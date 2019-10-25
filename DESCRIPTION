@@ -1,0 +1,13 @@
+Package: bibliomatrix
+Title: Provide Shared Functionality for Bibliometric Analytics
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Provides shared functions for data access.
+License: file LICENSE
+Encoding: UTF-8
+LazyData: true

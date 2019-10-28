@@ -33,7 +33,7 @@ devtools::install_github("KTH-Library/bibliomatrix")
 
 This is a basic example which shows you how to get some data when creating Annual Bibliometric Monitoring analytics:
 
-```{r example, message=FALSE}
+```{r example, , warning=FALSE, message=FALSE}
 library(bibliomatrix)
 library(dplyr)
 
@@ -42,13 +42,37 @@ library(dplyr)
 # output to a specific set of columns
 
 abm_tab1() %>% 
-filter(unit_long == "KTH Royal Institute of Technology") %>%
-select(unit_long, `Publication Type`, `WoS Coverage`) %>%
+# only show data given a specific unit id (KTH = 177)
+filter(id == 177) %>%
+select(`Organizational Unit`, `Publication Type`, `WoS Coverage`) %>%
 knitr::kable()
 
 ```
 
-```{r}
+This is a basic example of how to retrieve data for the organizational units used in the Annual Bibliometric Monitoring:
 
+```{r}
+# get data for organizational units at 
+# level 1 (KTH), level 2 (Schools) and level 3 (Departments / Institutions)
+# NB: this table is not yet complete and some entries lack english translations
+
+org <- abm_units()
+
+# inspect some organizational unit ids at "level 2" ie at the school level
+
+org %>%
+filter(unit_level == 2) %>%
+knitr::kable()
+
+```
+
+Some data relating to a specific school using the organizational unit id:
+
+```{r, warning=FALSE, message=FALSE}
+
+abm_tab1() %>%
+filter(id == 879223) %>%
+select(-id, -pubtype_order, -c(starts_with("20"))) %>%
+knitr::kable()
 ```
 

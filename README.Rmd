@@ -1,0 +1,54 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# bibliomatrix
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of bibliomatrix is to provide a common set of functionality for the Annual Bibliometric Monitoring efforts from the Bibliometrics team at the KTH Library.
+
+## Installation
+
+You can install the latest development version of bibliomatrix from [GitHub](https://KTH-Library.github.com/bibliomatrix) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("KTH-Library/bibliomatrix")
+```
+
+## Example
+
+This is a basic example which shows you how to get some data when creating Annual Bibliometric Monitoring analytics:
+
+```{r example, message=FALSE}
+library(bibliomatrix)
+library(dplyr)
+
+# simple example showing how to filter some of the data for Table 1
+# in the ABM report for an organizational unit and restrict the
+# output to a specific set of columns
+
+abm_tab1() %>% 
+filter(unit_long == "KTH Royal Institute of Technology") %>%
+select(unit_long, `Publication Type`, `WoS Coverage`) %>%
+knitr::kable()
+
+```
+
+```{r}
+
+```
+

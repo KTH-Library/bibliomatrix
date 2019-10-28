@@ -1,6 +1,8 @@
-abm_tab1 <- function(
-  level_org = "KTH"  
-) 
+#' Retrieve data for the first ABM table
+#' 
+#' @return tibble with data for organizational units
+#' @export
+abm_tab1 <- function() 
 {
   
   library(DBI)

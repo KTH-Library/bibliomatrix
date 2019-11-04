@@ -1,23 +1,6 @@
-#' Connection to Bibliometrics data source for KTH
-#' 
-#' This connection relies on an .Renviron file with environment variables.
-#' 
-#' Make sure one exists and that variables are set for:
-#' DBHOST, DBNAME, DBUSER, DBPASS
-#' 
-#' @return database connection
-#' @import DBI odbc
-#' @export
-con_bib <- function() {
-  con <- dbConnect(
-    odbc::odbc(), driver = "ODBC Driver 17 for SQL Server", 
-    server = Sys.getenv("DBHOST"), database = Sys.getenv("DBNAME"), Port = 1433, 
-    UID = Sys.getenv("DBUSER"), PWD = Sys.getenv("DBPASS")
-  )
-}
-  
 #' Retrieve data for the first ABM table
 #' 
+#' @param con connection to db, default is to use mssql connection
 #' @return tibble with data for organizational units
 #' @export
 #' @import DBI dplyr tidyr purrr
@@ -139,6 +122,7 @@ replace_if_re <- function(x,
 
 #' Organizational units at KTH
 #' 
+#' @param con connection to db, default is to use mssql db con
 #' @return tibble
 #' @export
 #' @import DBI dplyr tidyr	
@@ -158,7 +142,7 @@ abm_units <- function(con = con_bib()) {
   lookup <- bind_rows(
     
     # root level 1: KTH (hardcoding for now bec cannot find in BIBMON)
-    tibble(
+    tibble::tibble(
       unit_long_swe = "KTH Royal Institute of Technology",
       unit_id = 177,
       unit_level = 1,

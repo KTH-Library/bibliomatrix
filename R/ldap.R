@@ -76,6 +76,7 @@ ad_search_accountname <- function(accountname, cfg) {
 #' Besides the openldap utils used for LDAP queries it also requires environment variables to be set in .Renviron (LDAP_USER, LDAP_PASS, LDAP_HOST and LDAP_BASE for the service account used for the queries)
 #'
 #' @param search_term the KTH id or account name to use in the search query
+#' @param search_type one of "kthid" or "accountname" for the type of search to make
 #' @return tibble with key value pairs
 #' @details this function requires that the system library openldap is available ("sudo apt install openldap-utils")
 #' @examples ad_search("markussk", "accountname")
@@ -92,9 +93,12 @@ ad_search <- function(search_term,
    accountname = ad_search_accountname(search_term, cfg))
 }
 
+#' List member of properties from LDAP search
+#' 
+#' @param search_results a tibble with search results from the `ad_search()` fcn
+#' @return tibble with memberof LDIF values
 #' @import dplyr stringr
 #' @export
-#' 
 ad_memberof <- function(search_results) {
   search_results %>%
   filter(key == "memberOf") %>%

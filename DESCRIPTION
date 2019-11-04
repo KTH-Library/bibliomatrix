@@ -14,3 +14,13 @@ LazyData: true
 Suggests: 
     testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
+Imports: 
+    DBI,
+    RSQLite,
+    dplyr,
+    odbc,
+    purrr,
+    rappdirs,
+    stringr,
+    tidyr,
+    tibble

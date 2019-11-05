@@ -42,9 +42,10 @@ library(dplyr)
 # output to a specific set of columns
 
 abm_tab1() %>% 
-# only show data given a specific unit id (KTH = 177)
+# only show data given a specific unit id (KTH = 177), just five records
 filter(id == 177) %>%
 select(`Organizational Unit`, `Publication Type`, `WoS Coverage`) %>%
+slice(1:5) %>%
 knitr::kable()
 
 ```
@@ -73,6 +74,22 @@ Some data relating to a specific school using the organizational unit id:
 abm_tab1() %>%
 filter(id == 879223) %>%
 select(-id, -pubtype_order, -c(starts_with("20"))) %>%
+# just show five rows
+slice(1:5) %>%
 knitr::kable()
 ```
 
+## Development
+
+To further develop or change the package, please refer to instructions at <http://r-pkgs.org/>, then fork this repo, clone it, make the changes and whe done, submit a PR with the changes.
+
+If you wish to work from the CLI, you can use this approach:
+
+<https://github.com/KTH-Library/kontarion#contributions>
+
+For a concrete example - to make a change with regards to adding tests, follow instructions for how to [add a test](https://r-pkgs.org/tests.html) and add it in `test/testthat/` making sure that it verifies expected results, then do the Ctrl+Shift+{D,T,E} steps (if using keyboard shortcuts) and then use git to commit and push the changes to your fork, then issue a PR.
+
+## Meta
+
+* Please [report any issues or bugs](https://github.com/KTH-Library/bibliomatrix/issues).
+* License: AGPLv3

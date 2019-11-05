@@ -47,7 +47,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
   table1 <-
     orgdata %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(P_frac = sum(Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction)) %>%
     pivot_wider(names_from = Publication_Year, values_from = P_frac) %>%
     ungroup()
 
@@ -62,4 +62,50 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
   dbDisconnect(con)
   
   table1 %>% merge(table2)
+}
+
+table(b$Publication_Type_WoS)
+
+#' Retrieve Table 2 (Citations 3-year window) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return table over publications by type and year for display in ABM
+#' @import DBI dplyr tidyr purrr
+#' @export
+
+abm_table2 <- function(con = con_bib("sqlite"), unit_code, pub_year){
+  # Todo:
+  # - See abm_table1 above
+  # - Fix strange error related to database connection
+
+  # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
+  orgdata <- abm_data(unit_code = unit_code) %>%
+    filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
+           Publication_Year < max(Publication_Year) - 1) %>%
+    mutate(Publication_Year = as.character(Publication_Year)) %>%
+    collect()
+
+  if(!missing(pub_year))
+    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
+
+  # Year dependent part of table
+  table1 <-
+    orgdata %>%
+    group_by(Publication_Year) %>%
+    summarise(P_frac = sum(Unit_Fraction),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = T) / sum(Unit_Fraction, na.rm = T)) %>%
+    ungroup()
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_frac = sum(Unit_Fraction),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = T) / sum(Unit_Fraction, na.rm = T)) %>%
+    mutate(Publication_Year = "Total")
+
+  rbind(table1, table2)
 }

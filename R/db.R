@@ -197,7 +197,7 @@ db_sync_table <- function(
 #'   excluded, by default "Documents" is excluded, specify NULL to exclude 
 #' @param overwrite_existing a logical to indicate whether destination tables
 #'   should be overwritten if they already exist
-#' @return invisible result with list of table sync status (TRUE/FALSE)
+#' @return invisible result with vector of boolean status flags for synced tables
 #' @importFrom purrr map set_names
 #' @export
 db_sync <- function(
@@ -234,7 +234,8 @@ db_sync <- function(
   message("syncing these tables from source db: ", 
     if (length(tables)) tables else "none")
     
-  res <- purrr::map(tables, sync_possibly)
-  purrr::set_names(res, tables)
+  res <- purrr::map_lgl(tables, sync_possibly)
+  names(res) <- as.character(tables)
+#  purrr::set_names(res, as.character(tables))
   invisible(res)
 }

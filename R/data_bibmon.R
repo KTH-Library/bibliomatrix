@@ -2,9 +2,8 @@
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @return tibble with data for organizational units
-#' @export
 #' @import DBI dplyr tidyr purrr
-#' 
+#' @export
 abm_tab1 <- function(con = con_bib()) 
 {
   
@@ -94,14 +93,6 @@ abm_tab1 <- function(con = con_bib())
   return (res)
 }
 
-
-#' Extract regex capture groups
-#' @param x vector of strings
-#' @param re regexp where the first capture group gets extracted
-#' @return vector with string contents of first capture group
-#' @importFrom dplyr nth
-#' @importFrom stringr str_match_all
-#' @importFrom purrr map_chr
 extract_re <- function(x, re) 
 {
   if (missing(re))

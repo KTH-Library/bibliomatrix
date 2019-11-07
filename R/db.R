@@ -27,8 +27,10 @@ con_bib_mssql <- function()
 {
   envvars <- c("DBHOST", "DBNAME", "DBUSER", "DBPASS")
   
-  if (any(Sys.getenv(envvars) == ""))
+  if (any(Sys.getenv(envvars) == "")) {
+    message("Do you have an .Renviron file at: ", normalizePath("~/.Renviron"), "?")
     stop("Please use an .Renviron with these envvars set", paste(envvars))
+  }
   
   dbConnect(
     odbc(), driver = "ODBC Driver 17 for SQL Server", Port = 1433,
@@ -48,7 +50,7 @@ con_bib_mssql <- function()
 #' @noRd
 con_bib_sqlite <- function(create = FALSE, overwrite = FALSE) 
 {
-  db_path <- file.path(app_dir("bibmon")$config(), "bibmon.db")
+  db_path <- db_sqlite_location()
   
   if (!file.exists(db_path) & !create) 
     stop("No sqlite3 db available at ", db_path)
@@ -117,20 +119,19 @@ db_tables <- function(con) {
     con <- con_bib_mssql()
     tables <- odbc::dbListTables(
       con, catalog_name = "BIBMON", schema_name = "dbo")
+    if (!length(tables)) return(NULL)
     res <- db_counts(con, tables)    
     dbDisconnect(con)
-    return (res)
+    return(res)
   }
   
   # enumerate all tables in the SQLite db, excluding system tables
   enum_tables_sqlite <- function() {
+    con <- con_bib_sqlite()
     mygrep <- function(x, pattern = "^sqlite_") 
       grep(x = x, pattern = pattern, invert = TRUE, value = TRUE)
-    # workaround for dbListTables used on src_SQLiteConnection
-    #con <- DBI::dbConnect(RSQLite::SQLite(), con_bib_sqlite()$con@dbname)
-    #RSQLite::initExtension(con)
     tables <- RSQLite::dbListTables(con) %>% mygrep()
-    res <- db_counts(con, tables)
+    if (length(tables)) res <- db_counts(con, tables) else res <- NULL
     dbDisconnect(con)
     return (res)
   }
@@ -212,7 +213,18 @@ db_sync <- function(
     t1 <- tables_included
   }
   
-  t2 <- con_bib_sqlite() %>% db_tables() %>% pull(table)
+  tryCatch(
+    con_bib_sqlite(),
+    error = function(e) {
+      if (str_starts(e$message, "No sqlite3 db")) {
+        message("No sqlite3 db exists, probably first run, so creating one.")
+        con_bib_sqlite(create = TRUE)
+      }
+    }
+  )
+  
+  t2_df <- con_bib_sqlite() %>% db_tables()
+  t2 <- if (is.null(t2_df)) NULL else t2_df %>% pull(table)
 
   # inclusions  
   if (overwrite_existing)
@@ -231,11 +243,21 @@ db_sync <- function(
     otherwise = FALSE)
 
   # iterate over all tables for side-effects of synching
-  message("syncing these tables from source db: ", 
-    if (length(tables)) tables else "none")
+  message("excluded tables: ", tables_excluded)
+  message("syncing these tables from source db:\n", 
+    if (length(tables)) paste(collapse = ", ", tables) else "none")
     
   res <- purrr::map_lgl(tables, sync_possibly)
   names(res) <- as.character(tables)
 #  purrr::set_names(res, as.character(tables))
   invisible(res)
+}
+
+#' Location of sqlite3 db file for BIBMON data
+#' 
+#' @export
+#' @return character string representing on disk location for db file
+#' @import rappdirs
+db_sqlite_location <- function() {
+  file.path(rappdirs::app_dir("bibmon")$config(), "bibmon.db")
 }

@@ -12,3 +12,13 @@ use_build_ignore("dev.R")
 use_readme_rmd()
 use_testthat()
 use_test("connection")
+
+
+
+use_data_raw()
+
+build_vignettes()
+use_test("db")
+use_package("curl")
+
+# TODO

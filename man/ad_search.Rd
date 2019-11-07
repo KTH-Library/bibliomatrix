@@ -2,7 +2,7 @@
 % Please edit documentation in R/ldap.R
 \name{ad_search}
 \alias{ad_search}
-\title{Search Active Directory at KTH using ldapsearch}
+\title{Search Active Directory at KTH using kthid or username}
 \usage{
 ad_search(search_term, search_type = c("kthid", "accountname"))
 }
@@ -15,12 +15,15 @@ ad_search(search_term, search_type = c("kthid", "accountname"))
 tibble with key value pairs
 }
 \description{
-This function uses the ldapsearch utility to query the KTH Active Directory
+This function uses curl to query the KTH Active Directory. It requires 
+environment variables to be set in .Renviron, specifically
+LDAP_USER, LDAP_PASS, LDAP_HOST and LDAP_BASE for the service 
+account used for the queries.
 }
 \details{
-Besides the openldap utils used for LDAP queries it also requires environment variables to be set in .Renviron (LDAP_USER, LDAP_PASS, LDAP_HOST and LDAP_BASE for the service account used for the queries)
-
-this function requires that the system library openldap is available ("sudo apt install openldap-utils")
+Under the hood, this function issues a curl request similar to this one:
+curl --ntlm -user $CREDS \\
+ldaps://ldap.foo.com/DC=ads,DC=foo,DC=com?memberOf?sub?(&(sAMAccountName=$USER)(memberOf=CN=$GROUP,OU=Distribution,OU=Groups,DC=ads,DC=foo,DC=com))"
 }
 \examples{
 ad_search("markussk", "accountname")

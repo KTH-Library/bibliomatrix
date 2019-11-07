@@ -1,0 +1,306 @@
+---
+title: "Annual Bibliometric Monitoring 2018 - KTH"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    favicon: kth-logo.png
+    source_code: embed
+params:
+  kthid: u1o2ujjd
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(DT)
+library(readr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(bibliomatrix)
+
+if (!file.exists("pub.rda")) {
+  source("harvest_public.R")
+  dfs <- scrape()
+  write_rds(dfs, "pub.rda")
+}
+dfs <- read_rds("pub.rda")
+
+colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
+```
+
+Overview
+===========================
+
+Row
+---------------------
+
+### Total publications (fractionalized) {.value-box}
+
+```{r}
+total_pubs <-
+  dfs %>% pluck(1, 1) %>% summarize(total = sum(as.numeric(`2017`)))
+
+valueBox(
+  value = total_pubs,
+#  icon = "fa-area-chart",
+  color = colors_vb[1]
+)
+
+```
+
+### Field-normalized citations {.value-box}
+
+```{r}
+avg_cf <-
+  dfs %>% pluck(1, 3) %>% 
+  filter(Period == "2014-2016") %>%
+  pluck("cf")
+
+valueBox(
+  value = avg_cf,
+#  icon = "fa-area-chart",
+  color = colors_vb[2]
+)
+
+```
+
+### Share top 10% publications {.value-box}
+
+```{r}
+topten <-
+  dfs %>% pluck(1, 3) %>% 
+  filter(Period == "2014-2016") %>%
+  pluck("PTop10% Share")
+
+valueBox(
+  value = topten,
+#  icon = "fa-area-chart",
+  color = colors_vb[2]
+)
+
+```
+
+### Journal citations (field normalized) {.value-box}
+
+```{r}
+jcf <-
+  dfs %>% pluck(1, 4) %>% 
+  filter(Period == "2015-2017") %>%
+  pluck("Jcf frac")
+
+valueBox(
+  value = jcf,
+#  icon = "fa-area-chart",
+  color = colors_vb[3]
+)
+
+```
+
+### Share top 20% journals {.value-box}
+
+```{r}
+jcf <-
+  dfs %>% pluck(1, 4) %>% 
+  filter(Period == "2015-2017") %>%
+  pluck("Jtop20% share (frac)")
+
+valueBox(
+  value = jcf,
+#  icon = "fa-area-chart",
+  color = colors_vb[3]
+)
+
+```
+
+### Co-publications with Swedish non-universities {.value-box}
+
+```{r}
+copub_nonuni_swe <-
+  dfs %>% pluck(1, 5) %>% 
+  filter(Period == "2015-2017") %>%
+  pluck("Swe non-univ Share")
+
+valueBox(
+  value = copub_nonuni_swe,
+#  icon = "fa-area-chart",
+  color = colors_vb[4]
+)
+
+```
+
+### International co-publications {.value-box}
+
+```{r}
+copub_int <-
+  dfs %>% pluck(1, 5) %>% 
+  filter(Period == "2015-2017") %>%
+  pluck("International Share")
+
+valueBox(
+  value = copub_int,
+#  icon = "fa-area-chart",
+  color = colors_vb[4]
+)
+
+```
+
+
+
+Row
+--------------------------------
+
+### Background
+
+The bibliometric indicators referred are based on publications registered in DiVA and published 2011 to 2017. Only publications which have been affiliated to KTH are included. This yields that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, are not included in the statistics.
+
+Statistics regarding citations and co-publishing are based on the subset of publications in DiVA that are registered in Web of Science.
+
+### Further information
+
+- [Guide to the Annual Bibliometric Monitoring at KTH](https://intra.kth.se/bibliometri/public/link/attachment/Guide%20to%20the%20Annual%20Bibliometric%20Monitoring%20at%20KTH.pdf)
+- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](https://intra.kth.se/bibliometri/public/link/attachment/Description%20of%20data,%20methods%20and%20indicators%20in%20KTH%20Annual%20Bibliometric%20Monitoring.pdf)
+- [Formal definitions of field normalized citation indicators at KTH](https://www.kth.se/polopoly_fs/1.544479!/Formal%20definitions%20of%20field%20normalized%20citation%20indicators%20at%20KTH.pdf)
+- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer)
+- [President decision about the Annual Bibliometric Monitoring](https://intra.kth.se/bibliometri/public/link/attachment/Beslut%200934%20Arlig%20bibliometrisk%20uppfoljning.pdf)
+
+Row
+----------------------
+
+### Disclaimer
+
+Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
+
+Tables
+=====================================
+
+Column {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+
+### Publications in DiVA - Fractionalized
+
+```{r}
+
+
+
+my_locale <- readr::locale(decimal_mark = ".")
+
+my_parse_guess <- function(x)
+  readr::parse_guess(x, locale = my_locale, guess_integer = TRUE)
+# 
+# df <- 
+#   dfs %>% pluck(1, 1) %>% select(-c(1, 2)) %>%
+#   mutate_all(my_parse_guess)
+
+df <- abm_table1() %>% 
+  select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
+  mutate(Total = 0)
+
+DT::datatable(df, rownames = FALSE, options = list(
+  bPaginate = FALSE,
+  dom = 't'
+))
+
+
+```
+
+
+### Citations 3-year window
+
+```{r}
+df2 <- 
+  dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
+  mutate_all(my_parse_guess)
+
+DT::datatable(df2, rownames = FALSE, options = list(
+  bPaginate = FALSE,
+  dom = 't'
+))
+```
+
+### Citations - field normalized
+
+Fractionalized (3-year moving average)
+
+```{r}
+df3 <- 
+  dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
+  mutate_all(my_parse_guess)
+
+DT::datatable(df3, rownames = FALSE, options = list(
+  bPaginate = FALSE,
+  dom = 't'
+))
+```
+
+### Journal impact
+
+3-year moving average
+
+```{r}
+df4 <- 
+  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>%
+  mutate_all(my_parse_guess)
+
+DT::datatable(df4, rownames = FALSE, options = list(
+  bPaginate = FALSE,
+  dom = 't'
+))
+```
+
+### Co-publishing
+
+Internationally and with Swedish non-university organizations (3-year moving average)
+
+```{r}
+df5 <- 
+  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>%
+  mutate_all(my_parse_guess)
+
+DT::datatable(df5, rownames = FALSE, options = list(
+  bPaginate = FALSE,
+  dom = 't'
+))
+```
+
+Graphs
+=====================================
+
+Row
+-----------------------
+
+### DiVA publications
+
+```{r}
+
+# library(tidyr)
+# library(ggthemes)
+# library(plotly)
+# 
+# 
+# ts <- 
+#   df %>% 
+#   select(-c(`WoS Coverage`, Total)) %>%
+#   gather(key = "Year", value = "Indicator", 2:8)
+#   
+
+# p <- 
+#   ggplot(
+#     data = ts, 
+#     aes(x = Year, y = Indicator, group = Publication, 
+#         colour = Publication, label = Publication)) +
+#   geom_line() +
+#   geom_point() +
+#   scale_color_brewer(type = "qual", palette = "Paired") + 
+#   geom_text(data = ts %>% filter(Year == 2017) %>% arrange(desc(Indicator)) %>% slice(1:3),
+#             aes(label = Publication), hjust = 1,
+#             vjust = 2) +
+#   theme_economist_white() +
+#   theme(
+#     legend.position = "none",
+#     axis.title.x = element_blank(),
+#     axis.title.y = element_blank()) 
+# 
+# ggplotly(p)
+
+```

@@ -21,4 +21,6 @@ build_vignettes()
 use_test("db")
 use_package("curl")
 
+pkgdown::build_site()
+
 # TODO

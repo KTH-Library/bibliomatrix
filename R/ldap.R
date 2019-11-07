@@ -18,10 +18,18 @@ ldap_config <- function() {
 }
 
 ldap_cmd_search <- function(cfg = ldap_config(), ldap_query) {
-  
-  sprintf(
-    "ldapsearch -H \"%s\" -x -D \"%s\" -w \"%s\" -b \"%s\" \"%s\" -LLL",
-     cfg$ldap_host, cfg$ldap_user, cfg$ldap_pass, cfg$ldap_base, ldap_query)
+
+  if (Sys.info()["sysname"] == "Windows"){
+    ldapsearch <- file.path("C:", "OpenLDAP", "bin", "ldapsearch.exe")
+    sprintf(
+      "%s -H \"%s\" -x -D \"%s\" -w \"%s\" -b \"%s\" \"%s\" -LLL",
+      ldapsearch, cfg$ldap_host, cfg$ldap_user, cfg$ldap_pass, cfg$ldap_base, ldap_query)
+    
+  } else { 
+    sprintf(
+      "ldapsearch -H \"%s\" -x -D \"%s\" -w \"%s\" -b \"%s\" \"%s\" -LLL",
+      cfg$ldap_host, cfg$ldap_user, cfg$ldap_pass, cfg$ldap_base, ldap_query)
+  }
   
 }
 

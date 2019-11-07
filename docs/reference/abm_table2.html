@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Search Active Directory at KTH using kthid or username — ad_search • bibliomatrix</title>
+<title>Retrieve Table 2 (Citations 3-year window) for ABM — abm_table2 • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,11 +35,8 @@
 
 
 
-<meta property="og:title" content="Search Active Directory at KTH using kthid or username — ad_search" />
-<meta property="og:description" content="This function uses curl to query the KTH Active Directory. It requires 
-environment variables to be set in .Renviron, specifically
-LDAP_USER, LDAP_PASS, LDAP_HOST and LDAP_BASE for the service 
-account used for the queries." />
+<meta property="og:title" content="Retrieve Table 2 (Citations 3-year window) for ABM — abm_table2" />
+<meta property="og:description" content="Retrieve Table 2 (Citations 3-year window) for ABM" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,65 +117,44 @@ account used for the queries." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Search Active Directory at KTH using kthid or username</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/ldap.R'><code>R/ldap.R</code></a></small>
-    <div class="hidden name"><code>ad_search.Rd</code></div>
+    <h1>Retrieve Table 2 (Citations 3-year window) for ABM</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
+    <div class="hidden name"><code>abm_table2.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function uses curl to query the KTH Active Directory. It requires 
-environment variables to be set in .Renviron, specifically
-LDAP_USER, LDAP_PASS, LDAP_HOST and LDAP_BASE for the service 
-account used for the queries.</p>
+    <p>Retrieve Table 2 (Citations 3-year window) for ABM</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ad_search</span>(<span class='no'>search_term</span>, <span class='kw'>search_type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"kthid"</span>, <span class='st'>"accountname"</span>))</pre>
+    <pre class="usage"><span class='fu'>abm_table2</span>(<span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(), <span class='no'>unit_code</span>, <span class='no'>pub_year</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>search_term</th>
-      <td><p>the KTH id or account name to use in the search query</p></td>
+      <th>con</th>
+      <td><p>connection to db, default is to use mssql connection</p></td>
     </tr>
     <tr>
-      <th>search_type</th>
-      <td><p>one of "kthid" or "accountname" for the type of search to make</p></td>
+      <th>unit_code</th>
+      <td><p>the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)</p></td>
+    </tr>
+    <tr>
+      <th>pub_year</th>
+      <td><p>publication year(s) to analyze (optional, assuming master table holds only relevant years)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with key value pairs</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>tibble with citations statistics by year and total</p>
 
-    <p>Under the hood, this function issues a curl request similar to this one:
-curl --ntlm -user $CREDS \
-ldaps://ldap.foo.com/DC=ads,DC=foo,DC=com?memberOf?sub?(&amp;(sAMAccountName=$USER)(memberOf=CN=$GROUP,OU=Distribution,OU=Groups,DC=ads,DC=foo,DC=com))"</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>ad_search</span>(<span class='st'>"markussk"</span>, <span class='st'>"accountname"</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 113 x 2</span><span>
-#&gt;    key         value                                                            
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                                                            
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> DN          CN=Markus Skyttner (markussk),OU=OTHER,OU=USERS,OU=UG,DC=ug,DC=k…
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> objectClass top                                                              
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> objectClass person                                                           
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> objectClass organizationalPerson                                             
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> objectClass user                                                             
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> cn          Markus Skyttner (markussk)                                       
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> sn          Skyttner                                                         
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> c           SE                                                               
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> l           Stockholm                                                        
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> st          Stockholm                                                        
-#&gt; </span><span style='color: #949494;'># … with 103 more rows</span><span></div></span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

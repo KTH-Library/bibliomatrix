@@ -108,10 +108,11 @@
 <a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co"># output to a specific set of columns</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb2-8" data-line-number="8"><span class="kw"><a href="reference/abm_tab1.html">abm_tab1</a></span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co"># only show data given a specific unit id (KTH = 177)</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co"># only show data given a specific unit id (KTH = 177), just five records</span></a>
 <a class="sourceLine" id="cb2-10" data-line-number="10"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> </span><span class="dv">177</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="st">`</span><span class="dt">Organizational Unit</span><span class="st">`</span>, <span class="st">`</span><span class="dt">Publication Type</span><span class="st">`</span>, <span class="st">`</span><span class="dt">WoS Coverage</span><span class="st">`</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12">knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Organizational Unit</th>
@@ -143,46 +144,6 @@
 <td align="left">KTH Royal Institute of Technology</td>
 <td align="left">Book</td>
 <td align="right">0.0262478</td>
-</tr>
-<tr class="even">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Anthology (editor)</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Chapter in book</td>
-<td align="right">0.0397090</td>
-</tr>
-<tr class="even">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Article, book review</td>
-<td align="right">0.5369030</td>
-</tr>
-<tr class="odd">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Proceeding (editor)</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Report</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Doctorate thesis</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="even">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Licentiate thesis</td>
-<td align="right">0.0000000</td>
-</tr>
-<tr class="odd">
-<td align="left">KTH Royal Institute of Technology</td>
-<td align="left">Patent, approved</td>
-<td align="right">0.0000000</td>
 </tr>
 </tbody>
 </table>
@@ -219,15 +180,6 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Skolan för arkitektur och samhällsbyggnad (ABE)</td>
-<td align="right">5850</td>
-<td align="right">2</td>
-<td align="left">A</td>
-<td align="right">177</td>
-<td align="left">School of Architecture and the Built Environment (ABE)</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
 <td align="left">Skolan för elektroteknik och datavetenskap (EECS)</td>
 <td align="right">879223</td>
 <td align="right">2</td>
@@ -235,6 +187,15 @@
 <td align="right">177</td>
 <td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 <td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">Skolan för industriell teknik och management (ITM)</td>
+<td align="right">6023</td>
+<td align="right">2</td>
+<td align="left">I</td>
+<td align="right">177</td>
+<td align="left">School of Industrial Engineering and Management (ITM)</td>
+<td align="right">4</td>
 </tr>
 <tr class="odd">
 <td align="left">Skolan för kemi, bioteknologi och hälsa (CBH)</td>
@@ -246,13 +207,13 @@
 <td align="right">2</td>
 </tr>
 <tr class="even">
-<td align="left">Skolan för industriell teknik och management (ITM)</td>
-<td align="right">6023</td>
+<td align="left">Skolan för arkitektur och samhällsbyggnad (ABE)</td>
+<td align="right">5850</td>
 <td align="right">2</td>
-<td align="left">I</td>
+<td align="left">A</td>
 <td align="right">177</td>
-<td align="left">School of Industrial Engineering and Management (ITM)</td>
-<td align="right">4</td>
+<td align="left">School of Architecture and the Built Environment (ABE)</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="left">Skolan för teknikvetenskap (SCI)</td>
@@ -270,11 +231,13 @@
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="reference/abm_tab1.html">abm_tab1</a></span>() <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(id <span class="op">==</span><span class="st"> </span><span class="dv">879223</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>id, <span class="op">-</span>pubtype_order, <span class="op">-</span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">starts_with</a></span>(<span class="st">"20"</span>))) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co"># just show five rows</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="kw"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="53%">
-<col width="25%">
+<col width="54%">
+<col width="26%">
 <col width="10%">
 <col width="9%">
 </colgroup>
@@ -289,82 +252,50 @@
 <td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 <td align="left">Article, peer review</td>
 <td align="right">0.8804322</td>
-<td align="right">1973.472157</td>
+<td align="right">1973.47216</td>
 </tr>
 <tr class="even">
 <td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 <td align="left">Article, other</td>
 <td align="right">0.7437743</td>
-<td align="right">79.817100</td>
+<td align="right">79.81710</td>
 </tr>
 <tr class="odd">
 <td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 <td align="left">Conference paper, peer review</td>
 <td align="right">0.5764869</td>
-<td align="right">2876.217229</td>
+<td align="right">2876.21723</td>
 </tr>
 <tr class="even">
 <td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 <td align="left">Conference paper, other</td>
 <td align="right">0.0556550</td>
-<td align="right">338.736767</td>
+<td align="right">338.73677</td>
 </tr>
 <tr class="odd">
 <td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 <td align="left">Book</td>
 <td align="right">0.1589574</td>
-<td align="right">13.525637</td>
-</tr>
-<tr class="even">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Anthology (editor)</td>
-<td align="right">0.0000000</td>
-<td align="right">5.116667</td>
-</tr>
-<tr class="odd">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Chapter in book</td>
-<td align="right">0.0674281</td>
-<td align="right">121.116739</td>
-</tr>
-<tr class="even">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Article, book review</td>
-<td align="right">0.2045455</td>
-<td align="right">2.933333</td>
-</tr>
-<tr class="odd">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Proceeding (editor)</td>
-<td align="right">0.0000000</td>
-<td align="right">11.008333</td>
-</tr>
-<tr class="even">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Report</td>
-<td align="right">0.0000000</td>
-<td align="right">91.609695</td>
-</tr>
-<tr class="odd">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Doctorate thesis</td>
-<td align="right">0.0000000</td>
-<td align="right">508.000000</td>
-</tr>
-<tr class="even">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Licentiate thesis</td>
-<td align="right">0.0000000</td>
-<td align="right">167.000000</td>
-</tr>
-<tr class="odd">
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-<td align="left">Patent, approved</td>
-<td align="right">0.0000000</td>
-<td align="right">17.326190</td>
+<td align="right">13.52564</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div id="development" class="section level2">
+<h2 class="hasAnchor">
+<a href="#development" class="anchor"></a>Development</h2>
+<p>To further develop or change the package, please refer to instructions at <a href="http://r-pkgs.org/" class="uri">http://r-pkgs.org/</a>, then fork this repo, clone it, make the changes and whe done, submit a PR with the changes.</p>
+<p>If you wish to work from the CLI, you can use this approach:</p>
+<p><a href="https://github.com/KTH-Library/kontarion#contributions" class="uri">https://github.com/KTH-Library/kontarion#contributions</a></p>
+<p>For a concrete example - to make a change with regards to adding tests, follow instructions for how to <a href="https://r-pkgs.org/tests.html">add a test</a> and add it in <code>test/testthat/</code> making sure that it verifies expected results, then do the Ctrl+Shift+{D,T,E} steps (if using keyboard shortcuts) and then use git to commit and push the changes to your fork, then issue a PR.</p>
+</div>
+<div id="meta" class="section level2">
+<h2 class="hasAnchor">
+<a href="#meta" class="anchor"></a>Meta</h2>
+<ul>
+<li>Please <a href="https://github.com/KTH-Library/bibliomatrix/issues">report any issues or bugs</a>.</li>
+<li>License: AGPLv3</li>
+</ul>
 </div>
 </div>
   </div>

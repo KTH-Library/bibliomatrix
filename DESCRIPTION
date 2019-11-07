@@ -24,7 +24,7 @@ Suggests:
     rmarkdown,
     bench,
     readr
-RoxygenNote: 6.1.1
+RoxygenNote: 6.1.1.9000
 Imports: 
     DBI (>= 1.0.0),
     RSQLite (>= 2.1.2),

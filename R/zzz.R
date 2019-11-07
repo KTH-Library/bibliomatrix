@@ -17,6 +17,9 @@ globalz <- "
     pt_ordning.y skola_namn unit unit_id unit_long unit_long_eng
     unit_long_swe unit_sort value w_d_Sum w_d_Sum_NA w_unit wos_coverage
     wos_coverage_Mean wos_coverage_NA
+    Citations_3yr Jtop20 P_frac Ptop10 Publication_Type_WoS
+    Publication_Year Unit_Fraction Unit_code WebofScience_ID cf int
+    interval jcf level swe_nuniv
 "
 
 # HACK: add global fcns / vars with spaces in the name

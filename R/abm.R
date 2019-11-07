@@ -81,7 +81,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
   orgdata <- abm_data(unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
            Publication_Year < max(Publication_Year) - 1) %>%
-    mutate(Publication_Year = as.character(Publication_Year)) %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
@@ -89,7 +89,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
   # Year dependent part of table
   table1 <-
     orgdata %>%
-    group_by(Publication_Year) %>%
+    group_by(Publication_Year_ch) %>%
     summarise(P_frac = sum(Unit_Fraction),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
               C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
@@ -101,7 +101,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
               C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
-    mutate(Publication_Year = "Total")
+    mutate(Publication_Year_ch = "Total")
 
   dbDisconnect(con)
 

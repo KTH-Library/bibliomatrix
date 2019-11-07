@@ -70,7 +70,8 @@ con_bib_sqlite <- function(create = FALSE, overwrite = FALSE)
   
   sqliteflag <- if (create) RSQLite::SQLITE_RWC else RSQLite::SQLITE_RW
   #message("Using SQLit3 connection flag ", sqliteflag)
-  DBI::dbConnect(RSQLite::SQLite(), dbname = db_path, flags = sqliteflag)
+  DBI::dbConnect(RSQLite::SQLite(), synchronous = "normal", 
+    dbname = db_path, flags = sqliteflag)
 
 }
 

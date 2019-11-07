@@ -144,10 +144,12 @@ ldap_search_curl <- function(term,
   handle <- curl::new_handle()
   curl::handle_setopt(handle, userpwd = userpwd)
   res <- curl_fetch_memory(query, handle)
+  raw <- readBin(res$content, "raw", length(res$content))
+  mytext <- iconv(readBin(raw, character()), from = "UTF-8", to = "UTF-8")
 
   # parse the response  
   ldif <- 
-    rawToChar(res$content) %>%
+    mytext %>%
     str_replace_all("\n{2}", "\n") %>% 
     str_replace_all("\t", "") %>% 
     trimws() %>% 

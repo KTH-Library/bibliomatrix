@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# bibliomatrix
+# bibliomatrix <img src="man/figures/sticker.png" align="right" />
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -88,8 +88,3 @@ If you wish to work from the CLI, you can use this approach:
 <https://github.com/KTH-Library/kontarion#contributions>
 
 For a concrete example - to make a change with regards to adding tests, follow instructions for how to [add a test](https://r-pkgs.org/tests.html) and add it in `test/testthat/` making sure that it verifies expected results, then do the Ctrl+Shift+{D,T,E} steps (if using keyboard shortcuts) and then use git to commit and push the changes to your fork, then issue a PR.
-
-## Meta
-
-* Please [report any issues or bugs](https://github.com/KTH-Library/bibliomatrix/issues).
-* License: AGPLv3

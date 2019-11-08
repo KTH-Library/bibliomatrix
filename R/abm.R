@@ -25,7 +25,7 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @return tibble with pt_ordning and diva_publiation_type
-#' @import DBI dplyr tidyr purr
+#' @import DBI dplyr tidyr purrr
 #' @export
 get_pt_ordning <- function(con = con_bib()){
   con %>% tbl("Diva_publication_types") %>% collect()
@@ -287,7 +287,14 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
   rbind(table1, table2)
 }
 
-
+#' Retrieve dashboard indicators for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return list with indicator values for dashboard startpage
+#' @import DBI dplyr tidyr purrr
+#' @export
 abm_dash_indics <- function(con = con_bib(), unit_code){
   
   # Fetch table 1 for total number of publications and lastyear

@@ -20,6 +20,17 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
   res
 }
 
+
+#' Get order of publication type for ABM table 1
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @return tibble with pt_ordning and diva_publiation_type
+#' @import DBI dplyr tidyr purr
+#' @export
+get_pt_ordning <- function(con = con_bib()){
+  con %>% tbl("Diva_publication_types") %>% collect()
+}
+
 #' Retrieve Table 1 (Publications in DiVA) for ABM
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -28,11 +39,8 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 #' @return data frame with publications by type and year
 #' @import DBI dplyr tidyr purrr
 #' @export
-
 abm_table1 <- function(con = con_bib(), unit_code, pub_year){
   # ToDo:
-  # - Giving con to abm_data gives error message (external pointer is not valid) - fix that!
-  # - Fetch publication type sort order from somewhere (should probably just keep a small table in DB)
   # - collect() when?
   # - Return reasonable field names
   # - Return reasonable formats (for example WoS_coverage as percentage)
@@ -61,7 +69,9 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 
   dbDisconnect(con)
   
-  table1 %>% merge(table2)
+  ret <- table1 %>% merge(table2) %>% merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type")
+
+  ret %>% arrange(pt_ordning) %>% select(-pt_ordning)
 }
 
 #' Retrieve Table 2 (Citations 3-year window) for ABM

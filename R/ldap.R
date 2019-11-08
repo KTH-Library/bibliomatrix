@@ -129,7 +129,7 @@ ldap_cmd_curl <- function(ldap_filter, ldap_host, ldap_base,
 ldap_search_curl <- function(term,
   ldap_search_type = c("accountname", "kthid"),
   cfg = ldap_config()) {
-  
+
   # determine LDAP filter to use based on search type
   type <- match.arg(ldap_search_type)
   filter <- switch(type,

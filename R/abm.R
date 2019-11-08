@@ -39,8 +39,11 @@ get_pt_ordning <- function(con = con_bib()){
 #' @return data frame with publications by type and year
 #' @import DBI dplyr tidyr purrr
 #' @export
+
 abm_table1 <- function(con = con_bib(), unit_code, pub_year){
   # ToDo:
+  # - Giving con to abm_data gives error message (external pointer is not valid) - fix that!
+  # - Fetch publication type sort order from somewhere (should probably just keep a small table in DB)
   # - collect() when?
   # - Return reasonable field names
   # - Return reasonable formats (for example WoS_coverage as percentage)
@@ -81,6 +84,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return tibble with citations statistics by year and total
 #' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
 #' @export
 
 abm_table2 <- function(con = con_bib(), unit_code, pub_year){
@@ -115,7 +119,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
 
   dbDisconnect(con)
 
-  rbind(table1, table2)
+  bind_rows(table1, table2)
 }
 
 #' Create integer intervals useful for e.g. sliding means

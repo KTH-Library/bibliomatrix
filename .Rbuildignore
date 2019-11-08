@@ -6,7 +6,6 @@
 ^\.travis\.yml$     # Used for continuous integration testing with travis
 ^dev\.R$
 ^data-raw$
-
 ^doc$
 ^Meta$
 ^_pkgdown\.yml$

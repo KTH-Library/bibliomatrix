@@ -143,9 +143,16 @@ ldap_search_curl <- function(term,
   userpwd <- paste0(cfg$ldap_user, ":", cfg$ldap_pass)
   handle <- curl::new_handle()
   curl::handle_setopt(handle, userpwd = userpwd)
+  handle_setheaders(handle,
+    "Content-Type" = "text/plain;charset=UTF-8",
+    "Cache-Control" = "no-cache",
+    "User-Agent" = "bibliomatrix R-package"
+  )
   res <- curl_fetch_memory(query, handle)
   raw <- readBin(res$content, "raw", length(res$content))
-  mytext <- iconv(readBin(raw, character()), from = "UTF-8", to = "UTF-8")
+  #message("Guess encoding for content:")
+  #print(readr::guess_encoding(raw))
+  mytext <- iconv(readBin(raw, character()), from = "ASCII", to = "UTF-8")
 
   # parse the response  
   ldif <- 

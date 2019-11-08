@@ -124,7 +124,7 @@ ldap_cmd_curl <- function(ldap_filter, ldap_host, ldap_base,
   sprintf("%s/%s?%s?%s?%s", ldap_host, ldap_base, ldap_attributes, ldap_scope, ldap_filter)
 }
 
-#' @import curl
+#' @import curl dplyr
 #' @noRd
 ldap_search_curl <- function(term,
   ldap_search_type = c("accountname", "kthid"),
@@ -149,10 +149,15 @@ ldap_search_curl <- function(term,
     "User-Agent" = "bibliomatrix R-package"
   )
   res <- curl_fetch_memory(query, handle)
-  raw <- readBin(res$content, "raw", length(res$content))
+  r <- res$content
+  # workaround for embedded nul bytes on win
+  r[which(r == as.raw(0))] <- as.raw(0x20) ## replace with 0x20 = <space>  
+  mytext <- readChar(r, nchars = length(r))
+  
+  #raw <- readBin(r, "raw", length(r))
   #message("Guess encoding for content:")
   #print(readr::guess_encoding(raw))
-  mytext <- iconv(readBin(raw, character()), from = "ASCII", to = "UTF-8")
+  #mytext <- iconv(readBin(raw, character()), from = "ASCII", to = "UTF-8")
 
   # parse the response  
   ldif <- 
@@ -172,7 +177,17 @@ ldap_search_curl <- function(term,
   }
   
   # return a tibble with results
-  parse_ldif(ldif)
+  res <- parse_ldif(ldif)
+  
+  # special treatment for Windows due to the nul bytes
+  if (Sys.info()[["sysname"]] == "Windows") {
+    res <- res %>% filter(!key %in% c(
+      "objectGUID", "objectSid", "protocolSettings",
+      "msExchMailboxSecurityDescriptor", "msExchMailboxGuid"
+    ))
+  }
+  
+  return (res)
 }
 
 

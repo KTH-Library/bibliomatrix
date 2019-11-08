@@ -217,8 +217,8 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
     group_by(interval) %>%
     summarise(P_frac = sum(Unit_Fraction),
               jcf = weighted.mean(jcf, Unit_Fraction, na.rm = T),
-              top10_count = sum(Jtop20*Unit_Fraction, na.rm = T),
-              top10_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
+              top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
+              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
   # Summary part of table
@@ -226,8 +226,8 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction),
               jcf = weighted.mean(jcf, Unit_Fraction, na.rm = T),
-              top10_count = sum(Jtop20*Unit_Fraction, na.rm = T),
-              top10_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
+              top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
+              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     mutate(interval = "Total")
   
   dbDisconnect(con)
@@ -287,3 +287,31 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
   rbind(table1, table2)
 }
 
+
+abm_dash_indics <- function(con = con_bib(), unit_code){
+  
+  # Fetch table 1 for total number of publications and lastyear
+  t1 <- abm_table1(unit_code = unit_code)
+  lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
+
+  # Fetch table 3 for cf and top10
+  t3 <- abm_table3(unit_code = unit_code) %>%
+    filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
+  
+  # Fetch table 4 for jcf and top20
+  t4 <- abm_table4(unit_code = unit_code) %>%
+    filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
+  
+  # Fetch table 5 for non-univ and international copublications
+  t5 <- abm_table5(unit_code = unit_code) %>%
+    filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
+  
+  
+  list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
+       cf = t3$cf,
+       top10_share = t3$top10_share,
+       jcf = t4$jcf,
+       top20_share = t4$top20_share,
+       copub_nonuniv = t5$nonuniv_share,
+       copub_internat = t5$int_share)
+}

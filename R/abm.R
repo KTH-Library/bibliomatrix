@@ -155,19 +155,19 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   table1 <-
     orgdata3year %>%
     group_by(interval) %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              cf = weighted.mean(cf, Unit_Fraction, na.rm = T),
-              top10_count = sum(Ptop10*Unit_Fraction, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction_adj),
+              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
+              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     ungroup()
   
   # Summary part of table
   table2 <-
     orgdata %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              cf = weighted.mean(cf, Unit_Fraction, na.rm = T),
-              top10_count = sum(Ptop10*Unit_Fraction, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction_adj),
+              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
+              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     mutate(interval = "Total")
 
   dbDisconnect(con)

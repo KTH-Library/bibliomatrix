@@ -139,7 +139,8 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
-             Publication_Year < max(Publication_Year)) %>%
+             Publication_Year < max(Publication_Year) & 
+             !is.na(cf)) %>%
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
@@ -154,19 +155,19 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   table1 <-
     orgdata3year %>%
     group_by(interval) %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              cf = weighted.mean(cf, Unit_Fraction, na.rm = T),
-              top10_count = sum(Ptop10*Unit_Fraction, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction_adj),
+              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
+              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     ungroup()
   
   # Summary part of table
   table2 <-
     orgdata %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              cf = weighted.mean(cf, Unit_Fraction, na.rm = T),
-              top10_count = sum(Ptop10*Unit_Fraction, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction_adj),
+              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
+              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     mutate(interval = "Total")
 
   dbDisconnect(con)

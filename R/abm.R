@@ -322,3 +322,29 @@ abm_dash_indics <- function(con = con_bib(), unit_code){
        copub_nonuniv = t5$nonuniv_share,
        copub_internat = t5$int_share)
 }
+
+#' Retrieve information about ABM units (level 0-2)
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit unit code(s) for selection
+#' @param level organizational level(s) for selection (0 = KTH, 1 = School, 2 = Department)
+#' @param parent selects organizations with specific parent(s)
+#' @return tibble with information about selected units
+#' @import DBI dplyr tidyr purrr
+#' @export
+
+unit_info <- function(con = con_bib(), unit, level, parent){
+  # ToDo: Make possible to select on Diva_org_id
+
+  res <- con %>% tbl("abm_org_info") %>% collect()
+  if(!missing(level))
+    res <- res %>% filter(org_level %in% level)
+  if(!missing(unit))
+    res <- res %>% filter(unit_code %in% unit)
+  if(!missing(parent))
+    res <- res %>% filter(parent_org_id %in% parent)
+  
+  dbDisconnect(con)
+  
+  res
+}

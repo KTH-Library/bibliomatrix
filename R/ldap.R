@@ -129,7 +129,7 @@ ldap_cmd_curl <- function(ldap_filter, ldap_host, ldap_base,
 ldap_search_curl <- function(term,
   ldap_search_type = c("accountname", "kthid"),
   cfg = ldap_config()) {
-  
+
   # determine LDAP filter to use based on search type
   type <- match.arg(ldap_search_type)
   filter <- switch(type,
@@ -145,7 +145,7 @@ ldap_search_curl <- function(term,
   curl::handle_setopt(handle, userpwd = userpwd)
   res <- curl_fetch_memory(query, handle)
   raw <- readBin(res$content, "raw", length(res$content))
-  mytext <- iconv(readBin(raw, character()), from = "UTF-8", to = "UTF-8")
+  mytext <- iconv(readBin(raw, character()), to = "UTF-8")
 
   # parse the response  
   ldif <- 

@@ -139,7 +139,8 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
-             Publication_Year < max(Publication_Year)) %>%
+             Publication_Year < max(Publication_Year) & 
+             !is.na(cf)) %>%
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)

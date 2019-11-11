@@ -20,7 +20,6 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
   res
 }
 
-
 #' Get order of publication type for ABM table 1
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -40,9 +39,6 @@ get_pt_ordning <- function(con = con_bib()){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_table1 <- function(con = con_bib(), unit_code, pub_year){
-  # ToDo:
-  # - Return reasonable field names
-  # - Return reasonable formats (for example WoS_coverage as percentage)
 
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -66,8 +62,6 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
               WoS_coverage = weighted.mean(!is.na(WebofScience_ID), Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
-  dbDisconnect(con)
-  
   table1 %>%
     merge(table2) %>%
     merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
@@ -85,8 +79,6 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 #' @export
 
 abm_table2 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -113,8 +105,6 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
               C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
     mutate(Publication_Year_ch = "Total")
-
-  dbDisconnect(con)
 
   rbind(table1, table2)
 }
@@ -144,9 +134,7 @@ sliding_intervals <- function(first, last, width){
 #' @export
 
 abm_table3 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
-  
+
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
@@ -181,8 +169,6 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
               top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     mutate(interval = "Total")
 
-  dbDisconnect(con)
-  
   rbind(table1, table2)
 }
 
@@ -196,9 +182,7 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
 #' @export
 
 abm_table4 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
-  
+
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
@@ -230,8 +214,6 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     mutate(interval = "Total")
-  
-  dbDisconnect(con)
   
   rbind(table1, table2)
 }
@@ -246,9 +228,7 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
 #' @export
 
 abm_table5 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
-  
+
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
@@ -282,8 +262,6 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
               int_count = sum(int, na.rm = T),
               int_share = mean(int, na.rm = T)) %>%
     mutate(interval = "Total")
-  
-  dbDisconnect(con)
   
   rbind(table1, table2)
 }
@@ -311,9 +289,10 @@ abm_dash_indics <- function(con = con_bib(), unit_code){
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
   # Fetch table 5 for non-univ and international copublications
-  t5 <- abm_table5(unit_code = unit_code) %>%
+  t5 <- abm_table5(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
+  dbDisconnect(con)
   
   list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
        cf = t3$cf,
@@ -335,7 +314,7 @@ abm_dash_indics <- function(con = con_bib(), unit_code){
 #' @export
 
 unit_info <- function(con = con_bib(), unit, level, parent){
-  # ToDo: Make possible to select on Diva_org_id
+  # ToDo: Make possible to select on Diva_org_id (and possibly some catch-all search)
 
   res <- con %>% tbl("abm_org_info") %>% collect()
   if(!missing(level))
@@ -348,4 +327,84 @@ unit_info <- function(con = con_bib(), unit, level, parent){
   dbDisconnect(con)
   
   res
+}
+
+#' Display Table 1 (Publications in DiVA) for web use
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return data frame with publications by type and year
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table1_display <- function(con = con_bib(), unit_code, pub_year){
+  if(missing(pub_year)) table1 <- abm_table1(con, unit_code) else table1 <- abm_table1(con, unit_code, pub_year)
+  
+  dbDisconnect(con)
+  
+  table1
+}
+
+#' Display Table 2 (Citations 3-year window) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return tibble with citations statistics by year and total
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table2_display <- function(con = con_bib(), unit_code, pub_year){
+  if(missing(pub_year)) table2 <- abm_table2(con, unit_code) else table1 <- abm_table2(con, unit_code, pub_year)
+  
+  dbDisconnect(con)
+  
+  table2
+}
+
+#' Display Table 3 (Field normalized citations) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return tibble with field normalized citations and number/share of top10 publications by 3 year interval
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table3_display <- function(con = con_bib(), unit_code, pub_year){
+  if(missing(pub_year)) table3 <- abm_table3(con, unit_code) else table3 <- abm_table1(con, unit_code, pub_year)
+  
+  dbDisconnect(con)
+  
+  table3
+}
+
+#' Display Table 4 (Journal impact) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return tibble with field normalized journal citation score and number/share of publications in top20 journals
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table4_display <- function(con = con_bib(), unit_code, pub_year){
+  if(missing(pub_year)) table4 <- abm_table1(con, unit_code) else table4 <- abm_table1(con, unit_code, pub_year)
+  
+  dbDisconnect(con)
+  
+  table4
+}
+
+#' Display Table 5 (Co-publishing) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return tibble with number/share of international copublications and copublications with Swedish non-university organizations
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table5_display <- function(con = con_bib(), unit_code, pub_year){
+  if(missing(pub_year)) table5 <- abm_table1(con, unit_code) else table5 <- abm_table5(con, unit_code, pub_year)
+
+  dbDisconnect(con)
+  
+  table5
 }

@@ -167,7 +167,30 @@ Statistics regarding citations and co-publishing are based on the subset of publ
 Row
 ----------------------
 
-### Disclaimer
+### Publication data and attributions
+
+```{r, echo=FALSE, out.height="60px"}
+
+embed_data <- function(path)
+  paste0("data:", mime::guess_type(path), ";base64,", base64enc::base64encode(path))
+
+embed_file_link <- function(path, 
+  href = embed_data(path), 
+  name = basename(path),
+  text = paste("Download", name), ...) {
+  htmltools::a(text, href = href, download = name, ...)
+}
+
+icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
+icon_download <- htmltools::attachDependencies(icon_download, 
+  flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
+
+embed_file_link("~/Downloads/PublList_KTH.xlsx", 
+  title = "Download Publication List in Excel format",
+  text = icon_download, class="btn btn-primary")
+
+```
+Publication list for KTH in Excel format
 
 Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
 

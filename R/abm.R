@@ -39,17 +39,13 @@ get_pt_ordning <- function(con = con_bib()){
 #' @return data frame with publications by type and year
 #' @import DBI dplyr tidyr purrr
 #' @export
-
 abm_table1 <- function(con = con_bib(), unit_code, pub_year){
   # ToDo:
-  # - Giving con to abm_data gives error message (external pointer is not valid) - fix that!
-  # - Fetch publication type sort order from somewhere (should probably just keep a small table in DB)
-  # - collect() when?
   # - Return reasonable field names
   # - Return reasonable formats (for example WoS_coverage as percentage)
 
   # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
@@ -61,7 +57,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction)) %>%
     pivot_wider(names_from = Publication_Year, values_from = P_frac) %>%
     ungroup()
-
+  
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -69,12 +65,14 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction),
               WoS_coverage = weighted.mean(!is.na(WebofScience_ID), Unit_Fraction, na.rm = T)) %>%
     ungroup()
-
+  
   dbDisconnect(con)
   
-  ret <- table1 %>% merge(table2) %>% merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type")
-
-  ret %>% arrange(pt_ordning) %>% select(-pt_ordning)
+  table1 %>%
+    merge(table2) %>%
+    merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
+    arrange(pt_ordning) %>%
+    select(-pt_ordning)
 }
 
 #' Retrieve Table 2 (Citations 3-year window) for ABM
@@ -84,7 +82,6 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return tibble with citations statistics by year and total
 #' @import DBI dplyr tidyr purrr
-#' @importFrom stats weighted.mean
 #' @export
 
 abm_table2 <- function(con = con_bib(), unit_code, pub_year){
@@ -92,7 +89,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
   # - See abm_table1 above
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
            Publication_Year < max(Publication_Year) - 1) %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
@@ -119,7 +116,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
 
   dbDisconnect(con)
 
-  bind_rows(table1, table2)
+  rbind(table1, table2)
 }
 
 #' Create integer intervals useful for e.g. sliding means
@@ -151,7 +148,7 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   # - See abm_table1 above
   
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
              Publication_Year < max(Publication_Year) & 
              !is.na(cf)) %>%
@@ -203,7 +200,7 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
   # - See abm_table1 above
   
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
     collect()
   if(!missing(pub_year))
@@ -253,7 +250,7 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
   # - See abm_table1 above
   
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
     collect()
   if(!missing(pub_year))
@@ -302,15 +299,15 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
 abm_dash_indics <- function(con = con_bib(), unit_code){
   
   # Fetch table 1 for total number of publications and lastyear
-  t1 <- abm_table1(unit_code = unit_code)
+  t1 <- abm_table1(con = con, unit_code = unit_code)
   lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
 
   # Fetch table 3 for cf and top10
-  t3 <- abm_table3(unit_code = unit_code) %>%
+  t3 <- abm_table3(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
   
   # Fetch table 4 for jcf and top20
-  t4 <- abm_table4(unit_code = unit_code) %>%
+  t4 <- abm_table4(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
   # Fetch table 5 for non-univ and international copublications

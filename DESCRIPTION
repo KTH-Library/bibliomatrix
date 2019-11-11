@@ -18,6 +18,7 @@ Description: Shared functionality for working with bibliometric analytics. This
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 2.10)
 Suggests: 
     testthat (>= 2.1.0),
     knitr,

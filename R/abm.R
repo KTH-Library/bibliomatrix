@@ -132,6 +132,7 @@ sliding_intervals <- function(first, last, width){
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return tibble with field normalized citations and number/share of top10 publications by 3 year interval
+#' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 

@@ -2,6 +2,7 @@
 
 export(abm_dash_indices)
 export(abm_data)
+export(abm_publications)
 export(abm_tab1)
 export(abm_table1)
 export(abm_table2)

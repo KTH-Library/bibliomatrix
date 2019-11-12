@@ -185,7 +185,7 @@ icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
 icon_download <- htmltools::attachDependencies(icon_download, 
   flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
 
-embed_file_link("~/Downloads/PublList_KTH.xlsx", 
+embed_file_link(abm_publications(unit_code = "KTH"), 
   title = "Download Publication List in Excel format",
   text = icon_download, class="btn btn-primary")
 

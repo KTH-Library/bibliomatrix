@@ -185,7 +185,17 @@ icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
 icon_download <- htmltools::attachDependencies(icon_download, 
   flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
 
-embed_file_link(abm_publications(unit_code = "KTH"), 
+# export to xlsx format, into tempdir so we can embed a file link
+
+# data that we want to export
+publications_kth <- abm_publications(unit_code = "KTH")
+
+#install.packages("openxlsx")
+library(openxlsx)
+excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
+write.xlsx(publications_kth, excel_file)
+
+embed_file_link(excel_file, 
   title = "Download Publication List in Excel format",
   text = icon_download, class="btn btn-primary")
 

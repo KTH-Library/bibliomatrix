@@ -407,3 +407,28 @@ abm_table5_display <- function(con = con_bib(), unit_code, pub_year){
   
   table5
 }
+    
+#' Retrieve publication list for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @return tibble with publication list data for selected unit
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_publications <- function(con = con_bib(), unit_code, pub_year){
+
+  # Get publication level data for selected unit (and filter on pub_year if given)
+  orgdata <- abm_data(unit_code = unit_code)
+  if(!missing(pub_year))
+    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
+  
+  ret <- orgdata %>% select(-c("w_subj", "Unit_Fraction_adj", "level")) %>% collect()
+  
+  dbDisconnect(con)
+  
+  ret
+}
+  
+  
+  

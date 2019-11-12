@@ -357,7 +357,7 @@ unit_info <- function(con = con_bib(), unit, level, parent){
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
-#' @return 
+#' @return tibble with publication list for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
 

@@ -13,6 +13,9 @@ abm_publications(con = con_bib(), unit_code, pub_year)
 
 \item{pub_year}{publication year(s) to analyze (optional, assuming master table holds only relevant years)}
 }
+\value{
+tibble with publication list for selected unit
+}
 \description{
 Retrieve publication list for ABM
 }

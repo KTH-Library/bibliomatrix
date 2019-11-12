@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
 <!-- badges: end -->
 
 The goal of bibliomatrix is to provide a common set of functionality for
@@ -70,9 +72,9 @@ knitr::kable()
 | unit\_long\_swe                                    | unit\_id | unit\_level | unit\_abbrev | unit\_pid | unit\_long\_eng                                                             | unit\_sort |
 | :------------------------------------------------- | -------: | ----------: | :----------- | --------: | :-------------------------------------------------------------------------- | ---------: |
 | Skolan för kemi, bioteknologi och hälsa (CBH)      |   879224 |           2 | C            |       177 | School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH) |          2 |
-| Skolan för arkitektur och samhällsbyggnad (ABE)    |     5850 |           2 | A            |       177 | School of Architecture and the Built Environment (ABE)                      |          1 |
 | Skolan för elektroteknik och datavetenskap (EECS)  |   879223 |           2 | E            |       177 | School of Electrical Engineering and Computer Science (EECS)                |          3 |
 | Skolan för industriell teknik och management (ITM) |     6023 |           2 | I            |       177 | School of Industrial Engineering and Management (ITM)                       |          4 |
+| Skolan för arkitektur och samhällsbyggnad (ABE)    |     5850 |           2 | A            |       177 | School of Architecture and the Built Environment (ABE)                      |          1 |
 | Skolan för teknikvetenskap (SCI)                   |     6091 |           2 | S            |       177 | School of Engineering Sciences (SCI)                                        |          5 |
 
 Some data relating to a specific school using the organizational unit

@@ -93,7 +93,10 @@ ad_search_accountname <- function(accountname, cfg) {
 #' @param search_term the KTH id or account name to use in the search query
 #' @param search_type one of "kthid" or "accountname" for the type of search to make
 #' @return tibble with key value pairs
-#' @examples ad_search("markussk", "accountname")
+#' @examples 
+#' \dontrun{
+#' ad_search("markussk", "accountname")
+#' }
 #' @export
 ad_search <- function(search_term, 
   search_type = c("kthid", "accountname")) 

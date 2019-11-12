@@ -28,7 +28,6 @@ First load some useful packages, including `bibliomatrix`:
 ```{r setup, message=FALSE}
 library(bibliomatrix)
 library(dplyr)
-library(dbplyr)
 library(stringr)
 library(readr)
 library(knitr)

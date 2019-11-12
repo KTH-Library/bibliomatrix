@@ -12,14 +12,14 @@ suppressWarnings(packageStartupMessage(banner))
 # CRAN Note avoidance, see https://stackoverflow.com/questions/9439256
 # paste R CMD CHECK output for "Undefined global functions or variables below"
 globalz <- "
-    Diva_dep_id Diva_org_id Diva_school_id Doc_Year Organizational Unit
-    Publication_Type_DiVA cn dep_name key pt_ordning pt_ordning.x
-    pt_ordning.y skola_namn unit unit_id unit_long unit_long_eng
+    Citations_3yr Diva_dep_id Diva_org_id Diva_school_id Doc_Year Jtop20
+    P_frac Ptop10 Publication_Type_DiVA Publication_Type_WoS
+    Publication_Year Publication_Year_ch Unit_Fraction Unit_Fraction_adj
+    Unit_code WebofScience_ID cf cn dep_name int interval jcf key level
+    org_level parent_org_id pt_ordning pt_ordning.x pt_ordning.y
+    skola_namn swe_nuniv unit unit_code unit_id unit_long unit_long_eng
     unit_long_swe unit_sort value w_d_Sum w_d_Sum_NA w_unit wos_coverage
     wos_coverage_Mean wos_coverage_NA
-    Citations_3yr Jtop20 P_frac Ptop10 Publication_Type_WoS
-    Publication_Year Unit_Fraction Unit_code WebofScience_ID cf int
-    interval jcf level swe_nuniv
 "
 
 # HACK: add global fcns / vars with spaces in the name

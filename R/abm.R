@@ -270,11 +270,10 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return list with indicator values for dashboard startpage
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_dash_indics <- function(con = con_bib(), unit_code){
+abm_dash_indices <- function(con = con_bib(), unit_code){
   
   # Fetch table 1 for total number of publications and lastyear
   t1 <- abm_table1(con = con, unit_code = unit_code)

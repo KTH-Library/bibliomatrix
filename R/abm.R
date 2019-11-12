@@ -356,7 +356,7 @@ abm_table1_display <- function(con = con_bib(), unit_code, pub_year){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_table2_display <- function(con = con_bib(), unit_code, pub_year){
-  if(missing(pub_year)) table2 <- abm_table2(con, unit_code) else table1 <- abm_table2(con, unit_code, pub_year)
+  if(missing(pub_year)) table2 <- abm_table2(con, unit_code) else table2 <- abm_table2(con, unit_code, pub_year)
   
   dbDisconnect(con)
   
@@ -388,7 +388,7 @@ abm_table3_display <- function(con = con_bib(), unit_code, pub_year){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_table4_display <- function(con = con_bib(), unit_code, pub_year){
-  if(missing(pub_year)) table4 <- abm_table1(con, unit_code) else table4 <- abm_table1(con, unit_code, pub_year)
+  if(missing(pub_year)) table4 <- abm_table4(con, unit_code) else table4 <- abm_table1(con, unit_code, pub_year)
   
   dbDisconnect(con)
   
@@ -404,7 +404,7 @@ abm_table4_display <- function(con = con_bib(), unit_code, pub_year){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_table5_display <- function(con = con_bib(), unit_code, pub_year){
-  if(missing(pub_year)) table5 <- abm_table1(con, unit_code) else table5 <- abm_table5(con, unit_code, pub_year)
+  if(missing(pub_year)) table5 <- abm_table5(con, unit_code) else table5 <- abm_table5(con, unit_code, pub_year)
 
   dbDisconnect(con)
   

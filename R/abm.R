@@ -59,7 +59,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     orgdata %>%
     group_by(Publication_Type_DiVA) %>%
     summarise(P_frac = sum(Unit_Fraction),
-              WoS_coverage = weighted.mean(!is.na(WebofScience_ID), Unit_Fraction, na.rm = T)) %>%
+              WoS_coverage = stats::weighted.mean(!is.na(WebofScience_ID), Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
   table1 %>%
@@ -95,7 +95,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
     group_by(Publication_Year_ch) %>%
     summarise(P_frac = sum(Unit_Fraction),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
-              C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
+              C3 = stats::weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
   # Summary part of table
@@ -103,7 +103,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
-              C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
+              C3 = stats::weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
     mutate(Publication_Year_ch = "Total")
 
   rbind(table1, table2)
@@ -155,18 +155,18 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
     orgdata3year %>%
     group_by(interval) %>%
     summarise(P_frac = sum(Unit_Fraction_adj),
-              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
+              cf = stats::weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
               top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
+              top10_share = stats::weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     ungroup()
   
   # Summary part of table
   table2 <-
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction_adj),
-              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
+              cf = stats::weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
               top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
+              top10_share = stats::weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     mutate(interval = "Total")
 
   rbind(table1, table2)
@@ -201,18 +201,18 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
     orgdata3year %>%
     group_by(interval) %>%
     summarise(P_frac = sum(Unit_Fraction),
-              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = T),
+              jcf = stats::weighted.mean(jcf, Unit_Fraction, na.rm = T),
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
-              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
+              top20_share = stats::weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
   # Summary part of table
   table2 <-
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction),
-              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = T),
+              jcf = stats::weighted.mean(jcf, Unit_Fraction, na.rm = T),
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
-              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
+              top20_share = stats::weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     mutate(interval = "Total")
   
   rbind(table1, table2)

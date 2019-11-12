@@ -3,11 +3,11 @@
 language: r
 cache: packages
 
-addons:
-  apt:
-    packages:
-      - libxml2-dev
-      
+apt_packages:
+  - libxml2-dev
+
+r_build_args: --no-build-vignettes
+
 env:
   global:
     - R_PKG="$(basename $TRAVIS_REPO_SLUG)"

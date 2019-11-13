@@ -70,7 +70,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
               WoS_coverage = weighted.mean(!is.na(WebofScience_ID), Unit_Fraction, na.rm = T)) %>%
     ungroup()
 
-  dbDisconnect(con)
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   ret <- table1 %>% merge(table2) %>% merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type")
 
@@ -117,7 +117,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
               C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
     mutate(Publication_Year_ch = "Total")
 
-  dbDisconnect(con)
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
 
   bind_rows(table1, table2)
 }
@@ -184,7 +184,7 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
               top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     mutate(interval = "Total")
 
-  dbDisconnect(con)
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   rbind(table1, table2)
 }
@@ -234,7 +234,7 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     mutate(interval = "Total")
   
-  dbDisconnect(con)
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   rbind(table1, table2)
 }
@@ -286,7 +286,7 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
               int_share = mean(int, na.rm = T)) %>%
     mutate(interval = "Total")
   
-  dbDisconnect(con)
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   rbind(table1, table2)
 }
@@ -301,19 +301,19 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
 abm_dash_indices <- function(con = con_bib(), unit_code){
   
   # Fetch table 1 for total number of publications and lastyear
-  t1 <- abm_table1(unit_code = unit_code)
+  t1 <- abm_table1(con = con, unit_code = unit_code)
   lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
 
   # Fetch table 3 for cf and top10
-  t3 <- abm_table3(unit_code = unit_code) %>%
+  t3 <- abm_table3(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
   
   # Fetch table 4 for jcf and top20
-  t4 <- abm_table4(unit_code = unit_code) %>%
+  t4 <- abm_table4(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
   # Fetch table 5 for non-univ and international copublications
-  t5 <- abm_table5(unit_code = unit_code) %>%
+  t5 <- abm_table5(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
   
@@ -347,7 +347,7 @@ unit_info <- function(con = con_bib(), unit, level, parent){
   if(!missing(parent))
     res <- res %>% filter(parent_org_id %in% parent)
   
-  dbDisconnect(con)
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   res
 }

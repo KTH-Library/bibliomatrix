@@ -20,7 +20,6 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
   res
 }
 
-
 #' Get order of publication type for ABM table 1
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -38,18 +37,12 @@ get_pt_ordning <- function(con = con_bib()){
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return data frame with publications by type and year
 #' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
 #' @export
-
 abm_table1 <- function(con = con_bib(), unit_code, pub_year){
-  # ToDo:
-  # - Giving con to abm_data gives error message (external pointer is not valid) - fix that!
-  # - Fetch publication type sort order from somewhere (should probably just keep a small table in DB)
-  # - collect() when?
-  # - Return reasonable field names
-  # - Return reasonable formats (for example WoS_coverage as percentage)
 
   # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
@@ -61,7 +54,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction)) %>%
     pivot_wider(names_from = Publication_Year, values_from = P_frac) %>%
     ungroup()
-
+  
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -71,10 +64,12 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     ungroup()
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)
-  
-  ret <- table1 %>% merge(table2) %>% merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type")
 
-  ret %>% arrange(pt_ordning) %>% select(-pt_ordning)
+  table1 %>%
+    merge(table2) %>%
+    merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
+    arrange(pt_ordning) %>%
+    select(-pt_ordning)
 }
 
 #' Retrieve Table 2 (Citations 3-year window) for ABM
@@ -88,11 +83,9 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 #' @export
 
 abm_table2 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
            Publication_Year < max(Publication_Year) - 1) %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
@@ -144,14 +137,13 @@ sliding_intervals <- function(first, last, width){
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return tibble with field normalized citations and number/share of top10 publications by 3 year interval
 #' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
 #' @export
 
 abm_table3 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
-  
+
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
              Publication_Year < max(Publication_Year) & 
              !is.na(cf)) %>%
@@ -186,7 +178,7 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)
   
-  rbind(table1, table2)
+  bind_rows(table1, table2)
 }
 
 #' Retrieve Table 4 (Journal impact) for ABM
@@ -196,14 +188,13 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
 #' @return tibble with field normalized journal citation score and number/share of publications in top20 journals
 #' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
 #' @export
 
 abm_table4 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
-  
+
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
     collect()
   if(!missing(pub_year))
@@ -236,7 +227,7 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
   
   if (!"Pool" %in% class(con)) dbDisconnect(con)
   
-  rbind(table1, table2)
+  bind_rows(table1, table2)
 }
 
 #' Retrieve Table 5 (Co-publishing) for ABM
@@ -249,11 +240,9 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
 #' @export
 
 abm_table5 <- function(con = con_bib(), unit_code, pub_year){
-  # Todo:
-  # - See abm_table1 above
-  
+
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(unit_code = unit_code) %>%
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
     collect()
   if(!missing(pub_year))
@@ -288,7 +277,7 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
   
   if (!"Pool" %in% class(con)) dbDisconnect(con)
   
-  rbind(table1, table2)
+  bind_rows(table1, table2)
 }
 
 #' Retrieve dashboard indicators for ABM
@@ -316,7 +305,8 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
   t5 <- abm_table5(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
-  
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
+
   list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
        cf = t3$cf,
        top10_share = t3$top10_share,
@@ -337,7 +327,7 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
 #' @export
 
 unit_info <- function(con = con_bib(), unit, level, parent){
-  # ToDo: Make possible to select on Diva_org_id
+  # ToDo: Make possible to select on Diva_org_id (and possibly some catch-all search)
 
   res <- con %>% tbl("abm_org_info") %>% collect()
   if(!missing(level))
@@ -357,10 +347,9 @@ unit_info <- function(con = con_bib(), unit, level, parent){
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
 #' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
-#' @return tibble with publication list for selected unit
+#' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-
 abm_publications <- function(con = con_bib(), unit_code, pub_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
@@ -368,5 +357,12 @@ abm_publications <- function(con = con_bib(), unit_code, pub_year){
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
-  orgdata %>% select(-c("w_subj", "Unit_Fraction_adj", "level")) %>% collect()
+  ret <- orgdata %>% select(-c("w_subj", "Unit_Fraction_adj", "level")) %>% collect()
+  
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
+
+  ret
 }
+  
+  
+  

@@ -2,7 +2,7 @@
 % Please edit documentation in R/db.R
 \name{pool_bib}
 \alias{pool_bib}
-\title{Connection to Bibliometrics data source for KTH}
+\title{Connection pool to Bibliometrics data source for KTH}
 \usage{
 pool_bib(source_type = c("mssql", "sqlite"))
 }

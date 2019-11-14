@@ -4,8 +4,11 @@
 \alias{db_sync}
 \title{Sync the MS SQL Server database BIBMON to a local SQLite3 db}
 \usage{
-db_sync(tables_included, tables_excluded = c("Document"),
-  overwrite_existing = FALSE)
+db_sync(
+  tables_included,
+  tables_excluded = c("Document"),
+  overwrite_existing = FALSE
+)
 }
 \arguments{
 \item{tables_included}{a vector of table names in the source db to be 

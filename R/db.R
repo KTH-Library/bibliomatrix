@@ -32,12 +32,30 @@ con_bib_mssql <- function()
     stop("Please use an .Renviron with these envvars set", paste(envvars))
   }
   
-  dbConnect(
-    odbc(), driver = "ODBC Driver 17 for SQL Server", Port = 1433,
-    server = Sys.getenv("DBHOST"), database = Sys.getenv("DBNAME"),  
-    UID = Sys.getenv("DBUSER"), PWD = Sys.getenv("DBPASS"),
-    timeout = 30
-  )
+  if(startsWith(Sys.getenv("OS"), "Windows")) {
+    # encoding Windows-1252 curiously gives neat UTF-8 output from DB on Windows
+    # (while encoding UTF-8 does not)
+    dbConnect(
+      odbc(),
+      driver = "ODBC Driver 17 for SQL Server",
+      Port = 1433,
+      server = Sys.getenv("DBHOST"),
+      database = Sys.getenv("DBNAME"),
+      UID = Sys.getenv("DBUSER"),
+      PWD = Sys.getenv("DBPASS"),
+      timeout = 30,
+      encoding = "Windows-1252")
+  } else {
+    dbConnect(
+      odbc(),
+      driver = "ODBC Driver 17 for SQL Server",
+      Port = 1433,
+      server = Sys.getenv("DBHOST"),
+      database = Sys.getenv("DBNAME"),
+      UID = Sys.getenv("DBUSER"),
+      PWD = Sys.getenv("DBPASS"),
+      timeout = 30)
+  }
 }
 
 #' Connection to Bibliometrics data source for KTH using SQLite3 db
@@ -261,4 +279,99 @@ db_sync <- function(
 #' @import rappdirs
 db_sqlite_location <- function() {
   file.path(rappdirs::app_dir("bibmon")$config(), "bibmon.db")
+}
+
+#' Connection pool to Bibliometrics data source for KTH
+#' 
+#' This function returns a db connection to one of two possible pre-configured
+#' data sources containing Bibliometrics data
+#' 
+#' @param source_type one of "mssql" or "sqlite" with "mssql" being default
+#' @return database connection
+#' @export
+pool_bib <- function(source_type = c("mssql", "sqlite"))
+{
+  type <- match.arg(source_type)
+  switch(type,
+         mssql = pool_bib_mssql(),
+         sqlite = pool_bib_sqlite()
+  )
+}
+
+#' Connection pool to Bibliometrics data source for KTH using MS SQL Server db
+#' 
+#' This function relies on an .Renviron file with environment variables for 
+#' a connection to the MS SQL Server data source. Make sure one exists and 
+#' that variables are set for: DBHOST, DBNAME, DBUSER, DBPASS
+#' 
+#' @import DBI odbc pool
+#' @noRd
+pool_bib_mssql <- function() {
+  envvars <- c("DBHOST", "DBNAME", "DBUSER", "DBPASS")
+  
+  if (any(Sys.getenv(envvars) == "")) {
+    message("Do you have an .Renviron file at: ", normalizePath("~/.Renviron"), "?")
+    stop("Please use an .Renviron with these envvars set", paste(envvars))
+  }
+  
+  if(startsWith(Sys.getenv("OS"), "Windows")) {
+    # encoding Windows-1252 curiously gives neat UTF-8 output from DB on Windows
+    # (while encoding UTF-8 does not)
+    dbPool(
+      odbc(),
+      driver = "ODBC Driver 17 for SQL Server",
+      Port = 1433,
+      server = Sys.getenv("DBHOST"),
+      database = Sys.getenv("DBNAME"),
+      UID = Sys.getenv("DBUSER"),
+      PWD = Sys.getenv("DBPASS"),
+      timeout = 30,
+      encoding = "Windows-1252")
+  } else {
+    dbPool(
+      odbc(),
+      driver = "ODBC Driver 17 for SQL Server",
+      Port = 1433,
+      server = Sys.getenv("DBHOST"),
+      database = Sys.getenv("DBNAME"),
+      UID = Sys.getenv("DBUSER"),
+      PWD = Sys.getenv("DBPASS"),
+      timeout = 30)
+  }
+}
+
+#' Connection pool to Bibliometrics data source for KTH using SQLite3 db
+#' 
+#' This function relies on a "bibmon.db" file being present in the relevant application
+#' directory for a connection to the SQLite3 data source.
+#' 
+#' @import DBI RSQLite rappdirs pool
+#' @importFrom rappdirs app_dir
+#' @noRd
+pool_bib_sqlite <- function(create = FALSE, overwrite = FALSE) {
+  db_path <- db_sqlite_location()
+  
+  if (!file.exists(db_path) & !create) 
+    stop("No sqlite3 db available at ", db_path)
+  
+  if (file.exists(db_path) & create & !overwrite)
+    stop("A file exists at ", db_path, ", use `overwrite` = TRUE to overwrite it.")
+  
+  if (file.exists(db_path) & create & overwrite) {
+    message("Deleting database at ", db_path, ", creating new empty database there.")
+    unlink(db_path)
+  }
+  
+  if (!file.exists(dirname(db_path)) & create) {
+    message("Creating local dir for sqlit3 db at ", dirname(db_path))
+    dir.create(dirname(db_path), recursive = TRUE, showWarnings = FALSE)
+  }
+  sqliteflag <- if (create) RSQLite::SQLITE_RWC else RSQLite::SQLITE_RW
+
+  dbPool(
+    drv = RSQLite::SQLite(),
+    dbname = db_path,
+    synchronous = "normal",
+    flags = sqliteflag
+  )
 }

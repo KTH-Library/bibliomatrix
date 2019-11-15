@@ -23,4 +23,12 @@ use_package("curl")
 
 pkgdown::build_site()
 
-# TODO
+# Travis CI
+
+remotes::install_github("ropenscilabs/travis")
+
+library(travis)
+
+travis_enable()
+
+use_travis_deploy()

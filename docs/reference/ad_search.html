@@ -157,20 +157,9 @@ curl --ntlm -user $CREDS \
 ldaps://ldap.foo.com/DC=ads,DC=foo,DC=com?memberOf?sub?(&amp;(sAMAccountName=$USER)(memberOf=CN=$GROUP,OU=Distribution,OU=Groups,DC=ads,DC=foo,DC=com))"</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>ad_search</span>(<span class='st'>"markussk"</span>, <span class='st'>"accountname"</span>)</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 113 x 2</span><span>
-#&gt;    key         value                                                            
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>       </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                                                            
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span> DN          CN=Markus Skyttner (markussk),OU=OTHER,OU=USERS,OU=UG,DC=ug,DC=k…
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span> objectClass top                                                              
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span> objectClass person                                                           
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span> objectClass organizationalPerson                                             
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span> objectClass user                                                             
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span> cn          Markus Skyttner (markussk)                                       
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span> sn          Skyttner                                                         
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span> c           SE                                                               
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span> l           Stockholm                                                        
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span> st          Stockholm                                                        
-#&gt; </span><span style='color: #949494;'># … with 103 more rows</span><span></div></span></pre>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'>ad_search</span>(<span class='st'>"markussk"</span>, <span class='st'>"accountname"</span>)
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

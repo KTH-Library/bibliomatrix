@@ -26,5 +26,7 @@ curl --ntlm -user $CREDS \\
 ldaps://ldap.foo.com/DC=ads,DC=foo,DC=com?memberOf?sub?(&(sAMAccountName=$USER)(memberOf=CN=$GROUP,OU=Distribution,OU=Groups,DC=ads,DC=foo,DC=com))"
 }
 \examples{
+\dontrun{
 ad_search("markussk", "accountname")
+}
 }

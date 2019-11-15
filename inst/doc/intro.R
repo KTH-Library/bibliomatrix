@@ -1,31 +1,10 @@
----
-title: "Introduction to usage of `bibliomatrix`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{intro}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
-```{r, include = FALSE}
+## ---- include = FALSE----------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
 
-The `bibliomatrix` package offers functions to access data from different sources:
-
-- relational databases (Microsoft SQL Server and SQLite3)
-- LDAP / Active Directory
-- other data sources (mostly from web APIs)
-
-## Getting started
-
-First load some useful packages, including `bibliomatrix`:
-
-
-```{r setup, message=FALSE}
+## ----setup, message=FALSE------------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 library(stringr)
@@ -35,15 +14,8 @@ library(bench)
 
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
-```
 
-## Data for Annual Bibliometric Monitoring
-
-In order to get data from the Microsoft SQL Server database, an `.Renviron` file is currently required with values being provided for the following envvars: `DBUSER` (the MSSQL Server service account name for the BIBMON db), `DBPASS`, `DBHOST` (the hostname for the MSSQL server) and `DBNAME` (use "BIBMON").
-
-Once this has been provided in the `.Renviron` file, data for the first table in the Annual Bibiliometric Monitoring report can be retrieved:
-
-```{r, message=FALSE, fig.align='left'}
+## ---- message=FALSE, fig.align='left'------------------------------------
 
 # get data from the default data source (Microsoft SQL Server BIBMON database)
 t1 <- abm_tab1()
@@ -66,13 +38,8 @@ identical(src1, src2)
 bench_time(abm_tab1(con = con_bib("mssql")))
 bench_time(abm_tab1(con = con_bib("sqlite")))
 
-```
 
-## Data from LDAP / Active Directory
-
-In order to get data from the Active Directory, an `.Renviron` file should be used with values being provided for the following envvars: `LDAP_USER` (service account name in LDAP for issuing queries with), `LDAP_PASS`, `LDAP_HOST` (the hostname for the LDAP server) and `LDAP_BASE` (for example "dc=ug,dc=kth,dc=se").
-
-```{r, fig.align='left'}
+## ---- fig.align='left'---------------------------------------------------
 # search Active Directory using an account name, return first 10 rows
 ad_search("markussk", "accountname") %>% head(10) %>% kable()
 
@@ -110,5 +77,4 @@ ad_memberof() %>%
 filter(str_starts(memberof, "aff")) %>%
 kable()
 
-```
 

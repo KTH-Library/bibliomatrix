@@ -1,8 +1,9 @@
 # Tests to check consistency of results between old ABM and new results
 #
-# 
+# Currently this is only testing the output from a single testing unit (unit_code), at a specified level (testlevel below)
+#
 
-testunit<<- "5857"  # "5851" 13604 5857
+testunit<<- "13604"  # "5851" 13604 5857
 testlevel<<- "dept" #"dept" school
 acc_tolerance<- 0.00001
 
@@ -93,13 +94,13 @@ test_that("Publ. volume test", {
       pivot_wider(names_from = Doc_Year, values_from = w_d_Sum) 
   
   ref_comp<- ref_raw %>% filter(is.na(Doc_Year)) %>% select(-"_TYPE_", -"_PAGE_", -"_TABLE_", -"Doc_Year", -"unit")
-  ref_full<- merge(test_piv,test2_comp, by="Publication_Type_DiVA")
+  ref_full<- merge(ref_piv,ref_comp, by="Publication_Type_DiVA")
   
   # Prepare calculated table
   calc_test<- abm_table1(unit_code=testunit)
   calc_sort<- calc_test %>% arrange(Publication_Type_DiVA)
   
-  comp_result<- all.equal(ref_test, calc_sort, ignore_row_order= TRUE, check.names=FALSE, tolerance=acc_tolerance)
+  comp_result<- all.equal(ref_full, calc_sort, ignore_row_order= TRUE, check.names=FALSE, tolerance=acc_tolerance)
   expect_true(comp_result)
 })
 

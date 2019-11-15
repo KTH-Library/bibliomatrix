@@ -3,7 +3,6 @@
 \docType{package}
 \name{bibliomatrix}
 \alias{bibliomatrix}
-\alias{bibliomatrix-package}
 \title{bibliomatrix}
 \description{
 bibliomatrix

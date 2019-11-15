@@ -4,7 +4,7 @@
 
 testunit<<- "13604"  # "5851" 13604 5857
 testlevel<<- "dept" #"dept" school
-acc_tolerance<- 0.00001
+acc_tolerance<- 0.001
 
 # Function to read reference data exported from previous ABM
 #----------------------------
@@ -67,10 +67,22 @@ test_that("jcf-test", {
   
 })
 
+# Test comparing co-publication table
+#----------------------------------
+test_that("co-pub test", {
+  
+  cols<- c("sp_label_year", "N", "swe_co_Sum", "swe_co_Mean", "int_Sum", "int_Mean")
+  refname= paste0("copub_glid_",testlevel,"_aggr")
+  
+  comp_result<- compare_ref(cols=cols, refname=refname, calctable=abm_table5)
+  expect_true(comp_result)
+  
+})
+
 # test_that("cf-test", {
 #   cols<- c("cf_label_year", "w_d_Sum", "cf_scxwo_Mean", "top10_scxwo_Sum", "top10_scxwo_Mean") #, "unit")
-#   ref<- abm_ref(table = paste0("cf_glid_",testlevel,"_frac_aggr"), unit_code=testunit)  %>% select(cols) %>% collect()
-#   calc<- abm_table3(unit_code=testunit)
+#   ref<- abm_ref(table = paste0("copub_glid_",testlevel,"_frac_aggr"), unit_code=testunit)  %>% select(cols) %>% collect()
+#   calc<- abm_table5(unit_code=testunit)
 #   #colnames(calc)<- cols # not needed with all(X == Y)
 # 
 #   ref_df<- as.data.frame(ref) # simpler for comparison 

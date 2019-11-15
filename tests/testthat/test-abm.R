@@ -2,9 +2,9 @@
 #
 # 
 
-testunit<<- "13604"  # "5851" 13604 5857
+testunit<<- "5857"  # "5851" 13604 5857
 testlevel<<- "dept" #"dept" school
-acc_tolerance<- 0.001
+acc_tolerance<- 0.00001
 
 # Function to read reference data exported from previous ABM
 #----------------------------
@@ -24,7 +24,7 @@ compare_ref<- function(cols, refname, calctable){
   calc_df<- as.data.frame(calc)
   
   i<- sapply(calc_df, is.factor)
-  calc_df[i]<- lapply(calc_df[i], as.character)
+  calc_df[i]<- invisible(lapply(calc_df[i], as.character, war)) # invisible to supress warnings for character conversion
   all.equal(ref_df, calc_df, check.names=FALSE, tolerance=acc_tolerance)
   
 }
@@ -77,6 +77,30 @@ test_that("co-pub test", {
   comp_result<- compare_ref(cols=cols, refname=refname, calctable=abm_table5)
   expect_true(comp_result)
   
+})
+
+
+# Test comparing Diva table
+#
+# This is not using the compare_ref() function above, since this table needs some special wrangling before 
+# comparisons.
+#----------------------------------
+test_that("Publ. volume test", {
+  #Prepare reference table - must be pivoted and merged due to structure
+  ref_raw<- abm_ref(table = paste0("publ_",testlevel,"_frac_aggr"), unit_code=testunit)  %>% collect()
+  ref_piv<- ref_raw %>% select(-"_TYPE_", -"_PAGE_", -"_TABLE_", -"wos_coverage_Mean", -"unit") %>% 
+      filter(!is.na(Doc_Year)) %>% 
+      pivot_wider(names_from = Doc_Year, values_from = w_d_Sum) 
+  
+  ref_comp<- ref_raw %>% filter(is.na(Doc_Year)) %>% select(-"_TYPE_", -"_PAGE_", -"_TABLE_", -"Doc_Year", -"unit")
+  ref_full<- merge(test_piv,test2_comp, by="Publication_Type_DiVA")
+  
+  # Prepare calculated table
+  calc_test<- abm_table1(unit_code=testunit)
+  calc_sort<- calc_test %>% arrange(Publication_Type_DiVA)
+  
+  comp_result<- all.equal(ref_test, calc_sort, ignore_row_order= TRUE, check.names=FALSE, tolerance=acc_tolerance)
+  expect_true(comp_result)
 })
 
 # test_that("cf-test", {

@@ -3,6 +3,10 @@
 # Currently this is only testing the output from a single testing unit (unit_code), at a specified level (testlevel below)
 #
 
+# Set this flag to FALSE when testing locally, leave TRUE to skip these tests on Travis
+# since Travis does not have access to closed data sources
+skip_db_tests <- TRUE
+
 testunit<<- "13604"  # "5851" 13604 5857
 testlevel<<- "dept" #"dept" school
 acc_tolerance<- 0.00001
@@ -34,6 +38,7 @@ compare_ref<- function(cols, refname, calctable){
 # Test comparing cf
 #-----------------------
 test_that("cf-test", {
+  skip_if(skip_db_tests, "skipping (we may be the test without access to the data source")
   cols<- c("cf_label_year", "w_d_Sum", "cf_scxwo_Mean", "top10_scxwo_Sum", "top10_scxwo_Mean")
   refname= paste0("cf_glid_",testlevel,"_frac_aggr")
   
@@ -46,6 +51,8 @@ test_that("cf-test", {
 # Test comparing c3-table
 #----------------------------------
 test_that("c3-test", {
+  
+  skip_if(skip_db_tests, "skipping (we may be the test without access to the data source")
   
   cols<- c("publication_year", "p_frac_Sum", "c3_frac_Sum", "c3_frac_mean_Sum")
   refname= paste0("c3_",testlevel,"_frac_aggr")
@@ -60,6 +67,8 @@ test_that("c3-test", {
 #----------------------------------
 test_that("jcf-test", {
   
+  skip_if(skip_db_tests, "skipping (we may be the test without access to the data source")
+  
   cols<- c("jrv_label_year", "Pfrac_Sum", "jrv_mean_frac_Sum", "top20_sum_frac_Sum", "top20_mean_frac_Sum")
   refname= paste0("jcf_glid_",testlevel,"_frac_aggr")
   
@@ -71,6 +80,8 @@ test_that("jcf-test", {
 # Test comparing co-publication table
 #----------------------------------
 test_that("co-pub test", {
+  
+  skip_if(skip_db_tests, "skipping (we may be the test without access to the data source")
   
   cols<- c("sp_label_year", "N", "swe_co_Sum", "swe_co_Mean", "int_Sum", "int_Mean")
   refname= paste0("copub_glid_",testlevel,"_aggr")
@@ -87,6 +98,9 @@ test_that("co-pub test", {
 # comparisons.
 #----------------------------------
 test_that("Publ. volume test", {
+  
+  skip_if(skip_db_tests, "skipping (we may be the test without access to the data source")
+  
   #Prepare reference table - must be pivoted and merged due to structure
   ref_raw<- abm_ref(table = paste0("publ_",testlevel,"_frac_aggr"), unit_code=testunit)  %>% collect()
   ref_piv<- ref_raw %>% select(-"_TYPE_", -"_PAGE_", -"_TABLE_", -"wos_coverage_Mean", -"unit") %>% 

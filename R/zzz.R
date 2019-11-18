@@ -19,7 +19,7 @@ globalz <- "
     org_level parent_org_id pt_ordning pt_ordning.x pt_ordning.y
     skola_namn swe_nuniv unit unit_code unit_id unit_long unit_long_eng
     unit_long_swe unit_sort value w_d_Sum w_d_Sum_NA w_unit wos_coverage
-    wos_coverage_Mean wos_coverage_NA
+    wos_coverage_Mean wos_coverage_NA Doc_id wos_bin
 "
 
 # HACK: add global fcns / vars with spaces in the name

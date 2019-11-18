@@ -1,0 +1,48 @@
+---
+title: "Annual Bibliometric Monitoring 2018 - KTH"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    favicon: kth-logo.png
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(bibliomatrix)
+library(flexdashboard)
+library(purrr)
+library(dplyr)
+
+```
+
+Overview
+===========================
+
+
+```{r}
+library(collapsibleTree)
+
+df <- 
+  unit_info() %>% 
+  mutate(unit_long_en = if_else(!is.na(unit_short), unit_short, unit_long_en))
+
+# add parent_org_id's long name
+p_unit_long_en <- 
+  df  %>%
+  left_join(df, by = c("parent_org_id" = "Diva_org_id")) %>%
+  select(unit_long_en.y) %>%
+  as_vector()
+
+kth_pal3 <- as.character(palette_kth(3))
+
+df2 <- 
+  df %>% mutate(p_unit_long_en = p_unit_long_en) %>%
+  select(p_unit_long_en, unit_long_en, org_level, Diva_org_id) %>%
+  mutate(kth_color = kth_pal3[org_level + 1]) %>%
+  mutate(html_content = sprintf("<a href='#'>Blaha</a>"))
+
+collapsibleTreeNetwork(df2, c("p_unit_long_en", "unit_long_en"), 
+   fill = "kth_color", collapsed = TRUE, attribute = "html_content", zoomable = FALSE)
+
+```

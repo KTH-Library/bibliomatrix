@@ -29,6 +29,8 @@ kable()
 
 # get data but explicitly specify the data source 
 src1 <- abm_tab1(con = con_bib("mssql"))
+
+db_sync()  ## sync a local sqlite3db with the remote source
 src2 <- abm_tab1(con = con_bib("sqlite"))
 
 # are the results the same?

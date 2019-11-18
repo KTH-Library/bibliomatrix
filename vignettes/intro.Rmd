@@ -56,8 +56,6 @@ arrange(desc(Total)) %>%
 kable()
 
 # get data but explicitly specify the data source
-#
-# NOTE: Section below is giving check/build_vignettes error, probably due to sqlite
 src1 <- abm_tab1(con = con_bib("mssql"))
 
 db_sync()  ## sync a local sqlite3db with the remote source
@@ -77,8 +75,6 @@ bench_time(abm_tab1(con = con_bib("sqlite")))
 In order to get data from the Active Directory, an `.Renviron` file should be used with values being provided for the following envvars: `LDAP_USER` (service account name in LDAP for issuing queries with), `LDAP_PASS`, `LDAP_HOST` (the hostname for the LDAP server) and `LDAP_BASE` (for example "dc=ug,dc=kth,dc=se").
 
 ```{r, fig.align='left'}
-# NOTE: This section is giving check/build_vignettes error, probably due to LDAP-user etc
-
 # search Active Directory using an account name, return first 10 rows
 ad_search("markussk", "accountname") %>% head(10) %>% kable()
 

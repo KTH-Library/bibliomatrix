@@ -27,7 +27,7 @@ select(1:2, "Total") %>%
 arrange(desc(Total)) %>% 
 kable()
 
-# get data but explicitly specify the data source 
+# get data but explicitly specify the data source
 src1 <- abm_tab1(con = con_bib("mssql"))
 
 db_sync()  ## sync a local sqlite3db with the remote source

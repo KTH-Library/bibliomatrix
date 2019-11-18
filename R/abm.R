@@ -43,6 +43,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%  # Wos coverage as calculated in old ÅBU
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
@@ -60,7 +61,7 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     orgdata %>%
     group_by(Publication_Type_DiVA) %>%
     summarise(P_frac = sum(Unit_Fraction),
-              WoS_coverage = weighted.mean(!is.na(WebofScience_ID), Unit_Fraction, na.rm = T)) %>%
+              WoS_coverage = weighted.mean(wos_bin, Unit_Fraction, na.rm = T)) %>%
     ungroup()
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)

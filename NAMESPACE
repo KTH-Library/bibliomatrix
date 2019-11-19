@@ -3,6 +3,7 @@
 export("%>%")
 export(abm_dash_indices)
 export(abm_data)
+export(abm_private_data)
 export(abm_public_data)
 export(abm_publications)
 export(abm_tab1)

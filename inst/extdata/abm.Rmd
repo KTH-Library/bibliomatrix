@@ -32,16 +32,16 @@ library(scales)
 
 colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
 
-demo_unit<- "KTH"
+run_unit<- params$unit_code #"KTH"
 
 # Retrieve result tables
-df_diva <- abm_table1(unit_code = demo_unit) 
-df_cit3y <- abm_table2(unit_code= demo_unit)
-df_cf <- abm_table3(unit_code= demo_unit)
-df_jcf <- abm_table4(unit_code= demo_unit)
-df_copub <- abm_table5(unit_code= demo_unit) 
+df_diva <- abm_table1(unit_code = run_unit) 
+df_cit3y <- abm_table2(unit_code= run_unit)
+df_cf <- abm_table3(unit_code= run_unit)
+df_jcf <- abm_table4(unit_code= run_unit)
+df_copub <- abm_table5(unit_code= run_unit) 
 
-#dfs<- abm_data(unit_code = demo_unit) %>% collect()
+#dfs<- abm_data(unit_code = run_unit) %>% collect()
 ```
 
 Overview
@@ -54,7 +54,7 @@ Row
 
 ```{r}
 total_pubs <- 
-  df_diva %>% select("2018") %>% sum %>% round(digits=1)
+  df_diva %>% select("2018") %>% sum(na.rm=TRUE) %>% round(digits=1)
   #dfs %>% pluck(1, 1) %>% summarize(total = sum(as.numeric(`2017`)))
 
 valueBox(
@@ -204,7 +204,7 @@ icon_download <- htmltools::attachDependencies(icon_download,
 # export to xlsx format, into tempdir so we can embed a file link
 
 # data that we want to export
-publications_kth <- abm_publications(unit_code = demo_unit)
+publications_kth <- abm_publications(unit_code = run_unit)
 
 #install.packages("openxlsx")
 library(openxlsx)

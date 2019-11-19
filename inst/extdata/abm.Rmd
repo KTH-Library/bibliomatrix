@@ -19,17 +19,27 @@ library(dplyr)
 library(ggplot2)
 library(bibliomatrix)
 library(tidyr)
+library(scales)
 
-if (!file.exists("pub.rda")) {
-  source("harvest_public.R")
-  dfs <- scrape()
-  write_rds(dfs, "pub.rda")
-}
-dfs <- read_rds("pub.rda")
+# if (!file.exists("pub.rda")) {
+#   source("harvest_public.R")
+#   dfs <- scrape()
+#   write_rds(dfs, "pub.rda")
+# }
+#dfs <- read_rds("pub.rda")
 
 colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
 
 demo_unit<- "KTH"
+
+# Retrieve result tables
+df_diva <- abm_table1(unit_code = demo_unit) 
+df_cit3y <- abm_table2(unit_code= demo_unit)
+df_cf <- abm_table3(unit_code= demo_unit)
+df_jcf <- abm_table4(unit_code= demo_unit)
+df_copub <- abm_table5(unit_code= demo_unit) 
+
+#dfs<- abm_data(unit_code = demo_unit) %>% collect()
 ```
 
 Overview
@@ -41,8 +51,9 @@ Row
 ### Total publications (fractionalized) {.value-box}
 
 ```{r}
-total_pubs <-
-  dfs %>% pluck(1, 1) %>% summarize(total = sum(as.numeric(`2017`)))
+total_pubs <- 
+  df_diva %>% select("2018") %>% sum %>% round(digits=1)
+  #dfs %>% pluck(1, 1) %>% summarize(total = sum(as.numeric(`2017`)))
 
 valueBox(
   value = total_pubs,
@@ -55,10 +66,10 @@ valueBox(
 ### Field-normalized citations {.value-box}
 
 ```{r}
-avg_cf <-
-  dfs %>% pluck(1, 3) %>% 
-  filter(Period == "2014-2016") %>%
-  pluck("cf")
+avg_cf <- as.numeric(df_cf[4,"cf"]) %>% round(digits=2)
+  #dfs %>% pluck(1, 3) %>% 
+  #filter(Period == "2014-2016") %>%
+  #pluck("cf")
 
 valueBox(
   value = avg_cf,
@@ -71,10 +82,10 @@ valueBox(
 ### Share top 10% publications {.value-box}
 
 ```{r}
-topten <-
-  dfs %>% pluck(1, 3) %>% 
-  filter(Period == "2014-2016") %>%
-  pluck("PTop10% Share")
+topten <- as.numeric(df_cf[4,"top10_share"]) %>% percent()
+  #dfs %>% pluck(1, 3) %>% 
+  #filter(Period == "2014-2016") %>%
+  #pluck("PTop10% Share")
 
 valueBox(
   value = topten,
@@ -87,10 +98,10 @@ valueBox(
 ### Journal citations (field normalized) {.value-box}
 
 ```{r}
-jcf <-
-  dfs %>% pluck(1, 4) %>% 
-  filter(Period == "2015-2017") %>%
-  pluck("Jcf frac")
+jcf <- as.numeric(df_jcf[4,"jcf"]) %>% round(digits=2)
+  #dfs %>% pluck(1, 4) %>% 
+  #filter(Period == "2015-2017") %>%
+  #pluck("Jcf frac")
 
 valueBox(
   value = jcf,
@@ -103,10 +114,10 @@ valueBox(
 ### Share top 20% journals {.value-box}
 
 ```{r}
-jcf <-
-  dfs %>% pluck(1, 4) %>% 
-  filter(Period == "2015-2017") %>%
-  pluck("Jtop20% share (frac)")
+jcf <- as.numeric(df_jcf[5,"top20_share"]) %>% percent()
+  #dfs %>% pluck(1, 4) %>% 
+  #filter(Period == "2015-2017") %>%
+  #pluck("Jtop20% share (frac)")
 
 valueBox(
   value = jcf,
@@ -119,10 +130,10 @@ valueBox(
 ### Co-publications with Swedish non-universities {.value-box}
 
 ```{r}
-copub_nonuni_swe <-
-  dfs %>% pluck(1, 5) %>% 
-  filter(Period == "2015-2017") %>%
-  pluck("Swe non-univ Share")
+copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
+  # dfs %>% pluck(1, 5) %>% 
+  # filter(Period == "2015-2017") %>%
+  # pluck("Swe non-univ Share")
 
 valueBox(
   value = copub_nonuni_swe,
@@ -135,10 +146,10 @@ valueBox(
 ### International co-publications {.value-box}
 
 ```{r}
-copub_int <-
-  dfs %>% pluck(1, 5) %>% 
-  filter(Period == "2015-2017") %>%
-  pluck("International Share")
+copub_int <- as.numeric(df_copub[5,"int_share"]) %>% percent()
+  # dfs %>% pluck(1, 5) %>% 
+  # filter(Period == "2015-2017") %>%
+  # pluck("International Share")
 
 valueBox(
   value = copub_int,
@@ -191,7 +202,7 @@ icon_download <- htmltools::attachDependencies(icon_download,
 # export to xlsx format, into tempdir so we can embed a file link
 
 # data that we want to export
-publications_kth <- abm_publications(unit_code = "KTH")
+publications_kth <- abm_publications(unit_code = demo_unit)
 
 #install.packages("openxlsx")
 library(openxlsx)
@@ -208,23 +219,22 @@ Publication list for KTH in Excel format
 Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
 
 
-Publications in DiVA - Fractionalized
+Publications in DiVA
 =====================================
+
+### Publication volume, fractionalized 
 
 ```{r}
 
+#my_locale <- readr::locale(decimal_mark = ".")
 
-
-my_locale <- readr::locale(decimal_mark = ".")
-
-my_parse_guess <- function(x)
-  readr::parse_guess(x, locale = my_locale, guess_integer = TRUE)
+#my_parse_guess <- function(x)
+#  readr::parse_guess(x, locale = my_locale, guess_integer = TRUE)
 # 
 # df <- 
 #   dfs %>% pluck(1, 1) %>% select(-c(1, 2)) %>%
 #   mutate_all(my_parse_guess)
 
-df_diva <- abm_table1(unit_code = demo_unit) 
 # %>% 
 #   select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
 #   mutate(Total = 0)
@@ -241,7 +251,7 @@ Row
 ---------------------
 
 ### Publication volume 
-```{r}
+```{r, fig.width=10, fig.height=5}
 df_diva_long<- df_diva %>% select(-"P_frac", -"WoS_coverage") %>%  gather("year", "value", -Publication_Type_DiVA) 
 
 p <- ggplot(data = df_diva_long,
@@ -252,12 +262,13 @@ print(p)
 
 ```
 
-### Web of Science-coverage
+### Web of Science coverage
 
-```{r}
+```{r, fig.width=8, fig.height=5}
 p <- ggplot(data = df_diva,
     aes(x =  Publication_Type_DiVA)) +
   geom_bar(aes(weight = WoS_coverage)) +
+  ylab("Web of Science coverage") +
   theme(axis.text.x = element_text(angle=60, hjust=1))
   
 print(p)
@@ -275,7 +286,6 @@ Row
 ###  Citations 3-year window
 
 ```{r}
-df_cit3y <- abm_table2(unit_code= demo_unit)
   # dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
   # mutate_all(my_parse_guess)
 
@@ -291,7 +301,7 @@ DT::datatable(df_cit3y, rownames = FALSE, options = list(
 ###  Field normalized citations - Fractionalized (3-year moving average)
 
 ```{r}
-df_cf <- abm_table3(unit_code= demo_unit)
+
   # dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
   # mutate_all(my_parse_guess)
 
@@ -312,6 +322,7 @@ Row
 p <- ggplot(data = df_cf,
     aes(x = interval, y = cf, group=1)) +
   geom_point() + 
+  #geom_hline(yintercept=1) +
   geom_line()
   
 print(p)
@@ -336,13 +347,12 @@ print(p)
 Journal impact
 =====================================
 
-3-year moving average
+### 3-year moving average
 
 Row
 ---------------------
 
 ```{r}
-df_jcf <- abm_table4(unit_code= demo_unit)
 #  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>%
 #  mutate_all(my_parse_guess)
 
@@ -350,6 +360,36 @@ DT::datatable(df_jcf, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
 ))
+```
+
+Row
+---------------------
+
+###  Field normalized journal indicator
+
+```{r}
+
+p <- ggplot(data = df_jcf,
+    aes(x = interval, y = jcf, group=1)) +
+  geom_point() + 
+  #geom_hline(yintercept=1) +
+  geom_line()
+  
+print(p)
+
+```
+
+
+### Journal Top-20% 
+
+```{r}
+
+p <- ggplot(data = df_jcf,
+    aes(x = interval, y = top20_share, group=1)) +
+  geom_point() + 
+  geom_line()
+print(p)
+
 ```
 
 Co-publishing
@@ -363,7 +403,6 @@ Row
 ### Internationally and with Swedish non-university organizations (3-year moving average)
 
 ```{r}
-df_copub <- abm_table5(unit_code= demo_unit) 
 #  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>%
 #  mutate_all(my_parse_guess)
 
@@ -373,9 +412,12 @@ DT::datatable(df_copub, rownames = FALSE, options = list(
 ))
 ```
 
+Row
+----------------------
+
 ### Graphs
 
-```{r}
+```{r, fig.width=9, fig.height=6}
 df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(indicator %in% c("int_share", "nonuniv_share"))
 
 p <- ggplot(data = df_copub_long,

@@ -88,7 +88,7 @@ abm_table2 <- function(con = con_bib(), unit_code, pub_year){
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
-           Publication_Year < max(Publication_Year) - 1) %>%
+           Publication_Year < max(Publication_Year, na.rm = TRUE) - 1) %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     collect()
   if(!missing(pub_year))
@@ -128,7 +128,7 @@ sliding_intervals <- function(first, last, width){
   starts <- seq(first, last - width + 1)
   interval <- paste0(starts, "-", starts + width - 1)
   
-  data.frame(interval = rep(interval, each = width), x = rep(starts, each = width) + rep(seq(0, width - 1), length(starts)))
+  data.frame(interval = rep(interval, each = width), x = rep(starts, each = width) + rep(seq(0, width - 1), length(starts)), stringsAsFactors = FALSE)
 }
 
 #' Retrieve Table 3 (Field normalized citations) for ABM
@@ -146,7 +146,7 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
-             Publication_Year < max(Publication_Year) & 
+             Publication_Year < max(Publication_Year, na.rm = TRUE) & 
              !is.na(cf)) %>%
     collect()
   if(!missing(pub_year))

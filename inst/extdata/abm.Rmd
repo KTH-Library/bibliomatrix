@@ -8,6 +8,8 @@ output:
     source_code: embed
 params:
   kthid: u1o2ujjd
+  unit_code: KTH
+  
 ---
 
 ```{r setup, include=FALSE}
@@ -347,10 +349,10 @@ print(p)
 Journal impact
 =====================================
 
-### 3-year moving average
-
 Row
 ---------------------
+
+### 3-year moving average
 
 ```{r}
 #  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>%

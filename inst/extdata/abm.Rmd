@@ -1,5 +1,5 @@
 ---
-title: "Annual Bibliometric Monitoring 2018 - KTH"
+title: "ABM"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -23,23 +23,40 @@ library(bibliomatrix)
 library(tidyr)
 library(scales)
 
-# if (!file.exists("pub.rda")) {
-#   source("harvest_public.R")
-#   dfs <- scrape()
-#   write_rds(dfs, "pub.rda")
-# }
-#dfs <- read_rds("pub.rda")
-
-colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
-
+#colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
+colors_vb <- palette_kth(4)
 run_unit<- params$unit_code #"KTH"
 
+use_package_data <- TRUE
+
 # Retrieve result tables to use in tabs and key indicators
-df_diva <- abm_table1(unit_code = run_unit) 
-df_cit3y <- abm_table2(unit_code= run_unit)
-df_cf <- abm_table3(unit_code= run_unit)
-df_jcf <- abm_table4(unit_code= run_unit)
-df_copub <- abm_table5(unit_code= run_unit) 
+
+if (!use_package_data) {
+  df_diva <- abm_table1(unit_code = run_unit) 
+  df_cit3y <- abm_table2(unit_code= run_unit)
+  df_cf <- abm_table3(unit_code= run_unit)
+  df_jcf <- abm_table4(unit_code= run_unit)
+  df_copub <- abm_table5(unit_code= run_unit) 
+} else {
+  df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
+  df_cit3y <- pluck(abm_public_kth$units, params$unit_code, 2)
+  df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
+  df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
+  df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
+}
+
+round_df <- function(x) {
+  x <- x %>% mutate_if(is.numeric, function(x) round(x, digits=2))
+  x
+}
+
+res <- map(list(df_diva, df_cit3y, df_cf, df_jcf, df_copub), round_df)
+
+df_diva <- res %>% pluck(1)
+df_cit3y <- res %>% pluck(2)
+df_cf <- res %>% pluck(3)
+df_jcf <- res %>% pluck(4)
+df_copub <- res %>% pluck(5)
 
 #dfs<- abm_data(unit_code = run_unit) %>% collect()
 ```
@@ -174,33 +191,33 @@ Row
 
 ```{r, echo=FALSE, out.height="60px"}
 
-embed_data <- function(path)
-  paste0("data:", mime::guess_type(path), ";base64,", base64enc::base64encode(path))
-
-embed_file_link <- function(path, 
-  href = embed_data(path), 
-  name = basename(path),
-  text = paste("Download", name), ...) {
-  htmltools::a(text, href = href, download = name, ...)
-}
-
-icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
-icon_download <- htmltools::attachDependencies(icon_download, 
-  flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
-
-# export to xlsx format, into tempdir so we can embed a file link
-
-# data that we want to export
-publications_kth <- abm_publications(unit_code = run_unit)
-
-#install.packages("openxlsx")
-library(openxlsx)
-excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
-write.xlsx(publications_kth, excel_file)
-
-embed_file_link(excel_file, 
-  title = "Download Publication List in Excel format",
-  text = icon_download, class="btn btn-primary")
+# embed_data <- function(path)
+#   paste0("data:", mime::guess_type(path), ";base64,", base64enc::base64encode(path))
+# 
+# embed_file_link <- function(path, 
+#   href = embed_data(path), 
+#   name = basename(path),
+#   text = paste("Download", name), ...) {
+#   htmltools::a(text, href = href, download = name, ...)
+# }
+# 
+# icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
+# icon_download <- htmltools::attachDependencies(icon_download, 
+#   flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
+# 
+# # export to xlsx format, into tempdir so we can embed a file link
+# 
+# # data that we want to export
+# publications_kth <- abm_publications(unit_code = run_unit)
+# 
+# #install.packages("openxlsx")
+# library(openxlsx)
+# excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
+# write.xlsx(publications_kth, excel_file)
+# 
+# embed_file_link(excel_file, 
+#   title = "Download Publication List in Excel format",
+#   text = icon_download, class="btn btn-primary")
 
 ```
 Publication list for KTH in Excel format

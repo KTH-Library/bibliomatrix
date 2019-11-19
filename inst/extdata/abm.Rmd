@@ -34,7 +34,7 @@ colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
 
 run_unit<- params$unit_code #"KTH"
 
-# Retrieve result tables
+# Retrieve result tables to use in tabs and key indicators
 df_diva <- abm_table1(unit_code = run_unit) 
 df_cit3y <- abm_table2(unit_code= run_unit)
 df_cf <- abm_table3(unit_code= run_unit)
@@ -55,7 +55,6 @@ Row
 ```{r}
 total_pubs <- 
   df_diva %>% select("2018") %>% sum(na.rm=TRUE) %>% round(digits=1)
-  #dfs %>% pluck(1, 1) %>% summarize(total = sum(as.numeric(`2017`)))
 
 valueBox(
   value = total_pubs,
@@ -85,9 +84,6 @@ valueBox(
 
 ```{r}
 topten <- as.numeric(df_cf[4,"top10_share"]) %>% percent()
-  #dfs %>% pluck(1, 3) %>% 
-  #filter(Period == "2014-2016") %>%
-  #pluck("PTop10% Share")
 
 valueBox(
   value = topten,
@@ -101,9 +97,6 @@ valueBox(
 
 ```{r}
 jcf <- as.numeric(df_jcf[4,"jcf"]) %>% round(digits=2)
-  #dfs %>% pluck(1, 4) %>% 
-  #filter(Period == "2015-2017") %>%
-  #pluck("Jcf frac")
 
 valueBox(
   value = jcf,
@@ -117,9 +110,6 @@ valueBox(
 
 ```{r}
 jcf <- as.numeric(df_jcf[5,"top20_share"]) %>% percent()
-  #dfs %>% pluck(1, 4) %>% 
-  #filter(Period == "2015-2017") %>%
-  #pluck("Jtop20% share (frac)")
 
 valueBox(
   value = jcf,
@@ -133,9 +123,6 @@ valueBox(
 
 ```{r}
 copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
-  # dfs %>% pluck(1, 5) %>% 
-  # filter(Period == "2015-2017") %>%
-  # pluck("Swe non-univ Share")
 
 valueBox(
   value = copub_nonuni_swe,
@@ -228,6 +215,9 @@ Publications in DiVA
 
 ```{r}
 
+# All main tables are now retrieved at the top, and later used in tabs
+#------------------------------------------
+
 #my_locale <- readr::locale(decimal_mark = ".")
 
 #my_parse_guess <- function(x)
@@ -254,6 +244,8 @@ Row
 
 ### Publication volume 
 ```{r, fig.width=10, fig.height=5}
+
+# create long format to better fit ggplot
 df_diva_long<- df_diva %>% select(-"P_frac", -"WoS_coverage") %>%  gather("year", "value", -Publication_Type_DiVA) 
 
 p <- ggplot(data = df_diva_long,
@@ -267,11 +259,12 @@ print(p)
 ### Web of Science coverage
 
 ```{r, fig.width=8, fig.height=5}
+
 p <- ggplot(data = df_diva,
     aes(x =  Publication_Type_DiVA)) +
-  geom_bar(aes(weight = WoS_coverage)) +
-  ylab("Web of Science coverage") +
-  theme(axis.text.x = element_text(angle=60, hjust=1))
+    geom_bar(aes(weight = WoS_coverage)) +
+    ylab("Web of Science coverage") +
+    theme(axis.text.x = element_text(angle=60, hjust=1))
   
 print(p)
 
@@ -288,6 +281,7 @@ Row
 ###  Citations 3-year window
 
 ```{r}
+
   # dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
   # mutate_all(my_parse_guess)
 
@@ -319,13 +313,14 @@ Row
 ###  Average field normalized citation indicator
 
 ```{r}
+
 #df_cf_long<- df_cf %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(!indicator %in% c("P_frac", "top10_count"))
 
 p <- ggplot(data = df_cf,
     aes(x = interval, y = cf, group=1)) +
-  geom_point() + 
-  #geom_hline(yintercept=1) +
-  geom_line()
+    geom_point() + 
+    #geom_hline(yintercept=1) +
+    geom_line()
   
 print(p)
 
@@ -338,8 +333,8 @@ print(p)
 
 p <- ggplot(data = df_cf,
     aes(x = interval, y = top10_share, group=1)) +
-  geom_point() + 
-  geom_line()
+    geom_point() + 
+    geom_line()
   
 print(p)
 
@@ -355,8 +350,8 @@ Row
 ### 3-year moving average
 
 ```{r}
-#  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>%
-#  mutate_all(my_parse_guess)
+
+#  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
 
 DT::datatable(df_jcf, rownames = FALSE, options = list(
   bPaginate = FALSE,
@@ -373,10 +368,10 @@ Row
 
 p <- ggplot(data = df_jcf,
     aes(x = interval, y = jcf, group=1)) +
-  geom_point() + 
-  #geom_hline(yintercept=1) +
-  geom_line()
-  
+    geom_point() + 
+    #geom_hline(yintercept=1) +
+    geom_line()
+    
 print(p)
 
 ```
@@ -388,8 +383,9 @@ print(p)
 
 p <- ggplot(data = df_jcf,
     aes(x = interval, y = top20_share, group=1)) +
-  geom_point() + 
-  geom_line()
+    geom_point() + 
+    geom_line()
+
 print(p)
 
 ```
@@ -405,8 +401,7 @@ Row
 ### Internationally and with Swedish non-university organizations (3-year moving average)
 
 ```{r}
-#  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>%
-#  mutate_all(my_parse_guess)
+#  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
 
 DT::datatable(df_copub, rownames = FALSE, options = list(
   bPaginate = FALSE,
@@ -420,12 +415,15 @@ Row
 ### Graphs
 
 ```{r, fig.width=9, fig.height=6}
-df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(indicator %in% c("int_share", "nonuniv_share"))
+
+df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% 
+                            filter(!interval == "Total") %>% 
+                            filter(indicator %in% c("int_share", "nonuniv_share"))
 
 p <- ggplot(data = df_copub_long,
     aes(x = interval, y = value, group=indicator)) +
-  geom_line(aes(color=indicator)) + 
-  geom_point(aes(color=indicator))
+    geom_line(aes(color=indicator)) + 
+    geom_point(aes(color=indicator))
   
 print(p)
 

@@ -237,6 +237,32 @@ DT::datatable(df_diva, rownames = FALSE, options = list(
 
 ```
 
+Row
+---------------------
+
+### Publication volume 
+```{r}
+df_diva_long<- df_diva %>% select(-"P_frac", -"WoS_coverage") %>%  gather("year", "value", -Publication_Type_DiVA) 
+
+p <- ggplot(data = df_diva_long,
+    aes(x = year)) +
+  geom_bar(aes(weight = value, fill = Publication_Type_DiVA)) 
+  
+print(p)
+
+```
+
+### Web of Science-coverage
+
+```{r}
+p <- ggplot(data = df_diva,
+    aes(x =  Publication_Type_DiVA)) +
+  geom_bar(aes(weight = WoS_coverage)) +
+  theme(axis.text.x = element_text(angle=60, hjust=1))
+  
+print(p)
+
+```
 
 Citation impact
 =====================================

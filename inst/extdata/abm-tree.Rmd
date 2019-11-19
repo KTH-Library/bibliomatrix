@@ -38,6 +38,7 @@ kth_pal3 <- as.character(palette_kth(3))
 
 df2 <- 
   df %>% mutate(p_unit_long_en = p_unit_long_en) %>%
+  # the order here is important - parent node id first, then child node id
   select(p_unit_long_en, unit_long_en, org_level, Diva_org_id) %>%
   mutate(kth_color = kth_pal3[org_level + 1]) %>%
   mutate(html_content = sprintf("<a href='#'>Blaha</a>"))

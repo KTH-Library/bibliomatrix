@@ -366,5 +366,85 @@ abm_publications <- function(con = con_bib(), unit_code, pub_year){
   ret
 }
   
+#' Public data from the Annual Bibliometric Monitoring project
+#' 
+#' This returns an object which contains data for the various higher 
+#' organizational units at KTH
+#' 
+#' Data is cached in a local application directory by default and
+#' is returned from there unless the parameter overwrite_cache is TRUE. 
+#' To get fresh data cached, specify this flag.
+#' 
+#' @param overwrite_cache logical (by default FALSE) specifying whether 
+#'   the cache should be refreshed
+#' @return a list with two slots - "meta" for organizational unit metadata info 
+#'   and "units" with a named list of results (set of 5 different tibbles for each of the units).
+#' @importFrom readr write_rds
+#' @importFrom purrr map
+#' @importFrom stats setNames
+#' @export
+#' @examples 
+#' \dontrun{
+#' 
+#' # get all public data from the ABM
+#' public <- abm_public_data()
+#' 
+#' # get public data specifically for KTH and table 1
+#' unit_kth <- public \%>\% pluck("units", "KTH", 1)
+#' 
+#' # get public data specifically for KTH and table 1
+#' unit_kth <- public \%>\% pluck("units", "KTH", 1)
+#' 
+#' # get public data for the school "I" and all five tables
+#' unit_i <- public \%>\% pluck("units", "I")
+#' 
+#' # get public data for the architecture institution, table 1
+#' uc <- public \%>\% pluck("meta") \%>\% 
+#'   filter(unit_long_en == "Architecture") \%>\% pull(unit_code)
+#'   
+#' public \%>\% pluck("units", uc, 1)
+#' }   
+abm_public_data <- function(overwrite_cache = FALSE) {
   
+  cache_location <- file.path(
+    rappdirs::app_dir("bibmon")$config(),
+    "public.rds"
+  )
   
+  # if cache exists and shouldn't be overwritten, return it
+  if (file.exists(cache_location) & !overwrite_cache)
+    return (readr::read_rds(cache_location))  
+  
+  # retrieve unit codes
+  units_table <- 
+    unit_info() %>%
+    collect() %>%
+    arrange(-desc(org_level)) 
+  
+  units <- 
+    units_table %>% 
+    select(unit_code) %>% 
+    pull(1)
+  
+  # for a unit, retrieve all abm tables
+  unit_tables <- function(x) {
+    tabs <- list(
+      abm_table1(unit_code = x),
+      abm_table2(unit_code = x),
+      abm_table3(unit_code = x),
+      abm_table4(unit_code = x),
+      abm_table5(unit_code = x)
+    )
+  }
+  
+  message("Patience, please. It takes a while to fetch the data into the cache.")
+  res <- map(units, unit_tables)
+  res <- setNames(res, units)
+  
+  out <- list("meta" = units_table, "units" = res)
+  
+  message("Updating cached data for public data at: ", cache_location)
+  readr::write_rds(out, cache_location) 
+
+  return(out)  
+}

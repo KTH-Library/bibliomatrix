@@ -12,7 +12,7 @@ abm_private_data(unit_code)
 \value{
 a list with two slots - "meta" for organizational unit metadata info 
   and "units" with a named list of results (set of 5 different tibbles for 
-  each of the units and the publication list).
+  the tables and also the publication list).
 }
 \description{
 This returns an object which contains data for an individual researcher at KTH
@@ -21,13 +21,13 @@ This returns an object which contains data for an individual researcher at KTH
 \dontrun{
 
 # get all public data from the ABM
-private <- abm_private_data("u1kzf1xh")
+private <- abm_private_data('u1kzf1xh')
 
 # get table 1 for the kthid
-private %>% pluck("units", "u1kzf1xh", 1)
+private \%>\% pluck('units', 'u1kzf1xh', 1)
 
 # get publications for the kthid
-private %>% pluck("units", "u1kzf1xh", "publications")
+private \%>\% pluck('units', 'u1kzf1xh', 'publications')
 
 }   
 }

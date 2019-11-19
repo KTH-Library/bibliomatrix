@@ -461,20 +461,20 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #' @param unit_code the kthid for the researcher
 #' @return a list with two slots - "meta" for organizational unit metadata info 
 #'   and "units" with a named list of results (set of 5 different tibbles for 
-#'   each of the units and the publication list).
+#'   the tables and also the publication list).
 #' @importFrom stats setNames
 #' @export
 #' @examples 
 #' \dontrun{
 #' 
 #' # get all public data from the ABM
-#' private <- abm_private_data("u1kzf1xh")
+#' private <- abm_private_data('u1kzf1xh')
 #' 
 #' # get table 1 for the kthid
-#' private %>% pluck("units", "u1kzf1xh", 1)
+#' private \%>\% pluck('units', 'u1kzf1xh', 1)
 #' 
 #' # get publications for the kthid
-#' private %>% pluck("units", "u1kzf1xh", "publications")
+#' private \%>\% pluck('units', 'u1kzf1xh', 'publications')
 #' 
 #' }   
 abm_private_data <- function(unit_code) {

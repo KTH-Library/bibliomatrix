@@ -19,8 +19,9 @@ use_data_raw()
 
 build_vignettes()
 file.copy("doc", "inst", recursive = TRUE)
-
 pkgdown::build_site()
+
+
 use_test("db")
 use_package("curl")
 

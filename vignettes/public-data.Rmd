@@ -1,0 +1,45 @@
+---
+title: "Using bundled data in `bibliomatrix`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{public-data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(bibliomatrix)
+library(dplyr)
+
+# get public data for ABM 2019 at KTH
+p <- abm_public_kth
+
+# table 1 (excluding some earlier years)
+tab1 <- p$units$KTH[[1]] %>% select(-c(as.character(2012:2017)))
+knitr::kable(tab1)
+
+# get summary data for KTH (summarizing the most important indicators)
+# this data can be presented for example as the first visible entry on a dashboard 
+p$units$KTH$summaries
+
+# unit codes
+p$meta$unit_code
+
+# unit code for Architecture
+uc_arch <- 
+  p$meta %>% 
+  select(unit_code, unit_long_en) %>% 
+  filter(unit_long_en == "Architecture") %>%
+  pull(unit_code)
+
+# table 5 for Architecture
+tab5 <- p$units[[uc_arch]][[5]]
+knitr::kable(tab5)
+```

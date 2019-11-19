@@ -433,7 +433,8 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       abm_table2(unit_code = x),
       abm_table3(unit_code = x),
       abm_table4(unit_code = x),
-      abm_table5(unit_code = x)
+      abm_table5(unit_code = x),
+      summaries = abm_dash_indices(con = pool_bib(), unit_code = x)
     )
   }
   

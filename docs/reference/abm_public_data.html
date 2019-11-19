@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Retrieve information about ABM units (level 0-2) — unit_info • bibliomatrix</title>
+<title>Public data from the Annual Bibliometric Monitoring project — abm_public_data • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,9 @@
 
 
 
-<meta property="og:title" content="Retrieve information about ABM units (level 0-2) — unit_info" />
-<meta property="og:description" content="Retrieve information about ABM units (level 0-2)" />
+<meta property="og:title" content="Public data from the Annual Bibliometric Monitoring project — abm_public_data" />
+<meta property="og:description" content="This returns an object which contains data for the various higher 
+organizational units at KTH" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,48 +121,71 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Retrieve information about ABM units (level 0-2)</h1>
+    <h1>Public data from the Annual Bibliometric Monitoring project</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
-    <div class="hidden name"><code>unit_info.Rd</code></div>
+    <div class="hidden name"><code>abm_public_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieve information about ABM units (level 0-2)</p>
+    <p>This returns an object which contains data for the various higher 
+organizational units at KTH</p>
     </div>
 
-    <pre class="usage"><span class='fu'>unit_info</span>(<span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(), <span class='no'>unit</span>, <span class='no'>level</span>, <span class='no'>parent</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_public_data</span>(<span class='kw'>overwrite_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>con</th>
-      <td><p>connection to db, default is to use mssql connection</p></td>
-    </tr>
-    <tr>
-      <th>unit</th>
-      <td><p>unit code(s) for selection</p></td>
-    </tr>
-    <tr>
-      <th>level</th>
-      <td><p>organizational level(s) for selection (0 = KTH, 1 = School, 2 = Department)</p></td>
-    </tr>
-    <tr>
-      <th>parent</th>
-      <td><p>selects organizations with specific parent(s)</p></td>
+      <th>overwrite_cache</th>
+      <td><p>logical (by default FALSE) specifying whether 
+the cache should be refreshed</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with information about selected units</p>
+    <p>a list with two slots - "meta" for organizational unit metadata info 
+  and "units" with a named list of results (set of 5 different tibbles for each of the units).</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>Data is cached in a local application directory by default and
+is returned from there unless the parameter overwrite_cache is TRUE. 
+To get fresh data cached, specify this flag.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+
+<span class='co'># get all public data from the ABM</span>
+<span class='no'>public</span> <span class='kw'>&lt;-</span> <span class='fu'>abm_public_data</span>()
+
+<span class='co'># get public data specifically for KTH and table 1</span>
+<span class='no'>unit_kth</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='fl'>1</span>)
+
+<span class='co'># get summary data for KTH</span>
+<span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='st'>"summaries"</span>)
+
+<span class='co'># get public data specifically for KTH and table 1</span>
+<span class='no'>unit_kth</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='fl'>1</span>)
+
+<span class='co'># get public data for the school "I" and all five tables</span>
+<span class='no'>unit_i</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"I"</span>)
+
+<span class='co'># get public data for the architecture institution, table 1</span>
+<span class='no'>uc</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"meta"</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='no'>unit_long_en</span> <span class='kw'>==</span> <span class='st'>"Architecture"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>pull</span>(<span class='no'>unit_code</span>)
+
+<span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='no'>uc</span>, <span class='fl'>1</span>)
+
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

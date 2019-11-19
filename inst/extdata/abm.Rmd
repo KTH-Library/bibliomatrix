@@ -18,6 +18,7 @@ library(purrr)
 library(dplyr)
 library(ggplot2)
 library(bibliomatrix)
+library(tidyr)
 
 if (!file.exists("pub.rda")) {
   source("harvest_public.R")
@@ -27,6 +28,8 @@ if (!file.exists("pub.rda")) {
 dfs <- read_rds("pub.rda")
 
 colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
+
+demo_unit<- "KTH"
 ```
 
 Overview
@@ -204,13 +207,9 @@ Publication list for KTH in Excel format
 
 Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
 
-Tables
+
+Publications in DiVA - Fractionalized
 =====================================
-
-Column {.tabset .tabset-fade}
------------------------------------------------------------------------
-
-### Publications in DiVA - Fractionalized
 
 ```{r}
 
@@ -225,11 +224,12 @@ my_parse_guess <- function(x)
 #   dfs %>% pluck(1, 1) %>% select(-c(1, 2)) %>%
 #   mutate_all(my_parse_guess)
 
-df <- abm_table1() %>% 
-  select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
-  mutate(Total = 0)
+df_diva <- abm_table1(unit_code = demo_unit) 
+# %>% 
+#   select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
+#   mutate(Total = 0)
 
-DT::datatable(df, rownames = FALSE, options = list(
+DT::datatable(df_diva, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
 ))
@@ -238,71 +238,136 @@ DT::datatable(df, rownames = FALSE, options = list(
 ```
 
 
-### Citations 3-year window
+Citation impact
+=====================================
+
+<!---Column {data-width=500}
+------------------------------------- --->
+Row
+---------------------
+
+###  Citations 3-year window
 
 ```{r}
-df2 <- 
-  dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
-  mutate_all(my_parse_guess)
+df_cit3y <- abm_table2(unit_code= demo_unit)
+  # dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
+  # mutate_all(my_parse_guess)
 
-DT::datatable(df2, rownames = FALSE, options = list(
+DT::datatable(df_cit3y, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
 ))
 ```
 
-### Citations - field normalized
+<!--- Column {data-width=500}
+------------------------------------- --->
 
-Fractionalized (3-year moving average)
+###  Field normalized citations - Fractionalized (3-year moving average)
 
 ```{r}
-df3 <- 
-  dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
-  mutate_all(my_parse_guess)
+df_cf <- abm_table3(unit_code= demo_unit)
+  # dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
+  # mutate_all(my_parse_guess)
 
-DT::datatable(df3, rownames = FALSE, options = list(
+DT::datatable(df_cf, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
 ))
 ```
 
-### Journal impact
+Row
+---------------------
+
+###  Average field normalized citation indicator
+
+```{r}
+#df_cf_long<- df_cf %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(!indicator %in% c("P_frac", "top10_count"))
+
+p <- ggplot(data = df_cf,
+    aes(x = interval, y = cf, group=1)) +
+  geom_point() + 
+  geom_line()
+  
+print(p)
+
+```
+
+
+### %Top-10% 
+
+```{r}
+
+p <- ggplot(data = df_cf,
+    aes(x = interval, y = top10_share, group=1)) +
+  geom_point() + 
+  geom_line()
+  
+print(p)
+
+```
+
+
+Journal impact
+=====================================
 
 3-year moving average
 
-```{r}
-df4 <- 
-  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>%
-  mutate_all(my_parse_guess)
+Row
+---------------------
 
-DT::datatable(df4, rownames = FALSE, options = list(
+```{r}
+df_jcf <- abm_table4(unit_code= demo_unit)
+#  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>%
+#  mutate_all(my_parse_guess)
+
+DT::datatable(df_jcf, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
 ))
 ```
 
-### Co-publishing
+Co-publishing
+=====================================
 
-Internationally and with Swedish non-university organizations (3-year moving average)
+
+
+Row
+---------------------
+
+### Internationally and with Swedish non-university organizations (3-year moving average)
 
 ```{r}
-df5 <- 
-  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>%
-  mutate_all(my_parse_guess)
+df_copub <- abm_table5(unit_code= demo_unit) 
+#  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>%
+#  mutate_all(my_parse_guess)
 
-DT::datatable(df5, rownames = FALSE, options = list(
+DT::datatable(df_copub, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
 ))
 ```
 
-Graphs
+### Graphs
+
+```{r}
+df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(indicator %in% c("int_share", "nonuniv_share"))
+
+p <- ggplot(data = df_copub_long,
+    aes(x = interval, y = value, group=indicator)) +
+  geom_line(aes(color=indicator)) + 
+  geom_point(aes(color=indicator))
+  
+print(p)
+
+```
+
+<!---Graphs
 =====================================
 
 Row
 -----------------------
 
-### DiVA publications
+### DiVA publications --->
 
 ```{r}
 

@@ -251,12 +251,14 @@ Row
 #   select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
 #   mutate(Total = 0)
 
-DT::datatable(df_diva, rownames = FALSE, options = list(
-  bPaginate = FALSE,
-  pageLength = 100,
-  dom = 't'
-))
-
+DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage", "DiVA publication type" = "Publication_Type_DiVA", "Total" = "P_frac"),
+              rownames = FALSE,
+              options = list(
+                bPaginate = FALSE,
+                pageLength = 100,
+                dom = 't')) %>%
+  formatRound(2:9, digits = 1, mark = "") %>%
+  formatPercentage("WoS coverage", digits = 1)
 
 ```
 

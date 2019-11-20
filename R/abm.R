@@ -617,6 +617,7 @@ abm_graph_copub <- function(df){
 #' Create waffle share over share of international copublications
 #' 
 #' @param df a data frame at the format produced by abm_table5()
+#' @param col a vector with colors for filling (optional)
 #' @return a ggplot object
 #' @import ggplot2 waffle dplyr
 #' @export
@@ -637,6 +638,7 @@ abm_waffle_copub_int <- function(df, col = c(as.character(palette_kth(1)), "#F6F
 #' Create waffle share over share of Swedish non-university copublications
 #' 
 #' @param df a data frame at the format produced by abm_table5()
+#' @param col a vector with colors for filling (optional)
 #' @return a ggplot object
 #' @import ggplot2 waffle dplyr
 #' @export

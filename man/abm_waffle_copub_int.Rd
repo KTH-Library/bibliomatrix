@@ -8,6 +8,8 @@ abm_waffle_copub_int(df, col = c(as.character(palette_kth(1)), "#F6F6F6"))
 }
 \arguments{
 \item{df}{a data frame at the format produced by abm_table5()}
+
+\item{col}{a vector with colors for filling (optional)}
 }
 \value{
 a ggplot object

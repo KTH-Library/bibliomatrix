@@ -508,4 +508,106 @@ abm_private_data <- function(unit_code) {
   return(out)  
 }
 
+#' Create graph over DiVA publication types by year
+#' 
+#' @param df a data frame at the format produced by abm_table1()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_diva <- function(df){
+  df_diva_long <- df %>%
+    select(-"P_frac", -"WoS_coverage") %>%
+    gather("year", "value", -Publication_Type_DiVA) %>%
+    left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+  
+  ggplot(data = df_diva_long,
+         aes(x = year)) +
+    geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
+    labs(x = NULL, y = NULL, fill = NULL) +
+    scale_fill_brewer(palette = "Set3")
+}
 
+#' Create graph over WoS coverage by year
+#' 
+#' @param df a data frame at the format produced by abm_table1()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_wos_coverage <- function(df){
+  df <- df %>% left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+  ggplot(data = df,
+         aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
+    geom_bar(aes(weight = WoS_coverage)) +
+    ylab("Web of Science coverage") +
+    coord_flip() +
+    theme(axis.text.x = element_text(angle=60, hjust=1))
+}
+
+#' Create graph over Cf by year
+#' 
+#' @param df a data frame at the format produced by abm_table3()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_cf <- function(df){
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = cf, group=1)) +
+    geom_point() + 
+    geom_line()
+}
+
+#' Create graph over Top 10\% publications by year
+#' 
+#' @param df a data frame at the format produced by abm_table3()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_top10 <- function(df){
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top10_share, group=1)) +
+    geom_point() + 
+    geom_line()
+}
+
+#' Create graph over jcf by year
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_jcf <- function(df){
+  ggplot(data = df_jcf %>% filter(!interval == "Total"),
+         aes(x = interval, y = jcf, group=1)) +
+    geom_point() + 
+    geom_line()
+}
+
+#' Create graph over Top 20\% journals by year
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_top20 <- function(df){
+  ggplot(data = df_jcf %>% filter(!interval == "Total"),
+         aes(x = interval, y = top20_share, group=1)) +
+    geom_point() + 
+    geom_line()
+}
+
+#' Create graph over international and Swedish non-university copublications by year
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_copub <- function(df){
+  df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% 
+    filter(!interval == "Total") %>% 
+    filter(indicator %in% c("int_share", "nonuniv_share"))
+  
+  ggplot(data = df_copub_long,
+         aes(x = interval, y = value, group=indicator)) +
+    geom_line(aes(color=indicator)) + 
+    geom_point(aes(color=indicator))
+}

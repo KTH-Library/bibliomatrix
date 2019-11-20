@@ -250,6 +250,7 @@ Publications in DiVA
 
 DT::datatable(df_diva, rownames = FALSE, options = list(
   bPaginate = FALSE,
+  pageLength = 100,
   dom = 't'
 ))
 
@@ -261,30 +262,13 @@ Row
 
 ### Publication volume 
 ```{r, fig.width=10, fig.height=5}
-
-# create long format to better fit ggplot
-df_diva_long<- df_diva %>% select(-"P_frac", -"WoS_coverage") %>%  gather("year", "value", -Publication_Type_DiVA) 
-
-p <- ggplot(data = df_diva_long,
-    aes(x = year)) +
-  geom_bar(aes(weight = value, fill = Publication_Type_DiVA)) 
-  
-print(p)
-
+abm_graph_diva(df_diva)
 ```
 
 ### Web of Science coverage
 
 ```{r, fig.width=8, fig.height=5}
-
-p <- ggplot(data = df_diva,
-    aes(x =  Publication_Type_DiVA)) +
-    geom_bar(aes(weight = WoS_coverage)) +
-    ylab("Web of Science coverage") +
-    theme(axis.text.x = element_text(angle=60, hjust=1))
-  
-print(p)
-
+abm_graph_wos_coverage(df_diva)
 ```
 
 Citation impact
@@ -330,31 +314,14 @@ Row
 ###  Average field normalized citation indicator
 
 ```{r}
-
-#df_cf_long<- df_cf %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(!indicator %in% c("P_frac", "top10_count"))
-
-p <- ggplot(data = df_cf,
-    aes(x = interval, y = cf, group=1)) +
-    geom_point() + 
-    #geom_hline(yintercept=1) +
-    geom_line()
-  
-print(p)
-
+abm_graph_cf(df_cf)
 ```
 
 
 ### %Top-10% 
 
 ```{r}
-
-p <- ggplot(data = df_cf,
-    aes(x = interval, y = top10_share, group=1)) +
-    geom_point() + 
-    geom_line()
-  
-print(p)
-
+abm_graph_top10(df_cf)
 ```
 
 
@@ -382,35 +349,19 @@ Row
 ###  Field normalized journal indicator
 
 ```{r}
-
-p <- ggplot(data = df_jcf,
-    aes(x = interval, y = jcf, group=1)) +
-    geom_point() + 
-    #geom_hline(yintercept=1) +
-    geom_line()
-    
-print(p)
-
+abm_graph_jcf(df_jcf)
 ```
 
 
 ### Journal Top-20% 
 
 ```{r}
-
-p <- ggplot(data = df_jcf,
-    aes(x = interval, y = top20_share, group=1)) +
-    geom_point() + 
-    geom_line()
-
-print(p)
-
+abm_graph_top20(df_jcf)
 ```
+
 
 Co-publishing
 =====================================
-
-
 
 Row
 ---------------------
@@ -432,18 +383,7 @@ Row
 ### Graphs
 
 ```{r, fig.width=9, fig.height=6}
-
-df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% 
-                            filter(!interval == "Total") %>% 
-                            filter(indicator %in% c("int_share", "nonuniv_share"))
-
-p <- ggplot(data = df_copub_long,
-    aes(x = interval, y = value, group=indicator)) +
-    geom_line(aes(color=indicator)) + 
-    geom_point(aes(color=indicator))
-  
-print(p)
-
+abm_graph_copub(df_copub)
 ```
 
 <!---Graphs

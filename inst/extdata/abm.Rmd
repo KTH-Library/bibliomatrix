@@ -228,7 +228,10 @@ Certain data included herein is derived from the Science Citation Index Expended
 Publications in DiVA
 =====================================
 
-### Publication volume, fractionalized 
+Row
+---------------------
+
+### Publication volume, fractionalized
 
 ```{r}
 

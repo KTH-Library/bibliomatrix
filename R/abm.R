@@ -541,8 +541,11 @@ abm_graph_wos_coverage <- function(df){
          aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
     geom_bar(aes(weight = WoS_coverage)) +
     ylab("Web of Science coverage") +
+    xlab(NULL) +
+    ylab(NULL) +
     coord_flip() +
-    theme(axis.text.x = element_text(angle=60, hjust=1))
+    scale_y_continuous(labels=scales::percent, breaks = seq(0,1,0.1), limits = c(0, 1))
+  
 }
 
 #' Create graph over Cf by year
@@ -567,7 +570,7 @@ abm_graph_cf <- function(df){
 abm_graph_top10 <- function(df){
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top10_share, group=1)) +
-    geom_point() + 
+    geom_point() +
     geom_line()
 }
 

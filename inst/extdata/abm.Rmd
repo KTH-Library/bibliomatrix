@@ -136,39 +136,39 @@ valueBox(
 
 ```
 
-### Co-publications with Swedish non-universities {.value-box}
-
-```{r}
-copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
-
-valueBox(
-  value = copub_nonuni_swe,
-#  icon = "fa-area-chart",
-  color = colors_vb[4]
-)
-
-```
-
-### International co-publications {.value-box}
-
-```{r}
-copub_int <- as.numeric(df_copub[5,"int_share"]) %>% percent()
-  # dfs %>% pluck(1, 5) %>% 
-  # filter(Period == "2015-2017") %>%
-  # pluck("International Share")
-
-valueBox(
-  value = copub_int,
-#  icon = "fa-area-chart",
-  color = colors_vb[4]
-)
-
-```
-
-
-
 Row
---------------------------------
+---------------------
+
+### Co-publications with Swedish non-universities
+
+```{r}
+# copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
+# 
+# valueBox(
+#   value = copub_nonuni_swe,
+# #  icon = "fa-area-chart",
+#   color = colors_vb[4]
+# )
+abm_waffle_copub_nonuniv(df_copub)
+```
+
+### International co-publications
+
+```{r}
+abm_waffle_copub_int(df_copub)
+
+# copub_int <- as.numeric(df_copub[5,"int_share"]) %>% percent()
+#   # dfs %>% pluck(1, 5) %>% 
+#   # filter(Period == "2015-2017") %>%
+#   # pluck("International Share")
+# 
+# valueBox(
+#   value = copub_int,
+# #  icon = "fa-area-chart",
+#   color = colors_vb[4]
+# )
+
+```
 
 ### Background
 

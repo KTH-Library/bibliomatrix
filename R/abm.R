@@ -513,6 +513,7 @@ abm_private_data <- function(unit_code) {
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom stats reorder
 #' @export
 abm_graph_diva <- function(df){
   df_diva_long <- df %>%
@@ -532,6 +533,7 @@ abm_graph_diva <- function(df){
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom stats reorder
 #' @export
 abm_graph_wos_coverage <- function(df){
   df <- df %>% left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
@@ -610,4 +612,44 @@ abm_graph_copub <- function(df){
          aes(x = interval, y = value, group=indicator)) +
     geom_line(aes(color=indicator)) + 
     geom_point(aes(color=indicator))
+}
+
+#' Create waffle share over share of international copublications
+#' 
+#' @param df a data frame at the format produced by abm_table5()
+#' @return a ggplot object
+#' @import ggplot2 waffle dplyr
+#' @export
+abm_waffle_copub_int <- function(df, col = c(as.character(palette_kth(1)), "#F6F6F6")){
+  intshare <- df %>%
+    filter(interval == "Total") %>%
+    select(int_share) %>%
+    mutate(int_share = round(100*int_share)) %>%
+    as.integer()
+
+  waffle(c(intshare, 100-intshare),
+         rows = 5,
+         size = 1,
+         colors = col,
+         legend_pos = "none")
+}
+
+#' Create waffle share over share of Swedish non-university copublications
+#' 
+#' @param df a data frame at the format produced by abm_table5()
+#' @return a ggplot object
+#' @import ggplot2 waffle dplyr
+#' @export
+abm_waffle_copub_nonuniv <- function(df, col = c(as.character(palette_kth(1)), "#F6F6F6")){
+  nonuniv <- df %>%
+    filter(interval == "Total") %>%
+    select(nonuniv_share) %>%
+    mutate(nonuniv_share = round(100*nonuniv_share)) %>%
+    as.integer()
+  
+  waffle(c(nonuniv, 100-nonuniv),
+         rows = 5,
+         size = 1,
+         colors = col,
+         legend_pos = "none")
 }

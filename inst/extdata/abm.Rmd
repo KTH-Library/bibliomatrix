@@ -47,7 +47,6 @@ if (!use_package_data) {
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
 
-#dfs<- abm_data(unit_code = run_unit) %>% collect()
 ```
 
 Overview
@@ -171,32 +170,17 @@ Row
 ### Publication volume, fractionalized
 
 ```{r}
-
-# All main tables are now retrieved at the top, and later used in tabs
-#------------------------------------------
-
-#my_locale <- readr::locale(decimal_mark = ".")
-
-#my_parse_guess <- function(x)
-#  readr::parse_guess(x, locale = my_locale, guess_integer = TRUE)
-# 
-# df <- 
-#   dfs %>% pluck(1, 1) %>% select(-c(1, 2)) %>%
-#   mutate_all(my_parse_guess)
-
-# %>% 
-#   select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
-#   mutate(Total = 0)
-
-DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage", "DiVA publication type" = "Publication_Type_DiVA", "Total" = "P_frac"),
+DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage",
+                                 "DiVA publication type" = "Publication_Type_DiVA",
+                                 "Total" = "P_frac"),
               rownames = FALSE,
               options = list(
                 bPaginate = FALSE,
                 pageLength = 100,
-                dom = 't')) %>%
+                dom = 't')
+              ) %>%
   formatRound(2:9, digits = 1, mark = "") %>%
   formatPercentage("WoS coverage", digits = 1)
-
 ```
 
 Row
@@ -221,17 +205,19 @@ Citation impact
 Row
 ---------------------
 
-###  Citations 3-year window
+###  Citations 3-year window, fractional counts
 
 ```{r}
-
-  # dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
-  # mutate_all(my_parse_guess)
-
-DT::datatable(df_cit3y, rownames = FALSE, options = list(
-  bPaginate = FALSE,
-  dom = 't'
-))
+DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
+                                  "Publications" = "P_frac",
+                                  "Total Citations" = "C3_frac",
+                                  "Average Citations" = "C3"),
+              rownames = FALSE,
+              options = list(
+                bPaginate = FALSE,
+                dom = 't')
+              ) %>% 
+  formatRound(2:4, digits = 1, mark = "")
 ```
 
 <!--- Column {data-width=500}
@@ -244,16 +230,24 @@ DT::datatable(df_cit3y, rownames = FALSE, options = list(
   # dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
   # mutate_all(my_parse_guess)
 
-DT::datatable(df_cf, rownames = FALSE, options = list(
-  bPaginate = FALSE,
-  dom = 't'
-))
+DT::datatable(df_cf %>% rename("Publication years" = "interval",
+                               "Publications" = "P_frac",
+                               "Average Cf" = "cf",
+                               "Top 10% publications" = "top10_count",
+                               "Share Top 10%" = "top10_share"),
+              rownames = FALSE,
+              options = list(
+                bPaginate = FALSE,
+                dom = 't')
+              ) %>% 
+  formatRound(2:4, digits = 1, mark = "") %>% 
+  formatPercentage(5, digits = 1)
 ```
 
 Row
 ---------------------
 
-###  Average field normalized citation indicator
+###  Average field normalized citations (cf)
 
 ```{r}
 abm_graph_cf(df_cf)
@@ -273,16 +267,23 @@ Journal impact
 Row
 ---------------------
 
-### 3-year moving average
+### 3-year moving average, fractional counts
 
 ```{r}
 
 #  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
-
-DT::datatable(df_jcf, rownames = FALSE, options = list(
-  bPaginate = FALSE,
-  dom = 't'
-))
+DT::datatable(df_jcf %>% rename("Publication years" = "interval",
+                                "Publications" = "P_frac",
+                                "Average Journal Cf" = "jcf",
+                                "Publications in Top 20% journals" = "top20_count",
+                                "Share Top 20% journals" = "top20_share"),
+              rownames = FALSE,
+              options = list(
+                bPaginate = FALSE,
+                dom = 't')
+              ) %>% 
+  formatRound(2:4, digits = 1, mark = "") %>% 
+  formatPercentage(5, digits = 1)
 ```
 
 Row
@@ -308,64 +309,31 @@ Co-publishing
 Row
 ---------------------
 
-### Internationally and with Swedish non-university organizations (3-year moving average)
+### International and Swedish non-university copublications (full counts)
 
 ```{r}
 #  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
 
-DT::datatable(df_copub, rownames = FALSE, options = list(
-  bPaginate = FALSE,
-  dom = 't'
-))
+DT::datatable(df_copub %>% rename("Publication years" = "interval",
+                                 "Publications" = "P_full",
+                                 "Swedish non-university copublications" = "nonuniv_count",
+                                 "Share Swedish non-university" = "nonuniv_share",
+                                 "International copublications" = "int_count",
+                                 "Share international" = "int_share"),
+              rownames = FALSE,
+              options = list(
+                bPaginate = FALSE,
+                dom = 't')
+              ) %>%
+  formatPercentage(c(4,6), digits = 1)
 ```
 
 Row
 ----------------------
 
-### Graphs
+### International and Swedish non-university copublication
 
 ```{r, fig.width=9, fig.height=6}
 abm_graph_copub(df_copub)
 ```
 
-<!---Graphs
-=====================================
-
-Row
------------------------
-
-### DiVA publications --->
-
-```{r}
-
-# library(tidyr)
-# library(ggthemes)
-# library(plotly)
-# 
-# 
-# ts <- 
-#   df %>% 
-#   select(-c(`WoS Coverage`, Total)) %>%
-#   gather(key = "Year", value = "Indicator", 2:8)
-#   
-
-# p <- 
-#   ggplot(
-#     data = ts, 
-#     aes(x = Year, y = Indicator, group = Publication, 
-#         colour = Publication, label = Publication)) +
-#   geom_line() +
-#   geom_point() +
-#   scale_color_brewer(type = "qual", palette = "Paired") + 
-#   geom_text(data = ts %>% filter(Year == 2017) %>% arrange(desc(Indicator)) %>% slice(1:3),
-#             aes(label = Publication), hjust = 1,
-#             vjust = 2) +
-#   theme_economist_white() +
-#   theme(
-#     legend.position = "none",
-#     axis.title.x = element_blank(),
-#     axis.title.y = element_blank()) 
-# 
-# ggplotly(p)
-
-```

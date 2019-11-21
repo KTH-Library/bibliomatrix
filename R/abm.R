@@ -534,6 +534,7 @@ abm_graph_diva <- function(df){
 #' @return a ggplot object
 #' @import ggplot2 dplyr
 #' @importFrom stats reorder
+#' @importFrom scales percent
 #' @export
 abm_graph_wos_coverage <- function(df){
   df <- df %>% left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
@@ -544,8 +545,7 @@ abm_graph_wos_coverage <- function(df){
     xlab(NULL) +
     ylab(NULL) +
     coord_flip() +
-    scale_y_continuous(labels=scales::percent, breaks = seq(0,1,0.1), limits = c(0, 1))
-  
+    scale_y_continuous(labels=percent, breaks = seq(0,1,0.1), limits = c(0, 1))
 }
 
 #' Create graph over Cf by year
@@ -617,44 +617,23 @@ abm_graph_copub <- function(df){
     geom_point(aes(color=indicator))
 }
 
-#' Create waffle share over share of international copublications
+#' Create waffle chart (5 rows, 20 columns) for any single percentage
 #' 
-#' @param df a data frame at the format produced by abm_table5()
+#' @param pct a percentage expressed as a decimal number 0 <= pct <= 1
 #' @param col a vector with colors for filling (optional)
+#' @param label a title for the chart, displayed above the waffle (optional)
+#' @param 
 #' @return a ggplot object
-#' @import ggplot2 waffle dplyr
+#' @import waffle
 #' @export
-abm_waffle_copub_int <- function(df, col = c(as.character(palette_kth(1)), "#F6F6F6")){
-  intshare <- df %>%
-    filter(interval == "Total") %>%
-    select(int_share) %>%
-    mutate(int_share = round(100*int_share)) %>%
-    as.integer()
-
-  waffle(c(intshare, 100-intshare),
+abm_waffle_pct <- function(pct, col = c(as.character(palette_kth(1)), "gray"), label = NULL){
+  if(pct < 0.0 | pct > 1.0)
+    stop("Please give a number between 0 and 1")
+  yes <- round(100*pct)
+  waffle(c(yes, 100-yes),
          rows = 5,
          size = 1,
          colors = col,
-         legend_pos = "none")
-}
-
-#' Create waffle share over share of Swedish non-university copublications
-#' 
-#' @param df a data frame at the format produced by abm_table5()
-#' @param col a vector with colors for filling (optional)
-#' @return a ggplot object
-#' @import ggplot2 waffle dplyr
-#' @export
-abm_waffle_copub_nonuniv <- function(df, col = c(as.character(palette_kth(1)), "#F6F6F6")){
-  nonuniv <- df %>%
-    filter(interval == "Total") %>%
-    select(nonuniv_share) %>%
-    mutate(nonuniv_share = round(100*nonuniv_share)) %>%
-    as.integer()
-  
-  waffle(c(nonuniv, 100-nonuniv),
-         rows = 5,
-         size = 1,
-         colors = col,
-         legend_pos = "none")
+         legend_pos = "none",
+         title = label)
 }

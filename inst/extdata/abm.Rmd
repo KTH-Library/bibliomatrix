@@ -36,140 +36,77 @@ if (!use_package_data) {
   df_cit3y <- abm_table2(unit_code= run_unit)
   df_cf <- abm_table3(unit_code= run_unit)
   df_jcf <- abm_table4(unit_code= run_unit)
-  df_copub <- abm_table5(unit_code= run_unit) 
+  df_copub <- abm_table5(unit_code= run_unit)
+  unit_meta <- unit_info(unit = run_unit)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
   df_cit3y <- pluck(abm_public_kth$units, params$unit_code, 2)
   df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
   df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
   df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
+  unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
-
-round_df <- function(x) {
-  x <- x %>% mutate_if(is.numeric, function(x) round(x, digits=2))
-  x
-}
-
-res <- map(list(df_diva, df_cit3y, df_cf, df_jcf, df_copub), round_df)
-
-df_diva <- res %>% pluck(1)
-df_cit3y <- res %>% pluck(2)
-df_cf <- res %>% pluck(3)
-df_jcf <- res %>% pluck(4)
-df_copub <- res %>% pluck(5)
 
 #dfs<- abm_data(unit_code = run_unit) %>% collect()
 ```
 
 Overview
 ===========================
-
 Row
 ---------------------
 
-### Total publications (fractionalized) {.value-box}
+### Total publications (fractionalized)
 
 ```{r}
-total_pubs <- 
-  df_diva %>% select("2018") %>% sum(na.rm=TRUE) %>% round(digits=1)
+lastyear <- nth(names(df_diva), -3)
+total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
 
-valueBox(
-  value = total_pubs,
-#  icon = "fa-area-chart",
-  color = colors_vb[1]
-)
+sprintf("%.1f publication fractions in DiVA %s\nINSERT SOME GRAPHIC HERE", round(total_pubs, 1), lastyear)
 
 ```
 
-### Field-normalized citations {.value-box}
+### Publication statistics
 
 ```{r}
-avg_cf <- as.numeric(df_cf[4,"cf"]) %>% round(digits=2)
-  #dfs %>% pluck(1, 3) %>% 
-  #filter(Period == "2014-2016") %>%
-  #pluck("cf")
+last_interval <- nth(df_cf$interval, -2)
+cf <- as.numeric(filter(df_cf, interval == last_interval)$cf)
 
-valueBox(
-  value = avg_cf,
-#  icon = "fa-area-chart",
-  color = colors_vb[2]
-)
+sprintf("Cf is %.1f - INSERT BULLET GRAPH HERE", cf)
 
+top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
+top10_label <- sprintf("%d%% of publications %s\nare Top 10 %% in it's field", round(100*top10_share), last_interval)
+abm_waffle_pct(top10_share, label = top10_label)
 ```
 
-### Share top 10% publications {.value-box}
+### Journal statistics
 
 ```{r}
-topten <- as.numeric(df_cf[4,"top10_share"]) %>% percent()
+last_interval <- nth(df_jcf$interval, -2)
+jcf <- as.numeric(filter(df_jcf, interval == last_interval)$jcf)
 
-valueBox(
-  value = topten,
-#  icon = "fa-area-chart",
-  color = colors_vb[2]
-)
+sprintf("JCf is %.1f - INSERT BULLET GRAPH HERE", jcf)
 
+top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
+top20_label <- sprintf("%d%% of publications %s\nin Top 20 %% journals", round(100*top20_share), last_interval)
+abm_waffle_pct(top20_share, label = top20_label)
 ```
 
-### Journal citations (field normalized) {.value-box}
+### Co-publications
 
 ```{r}
-jcf <- as.numeric(df_jcf[4,"jcf"]) %>% round(digits=2)
+last_interval <- nth(df_copub$interval, -2)
 
-valueBox(
-  value = jcf,
-#  icon = "fa-area-chart",
-  color = colors_vb[3]
-)
+nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
+nonuniv_lbl <- sprintf("%d%% of publications %s\nwith Swedish non-university organization", round(100*nonuniv_share), last_interval)
+abm_waffle_pct(nonuniv_share, label = nonuniv_lbl)
 
-```
-
-### Share top 20% journals {.value-box}
-
-```{r}
-jcf <- as.numeric(df_jcf[5,"top20_share"]) %>% percent()
-
-valueBox(
-  value = jcf,
-#  icon = "fa-area-chart",
-  color = colors_vb[3]
-)
-
+int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
+int_lbl <- sprintf("%d%% of publications %s\nwere international copublications", round(100*int_share), last_interval)
+abm_waffle_pct(int_share, label = int_lbl)
 ```
 
 Row
----------------------
-
-### Co-publications with Swedish non-universities
-
-```{r}
-# copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
-# 
-# valueBox(
-#   value = copub_nonuni_swe,
-# #  icon = "fa-area-chart",
-#   color = colors_vb[4]
-# )
-abm_waffle_copub_nonuniv(df_copub)
-```
-
-### International co-publications
-
-```{r}
-abm_waffle_copub_int(df_copub)
-
-# copub_int <- as.numeric(df_copub[5,"int_share"]) %>% percent()
-#   # dfs %>% pluck(1, 5) %>% 
-#   # filter(Period == "2015-2017") %>%
-#   # pluck("International Share")
-# 
-# valueBox(
-#   value = copub_int,
-# #  icon = "fa-area-chart",
-#   color = colors_vb[4]
-# )
-
-```
-
+---
 ### Background
 
 The bibliometric indicators referred are based on publications registered in DiVA and published 2011 to 2017. Only publications which have been affiliated to KTH are included. This yields that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, are not included in the statistics.

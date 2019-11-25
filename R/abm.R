@@ -622,7 +622,7 @@ abm_graph_copub <- function(df){
 #' @param pct a percentage expressed as a decimal number 0 <= pct <= 1
 #' @param col a vector with colors for filling (optional)
 #' @param label a title for the chart, displayed above the waffle (optional)
-#' @param 
+#'
 #' @return a ggplot object
 #' @import waffle
 #' @export
@@ -630,10 +630,54 @@ abm_waffle_pct <- function(pct, col = c(as.character(palette_kth(1)), "gray"), l
   if(pct < 0.0 | pct > 1.0)
     stop("Please give a number between 0 and 1")
   yes <- round(100*pct)
-  waffle(c(yes, 100-yes),
+  waffle(parts = c(yes, 100-yes),
          rows = 5,
          size = 1,
          colors = col,
          legend_pos = "none",
-         title = label)
+         title = label) +
+    theme(plot.title=element_text(size = 12))
 }
+
+#' Create bullet graph with reference line
+#'
+#' @param measure a label for the indicator, shown to the left of the gauge
+#' @param value the value of the indicator, displayed as a horizontal wide line
+#' @param tdarget a reference value displayed as a vertical thin line
+#' @return a ggplot object
+#' @import ggplot2
+#' @export
+abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
+  if(pct){
+    value <- 100*value
+    reference <- 100*reference
+  }
+  value <- round(value, roundto)
+
+  title <- sprintf(paste0("%s = %.", roundto, "f%s"), label, value, ifelse(pct, "%", ""))
+
+  bg.data <- data.frame(measure = label, target = reference, value = value)
+  kth_cols <- palette_kth(4)
+
+  ggplot(bg.data) +
+    labs(title = title) +
+    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill=kth_cols["lightblue"], stat="identity", width=0.5, alpha=0.4) +
+    geom_errorbar(aes(x = measure, ymin = target*.999, ymax = target*1.001), color=kth_cols["cerise"], width = 0.5) +
+    geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.3) +
+    coord_flip() +
+    theme(plot.title=element_text(size = 12),
+          axis.text.x=element_text(size=8),
+          axis.title.x=element_blank(),
+          axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.title.y=element_blank(),
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank(),
+          aspect.ratio = 0.1)
+}
+

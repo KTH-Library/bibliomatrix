@@ -193,4 +193,32 @@ ldap_search_curl <- function(term,
   return (res)
 }
 
+#' LDAP account name from a given KTH id
+#' @param kthid the employee identifier
+#' @export
+#' @importFrom dplyr filter pull
+ad_accountname <- function(kthid) {
+  ad_search(kthid) %>% 
+  filter(key == "sAMAccountName") %>% 
+  pull(value)
+}
 
+#' KTH user account identifier (kthid) from LDAP account name
+#' @param accountname the LDAP accountname
+#' @export
+#' @importFrom dplyr filter pull
+ad_kthid <- function(accountname) {
+  ad_search(accountname, "accountname") %>% 
+  filter(key == "ugKthid") %>% 
+  pull(value)
+}
+
+#' KTH displayname from user account identifier
+#' @param kthid the employee identifier
+#' @export
+#' @importFrom dplyr filter pull
+ad_displayname <- function(kthid) {
+  ad_search(kthid) %>% 
+  filter(key == "cn") %>% 
+  pull(value)
+}

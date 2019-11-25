@@ -14,24 +14,35 @@ library(dplyr)
 # issue "make up" in the directory where the plumber.R API resides
 # (cd inst/plumber/abm; make up)
 
-ABM_API_PATTERN <- "http://localhost:8080/unit/%s/flexdashboard"
+ABM_API_UNIT <- "http://localhost:8080/unit/%s/flexdashboard"
+ABM_API_EMP <- "http://localhost:8080/employee/%s/flexdashboard"
 
 server <- function(input, output, session) {
     
+    ua <- Sys.getenv("SHINYPROXY_USERNAME")
+    if (ua == "") ua <- "cwil"
+    kthid <- ad_kthid(ua)
+    active_user <- kthid %>% set_names(ad_displayname(kthid))
+
     output$units <- renderUI({
         
         orgs <- abm_public_kth$meta$Diva_org_id %>% 
             set_names(abm_public_kth$meta$unit_long_en_indent2)
         
+        orgs <- c(active_user, orgs)
+        
         shiny::selectInput(inputId = "unitid", label = NULL, 
-            choices = orgs, selected = "177", size = 1,
+            choices = orgs, selected = kthid, size = 1,
             multiple = FALSE, selectize = FALSE, width = "100%")
     })
     
     # using the API, which could be anywhere or external
 
     observe({
-        dash_src <<- sprintf(ABM_API_PATTERN, input$unitid)
+        req(input$unitid)
+        API <- ifelse(input$unitid == kthid, ABM_API_EMP, ABM_API_UNIT)
+        dash_src <<- sprintf(API, input$unitid)
+        cat(dash_src, "\n")
     })
     
     output$frame <- renderUI({

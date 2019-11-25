@@ -80,6 +80,24 @@ function(id, res) {
   
 }
 
+#* A flexdashboard reporting on Bibliometric indicators for an employee at KTH
+#* @get /employee/<id>/flexdashboard
+#* @tag ABM reports
+#* @response 400 Invalid input.
+#* @serializer contentType list(type = "text/html")
+function(id, res) {
+  cache <- file.path(tempdir(), paste0(id, ".rds"))
+  if (file.exists(cache)) {
+    readBin(cache, "raw", n = file.info(cache)$size)
+  } else {
+    report <- system.file("extdata/abm-private.Rmd", package = "bibliomatrix")
+    f <- rmarkdown::render(report, params = list(unit_code = id))
+    file.copy(f, cache)
+    readBin(f, "raw", n = file.info(f)$size)
+  }
+}
+
+
 #* An endpoint to be used by monitoring services in the KTH IT Operations infrastructure
 #* @get /_monitor
 #* @serializer contentType list(type = "text/plain;charset=utf-8")

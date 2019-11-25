@@ -20,6 +20,7 @@ globalz <- "
     skola_namn swe_nuniv unit unit_code unit_id unit_long unit_long_eng
     unit_long_swe unit_sort value w_d_Sum w_d_Sum_NA w_unit wos_coverage
     wos_coverage_Mean wos_coverage_NA Doc_id wos_bin
+    from n_pad unit_long_en
 "
 
 # HACK: add global fcns / vars with spaces in the name

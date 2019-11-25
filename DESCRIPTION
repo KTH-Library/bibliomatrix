@@ -43,7 +43,8 @@ Imports:
     callr (>= 3.3.2),
     httr (>= 1.4.1),
     jsonlite (>= 1.6),
-    plumber (>= 0.4.6)
+    plumber (>= 0.4.6),
+    shiny (>= 1.4.0)
 URL: https://github.com/KTH-Library/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues
 VignetteBuilder: knitr

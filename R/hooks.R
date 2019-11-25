@@ -2,6 +2,7 @@
 #' the datasets bundled in this package
 #' @param example the name of the bundled Shiny application example
 #' @export
+#' @importFrom shiny runApp
 run_app <- function(example) {
   
   PKG <- "bibliomatrix"

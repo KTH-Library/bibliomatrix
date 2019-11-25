@@ -64,10 +64,16 @@ function(id, res) {
   is_valid <- id %in% abm_public_kth$meta$Diva_org_id
   
   if (is_valid) {
-    uc <- abm_public_kth$meta %>% filter(Diva_org_id == id) %>% pull(unit_code)
-    report <- system.file("extdata/abm.Rmd", package = "bibliomatrix")
-    f <- rmarkdown::render(report, params = list(unit_code = uc))
-    readBin(f, "raw", n = file.info(f)$size)
+    cache <- file.path(tempdir(), paste0(id, ".rds"))
+    if (file.exists(cache)) {
+      readBin(cache, "raw", n = file.info(cache)$size)
+    } else {
+      uc <- abm_public_kth$meta %>% filter(Diva_org_id == id) %>% pull(unit_code)
+      report <- system.file("extdata/abm.Rmd", package = "bibliomatrix")
+      f <- rmarkdown::render(report, params = list(unit_code = uc))
+      file.copy(f, cache)
+      readBin(f, "raw", n = file.info(f)$size)
+    }
   } else {
     res$status <- 400
   }

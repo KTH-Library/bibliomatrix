@@ -24,9 +24,8 @@ library(bibliomatrix)
 library(tidyr)
 library(scales)
 
-#colors_vb <- RColorBrewer::brewer.pal(4, "Set2")
 colors_vb <- palette_kth(4)
-run_unit<- params$unit_code #"KTH"
+run_unit<- params$unit_code
 
 use_package_data <- TRUE
 
@@ -48,6 +47,10 @@ if (!use_package_data) {
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
 
+unit_label <- 
+  abm_public_kth$meta %>% 
+  filter(unit_code == params$unit_code) %>% 
+  pull(unit_long_en)
 ```
 
 Overview

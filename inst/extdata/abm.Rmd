@@ -108,7 +108,8 @@ valueBox(
 ### Share top 10% publications {.value-box}
 
 ```{r}
-topten <- as.numeric(df_cf[4,"top10_share"]) %>% percent()
+# TODO: be more defensive here (what if no rows are returned?)
+topten <- as.numeric(df_cf[nrow(df_cf) - 1, "top10_share"]) %>% percent()
 
 valueBox(
   value = topten,

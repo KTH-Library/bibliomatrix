@@ -7,11 +7,15 @@
 abm_bullet(label, value, reference, roundto = 1, pct = FALSE)
 }
 \arguments{
+\item{label}{a label for the indicator, shown to the left of the gauge}
+
 \item{value}{the value of the indicator, displayed as a horizontal wide line}
 
-\item{measure}{a label for the indicator, shown to the left of the gauge}
+\item{reference}{a reference value displayed as a vertical thin line}
 
-\item{tdarget}{a reference value displayed as a vertical thin line}
+\item{roundto}{number of digits after the decimal point (default = 1)}
+
+\item{pct}{boolean, set to TRUE if given value is a share (default = FALSE)}
 }
 \value{
 a ggplot object

@@ -641,9 +641,11 @@ abm_waffle_pct <- function(pct, col = c(as.character(palette_kth(1)), "gray"), l
 
 #' Create bullet graph with reference line
 #'
-#' @param measure a label for the indicator, shown to the left of the gauge
+#' @param label a label for the indicator, shown to the left of the gauge
 #' @param value the value of the indicator, displayed as a horizontal wide line
-#' @param tdarget a reference value displayed as a vertical thin line
+#' @param reference a reference value displayed as a vertical thin line
+#' @param roundto number of digits after the decimal point (default = 1)
+#' @param pct boolean, set to TRUE if given value is a share (default = FALSE)
 #' @return a ggplot object
 #' @import ggplot2
 #' @export

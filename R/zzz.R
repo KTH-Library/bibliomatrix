@@ -21,7 +21,7 @@ globalz <- "
     unit_long_swe unit_sort value w_d_Sum w_d_Sum_NA w_unit wos_coverage
     wos_coverage_Mean wos_coverage_NA Doc_id wos_bin
     WoS_coverage df_copub df_jcf indicator int_share nonuniv_share
-    top10_share top20_share year
+    top10_share top20_share year measure target
 "
 
 # HACK: add global fcns / vars with spaces in the name

@@ -13,14 +13,14 @@ use_readme_rmd()
 use_testthat()
 use_test("connection")
 
-
+use_package("igraph")
+use_package("")
 
 use_data_raw()
 
 build_vignettes()
-file.copy("doc", "inst", recursive = TRUE)
 pkgdown::build_site()
-
+file.copy("doc", "inst", recursive = TRUE)
 
 use_test("db")
 use_package("curl")

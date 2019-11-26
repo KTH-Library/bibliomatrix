@@ -14,6 +14,7 @@ params:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(crosstalk)
 library(DT)
 library(readr)
 library(purrr)
@@ -170,6 +171,8 @@ Certain data included herein is derived from the Science Citation Index Expended
 Publications in DiVA
 =====================================
 
+#### `r unit_label`
+
 Row
 ---------------------
 
@@ -205,6 +208,8 @@ abm_graph_wos_coverage(df_diva)
 
 Citation impact
 =====================================
+
+#### `r unit_label`
 
 <!---Column {data-width=500}
 ------------------------------------- --->
@@ -270,6 +275,8 @@ abm_graph_top10(df_cf)
 Journal impact
 =====================================
 
+#### `r unit_label`
+
 Row
 ---------------------
 
@@ -308,9 +315,10 @@ abm_graph_jcf(df_jcf)
 abm_graph_top20(df_jcf)
 ```
 
-
 Co-publishing
 =====================================
+
+#### `r unit_label`
 
 Row
 ---------------------

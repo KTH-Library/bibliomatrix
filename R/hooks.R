@@ -44,6 +44,6 @@ run_api <- function(teardown = FALSE) {
   #   pr <- plumber::plumb(system.file(package = "bibliomatrix", "plumber", "abm", "plumber.R"))
   #   pr$run(port = 8080, swagger = TRUE, host = "127.0.0.1")})
   msg <- sprintf("Please do this manually for now; open a terminal and issue: \ncd %s \nmake up", 
-     dirname(system.file(package = "bibliomatrix", "plumber", "abm", "plumber.R")))
+     normalizePath(dirname(system.file(package = "bibliomatrix", "plumber", "abm", "plumber.R"))))
   message(msg)
 }

@@ -14,6 +14,7 @@ params:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(crosstalk)
 library(DT)
 library(readr)
 library(purrr)
@@ -58,11 +59,18 @@ df_cf <- res %>% pluck(3)
 df_jcf <- res %>% pluck(4)
 df_copub <- res %>% pluck(5)
 
+unit_label <- 
+  abm_public_kth$meta %>% 
+  filter(unit_code == params$unit_code) %>% 
+  pull(unit_long_en)
+
 #dfs<- abm_data(unit_code = run_unit) %>% collect()
 ```
 
 Overview
 ===========================
+
+#### `r unit_label`
 
 Row
 ---------------------
@@ -100,7 +108,8 @@ valueBox(
 ### Share top 10% publications {.value-box}
 
 ```{r}
-topten <- as.numeric(df_cf[4,"top10_share"]) %>% percent()
+# TODO: be more defensive here (what if no rows are returned?)
+topten <- as.numeric(df_cf[nrow(df_cf) - 1, "top10_share"]) %>% percent()
 
 valueBox(
   value = topten,
@@ -194,15 +203,15 @@ Row
 # embed_data <- function(path)
 #   paste0("data:", mime::guess_type(path), ";base64,", base64enc::base64encode(path))
 # 
-# embed_file_link <- function(path, 
-#   href = embed_data(path), 
+# embed_file_link <- function(path,
+#   href = embed_data(path),
 #   name = basename(path),
 #   text = paste("Download", name), ...) {
 #   htmltools::a(text, href = href, download = name, ...)
 # }
 # 
 # icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
-# icon_download <- htmltools::attachDependencies(icon_download, 
+# icon_download <- htmltools::attachDependencies(icon_download,
 #   flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
 # 
 # # export to xlsx format, into tempdir so we can embed a file link
@@ -215,9 +224,9 @@ Row
 # excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
 # write.xlsx(publications_kth, excel_file)
 # 
-# embed_file_link(excel_file, 
+# embed_file_link(excel_file,
 #   title = "Download Publication List in Excel format",
-#   text = icon_download, class="btn btn-primary")
+#   text = icon_download, class="btn-download")
 
 ```
 Publication list for KTH in Excel format
@@ -227,6 +236,11 @@ Certain data included herein is derived from the Science Citation Index Expended
 
 Publications in DiVA
 =====================================
+
+#### `r unit_label`
+
+Row
+---------------------
 
 ### Publication volume, fractionalized 
 
@@ -289,6 +303,8 @@ print(p)
 
 Citation impact
 =====================================
+
+#### `r unit_label`
 
 <!---Column {data-width=500}
 ------------------------------------- --->
@@ -361,6 +377,8 @@ print(p)
 Journal impact
 =====================================
 
+#### `r unit_label`
+
 Row
 ---------------------
 
@@ -410,7 +428,7 @@ print(p)
 Co-publishing
 =====================================
 
-
+#### `r unit_label`
 
 Row
 ---------------------
@@ -461,20 +479,20 @@ Row
 # library(plotly)
 # 
 # 
-# ts <- 
-#   df %>% 
+# ts <-
+#   df %>%
 #   select(-c(`WoS Coverage`, Total)) %>%
 #   gather(key = "Year", value = "Indicator", 2:8)
-#   
-
-# p <- 
+# 
+# 
+# p <-
 #   ggplot(
-#     data = ts, 
-#     aes(x = Year, y = Indicator, group = Publication, 
+#     data = ts,
+#     aes(x = Year, y = Indicator, group = Publication,
 #         colour = Publication, label = Publication)) +
 #   geom_line() +
 #   geom_point() +
-#   scale_color_brewer(type = "qual", palette = "Paired") + 
+#   scale_color_brewer(type = "qual", palette = "Paired") +
 #   geom_text(data = ts %>% filter(Year == 2017) %>% arrange(desc(Indicator)) %>% slice(1:3),
 #             aes(label = Publication), hjust = 1,
 #             vjust = 2) +
@@ -482,7 +500,7 @@ Row
 #   theme(
 #     legend.position = "none",
 #     axis.title.x = element_blank(),
-#     axis.title.y = element_blank()) 
+#     axis.title.y = element_blank())
 # 
 # ggplotly(p)
 

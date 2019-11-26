@@ -327,21 +327,81 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
 #' @return tibble with information about selected units
 #' @import DBI dplyr tidyr purrr
 #' @export
-
 unit_info <- function(con = con_bib(), unit, level, parent){
-  # ToDo: Make possible to select on Diva_org_id (and possibly some catch-all search)
+  
+  # TODO: should this function provide filter params?
+  # discuss: filtering could happen from outside
+  
+  res <- unit_info_internal(con, unit, level, parent)
 
-  res <- con %>% tbl("abm_org_info") %>% collect()
-  if(!missing(level))
+  if (!missing(level))
     res <- res %>% filter(org_level %in% level)
-  if(!missing(unit))
+  
+  if (!missing(unit))
     res <- res %>% filter(unit_code %in% unit)
-  if(!missing(parent))
+  
+  if (!missing(parent))
     res <- res %>% filter(parent_org_id %in% parent)
   
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
-  
   res
+  
+}
+
+#' Depth-first search ordered organizational units DAG (tree)'
+#' 
+#' This function checks data integrity for KTH organizational units data
+#' ensuring it is a tree (directed acyclic graph) and makes a dfs to
+#' order the tree and then converts it into a tibble adds two fields for
+#' display purposes - one space padded indented field and one which is
+#' space padded with a Unicode space character that doesn't get santized
+#' when used in HTML contexts (such as in a shinyInput filter)
+#' @return tibble with dfs ordered tree
+#' @importFrom igraph graph_from_data_frame V is_dag
+#' @importFrom stringr str_pad
+#' @noRd
+
+unit_info_internal <- function(con = con_bib(), unit, level, parent) {
+
+  res <- con %>% tbl("abm_org_info") %>% collect()
+    
+  treee <- 
+    res %>% 
+    select(Diva_org_id, parent_org_id, unit_long_en, org_level, everything()) %>%
+    arrange(-desc(org_level)) %>%
+    mutate(n_pad = org_level * 4) %>%
+    mutate(unit_long_en_indent1 = sprintf("%*s%s", n_pad, "", unit_long_en)) %>%
+    mutate(unit_long_en_indent2 = sprintf("%s%s", 
+      # for usage in html where leading white space gets sanitized
+      stringr::str_pad("", side = "left", width = n_pad, pad = "\U00A0"), 
+      unit_long_en)) %>%
+    select(-n_pad)
+  
+  v <- 
+    treee %>% 
+    select(from = 2, to = 1, everything()) %>%
+    # convention in igraph for root node id
+    mutate(from = recode(from, .missing = as.integer(1)))
+  
+  g <- igraph::graph_from_data_frame(v, directed = TRUE)
+  
+  if (!igraph::is_dag(g)) 
+    stop("Data integrity failed for abm_org_info tbl - it is not a tree structure!")
+    
+  #sc <- igraph::subcomponent(g, igraph::V(g)["177"], "out")
+  #plot(g, layout = layout.reingold.tilford(g, root=1))
+  #layout_as_tree(g, root = 1)
+  
+  root_id <- "177"  # hard coded for KTH
+  
+  out <- 
+    igraph::dfs(g, igraph::V(g)[root_id], "out")$order %>%
+    names() %>%
+    as.integer() %>%
+    tibble(Diva_org_id = .) %>% 
+    inner_join(treee, by = "Diva_org_id")
+  
+  out
+  
 }
 
 #' Retrieve publication list for ABM
@@ -422,8 +482,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   # retrieve unit codes
   units_table <- 
     unit_info() %>%
-    collect() %>%
-    arrange(-desc(org_level)) 
+    collect() 
   
   units <- 
     units_table %>% 

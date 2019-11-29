@@ -24,7 +24,7 @@ library(bibliomatrix)
 library(tidyr)
 library(scales)
 
-colors_vb <- palette_kth(4)s
+colors_vb <- palette_kth(4)
 run_unit <- params$unit_code
 
 use_package_data <- TRUE

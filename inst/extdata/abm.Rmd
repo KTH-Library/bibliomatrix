@@ -25,7 +25,7 @@ library(tidyr)
 library(scales)
 
 colors_vb <- palette_kth(4)
-run_unit<- params$unit_code
+run_unit <- params$unit_code
 
 use_package_data <- TRUE
 
@@ -49,7 +49,7 @@ if (!use_package_data) {
 
 unit_label <- 
   abm_public_kth$meta %>% 
-  filter(unit_code == params$unit_code) %>% 
+  filter(unit_code == run_unit) %>% 
   pull(unit_long_en)
 ```
 
@@ -190,10 +190,13 @@ DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage",
                                  "DiVA publication type" = "Publication_Type_DiVA",
                                  "Total" = "P_frac"),
               rownames = FALSE,
+              extensions = "Buttons",
               options = list(
                 bPaginate = FALSE,
                 pageLength = 100,
-                dom = 't')
+                dom = 'Bt',
+                buttons = c("copy", "csv", "excel"),
+                title = "ABM_publications")
               ) %>%
   formatRound(2:9, digits = 1, mark = "") %>%
   formatPercentage("WoS coverage", digits = 1)
@@ -231,9 +234,12 @@ DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
                                   "Total Citations" = "C3_frac",
                                   "Average Citations" = "C3"),
               rownames = FALSE,
+              extensions = "Buttons",
               options = list(
                 bPaginate = FALSE,
-                dom = 't')
+                dom = 'Bt',
+                buttons = c("copy", "csv", "excel"),
+                title = "ABM_citations")
               ) %>% 
   formatRound(2:4, digits = 1, mark = "")
 ```
@@ -244,19 +250,18 @@ DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
 ###  Field normalized citations - Fractionalized (3-year moving average)
 
 ```{r}
-
-  # dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
-  # mutate_all(my_parse_guess)
-
 DT::datatable(df_cf %>% rename("Publication years" = "interval",
                                "Publications" = "P_frac",
                                "Average Cf" = "cf",
                                "Top 10% publications" = "top10_count",
                                "Share Top 10%" = "top10_share"),
               rownames = FALSE,
+              extensions = "Buttons",
               options = list(
                 bPaginate = FALSE,
-                dom = 't')
+                dom = 'Bt',
+                buttons = c("copy", "csv", "excel"),
+                filename = "ABM_field_normalized_citations")
               ) %>% 
   formatRound(2:4, digits = 1, mark = "") %>% 
   formatPercentage(5, digits = 1)
@@ -290,17 +295,18 @@ Row
 ### 3-year moving average, fractional counts
 
 ```{r}
-
-#  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
 DT::datatable(df_jcf %>% rename("Publication years" = "interval",
                                 "Publications" = "P_frac",
                                 "Average Journal Cf" = "jcf",
                                 "Publications in Top 20% journals" = "top20_count",
                                 "Share Top 20% journals" = "top20_share"),
               rownames = FALSE,
+              extensions = "Buttons",
               options = list(
                 bPaginate = FALSE,
-                dom = 't')
+                dom = 'Bt',
+                buttons = c("copy", "csv", "excel"),
+                title = "ABM_journal_impact")
               ) %>% 
   formatRound(2:4, digits = 1, mark = "") %>% 
   formatPercentage(5, digits = 1)
@@ -333,8 +339,6 @@ Row
 ### International and Swedish non-university copublications (full counts)
 
 ```{r}
-#  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
-
 DT::datatable(df_copub %>% rename("Publication years" = "interval",
                                  "Publications" = "P_full",
                                  "Swedish non-university copublications" = "nonuniv_count",
@@ -342,9 +346,12 @@ DT::datatable(df_copub %>% rename("Publication years" = "interval",
                                  "International copublications" = "int_count",
                                  "Share international" = "int_share"),
               rownames = FALSE,
+              extensions = "Buttons",
               options = list(
                 bPaginate = FALSE,
-                dom = 't')
+                dom = 'Bt',
+                buttons = c("copy", "csv", "excel"),
+                title = "ABM_copublications")
               ) %>%
   formatPercentage(c(4,6), digits = 1)
 ```

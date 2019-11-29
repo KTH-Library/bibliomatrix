@@ -600,7 +600,6 @@ abm_graph_wos_coverage <- function(df){
   ggplot(data = df,
          aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
     geom_bar(aes(weight = WoS_coverage)) +
-    ylab("Web of Science coverage") +
     xlab(NULL) +
     ylab(NULL) +
     coord_flip() +
@@ -614,10 +613,16 @@ abm_graph_wos_coverage <- function(df){
 #' @import ggplot2 dplyr
 #' @export
 abm_graph_cf <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$cf)))
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
-    geom_line()
+    geom_line(color = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab(NULL) +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["olive"])
 }
 
 #' Create graph over Top 10\% publications by year
@@ -625,12 +630,20 @@ abm_graph_cf <- function(df){
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom scales percent
 #' @export
 abm_graph_top10 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.2, ceiling(max(df$top10_share)*10)/10)
+  
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
-    geom_line()
+    geom_line(color = kth_cols["blue"]) +
+  xlab(NULL) +
+  ylab(NULL) +
+  geom_hline(yintercept = 0.1, color = kth_cols["olive"]) +
+  scale_y_continuous(labels = percent, limits = c(0, ymax))
 }
 
 #' Create graph over jcf by year
@@ -640,10 +653,17 @@ abm_graph_top10 <- function(df){
 #' @import ggplot2 dplyr
 #' @export
 abm_graph_jcf <- function(df){
-  ggplot(data = df_jcf %>% filter(!interval == "Total"),
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$jcf)))
+
+  ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = jcf, group=1)) +
     geom_point() + 
-    geom_line()
+    geom_line(color = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab(NULL) +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["olive"])
 }
 
 #' Create graph over Top 20\% journals by year
@@ -651,12 +671,20 @@ abm_graph_jcf <- function(df){
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom scales percent
 #' @export
 abm_graph_top20 <- function(df){
-  ggplot(data = df_jcf %>% filter(!interval == "Total"),
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.4, ceiling(max(df$top20_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top20_share, group=1)) +
-    geom_point() + 
-    geom_line()
+    geom_point() +
+    geom_line(color = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab(NULL) +
+    geom_hline(yintercept = 0.2, color = kth_cols["olive"]) +
+    scale_y_continuous(labels = percent, limits = c(0, ymax))
 }
 
 #' Create graph over international and Swedish non-university copublications by year
@@ -666,14 +694,20 @@ abm_graph_top20 <- function(df){
 #' @import ggplot2 dplyr
 #' @export
 abm_graph_copub <- function(df){
-  df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% 
-    filter(!interval == "Total") %>% 
-    filter(indicator %in% c("int_share", "nonuniv_share"))
+  
+  df_copub_long<- df %>%
+    select(interval, nonuniv_share, int_share) %>% 
+    rename("Swedish Non-university" = nonuniv_share, "International" = int_share) %>% 
+    gather("Copublication", "value", -interval) %>% 
+    filter(!interval == "Total")
   
   ggplot(data = df_copub_long,
-         aes(x = interval, y = value, group=indicator)) +
-    geom_line(aes(color=indicator)) + 
-    geom_point(aes(color=indicator))
+         aes(x = interval, y = value, group = Copublication)) +
+    geom_line(aes(color = Copublication)) +
+    geom_point(aes(color = Copublication)) +
+    xlab(NULL) +
+    ylab(NULL) +
+    scale_y_continuous(labels = percent, limits = c(0, 1))
 }
 
 #' Create waffle chart (5 rows, 20 columns) for any single percentage

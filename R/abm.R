@@ -152,6 +152,9 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
+  if(nrow(orgdata) == 0)
+    return(tibble(interval = "Total", P_frac = NA, cf = NA, top10_count = NA, top10_share = NA))
+
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <- merge(x = orgdata,
                         y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
@@ -201,6 +204,9 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
+  if(nrow(orgdata) == 0)
+    return(tibble(interval = "Total", P_frac = NA, jcf = NA, top20_count = NA, top20_share = NA))
+  
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <- merge(x = orgdata,
                         y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
@@ -249,6 +255,9 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
+  
+  if(nrow(orgdata) == 0)
+    return(tibble(interval = "Total", P_full = NA, nonuniv_count = NA, nonuniv_share = NA, int_count = NA, int_share = NA))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <- merge(x = orgdata,

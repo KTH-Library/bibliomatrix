@@ -694,7 +694,7 @@ abm_graph_top20 <- function(df){
 #' @import ggplot2 dplyr
 #' @export
 abm_graph_copub <- function(df){
-  
+  kth_cols <- as.vector(palette_kth(4))
   df_copub_long<- df %>%
     select(interval, nonuniv_share, int_share) %>% 
     rename("Swedish Non-university" = nonuniv_share, "International" = int_share) %>% 
@@ -707,7 +707,8 @@ abm_graph_copub <- function(df){
     geom_point(aes(color = Copublication)) +
     xlab(NULL) +
     ylab(NULL) +
-    scale_y_continuous(labels = percent, limits = c(0, 1))
+    scale_y_continuous(labels = percent, limits = c(0, 1)) +
+    scale_color_manual(values = kth_cols)
 }
 
 #' Create waffle chart (5 rows, 20 columns) for any single percentage

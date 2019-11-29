@@ -59,43 +59,15 @@ Overview
 Row {data-height=200}
 ---------------------
 ### Total publications (fractional counts)
-```{r, fig_width = 1, fig.height = 1}
+```{r, fig.width = 4, fig.height = 1}
 lastyear <- nth(names(df_diva), -3)
 total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
 
 abm_bullet(label = "Publication (fractions)", value = total_pubs, reference = 2000)
 ```
 
-### Field normalized citations
-
-```{r, fig_width = 1, fig.height = 1}
-last_interval <- nth(df_cf$interval, -2)
-cf <- as.numeric(filter(df_cf, interval == last_interval)$cf)
-abm_bullet(label = "Field normalized citations (Cf)", value = cf, reference = 1.0)
-```
-
-### Share Top10%
-```{r, fig_width = 1, fig.height = 1}
-top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
-abm_bullet(label = "Share Top10% publications", value = top10_share, reference = 0.10, pct = TRUE)
-```
-
-### Journal field normalized citations
-```{r, fig_width = .1, fig.height = 1}
-last_interval <- nth(df_jcf$interval, -2)
-jcf <- as.numeric(filter(df_jcf, interval == last_interval)$jcf)
-abm_bullet(label = "Field normalized journal citations (JCf)", value = jcf, reference = 1.0)
-```
-
-### Share Top20% journals
-```{r, fig_width = .1, fig.height = 1}
-
-top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
-abm_bullet(label = "Share in Top20% journals", value = top20_share, reference = 0.20, pct = TRUE)
-```
-
 ### Swedish non-university copublication
-```{r, fig_width = 1, fig.height = 1}
+```{r, fig.width = 3, fig.height = 1}
 last_interval <- nth(df_copub$interval, -2)
 
 nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
@@ -104,7 +76,7 @@ abm_waffle_pct(nonuniv_share, label = nonuniv_lbl)
 ```
 
 ### International copublication
-```{r, fig_width = 1, fig.height = 1}
+```{r, fig.width = 3, fig.height = 1}
 last_interval <- nth(df_copub$interval, -2)
 
 
@@ -112,6 +84,38 @@ int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
 int_lbl <- sprintf("International: %d%%", round(100*int_share))
 #int_lbl <- sprintf("%d%% of publications %s\nwere international copublications", round(100*int_share), last_interval)
 abm_waffle_pct(int_share, label = int_lbl)
+```
+
+Row {data-height=200}
+---------------------
+### Field normalized citations
+
+```{r, fig.width = 4, fig.height = 1}
+last_interval <- nth(df_cf$interval, -2)
+cf <- as.numeric(filter(df_cf, interval == last_interval)$cf)
+abm_bullet(label = "Field normalized citations (Cf)", value = cf, reference = 1.0)
+```
+
+### Share Top10%
+```{r, fig.width = 4, fig.height = 1}
+top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
+abm_bullet(label = "Share Top10% publications", value = top10_share, reference = 0.10, pct = TRUE)
+```
+
+Row {data-height=200}
+---------------------
+### Journal field normalized citations
+```{r, fig.width = 4, fig.height = 1}
+last_interval <- nth(df_jcf$interval, -2)
+jcf <- as.numeric(filter(df_jcf, interval == last_interval)$jcf)
+abm_bullet(label = "Field normalized journal citations (JCf)", value = jcf, reference = 1.0)
+```
+
+### Share Top20% journals
+```{r, fig.width = 4, fig.height = 1}
+
+top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
+abm_bullet(label = "Share in Top20% journals", value = top20_share, reference = 0.20, pct = TRUE)
 ```
 
 Row

@@ -22,12 +22,16 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 
 #' Get order of publication type for ABM table 1
 #' 
-#' @param con connection to db, default is to use mssql connection
+#' @param con connection to db - if no connection is given, attempt to use abm_public_kth data
 #' @return tibble with pt_ordning and diva_publiation_type
 #' @import DBI dplyr tidyr purrr
 #' @export
-get_pt_ordning <- function(con = con_bib()){
-  con %>% tbl("Diva_publication_types") %>% collect()
+get_pt_ordning <- function(con){
+  if(!missing(con)){
+    con %>% tbl("Diva_publication_types") %>% collect()
+  } else {
+    abm_public_kth$pt_ordning
+  }
 }
 
 #' Retrieve Table 1 (Publications in DiVA) for ABM
@@ -63,12 +67,14 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction),
               WoS_coverage = weighted.mean(wos_bin, Unit_Fraction, na.rm = T)) %>%
     ungroup()
+  
+  pt_ordning <- get_pt_ordning(con)
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)
 
   table1 %>%
     merge(table2) %>%
-    merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
+    merge(pt_ordning, by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
     arrange(pt_ordning) %>%
     select(-pt_ordning)
 }
@@ -437,8 +443,9 @@ abm_publications <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param overwrite_cache logical (by default FALSE) specifying whether 
 #'   the cache should be refreshed
-#' @return a list with two slots - "meta" for organizational unit metadata info 
-#'   and "units" with a named list of results (set of 5 different tibbles for each of the units).
+#' @return a list with three slots - "meta" for organizational unit metadata info,
+#'   "units" with a named list of results (set of 5 different tibbles for each of the units)
+#'   and "pt_ordning" for DiVA publication type sort order
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -489,6 +496,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
     select(unit_code) %>% 
     pull(1)
   
+  # retrieve sort order for DiVA publication types
+  pt_ordning <- get_pt_ordning(con = pool_bib())
+  
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
@@ -505,7 +515,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  out <- list("meta" = units_table, "units" = res)
+  out <- list("meta" = units_table, "units" = res, "pt_ordning" = pt_ordning)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 
@@ -518,7 +528,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #' This returns an object which contains data for an individual researcher at KTH
 #'  
 #' @param unit_code the kthid for the researcher
-#' @return a list with two slots - "meta" for organizational unit metadata info 
+#' @return a list with two slots - "meta" for organizational unit metadata info
 #'   and "units" with a named list of results (set of 5 different tibbles for 
 #'   the tables and also the publication list).
 #' @importFrom stats setNames
@@ -546,7 +556,7 @@ abm_private_data <- function(unit_code) {
     unit_info() %>%
     collect() %>%
     arrange(-desc(org_level)) 
-  
+
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(

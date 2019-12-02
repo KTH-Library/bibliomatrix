@@ -4,10 +4,10 @@
 \alias{get_pt_ordning}
 \title{Get order of publication type for ABM table 1}
 \usage{
-get_pt_ordning(con = con_bib())
+get_pt_ordning(con)
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
+\item{con}{connection to db - if no connection is given, attempt to use abm_public_kth data}
 }
 \value{
 tibble with pt_ordning and diva_publiation_type

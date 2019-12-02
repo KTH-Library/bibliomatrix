@@ -7,7 +7,7 @@ output:
     favicon: kth-logo.png
     source_code: embed
 params:
-  kthid: u1o2ujjd
+  kthid: u1ygqmuy
   unit_code: KTH
   
 ---
@@ -61,7 +61,7 @@ Row {data-height=300}
 ---------------------
 ### Total publications (fractional counts){.value-box}
 
-```{r, fig.width = 1}
+```{r, fig.width = 2}
 if(nrow(df_diva) > 0){
   lastyear <- nth(names(df_diva), -3)
   total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
@@ -170,8 +170,9 @@ Row
 ```
 Publication list for KTH in Excel format
 
-Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
-
+```{r, echo=FALSE, out.height="60px"}
+wos_disclaimer()
+```
 
 Publications in DiVA
 =====================================

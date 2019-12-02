@@ -15,13 +15,13 @@ library(purrr)
 # issue "make up" in the directory where the plumber.R API resides
 # (cd inst/plumber/abm; make up)
 
-ABM_API_UNIT <- "http://localhost:8080/unit/%s/flexdashboard"
+ABM_API_UNIT <- "http://localhost:8080/unit/%s/flexdashboard?embeddata=true"
 ABM_API_EMP <- "http://localhost:8080/employee/%s/flexdashboard"
 
 server <- function(input, output, session) {
 
     ua <- Sys.getenv("SHINYPROXY_USERNAME")
-    if (ua == "") ua <- "cwil"
+    if (ua == "") ua <- "sigbritt"
     
     kthid <- function() {
         if (input$use_prerendered) return (177)
@@ -99,11 +99,14 @@ server <- function(input, output, session) {
                 filter(Diva_org_id == as.integer(input$unitid)) %>% 
                 pull(unit_code)
            
-            report <- system.file("extdata/abm.Rmd", package = "bibliomatrix")
-            f <- rmarkdown::render(report, params = list(unit_code = uc))
+
+            report <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
+            f <- rmarkdown::render(report, params = list(unit_code = uc,
+                is_employee = FALSE, embed_data = FALSE, use_package_data = TRUE))
         } else {
-            report <- system.file("extdata/abm-private.Rmd", package = "bibliomatrix")
-            f <- rmarkdown::render(report, params = list(unit_code = input$unitid))
+            report <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
+            f <- rmarkdown::render(report, params = list(unit_code = input$unitid,
+                is_employee = TRUE, embed_data = TRUE, use_package_data = FALSE))
         }
         includeHTML(f)
         #readBin(f, "raw", n = file.info(f)$size)

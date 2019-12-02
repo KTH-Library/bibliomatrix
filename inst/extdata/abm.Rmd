@@ -7,14 +7,24 @@ output:
     favicon: kth-logo.png
     css: gauge-extra.css
 params:
-  kthid: u1o2ujjd
-  unit_code: KTH
+  unit_code: u1g9umtq
+  is_employee: TRUE
+  use_package_data: FALSE
+  embed_data: TRUE
+  use_gauge: FALSE
   
 ---
 
 ```{r setup, include=FALSE}
+# unit_codes for testing:
+
+# u1g9umtq
+# u1jr9fll 
+# u1ygqmuy
+# u13bp6vd
+# u18qe64m   <- NB: this one triggers an exception in sliding_intervals() fcn
+
 library(flexdashboard)
-library(crosstalk)
 library(DT)
 library(readr)
 library(purrr)
@@ -28,11 +38,9 @@ library(scales)
 colors_vb <- palette_kth(4)
 run_unit<- params$unit_code #"KTH"
 
-use_package_data <- TRUE
-
 # Retrieve result tables to use in tabs and key indicators
 
-if (!use_package_data) {
+if (params$use_package_data != TRUE) {
   df_diva <- abm_table1(unit_code = run_unit) 
   df_cit3y <- abm_table2(unit_code= run_unit)
   df_cf <- abm_table3(unit_code= run_unit)
@@ -59,12 +67,19 @@ df_cf <- res %>% pluck(3)
 df_jcf <- res %>% pluck(4)
 df_copub <- res %>% pluck(5)
 
-unit_label <- 
-  abm_public_kth$meta %>% 
-  filter(unit_code == params$unit_code) %>% 
-  pull(unit_long_en)
+if (params$is_employee) {
+  
+  unit_label <- 
+    ad_displayname(kthid = params$unit_code)
+  
+} else {
+  
+  unit_label <- 
+    abm_public_kth$meta %>% 
+    filter(unit_code == params$unit_code) %>%
+    pull(unit_long_en)
+}
 
-#dfs<- abm_data(unit_code = run_unit) %>% collect()
 ```
 
 Overview
@@ -81,21 +96,25 @@ Row
 total_pubs <- 
   df_diva %>% select("2018") %>% sum(na.rm=TRUE) %>% round(digits=1)
 
-# sector <- gaugeSectors(colors = colors_vb[1])
-# gauge(
-#   value = total_pubs, 
-#   sectors = sector,
-#   min = 0,
-#   max = total_pubs * 1.25,
-#   href = "#publications-in-diva"
-# )
 
-valueBox(
- value = total_pubs,
-# icon = "fa-area-chart",
- color = colors_vb[1],
- href = "#publications-in-diva"
-)
+if (params$use_gauge == TRUE) {
+  sector <- gaugeSectors(colors = colors_vb[1])
+  gauge(
+    value = total_pubs,
+    sectors = sector,
+    min = 0,
+    max = total_pubs * 1.25,
+    href = "#publications-in-diva"
+  )
+} else {
+  valueBox(
+   value = total_pubs,
+  # icon = "fa-area-chart",
+   color = colors_vb[1],
+   href = "#publications-in-diva"
+  )
+}
+
 
 ```
 
@@ -107,27 +126,32 @@ avg_cf <- as.numeric(df_cf[4,"cf"]) %>% round(digits=2)
   #filter(Period == "2014-2016") %>%
   #pluck("cf")
 
-# sector <- gaugeSectors(
-#   success = c(1, 2),
-#   warning = c(0.5, 1),
-#   danger = c(0, 0.5),
-#   colors = c(colors_vb[1])
-# )
-# 
-# gauge(
-#   value = avg_cf, 
-#   sectors = sector,
-#   min = 0,
-#   max = 2,
-#   href = "#citation-impact"
-# )
-
-valueBox(
- value = avg_cf,
-# icon = "fa-area-chart",
- color = colors_vb[2],
- href = "#citation-impact"
-)
+if (params$use_gauge == TRUE) {
+  
+  sector <- gaugeSectors(
+    success = c(1, 2),
+    warning = c(0.5, 1),
+    danger = c(0, 0.5),
+    colors = c(colors_vb[1])
+  )
+  
+  gauge(
+    value = avg_cf,
+    sectors = sector,
+    min = 0,
+    max = 2,
+    href = "#citation-impact"
+  )
+  
+} else {
+  
+  valueBox(
+   value = avg_cf,
+  # icon = "fa-area-chart",
+   color = colors_vb[2],
+   href = "#citation-impact"
+  )
+}
 
 ```
 
@@ -137,27 +161,30 @@ valueBox(
 # TODO: be more defensive here (what if no rows are returned?)
 topten <- as.numeric(df_cf[nrow(df_cf) - 1, "top10_share"]) %>% percent()
 
-# sector <- gaugeSectors(
-#   success = c(10, 20),
-#   warning = c(5, 10),
-#   danger = c(0, 5),
-#   colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
-# )
-# 
-# gauge(
-#   value = topten, 
-#   sectors = sector,
-#   min = 0,
-#   max = 20,
-#   href = "#citation-impact"
-# )
+if (params$use_gauge == TRUE) {
 
-valueBox(
- value = topten,
-# icon = "fa-area-chart",
- color = colors_vb[2],
- href = "#citation-impact"
-)
+  sector <- gaugeSectors(
+    success = c(10, 20),
+    warning = c(5, 10),
+    danger = c(0, 5),
+    colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
+  )
+  
+  gauge(
+    value = topten,
+    sectors = sector,
+    min = 0,
+    max = 20,
+    href = "#citation-impact"
+  )
+} else {
+  valueBox(
+   value = topten,
+  # icon = "fa-area-chart",
+   color = colors_vb[2],
+   href = "#citation-impact"
+  )
+}
 
 ```
 
@@ -166,28 +193,31 @@ valueBox(
 ```{r}
 jcf <- as.numeric(df_jcf[4,"jcf"]) %>% round(digits=2)
 
-# sector <- gaugeSectors(
-#   success = c(1, 2),
-#   warning = c(0.5, 1),
-#   danger = c(0, 0.5),
-#   colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
-# )
-# 
-# gauge(
-#   value = jcf, 
-#   sectors = sector,
-#   min = 0,
-#   max = 2,
-#   href = "#journal-impact"
-# )
+if (params$use_gauge == TRUE) {
 
+  sector <- gaugeSectors(
+    success = c(1, 2),
+    warning = c(0.5, 1),
+    danger = c(0, 0.5),
+    colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
+  )
+  
+  gauge(
+    value = jcf,
+    sectors = sector,
+    min = 0,
+    max = 2,
+    href = "#journal-impact"
+  )
 
-valueBox(
- value = jcf,
-# icon = "fa-area-chart",
- color = colors_vb[3],
- href = "#journal-impact"
-)
+} else {
+  valueBox(
+   value = jcf,
+  # icon = "fa-area-chart",
+   color = colors_vb[3],
+   href = "#journal-impact"
+  )
+}
 
 ```
 
@@ -196,28 +226,31 @@ valueBox(
 ```{r}
 jcf <- as.numeric(df_jcf[5,"top20_share"]) %>% percent()
 
-# sector <- gaugeSectors(
-#   success = c(20, 40),
-#   warning = c(10, 20),
-#   danger = c(0, 10),
-#   colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
-# )
-# 
-# gauge(
-#   value = jcf, 
-#   sectors = sector,
-#   min = 0,
-#   max = 40,
-#   href = "#journal-impact"
-# )
+if (params$use_gauge == TRUE) {
 
+  sector <- gaugeSectors(
+    success = c(20, 40),
+    warning = c(10, 20),
+    danger = c(0, 10),
+    colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
+  )
+  
+  gauge(
+    value = jcf,
+    sectors = sector,
+    min = 0,
+    max = 40,
+    href = "#journal-impact"
+  )
+} else {
+  valueBox(
+   value = jcf,
+  # icon = "fa-area-chart",
+   color = colors_vb[3],
+   href = "#journal-impact"
+  )
+}
 
-valueBox(
- value = jcf,
-# icon = "fa-area-chart",
- color = colors_vb[3],
- href = "#journal-impact"
-)
 
 ```
 
@@ -226,25 +259,30 @@ valueBox(
 ```{r}
 copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
 
-# sector <- gaugeSectors(
-#   success = c(0, 100),
-#   colors = c(colors_vb[1])
-# )
-# 
-# gauge(
-#   value = copub_nonuni_swe, 
-#   sectors = sector,
-#   min = 0,
-#   max = 100,
-#   href = "#co-publishing"
-# )
+if (params$use_gauge == TRUE) {
 
-valueBox(
- value = copub_nonuni_swe,
-# icon = "fa-area-chart",
- color = colors_vb[4],
- href = "#co-publishing"
-)
+  sector <- gaugeSectors(
+    success = c(0, 100),
+    colors = c(colors_vb[1])
+  )
+  
+  gauge(
+    value = copub_nonuni_swe,
+    sectors = sector,
+    min = 0,
+    max = 100,
+    href = "#co-publishing"
+  )
+  
+} else {
+  valueBox(
+   value = copub_nonuni_swe,
+  # icon = "fa-area-chart",
+   color = colors_vb[4],
+   href = "#co-publishing"
+  )
+}
+
 
 ```
 
@@ -256,25 +294,28 @@ copub_int <- as.numeric(df_copub[5,"int_share"]) %>% percent()
   # filter(Period == "2015-2017") %>%
   # pluck("International Share")
 
-# sector <- gaugeSectors(
-#   success = c(0, 100),
-#   colors = c(colors_vb[1])
-# )
-# 
-# gauge(
-#   value = copub_int, 
-#   sectors = sector,
-#   min = 0,
-#   max = 100,
-#   href = "#co-publishing"
-# )
+if (params$use_gauge == TRUE) {
 
-valueBox(
- value = copub_int,
-# icon = "fa-area-chart",
- color = colors_vb[4],
- href = "#co-publishing"
-)
+  sector <- gaugeSectors(
+    success = c(0, 100),
+    colors = c(colors_vb[1])
+  )
+  
+  gauge(
+    value = copub_int,
+    sectors = sector,
+    min = 0,
+    max = 100,
+    href = "#co-publishing"
+  )
+} else {
+  valueBox(
+   value = copub_int,
+  # icon = "fa-area-chart",
+   color = colors_vb[4],
+   href = "#co-publishing"
+  )
+}
 
 ```
 
@@ -302,39 +343,52 @@ Row
 
 ### Publication data and attributions
 
-```{r, echo=FALSE, out.height="60px"}
+Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
 
-# embed_data <- function(path)
-#   paste0("data:", mime::guess_type(path), ";base64,", base64enc::base64encode(path))
-# 
-# embed_file_link <- function(path,
-#   href = embed_data(path),
-#   name = basename(path),
-#   text = paste("Download", name), ...) {
-#   htmltools::a(text, href = href, download = name, ...)
-# }
-# 
-# icon_download <- htmltools::tag("i", list(class = "fa fa-download"))
-# icon_download <- htmltools::attachDependencies(icon_download,
-#   flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
-# 
-# # export to xlsx format, into tempdir so we can embed a file link
-# 
-# # data that we want to export
-# publications_kth <- abm_publications(unit_code = run_unit)
-# 
-# #install.packages("openxlsx")
-# library(openxlsx)
-# excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
-# write.xlsx(publications_kth, excel_file)
-# 
-# embed_file_link(excel_file,
-#   title = "Download Publication List in Excel format",
-#   text = icon_download, class="btn-download")
+```{r, echo=FALSE, results="asis"}
+
+if (params$embed_data == TRUE) {
+  
+  library(htmltools)
+  
+  embed_data <- function(path)
+    paste0("data:", mime::guess_type(path), ";base64,", base64enc::base64encode(path))
+  
+  embed_file_link <- function(path,
+    href = embed_data(path),
+    name = basename(path),
+    text = paste("Download", name), ...) {
+    withTags(p(a(text, href = href, download = name, ...)))
+  }
+  
+  icon_download <- htmltools::tag("i", list(
+    class = "fa fa-download", 
+    paste("Publication data for", unit_label)))
+  
+  icon_download <- htmltools::attachDependencies(icon_download,
+    flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
+  
+  # export to xlsx format, into tempdir so we can embed a file link
+  
+  # data that we want to export
+  publications_kth <- abm_publications(unit_code = run_unit)
+  
+  #install.packages("openxlsx")
+  library(openxlsx)
+  excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
+  write.xlsx(publications_kth, excel_file)
+  
+  embed_file_link(excel_file,
+    title = "Download Publication List in Excel format",
+    text = icon_download, 
+    class = "btn btn-sm btn-primary")
+}
 
 ```
 
-Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
+Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.
+
+<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary">Edit your publication data in DiVa</a>
 
 
 Publications in DiVA
@@ -348,22 +402,6 @@ Row
 ### Publication volume, fractionalized 
 
 ```{r}
-
-# All main tables are now retrieved at the top, and later used in tabs
-#------------------------------------------
-
-#my_locale <- readr::locale(decimal_mark = ".")
-
-#my_parse_guess <- function(x)
-#  readr::parse_guess(x, locale = my_locale, guess_integer = TRUE)
-# 
-# df <- 
-#   dfs %>% pluck(1, 1) %>% select(-c(1, 2)) %>%
-#   mutate_all(my_parse_guess)
-
-# %>% 
-#   select(`WoS Coverage` = WoS_coverage, `Publication Type` = Publication_Type_DiVA) %>%
-#   mutate(Total = 0)
 
 DT::datatable(df_diva, rownames = FALSE, options = list(
   bPaginate = FALSE,
@@ -418,9 +456,6 @@ Row
 
 ```{r}
 
-  # dfs %>% pluck(1, 2) %>% select(-c(1, 2)) %>%
-  # mutate_all(my_parse_guess)
-
 DT::datatable(df_cit3y, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
@@ -434,9 +469,6 @@ DT::datatable(df_cit3y, rownames = FALSE, options = list(
 
 ```{r}
 
-  # dfs %>% pluck(1, 3) %>% select(-c(1, 2)) %>%
-  # mutate_all(my_parse_guess)
-
 DT::datatable(df_cf, rownames = FALSE, options = list(
   bPaginate = FALSE,
   dom = 't'
@@ -449,8 +481,6 @@ Row
 ###  Average field normalized citation indicator
 
 ```{r}
-
-#df_cf_long<- df_cf %>% gather("indicator", "value", -interval) %>% filter(!interval == "Total") %>% filter(!indicator %in% c("P_frac", "top10_count"))
 
 p <- ggplot(data = df_cf,
     aes(x = interval, y = cf, group=1)) +
@@ -488,8 +518,6 @@ Row
 ### 3-year moving average
 
 ```{r}
-
-#  dfs %>% pluck(1, 4) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
 
 DT::datatable(df_jcf, rownames = FALSE, options = list(
   bPaginate = FALSE,
@@ -539,7 +567,6 @@ Row
 ### Internationally and with Swedish non-university organizations (3-year moving average)
 
 ```{r}
-#  dfs %>% pluck(1, 5) %>% select(-c(1, 2)) %>% mutate_all(my_parse_guess)
 
 DT::datatable(df_copub, rownames = FALSE, options = list(
   bPaginate = FALSE,
@@ -554,9 +581,11 @@ Row
 
 ```{r, fig.width=9, fig.height=6}
 
-df_copub_long<- df_copub %>% gather("indicator", "value", -interval) %>% 
-                            filter(!interval == "Total") %>% 
-                            filter(indicator %in% c("int_share", "nonuniv_share"))
+df_copub_long <- 
+  df_copub %>% 
+  gather("indicator", "value", -interval) %>% 
+    filter(!interval == "Total") %>% 
+    filter(indicator %in% c("int_share", "nonuniv_share"))
 
 p <- ggplot(data = df_copub_long,
     aes(x = interval, y = value, group=indicator)) +
@@ -564,47 +593,5 @@ p <- ggplot(data = df_copub_long,
     geom_point(aes(color=indicator))
   
 print(p)
-
-```
-
-<!---Graphs
-=====================================
-
-Row
------------------------
-
-### DiVA publications --->
-
-```{r}
-
-# library(tidyr)
-# library(ggthemes)
-# library(plotly)
-# 
-# 
-# ts <-
-#   df %>%
-#   select(-c(`WoS Coverage`, Total)) %>%
-#   gather(key = "Year", value = "Indicator", 2:8)
-# 
-# 
-# p <-
-#   ggplot(
-#     data = ts,
-#     aes(x = Year, y = Indicator, group = Publication,
-#         colour = Publication, label = Publication)) +
-#   geom_line() +
-#   geom_point() +
-#   scale_color_brewer(type = "qual", palette = "Paired") +
-#   geom_text(data = ts %>% filter(Year == 2017) %>% arrange(desc(Indicator)) %>% slice(1:3),
-#             aes(label = Publication), hjust = 1,
-#             vjust = 2) +
-#   theme_economist_white() +
-#   theme(
-#     legend.position = "none",
-#     axis.title.x = element_blank(),
-#     axis.title.y = element_blank())
-# 
-# ggplotly(p)
 
 ```

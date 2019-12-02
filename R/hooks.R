@@ -84,13 +84,18 @@ prerender <- function(refresh = FALSE) {
     unit_code <- uc_from_orgid(orgid)
     dash <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
     f <- rmarkdown::render(dash, output_file = filename, 
-       params = list(unit_code = unit_code))
+       params = list(unit_code = unit_code), quiet = TRUE)
   }
   
   # create the progress bar with a dplyr function. 
   pb <- progress_estimated(length(orgid))
   res <- map(orgid, render_with_progress)
-  res
+  
+  loc_www <- system.file("shiny-apps", "abm", package = "bibliomatrix")
+  message("Updating shiny app cache at ", loc_www)
+  file.copy(dest, loc_www, recursive = TRUE, overwrite = TRUE)
+  
+  return (res)
 }
 
 #' Location for prerender cache with dashboard HTML content

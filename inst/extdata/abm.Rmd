@@ -5,7 +5,7 @@ output:
     orientation: rows
     vertical_layout: scroll
     favicon: kth-logo.png
-    source_code: embed
+    css: gauge-extra.css
 params:
   kthid: u1o2ujjd
   unit_code: KTH
@@ -81,10 +81,20 @@ Row
 total_pubs <- 
   df_diva %>% select("2018") %>% sum(na.rm=TRUE) %>% round(digits=1)
 
+# sector <- gaugeSectors(colors = colors_vb[1])
+# gauge(
+#   value = total_pubs, 
+#   sectors = sector,
+#   min = 0,
+#   max = total_pubs * 1.25,
+#   href = "#publications-in-diva"
+# )
+
 valueBox(
-  value = total_pubs,
-#  icon = "fa-area-chart",
-  color = colors_vb[1]
+ value = total_pubs,
+# icon = "fa-area-chart",
+ color = colors_vb[1],
+ href = "#publications-in-diva"
 )
 
 ```
@@ -97,10 +107,26 @@ avg_cf <- as.numeric(df_cf[4,"cf"]) %>% round(digits=2)
   #filter(Period == "2014-2016") %>%
   #pluck("cf")
 
+# sector <- gaugeSectors(
+#   success = c(1, 2),
+#   warning = c(0.5, 1),
+#   danger = c(0, 0.5),
+#   colors = c(colors_vb[1])
+# )
+# 
+# gauge(
+#   value = avg_cf, 
+#   sectors = sector,
+#   min = 0,
+#   max = 2,
+#   href = "#citation-impact"
+# )
+
 valueBox(
-  value = avg_cf,
-#  icon = "fa-area-chart",
-  color = colors_vb[2]
+ value = avg_cf,
+# icon = "fa-area-chart",
+ color = colors_vb[2],
+ href = "#citation-impact"
 )
 
 ```
@@ -111,10 +137,26 @@ valueBox(
 # TODO: be more defensive here (what if no rows are returned?)
 topten <- as.numeric(df_cf[nrow(df_cf) - 1, "top10_share"]) %>% percent()
 
+# sector <- gaugeSectors(
+#   success = c(10, 20),
+#   warning = c(5, 10),
+#   danger = c(0, 5),
+#   colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
+# )
+# 
+# gauge(
+#   value = topten, 
+#   sectors = sector,
+#   min = 0,
+#   max = 20,
+#   href = "#citation-impact"
+# )
+
 valueBox(
-  value = topten,
-#  icon = "fa-area-chart",
-  color = colors_vb[2]
+ value = topten,
+# icon = "fa-area-chart",
+ color = colors_vb[2],
+ href = "#citation-impact"
 )
 
 ```
@@ -124,10 +166,27 @@ valueBox(
 ```{r}
 jcf <- as.numeric(df_jcf[4,"jcf"]) %>% round(digits=2)
 
+# sector <- gaugeSectors(
+#   success = c(1, 2),
+#   warning = c(0.5, 1),
+#   danger = c(0, 0.5),
+#   colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
+# )
+# 
+# gauge(
+#   value = jcf, 
+#   sectors = sector,
+#   min = 0,
+#   max = 2,
+#   href = "#journal-impact"
+# )
+
+
 valueBox(
-  value = jcf,
-#  icon = "fa-area-chart",
-  color = colors_vb[3]
+ value = jcf,
+# icon = "fa-area-chart",
+ color = colors_vb[3],
+ href = "#journal-impact"
 )
 
 ```
@@ -137,10 +196,27 @@ valueBox(
 ```{r}
 jcf <- as.numeric(df_jcf[5,"top20_share"]) %>% percent()
 
+# sector <- gaugeSectors(
+#   success = c(20, 40),
+#   warning = c(10, 20),
+#   danger = c(0, 10),
+#   colors = c(colors_vb[1], colors_vb[2], colors_vb[3])
+# )
+# 
+# gauge(
+#   value = jcf, 
+#   sectors = sector,
+#   min = 0,
+#   max = 40,
+#   href = "#journal-impact"
+# )
+
+
 valueBox(
-  value = jcf,
-#  icon = "fa-area-chart",
-  color = colors_vb[3]
+ value = jcf,
+# icon = "fa-area-chart",
+ color = colors_vb[3],
+ href = "#journal-impact"
 )
 
 ```
@@ -150,10 +226,24 @@ valueBox(
 ```{r}
 copub_nonuni_swe <- as.numeric(df_copub[5,"nonuniv_share"]) %>% percent()
 
+# sector <- gaugeSectors(
+#   success = c(0, 100),
+#   colors = c(colors_vb[1])
+# )
+# 
+# gauge(
+#   value = copub_nonuni_swe, 
+#   sectors = sector,
+#   min = 0,
+#   max = 100,
+#   href = "#co-publishing"
+# )
+
 valueBox(
-  value = copub_nonuni_swe,
-#  icon = "fa-area-chart",
-  color = colors_vb[4]
+ value = copub_nonuni_swe,
+# icon = "fa-area-chart",
+ color = colors_vb[4],
+ href = "#co-publishing"
 )
 
 ```
@@ -166,10 +256,24 @@ copub_int <- as.numeric(df_copub[5,"int_share"]) %>% percent()
   # filter(Period == "2015-2017") %>%
   # pluck("International Share")
 
+# sector <- gaugeSectors(
+#   success = c(0, 100),
+#   colors = c(colors_vb[1])
+# )
+# 
+# gauge(
+#   value = copub_int, 
+#   sectors = sector,
+#   min = 0,
+#   max = 100,
+#   href = "#co-publishing"
+# )
+
 valueBox(
-  value = copub_int,
-#  icon = "fa-area-chart",
-  color = colors_vb[4]
+ value = copub_int,
+# icon = "fa-area-chart",
+ color = colors_vb[4],
+ href = "#co-publishing"
 )
 
 ```
@@ -229,7 +333,6 @@ Row
 #   text = icon_download, class="btn-download")
 
 ```
-Publication list for KTH in Excel format
 
 Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: : © Copyright Clarivate Analytics. 2017. All rights reserved. 
 

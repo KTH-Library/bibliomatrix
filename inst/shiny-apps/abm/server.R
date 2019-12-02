@@ -19,21 +19,26 @@ ABM_API_UNIT <- "http://localhost:8080/unit/%s/flexdashboard"
 ABM_API_EMP <- "http://localhost:8080/employee/%s/flexdashboard"
 
 server <- function(input, output, session) {
-    
+
     ua <- Sys.getenv("SHINYPROXY_USERNAME")
     if (ua == "") ua <- "cwil"
-    kthid <- ad_kthid(ua)
-    active_user <- kthid %>% set_names(ad_displayname(kthid))
-
+    
+    kthid <- function() {
+        if (input$use_prerendered) return (177)
+        kthid <- ad_kthid(ua)
+        kthid <- setNames(kthid, ad_displayname(kthid))
+    }
+    
     output$units <- renderUI({
         
         orgs <- abm_public_kth$meta$Diva_org_id %>% 
             set_names(abm_public_kth$meta$unit_long_en_indent2)
         
-        orgs <- c(active_user, orgs)
+        if (!input$use_prerendered)
+            orgs <- c(kthid(), orgs)
         
         shiny::selectInput(inputId = "unitid", label = NULL, 
-            choices = orgs, selected = kthid, size = 1,
+            choices = orgs, selected = kthid(), size = 1,
             multiple = FALSE, selectize = FALSE, width = "100%")
     })
     
@@ -41,17 +46,44 @@ server <- function(input, output, session) {
 
     observe({
         req(input$unitid)
-        API <- ifelse(input$unitid == kthid, ABM_API_EMP, ABM_API_UNIT)
+        # if the unit id not is for an org then use employee endpoint
+        API <- ifelse(!input$unitid %in% abm_public_kth$meta$Diva_org_id, 
+            ABM_API_EMP, ABM_API_UNIT)
         dash_src <<- sprintf(API, input$unitid)
-        cat(dash_src, "\n")
+        if (!input$use_prerendered)
+            cat(dash_src, "\n")
     })
     
     output$frame <- renderUI({
         
         req(input$unitid)
         
-        tags$iframe(src = dash_src, width = "100%", height = "100%",
-                    frameborder = 0, scrolling = 'auto')
+        if (input$use_prerendered) {
+            f <- file.path(prerender_cache_location(), 
+                paste0(input$unitid, ".html"))
+            # txt <- read_lines(f)
+            # s1 <- "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">"
+            # s2 <- "<div class=\"navbar navbar-inverse\" role=\"navigation\">"
+            # txt <- str_replace(txt, s1, s2)
+            # write_lines(txt, f)
+#            f2 <- filter_fragment(f, search = "", replace = "")
+            # issue https://community.rstudio.com/t/generating-markdown-reports-from-shiny/8676/5
+            # includeHTML(f)
+            # active_dash <- file.path(system.file("shiny-apps", "abm", "www", package = "bibliomatrix"),
+            #     "activedash.html")
+            # cat("copying ", f, " to ", active_dash)
+            # res <- file.copy(f, "activedash.html", overwrite = TRUE)
+            # cat("outcome: res")
+            # embed_data <- function(path)
+            #     paste0("data:", mime::guess_type(path), ";base64,", 
+            #            base64enc::base64encode(path))
+            tags$iframe(src = paste0(input$unitid, ".html"), width = "100%", height = "100%",
+                        frameborder = 0, scrolling = 'auto')
+        } else {
+            cat("Embedding in iframe: ", dash_src, "\n")
+            tags$iframe(src = dash_src, width = "100%", height = "100%",
+                frameborder = 0, scrolling = 'auto')
+        }
         
     })    
     
@@ -61,14 +93,19 @@ server <- function(input, output, session) {
         
         req(input$unitid)
         
-        uc <- 
-            abm_public_kth$meta %>% 
-            filter(Diva_org_id == as.integer(input$unitid)) %>% 
-            pull(unit_code)
-        
-       report <- system.file("extdata/abm.Rmd", package = "bibliomatrix")
-       f <- rmarkdown::render(report, params = list(unit_code = uc))
-       includeHTML(f)
+        if (input$unitid %in% abm_public_kth$meta$Diva_org_id) {
+            uc <- 
+                abm_public_kth$meta %>% 
+                filter(Diva_org_id == as.integer(input$unitid)) %>% 
+                pull(unit_code)
+           
+            report <- system.file("extdata/abm.Rmd", package = "bibliomatrix")
+            f <- rmarkdown::render(report, params = list(unit_code = uc))
+        } else {
+            report <- system.file("extdata/abm-private.Rmd", package = "bibliomatrix")
+            f <- rmarkdown::render(report, params = list(unit_code = input$unitid))
+        }
+        includeHTML(f)
         #readBin(f, "raw", n = file.info(f)$size)
     })
     

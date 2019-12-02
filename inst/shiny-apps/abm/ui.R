@@ -13,7 +13,10 @@ dashboardPage(skin = "black",
       title = "KTHB",
       style = "padding-top:10px; padding-bottom:10px;"),
       class = "dropdown")),
-  dashboardSidebar(uiOutput("units")),
+  dashboardSidebar(
+    uiOutput("units"),
+    checkboxInput("use_prerendered", "Use pre-rendered content", value = FALSE)
+  ),
   dashboardBody(
     box(width = 12, height = "90vh", 
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),

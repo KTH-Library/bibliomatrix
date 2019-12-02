@@ -787,3 +787,14 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
           aspect.ratio = 0.1)
 }
 
+#' Make ABM table have last rows bold with gray background, other rows with white background
+#'
+#' @param t the table to be formatted
+#' @export
+abm_format_rows <- function(t){
+  formatStyle(table = t,
+              columns = 1,
+              target = "row",
+              fontWeight = styleEqual("Total", "bold"),
+              backgroundColor = styleEqual("Total", "#DDDDDD", "#FFFFFF"))
+}

@@ -198,7 +198,9 @@ DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage",
                 title = "ABM_publications")
               ) %>%
   formatRound(2:9, digits = 1, mark = "") %>%
-  formatPercentage("WoS coverage", digits = 1)
+  formatPercentage("WoS coverage", digits = 1) %>%
+  abm_format_rows()
+
 ```
 
 Row
@@ -242,7 +244,8 @@ DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
                 buttons = c("copy", "csv", "excel"),
                 title = "ABM_citations")
               ) %>% 
-  formatRound(2:4, digits = 1, mark = "")
+  formatRound(2:4, digits = 1, mark = "") %>%
+  abm_format_rows()
 ```
 
 <!--- Column {data-width=500}
@@ -265,7 +268,8 @@ DT::datatable(df_cf %>% rename("Publication years" = "interval",
                 filename = "ABM_field_normalized_citations")
               ) %>% 
   formatRound(2:4, digits = 1, mark = "") %>% 
-  formatPercentage(5, digits = 1)
+  formatPercentage(5, digits = 1) %>%
+  abm_format_rows()
 ```
 
 Row
@@ -312,7 +316,8 @@ DT::datatable(df_jcf %>% rename("Publication years" = "interval",
                 title = "ABM_journal_impact")
               ) %>% 
   formatRound(2:4, digits = 1, mark = "") %>% 
-  formatPercentage(5, digits = 1)
+  formatPercentage(5, digits = 1) %>%
+  abm_format_rows()
 ```
 
 Row
@@ -358,7 +363,8 @@ DT::datatable(df_copub %>% rename("Publication years" = "interval",
                 buttons = c("copy", "csv", "excel"),
                 title = "ABM_copublications")
               ) %>%
-  formatPercentage(c(4,6), digits = 1)
+  formatPercentage(c(4,6), digits = 1) %>%
+  abm_format_rows()
 ```
 
 Row

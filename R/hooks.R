@@ -58,6 +58,7 @@ run_api <- function(teardown = FALSE) {
 #' @import dplyr
 prerender <- function(refresh = FALSE) {
   
+  abm_public_kth <- bibliomatrix::abm_public_kth
   dest <- prerender_cache_location()
   if (!dir.exists(dest)) dir.create(dest)
   

@@ -22,7 +22,7 @@ globalz <- "
     wos_coverage_Mean wos_coverage_NA Doc_id wos_bin
     WoS_coverage df_copub df_jcf indicator int_share nonuniv_share
     top10_share top20_share year measure target
-    from n_pad unit_long_en Copublication
+    from n_pad unit_long_en Copublication formatStyle styleEqual
 "
 
 # HACK: add global fcns / vars with spaces in the name

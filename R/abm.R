@@ -624,6 +624,7 @@ abm_graph_wos_coverage <- function(df){
 abm_graph_cf <- function(df){
   kth_cols <- palette_kth(4)
   ymax <- max(2, ceiling(max(df$cf)))
+
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
@@ -631,7 +632,7 @@ abm_graph_cf <- function(df){
     xlab(NULL) +
     ylab(NULL) +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["olive"])
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"])
 }
 
 #' Create graph over Top 10\% publications by year
@@ -651,7 +652,7 @@ abm_graph_top10 <- function(df){
     geom_line(color = kth_cols["blue"]) +
   xlab(NULL) +
   ylab(NULL) +
-  geom_hline(yintercept = 0.1, color = kth_cols["olive"]) +
+  geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
   scale_y_continuous(labels = percent, limits = c(0, ymax))
 }
 
@@ -672,7 +673,7 @@ abm_graph_jcf <- function(df){
     xlab(NULL) +
     ylab(NULL) +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["olive"])
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"])
 }
 
 #' Create graph over Top 20\% journals by year
@@ -692,7 +693,7 @@ abm_graph_top20 <- function(df){
     geom_line(color = kth_cols["blue"]) +
     xlab(NULL) +
     ylab(NULL) +
-    geom_hline(yintercept = 0.2, color = kth_cols["olive"]) +
+    geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
     scale_y_continuous(labels = percent, limits = c(0, ymax))
 }
 
@@ -767,7 +768,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
   ggplot(bg.data) +
     labs(title = title) +
     geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill=kth_cols["lightblue"], stat="identity", width=0.5, alpha=0.4) +
-    geom_errorbar(aes(x = measure, ymin = target*.999, ymax = target*1.001), color=kth_cols["cerise"], width = 0.5) +
+    geom_errorbar(aes(x = measure, ymin = target*.99, ymax = target*1.01), color=kth_cols["cerise"], width = 0.5) +
     geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.3) +
     coord_flip() +
     theme(plot.title=element_text(size = 12),

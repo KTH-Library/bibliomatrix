@@ -57,20 +57,25 @@ function(id, tab, res) {
 
 #* A flexdashboard reporting on Bibliometric indicators for a unit at KTH
 #* @get /unit/<id:int>/flexdashboard
+#* @param embeddata:logical flag to indicate if publication data should be embedded
 #* @tag ABM reports
 #* @response 400 Invalid input.
 #* @serializer contentType list(type = "text/html")
-function(id, res) {
+function(id, res, embeddata = "false") {
   is_valid <- id %in% abm_public_kth$meta$Diva_org_id
-  
+  embed <- ifelse(embeddata == "true", TRUE, FALSE)
+  #cat("embed is: ", embed, "\n")
   if (is_valid) {
-    cache <- file.path(tempdir(), paste0(id, ".rds"))
+    cache <- file.path(tempdir(), 
+       paste0(id, ifelse(embed, "-embed-", ""), ".rds"))
     if (file.exists(cache)) {
+      cat("Serving from cache: ", cache, "\n")
       readBin(cache, "raw", n = file.info(cache)$size)
     } else {
       uc <- abm_public_kth$meta %>% filter(Diva_org_id == id) %>% pull(unit_code)
-      report <- system.file("extdata/abm.Rmd", package = "bibliomatrix")
-      f <- rmarkdown::render(report, params = list(unit_code = uc))
+      report <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
+      f <- rmarkdown::render(report, quiet = TRUE, params = list(
+        unit_code = uc, embed_data = embed, is_employee = FALSE, use_package_data = TRUE))
       file.copy(f, cache)
       readBin(f, "raw", n = file.info(f)$size)
     }
@@ -90,13 +95,13 @@ function(id, res) {
   if (file.exists(cache)) {
     readBin(cache, "raw", n = file.info(cache)$size)
   } else {
-    report <- system.file("extdata/abm-private.Rmd", package = "bibliomatrix")
-    f <- rmarkdown::render(report, params = list(unit_code = id))
+    report <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
+    f <- rmarkdown::render(report, params = list(
+      unit_code = id, is_employee = TRUE, embed_data = TRUE, use_package_data = FALSE))
     file.copy(f, cache)
     readBin(f, "raw", n = file.info(f)$size)
   }
 }
-
 
 #* An endpoint to be used by monitoring services in the KTH IT Operations infrastructure
 #* @get /_monitor

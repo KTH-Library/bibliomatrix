@@ -47,6 +47,8 @@ run_api <- function(teardown = FALSE) {
   msg <- sprintf("Please do this manually for now; open a terminal and issue: \ncd %s \nmake up", 
      normalizePath(dirname(system.file(package = "bibliomatrix", "plumber", "abm", "plumber.R"))))
   message(msg)
+  if (Sys.info()["sysname"] == "Windows")
+    message("On Windows, please use 'RScript.exe run_api.R' instead of 'make up'")
 }
 
 #' Prerender dashboards for public data

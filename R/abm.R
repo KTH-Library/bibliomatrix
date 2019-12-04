@@ -26,11 +26,11 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 #' @return tibble with pt_ordning and diva_publiation_type
 #' @import DBI dplyr tidyr purrr
 #' @export
-get_pt_ordning <- function(con){
+get_pubtype_order <- function(con){
   if(!missing(con)){
     con %>% tbl("Diva_publication_types") %>% collect()
   } else {
-    abm_public_kth$pt_ordning
+    abm_public_kth$pubtype_order
   }
 }
 
@@ -68,13 +68,13 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
               WoS_coverage = weighted.mean(wos_bin, Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
-  pt_ordning <- get_pt_ordning(con)
+  pubtype_order <- get_pubtype_order(con)
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)
 
   table1 %>%
-    merge(table2) %>%
-    merge(pt_ordning, by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
+    inner_join(table2) %>%
+    inner_join(pubtype_order, by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
     arrange(pt_ordning) %>%
     select(-pt_ordning)
 }
@@ -159,10 +159,10 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+                        by = c("Publication_Year" = "x"))
 
   # Year dependent part of table
   table1 <-
@@ -208,10 +208,10 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+               by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
   table1 <-
@@ -257,10 +257,10 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+               by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
   table1 <-
@@ -497,7 +497,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
     pull(1)
   
   # retrieve sort order for DiVA publication types
-  pt_ordning <- get_pt_ordning(con = pool_bib())
+  pubtype_order <-
+    get_pubtype_order(con = pool_bib()) %>%
+    arrange(pt_ordning)
   
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
@@ -515,7 +517,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  out <- list("meta" = units_table, "units" = res, "pt_ordning" = pt_ordning)
+  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 

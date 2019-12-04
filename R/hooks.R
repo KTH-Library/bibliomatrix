@@ -65,6 +65,7 @@ prerender <- function(refresh = FALSE) {
   if (!dir.exists(dest)) dir.create(dest)
   
   orgid <- abm_public_kth$meta$Diva_org_id
+  
   f_from_orgid <- function(uc) paste0(uc, ".html")
   uc_from_orgid <- function(orgid) 
     abm_public_kth$meta %>% filter(Diva_org_id == orgid) %>% pull(unit_code)
@@ -86,12 +87,17 @@ prerender <- function(refresh = FALSE) {
     filename <- file.path(dest, f_from_orgid(orgid))
     unit_code <- uc_from_orgid(orgid)
     dash <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
-    f <- rmarkdown::render(dash, output_file = filename, 
-       params = list(unit_code = unit_code), quiet = TRUE)
+    f <- rmarkdown::render(dash, output_file = filename, quiet = TRUE,
+       params = list(
+         unit_code = unit_code, 
+         is_employee = FALSE, 
+         use_package_data = TRUE, 
+         embed_data = FALSE))
   }
   
-  # create the progress bar with a dplyr function. 
+
   pb <- progress_estimated(length(orgid))
+  
   res <- map(orgid, render_with_progress)
   
   loc_www <- system.file("shiny-apps", "abm", package = "bibliomatrix")

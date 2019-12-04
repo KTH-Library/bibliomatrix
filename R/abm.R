@@ -599,7 +599,7 @@ abm_graph_diva <- function(df){
   df_diva_long <- df %>%
     select(-"P_frac", -"WoS_coverage") %>%
     gather("year", "value", -Publication_Type_DiVA) %>%
-    left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
   ggplot(data = df_diva_long,
          aes(x = year)) +
@@ -617,7 +617,7 @@ abm_graph_diva <- function(df){
 #' @importFrom scales percent
 #' @export
 abm_graph_wos_coverage <- function(df){
-  df <- df %>% left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+  df <- df %>% left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   ggplot(data = df,
          aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
     geom_bar(aes(weight = WoS_coverage)) +

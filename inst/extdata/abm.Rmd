@@ -102,7 +102,7 @@ if (nrow(df_diva) > 0){
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0){
   last_interval <- nth(df_cf$interval, -2)
   cf <- as.numeric(filter(df_cf, interval == last_interval)$cf)
-  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", value = cf, reference = 1.0)
+  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", value = cf, reference = 1.0, roundto = 2)
   
   top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
   pub_bullet2 <- abm_bullet(label = "Share Top10% publications", value = top10_share, reference = 0.10, pct = TRUE)
@@ -120,7 +120,7 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0){
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow > 0){
   last_interval <- nth(df_jcf$interval, -2)
   jcf <- as.numeric(filter(df_jcf, interval == last_interval)$jcf)
-  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", value = jcf, reference = 1.0)
+  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", value = jcf, reference = 1.0, roundto = 2)
 
   top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
   jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, reference = 0.20, pct = TRUE)

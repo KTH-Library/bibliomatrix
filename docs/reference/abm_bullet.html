@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Public data from the Annual Bibliometric Monitoring project — abm_public_data • bibliomatrix</title>
+<title>Create bullet graph with reference line — abm_bullet • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,8 @@
 
 
 
-<meta property="og:title" content="Public data from the Annual Bibliometric Monitoring project — abm_public_data" />
-<meta property="og:description" content="This returns an object which contains data for the various higher 
-organizational units at KTH" />
+<meta property="og:title" content="Create bullet graph with reference line — abm_bullet" />
+<meta property="og:description" content="Create bullet graph with reference line" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -121,72 +120,52 @@ organizational units at KTH" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Public data from the Annual Bibliometric Monitoring project</h1>
+    <h1>Create bullet graph with reference line</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
-    <div class="hidden name"><code>abm_public_data.Rd</code></div>
+    <div class="hidden name"><code>abm_bullet.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This returns an object which contains data for the various higher 
-organizational units at KTH</p>
+    <p>Create bullet graph with reference line</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_public_data</span>(<span class='kw'>overwrite_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_bullet</span>(<span class='no'>label</span>, <span class='no'>value</span>, <span class='no'>reference</span>, <span class='kw'>roundto</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>pct</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>overwrite_cache</th>
-      <td><p>logical (by default FALSE) specifying whether 
-the cache should be refreshed</p></td>
+      <th>label</th>
+      <td><p>a label for the indicator, shown to the left of the gauge</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>the value of the indicator, displayed as a horizontal wide line</p></td>
+    </tr>
+    <tr>
+      <th>reference</th>
+      <td><p>a reference value displayed as a vertical thin line</p></td>
+    </tr>
+    <tr>
+      <th>roundto</th>
+      <td><p>number of digits after the decimal point (default = 1)</p></td>
+    </tr>
+    <tr>
+      <th>pct</th>
+      <td><p>boolean, set to TRUE if given value is a share (default = FALSE)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list with three slots - "meta" for organizational unit metadata info,
-  "units" with a named list of results (set of 5 different tibbles for each of the units)
-  and "pt_ordning" for DiVA publication type sort order</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>a ggplot object</p>
 
-    <p>Data is cached in a local application directory by default and
-is returned from there unless the parameter overwrite_cache is TRUE. 
-To get fresh data cached, specify this flag.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='co'># get all public data from the ABM</span>
-<span class='no'>public</span> <span class='kw'>&lt;-</span> <span class='fu'>abm_public_data</span>()
-
-<span class='co'># get public data specifically for KTH and table 1</span>
-<span class='no'>unit_kth</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='fl'>1</span>)
-
-<span class='co'># get summary data for KTH</span>
-<span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='st'>"summaries"</span>)
-
-<span class='co'># get public data specifically for KTH and table 1</span>
-<span class='no'>unit_kth</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='fl'>1</span>)
-
-<span class='co'># get public data for the school "I" and all five tables</span>
-<span class='no'>unit_i</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"I"</span>)
-
-<span class='co'># get public data for the architecture institution, table 1</span>
-<span class='no'>uc</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"meta"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='no'>unit_long_en</span> <span class='kw'>==</span> <span class='st'>"Architecture"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>pull</span>(<span class='no'>unit_code</span>)
-
-<span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='no'>uc</span>, <span class='fl'>1</span>)
-
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

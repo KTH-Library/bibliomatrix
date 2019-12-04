@@ -22,12 +22,16 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 
 #' Get order of publication type for ABM table 1
 #' 
-#' @param con connection to db, default is to use mssql connection
+#' @param con connection to db - if no connection is given, attempt to use abm_public_kth data
 #' @return tibble with pt_ordning and diva_publiation_type
 #' @import DBI dplyr tidyr purrr
 #' @export
-get_pt_ordning <- function(con = con_bib()){
-  con %>% tbl("Diva_publication_types") %>% collect()
+get_pubtype_order <- function(con){
+  if(!missing(con)){
+    con %>% tbl("Diva_publication_types") %>% collect()
+  } else {
+    abm_public_kth$pubtype_order
+  }
 }
 
 #' Retrieve Table 1 (Publications in DiVA) for ABM
@@ -63,12 +67,14 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction),
               WoS_coverage = weighted.mean(wos_bin, Unit_Fraction, na.rm = T)) %>%
     ungroup()
+  
+  pubtype_order <- get_pubtype_order(con)
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)
 
   table1 %>%
-    merge(table2) %>%
-    merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
+    inner_join(table2, by = "Publication_Type_DiVA") %>%
+    inner_join(pubtype_order, by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
     arrange(pt_ordning) %>%
     select(-pt_ordning)
 }
@@ -152,11 +158,14 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
+  if(nrow(orgdata) == 0)
+    return(tibble(interval = "Total", P_frac = NA, cf = NA, top10_count = NA, top10_share = NA))
+
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+                        by = c("Publication_Year" = "x"))
 
   # Year dependent part of table
   table1 <-
@@ -201,11 +210,14 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
   
+  if(nrow(orgdata) == 0)
+    return(tibble(interval = "Total", P_frac = NA, jcf = NA, top20_count = NA, top20_share = NA))
+  
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+               by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
   table1 <-
@@ -249,12 +261,15 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
     collect()
   if(!missing(pub_year))
     orgdata <- filter(orgdata, Publication_Year %in% pub_year)
+  
+  if(nrow(orgdata) == 0)
+    return(tibble(interval = "Total", P_full = NA, nonuniv_count = NA, nonuniv_share = NA, int_count = NA, int_share = NA))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+               by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
   table1 <-
@@ -437,8 +452,9 @@ abm_publications <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param overwrite_cache logical (by default FALSE) specifying whether 
 #'   the cache should be refreshed
-#' @return a list with two slots - "meta" for organizational unit metadata info 
-#'   and "units" with a named list of results (set of 5 different tibbles for each of the units).
+#' @return a list with three slots - "meta" for organizational unit metadata info,
+#'   "units" with a named list of results (set of 5 different tibbles for each of the units)
+#'   and "pt_ordning" for DiVA publication type sort order
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -489,6 +505,11 @@ abm_public_data <- function(overwrite_cache = FALSE) {
     select(unit_code) %>% 
     pull(1)
   
+  # retrieve sort order for DiVA publication types
+  pubtype_order <-
+    get_pubtype_order(con = pool_bib()) %>%
+    arrange(pt_ordning)
+  
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
@@ -505,7 +526,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  out <- list("meta" = units_table, "units" = res)
+  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 
@@ -567,4 +588,226 @@ abm_private_data <- function(unit_code) {
   return(out)  
 }
 
+#' Create graph over DiVA publication types by year
+#' 
+#' @param df a data frame at the format produced by abm_table1()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @importFrom stats reorder
+#' @export
+abm_graph_diva <- function(df){
+  df_diva_long <- df %>%
+    select(-"P_frac", -"WoS_coverage") %>%
+    gather("year", "value", -Publication_Type_DiVA) %>%
+    left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+  
+  ggplot(data = df_diva_long,
+         aes(x = year)) +
+    geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
+    labs(x = NULL, y = NULL, fill = NULL) +
+    scale_fill_brewer(palette = "Set3")
+}
 
+#' Create graph over WoS coverage by year
+#' 
+#' @param df a data frame at the format produced by abm_table1()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @importFrom stats reorder
+#' @importFrom scales percent
+#' @export
+abm_graph_wos_coverage <- function(df){
+  df <- df %>% left_join(get_pt_ordning(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+  ggplot(data = df,
+         aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
+    geom_bar(aes(weight = WoS_coverage)) +
+    xlab(NULL) +
+    ylab(NULL) +
+    coord_flip() +
+    scale_y_continuous(labels=percent, breaks = seq(0,1,0.1), limits = c(0, 1))
+}
+
+#' Create graph over Cf by year
+#' 
+#' @param df a data frame at the format produced by abm_table3()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_cf <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$cf)))
+
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = cf, group=1)) +
+    geom_point() + 
+    geom_line(color = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab(NULL) +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"])
+}
+
+#' Create graph over Top 10\% publications by year
+#' 
+#' @param df a data frame at the format produced by abm_table3()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @importFrom scales percent
+#' @export
+abm_graph_top10 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.2, ceiling(max(df$top10_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top10_share, group=1)) +
+    geom_point() +
+    geom_line(color = kth_cols["blue"]) +
+  xlab(NULL) +
+  ylab(NULL) +
+  geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+  scale_y_continuous(labels = percent, limits = c(0, ymax))
+}
+
+#' Create graph over jcf by year
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_jcf <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$jcf)))
+
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = jcf, group=1)) +
+    geom_point() + 
+    geom_line(color = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab(NULL) +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"])
+}
+
+#' Create graph over Top 20\% journals by year
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @importFrom scales percent
+#' @export
+abm_graph_top20 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.4, ceiling(max(df$top20_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top20_share, group=1)) +
+    geom_point() +
+    geom_line(color = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab(NULL) +
+    geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = percent, limits = c(0, ymax))
+}
+
+#' Create graph over international and Swedish non-university copublications by year
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_copub <- function(df){
+  kth_cols <- as.vector(palette_kth(4))
+  df_copub_long<- df %>%
+    select(interval, nonuniv_share, int_share) %>% 
+    rename("Swedish Non-university" = nonuniv_share, "International" = int_share) %>% 
+    gather("Copublication", "value", -interval) %>% 
+    filter(!interval == "Total")
+  
+  ggplot(data = df_copub_long,
+         aes(x = interval, y = value, group = Copublication)) +
+    geom_line(aes(color = Copublication)) +
+    geom_point(aes(color = Copublication)) +
+    xlab(NULL) +
+    ylab(NULL) +
+    scale_y_continuous(labels = percent, limits = c(0, 1)) +
+    scale_color_manual(values = kth_cols)
+}
+
+#' Create waffle chart (5 rows, 20 columns) for any single percentage
+#' 
+#' @param pct a percentage expressed as a decimal number 0 <= pct <= 1
+#' @param col a vector with colors for filling (optional)
+#' @param label a title for the chart, displayed above the waffle (optional)
+#'
+#' @return a ggplot object
+#' @import waffle
+#' @export
+abm_waffle_pct <- function(pct, 
+  col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
+  if(pct < 0.0 | pct > 1.0)
+    stop("Please give a number between 0 and 1")
+  yes <- round(100*pct)
+  waffle(parts = c(yes, 100-yes),
+         rows = 5,
+         size = 1,
+         colors = col,
+         legend_pos = "none",
+         title = label) +
+    theme(plot.title=element_text(size = 12))
+}
+
+#' Create bullet graph with reference line
+#'
+#' @param label a label for the indicator, shown to the left of the gauge
+#' @param value the value of the indicator, displayed as a horizontal wide line
+#' @param reference a reference value displayed as a vertical thin line
+#' @param roundto number of digits after the decimal point (default = 1)
+#' @param pct boolean, set to TRUE if given value is a share (default = FALSE)
+#' @return a ggplot object
+#' @import ggplot2
+#' @export
+abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
+  if(pct){
+    value <- 100*value
+    reference <- 100*reference
+  }
+  value <- round(value, roundto)
+
+  title <- sprintf(paste0("%s = %.", roundto, "f%s"), label, value, ifelse(pct, "%", ""))
+
+  bg.data <- data.frame(measure = label, target = reference, value = value)
+  kth_cols <- palette_kth()
+
+  ggplot(bg.data) +
+    labs(title = title) +
+    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill="gray", stat="identity", width=0.7, alpha=1) +
+    geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.4) +
+    geom_errorbar(aes(x = measure, ymin = target, ymax = target), color=kth_cols["cerise"], width = 0.9, size = 1.1) +
+    coord_flip() +
+    theme(plot.title=element_text(size = 12),
+          axis.text.x=element_text(size=8),
+          axis.title.x=element_blank(),
+          axis.line.y=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          axis.title.y=element_blank(),
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          plot.background=element_blank(),
+          aspect.ratio = 0.1)
+}
+
+#' Make ABM table have last rows bold with gray background, other rows with white background
+#'
+#' @param t the table to be formatted
+#' @export
+abm_format_rows <- function(t){
+  formatStyle(table = t,
+              columns = 1,
+              target = "row",
+              fontWeight = styleEqual("Total", "bold"),
+              backgroundColor = styleEqual("Total", "#DDDDDD", "#FFFFFF"))
+}

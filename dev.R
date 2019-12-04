@@ -18,9 +18,19 @@ use_package("")
 
 use_data_raw()
 
+
+## DO THIS when pushing
+
+# remember to update the bundled data
+document()
+check()
+source("data-raw/public_data.R")
+# first revert the .gitignore if it has been changed by below
 build_vignettes()
 pkgdown::build_site()
 file.copy("doc", "inst", recursive = TRUE)
+
+
 
 use_test("db")
 use_package("curl")

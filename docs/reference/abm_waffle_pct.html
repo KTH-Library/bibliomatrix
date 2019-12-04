@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Public data from the Annual Bibliometric Monitoring project — abm_public_data • bibliomatrix</title>
+<title>Create waffle chart (5 rows, 20 columns) for any single percentage — abm_waffle_pct • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,9 +35,8 @@
 
 
 
-<meta property="og:title" content="Public data from the Annual Bibliometric Monitoring project — abm_public_data" />
-<meta property="og:description" content="This returns an object which contains data for the various higher 
-organizational units at KTH" />
+<meta property="og:title" content="Create waffle chart (5 rows, 20 columns) for any single percentage — abm_waffle_pct" />
+<meta property="og:description" content="Create waffle chart (5 rows, 20 columns) for any single percentage" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -121,72 +120,48 @@ organizational units at KTH" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Public data from the Annual Bibliometric Monitoring project</h1>
+    <h1>Create waffle chart (5 rows, 20 columns) for any single percentage</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
-    <div class="hidden name"><code>abm_public_data.Rd</code></div>
+    <div class="hidden name"><code>abm_waffle_pct.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This returns an object which contains data for the various higher 
-organizational units at KTH</p>
+    <p>Create waffle chart (5 rows, 20 columns) for any single percentage</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_public_data</span>(<span class='kw'>overwrite_cache</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_waffle_pct</span>(
+  <span class='no'>pct</span>,
+  <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fu'><a href='palette_kth.html'>palette_kth</a></span>()[<span class='st'>"blue"</span>], <span class='st'>"gray"</span>)),
+  <span class='kw'>label</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>overwrite_cache</th>
-      <td><p>logical (by default FALSE) specifying whether 
-the cache should be refreshed</p></td>
+      <th>pct</th>
+      <td><p>a percentage expressed as a decimal number 0 &lt;= pct &lt;= 1</p></td>
+    </tr>
+    <tr>
+      <th>col</th>
+      <td><p>a vector with colors for filling (optional)</p></td>
+    </tr>
+    <tr>
+      <th>label</th>
+      <td><p>a title for the chart, displayed above the waffle (optional)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list with three slots - "meta" for organizational unit metadata info,
-  "units" with a named list of results (set of 5 different tibbles for each of the units)
-  and "pt_ordning" for DiVA publication type sort order</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>a ggplot object</p>
 
-    <p>Data is cached in a local application directory by default and
-is returned from there unless the parameter overwrite_cache is TRUE. 
-To get fresh data cached, specify this flag.</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-
-<span class='co'># get all public data from the ABM</span>
-<span class='no'>public</span> <span class='kw'>&lt;-</span> <span class='fu'>abm_public_data</span>()
-
-<span class='co'># get public data specifically for KTH and table 1</span>
-<span class='no'>unit_kth</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='fl'>1</span>)
-
-<span class='co'># get summary data for KTH</span>
-<span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='st'>"summaries"</span>)
-
-<span class='co'># get public data specifically for KTH and table 1</span>
-<span class='no'>unit_kth</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"KTH"</span>, <span class='fl'>1</span>)
-
-<span class='co'># get public data for the school "I" and all five tables</span>
-<span class='no'>unit_i</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='st'>"I"</span>)
-
-<span class='co'># get public data for the architecture institution, table 1</span>
-<span class='no'>uc</span> <span class='kw'>&lt;-</span> <span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"meta"</span>) <span class='kw'>%&gt;%</span>
-  <span class='fu'><a href='https://rdrr.io/r/stats/filter.html'>filter</a></span>(<span class='no'>unit_long_en</span> <span class='kw'>==</span> <span class='st'>"Architecture"</span>) <span class='kw'>%&gt;%</span> <span class='fu'>pull</span>(<span class='no'>unit_code</span>)
-
-<span class='no'>public</span> <span class='kw'>%&gt;%</span> <span class='fu'>pluck</span>(<span class='st'>"units"</span>, <span class='no'>uc</span>, <span class='fl'>1</span>)
-
-}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
       <li><a href="#value">Value</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

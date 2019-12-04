@@ -730,7 +730,8 @@ abm_graph_copub <- function(df){
 #' @return a ggplot object
 #' @import waffle
 #' @export
-abm_waffle_pct <- function(pct, col = c(as.character(palette_kth(1)), "gray"), label = NULL){
+abm_waffle_pct <- function(pct, 
+  col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
   if(pct < 0.0 | pct > 1.0)
     stop("Please give a number between 0 and 1")
   yes <- round(100*pct)
@@ -763,13 +764,13 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
   title <- sprintf(paste0("%s = %.", roundto, "f%s"), label, value, ifelse(pct, "%", ""))
 
   bg.data <- data.frame(measure = label, target = reference, value = value)
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth()
 
   ggplot(bg.data) +
     labs(title = title) +
-    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill=kth_cols["lightblue"], stat="identity", width=0.5, alpha=0.4) +
-    geom_errorbar(aes(x = measure, ymin = target*.99, ymax = target*1.01), color=kth_cols["cerise"], width = 0.5) +
-    geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.3) +
+    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill="gray", stat="identity", width=0.7, alpha=1) +
+    geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.4) +
+    geom_errorbar(aes(x = measure, ymin = target, ymax = target), color=kth_cols["cerise"], width = 0.9, size = 1.1) +
     coord_flip() +
     theme(plot.title=element_text(size = 12),
           axis.text.x=element_text(size=8),

@@ -217,8 +217,26 @@ ad_kthid <- function(accountname) {
 #' @param kthid the employee identifier
 #' @export
 #' @importFrom dplyr filter pull
+#' @importFrom base64enc base64decode
 ad_displayname <- function(kthid) {
-  ad_search(kthid) %>% 
-  filter(key == "cn") %>% 
-  pull(value)
+  
+  label <- 
+    ad_search(kthid) %>% 
+    filter(key == "cn") %>% 
+    pull(value)
+  
+  if (is_empty(label))
+    label <- 
+      ad_search(kthid) %>% 
+      filter(key == "displayName:") %>% 
+      pull(value) %>% base64enc::base64decode() %>% rawToChar()
+  
+  if (is_empty(label)) {
+    warning("Couldn't look up kthid at LDAP, tried: ", kthid)
+    label <- "Osqulda"
+  }
+
+  return (label)
+  
 }
+

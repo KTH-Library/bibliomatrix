@@ -6,7 +6,7 @@
 \usage{
 abm_waffle_pct(
   pct,
-  col = c(as.character(palette_kth(1)), "gray"),
+  col = as.character(c(palette_kth()["blue"], "gray")),
   label = NULL
 )
 }

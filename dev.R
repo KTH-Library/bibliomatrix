@@ -18,9 +18,14 @@ use_package("")
 
 use_data_raw()
 
+
+## DO THIS when pushing
+
 build_vignettes()
 pkgdown::build_site()
 file.copy("doc", "inst", recursive = TRUE)
+
+
 
 use_test("db")
 use_package("curl")

@@ -22,12 +22,16 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 
 #' Get order of publication type for ABM table 1
 #' 
-#' @param con connection to db, default is to use mssql connection
+#' @param con connection to db - if no connection is given, attempt to use abm_public_kth data
 #' @return tibble with pt_ordning and diva_publiation_type
 #' @import DBI dplyr tidyr purrr
 #' @export
-get_pt_ordning <- function(con = con_bib()){
-  con %>% tbl("Diva_publication_types") %>% collect()
+get_pubtype_order <- function(con){
+  if(!missing(con)){
+    con %>% tbl("Diva_publication_types") %>% collect()
+  } else {
+    abm_public_kth$pubtype_order
+  }
 }
 
 #' Retrieve Table 1 (Publications in DiVA) for ABM
@@ -63,12 +67,14 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
     summarise(P_frac = sum(Unit_Fraction),
               WoS_coverage = weighted.mean(wos_bin, Unit_Fraction, na.rm = T)) %>%
     ungroup()
+  
+  pubtype_order <- get_pubtype_order(con)
 
   if (!"Pool" %in% class(con)) dbDisconnect(con)
 
   table1 %>%
-    merge(table2) %>%
-    merge(get_pt_ordning(), by.x = "Publication_Type_DiVA", by.y = "diva_publication_type") %>%
+    inner_join(table2) %>%
+    inner_join(pubtype_order, by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
     arrange(pt_ordning) %>%
     select(-pt_ordning)
 }
@@ -156,10 +162,10 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
     return(tibble(interval = "Total", P_frac = NA, cf = NA, top10_count = NA, top10_share = NA))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+                        by = c("Publication_Year" = "x"))
 
   # Year dependent part of table
   table1 <-
@@ -208,10 +214,10 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
     return(tibble(interval = "Total", P_frac = NA, jcf = NA, top20_count = NA, top20_share = NA))
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+               by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
   table1 <-
@@ -260,10 +266,10 @@ abm_table5 <- function(con = con_bib(), unit_code, pub_year){
     return(tibble(interval = "Total", P_full = NA, nonuniv_count = NA, nonuniv_share = NA, int_count = NA, int_share = NA))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
-  orgdata3year <- merge(x = orgdata,
-                        y = sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by.x = "Publication_Year",
-                        by.y = "x")
+  orgdata3year <-
+    orgdata %>% 
+    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+               by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
   table1 <-
@@ -446,8 +452,9 @@ abm_publications <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param overwrite_cache logical (by default FALSE) specifying whether 
 #'   the cache should be refreshed
-#' @return a list with two slots - "meta" for organizational unit metadata info 
-#'   and "units" with a named list of results (set of 5 different tibbles for each of the units).
+#' @return a list with three slots - "meta" for organizational unit metadata info,
+#'   "units" with a named list of results (set of 5 different tibbles for each of the units)
+#'   and "pt_ordning" for DiVA publication type sort order
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -498,6 +505,11 @@ abm_public_data <- function(overwrite_cache = FALSE) {
     select(unit_code) %>% 
     pull(1)
   
+  # retrieve sort order for DiVA publication types
+  pubtype_order <-
+    get_pubtype_order(con = pool_bib()) %>%
+    arrange(pt_ordning)
+  
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
@@ -514,7 +526,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  out <- list("meta" = units_table, "units" = res)
+  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 
@@ -527,7 +539,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #' This returns an object which contains data for an individual researcher at KTH
 #'  
 #' @param unit_code the kthid for the researcher
-#' @return a list with two slots - "meta" for organizational unit metadata info 
+#' @return a list with two slots - "meta" for organizational unit metadata info
 #'   and "units" with a named list of results (set of 5 different tibbles for 
 #'   the tables and also the publication list).
 #' @importFrom stats setNames
@@ -555,7 +567,7 @@ abm_private_data <- function(unit_code) {
     unit_info() %>%
     collect() %>%
     arrange(-desc(org_level)) 
-  
+
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(

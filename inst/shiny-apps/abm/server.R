@@ -4,6 +4,7 @@ library(shinythemes)
 
 library(bibliomatrix)
 library(dplyr)
+library(purrr)
 
 # deploy to shiny in root context
 #ln -s /usr/local/lib/R/site-library/bibliomatrix/shiny-apps/abm/* .

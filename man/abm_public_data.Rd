@@ -11,8 +11,9 @@ abm_public_data(overwrite_cache = FALSE)
 the cache should be refreshed}
 }
 \value{
-a list with two slots - "meta" for organizational unit metadata info 
-  and "units" with a named list of results (set of 5 different tibbles for each of the units).
+a list with three slots - "meta" for organizational unit metadata info,
+  "units" with a named list of results (set of 5 different tibbles for each of the units)
+  and "pt_ordning" for DiVA publication type sort order
 }
 \description{
 This returns an object which contains data for the various higher 

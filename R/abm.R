@@ -767,8 +767,8 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
 
   ggplot(bg.data) +
     labs(title = title) +
-    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill=kth_cols["lightblue"], stat="identity", width=0.5, alpha=0.4) +
-    geom_errorbar(aes(x = measure, ymin = target*.99, ymax = target*1.01), color=kth_cols["cerise"], width = 0.5) +
+    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill = "gray", stat = "identity", width = 0.5, alpha = 0.4) +
+    geom_errorbar(aes(x = measure, ymin = target, ymax = target), color = kth_cols["cerise"], width = 0.6) +
     geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.3) +
     coord_flip() +
     theme(plot.title=element_text(size = 12),

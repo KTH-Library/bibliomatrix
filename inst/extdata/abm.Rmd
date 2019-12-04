@@ -425,11 +425,11 @@ DT::datatable(df_copub %>% rename("Publication years" = "interval",
 ```
 
 Row
-----------------------
+-------
 
 ### International and Swedish non-university copublication
 
-```{r, fig.width=9, fig.height=6}
+```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0)
   abm_graph_copub(df_copub)
 

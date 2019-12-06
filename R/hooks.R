@@ -62,7 +62,7 @@ prerender <- function(refresh = FALSE) {
   
   abm_public_kth <- bibliomatrix::abm_public_kth
   dest <- prerender_cache_location()
-  if (!dir.exists(dest)) dir.create(dest)
+  if (!dir.exists(dest)) dir.create(dest, recursive = TRUE)
   
   orgid <- abm_public_kth$meta$Diva_org_id
   

@@ -38,20 +38,20 @@ get_pubtype_order <- function(con){
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return data frame with publications by type and year
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
-abm_table1 <- function(con = con_bib(), unit_code, pub_year){
+abm_table1 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%  # Wos coverage as calculated in old ÅBU
-    collect()
-  if(!missing(pub_year))
-    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
-  
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
+    collect() %>% 
+    filter(Publication_Year %in% analysis_start:analysis_stop)
+
   # Year dependent part of table
   table1 <-
     orgdata %>%
@@ -83,22 +83,21 @@ abm_table1 <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return tibble with citations statistics by year and total
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table2 <- function(con = con_bib(), unit_code, pub_year){
+abm_table2 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
+    collect() %>%
     filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
-           Publication_Year < max(Publication_Year, na.rm = TRUE) - 1) %>%
-    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
-    collect()
-  if(!missing(pub_year))
-    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
+           Publication_Year %in% analysis_start:(analysis_stop - 2)) %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year))
 
   # Year dependent part of table
   table1 <-
@@ -141,31 +140,30 @@ sliding_intervals <- function(first, last, width){
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return tibble with field normalized citations and number/share of top10 publications by 3 year interval
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table3 <- function(con = con_bib(), unit_code, pub_year){
+abm_table3 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
+    collect() %>%
     filter(Publication_Type_WoS %in% c("Article", "Review") &
-             Publication_Year < max(Publication_Year, na.rm = TRUE) & 
-             !is.na(cf)) %>%
-    collect()
-  if(!missing(pub_year))
-    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
-  
+             Publication_Year %in% analysis_start:(analysis_stop - 1) & 
+             !is.na(cf))
+
   if(nrow(orgdata) == 0)
     return(tibble(interval = "Total", P_frac = NA, cf = NA, top10_count = NA, top10_share = NA))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
-    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
-                        by = c("Publication_Year" = "x"))
+    inner_join(sliding_intervals(analysis_start, analysis_stop - 1, 3),
+               by = c("Publication_Year" = "x"))
 
   # Year dependent part of table
   table1 <-
@@ -195,28 +193,28 @@ abm_table3 <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return tibble with field normalized journal citation score and number/share of publications in top20 journals
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table4 <- function(con = con_bib(), unit_code, pub_year){
+abm_table4 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    filter(Publication_Type_WoS %in% c("Article", "Review")) %>%
-    collect()
-  if(!missing(pub_year))
-    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
-  
+    collect() %>%
+    filter(Publication_Type_WoS %in% c("Article", "Review") & 
+             Publication_Year %in% analysis_start:(analysis_stop))
+
   if(nrow(orgdata) == 0)
     return(tibble(interval = "Total", P_frac = NA, jcf = NA, top20_count = NA, top20_share = NA))
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
-    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+    inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
                by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
@@ -247,28 +245,28 @@ abm_table4 <- function(con = con_bib(), unit_code, pub_year){
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return tibble with number/share of international copublications and copublications with Swedish non-university organizations
 #' @import DBI dplyr tidyr purrr
 #' @export
 
-abm_table5 <- function(con = con_bib(), unit_code, pub_year){
+abm_table5 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    filter(Publication_Type_WoS %in% c("Article", "Review")
-           & !is.na(int)) %>%
-    collect()
-  if(!missing(pub_year))
-    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
-  
+    collect() %>%
+    filter(Publication_Type_WoS %in% c("Article", "Review") &
+             Publication_Year %in% analysis_start:(analysis_stop)
+            & !is.na(int))
+
   if(nrow(orgdata) == 0)
     return(tibble(interval = "Total", P_full = NA, nonuniv_count = NA, nonuniv_share = NA, int_count = NA, int_share = NA))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
-    inner_join(sliding_intervals(min(orgdata$Publication_Year), max(orgdata$Publication_Year), 3),
+    inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
                by = c("Publication_Year" = "x"))
   
   # Year dependent part of table
@@ -423,17 +421,16 @@ unit_info_internal <- function(con = con_bib(), unit, level, parent) {
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param pub_year publication year(s) to analyze (optional, assuming master table holds only relevant years)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con = con_bib(), unit_code, pub_year){
+abm_publications <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(unit_code = unit_code)
-  if(!missing(pub_year))
-    orgdata <- filter(orgdata, Publication_Year %in% pub_year)
-  
+  orgdata <- abm_data(unit_code = unit_code, pub_year = analysis_start:analysis_stop)
+
   ret <- orgdata %>% select(-c("w_subj", "Unit_Fraction_adj", "level")) %>% collect()
   
   if (!"Pool" %in% class(con)) dbDisconnect(con)

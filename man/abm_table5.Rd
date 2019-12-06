@@ -4,14 +4,21 @@
 \alias{abm_table5}
 \title{Retrieve Table 5 (Co-publishing) for ABM}
 \usage{
-abm_table5(con = con_bib(), unit_code, pub_year)
+abm_table5(
+  con = con_bib(),
+  unit_code,
+  analysis_start = 2012,
+  analysis_stop = 2018
+)
 }
 \arguments{
 \item{con}{connection to db, default is to use mssql connection}
 
 \item{unit_code}{the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)}
 
-\item{pub_year}{publication year(s) to analyze (optional, assuming master table holds only relevant years)}
+\item{analysis_start}{first publication year of analysis, default 2012}
+
+\item{analysis_stop}{last publication year of analysis, default 2018}
 }
 \value{
 tibble with number/share of international copublications and copublications with Swedish non-university organizations

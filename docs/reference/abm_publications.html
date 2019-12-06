@@ -129,7 +129,12 @@
     <p>Retrieve publication list for ABM</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_publications</span>(<span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(), <span class='no'>unit_code</span>, <span class='no'>pub_year</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_publications</span>(
+  <span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(),
+  <span class='no'>unit_code</span>,
+  <span class='kw'>analysis_start</span> <span class='kw'>=</span> <span class='fl'>2012</span>,
+  <span class='kw'>analysis_stop</span> <span class='kw'>=</span> <span class='fl'>2018</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,8 +148,12 @@
       <td><p>the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)</p></td>
     </tr>
     <tr>
-      <th>pub_year</th>
-      <td><p>publication year(s) to analyze (optional, assuming master table holds only relevant years)</p></td>
+      <th>analysis_start</th>
+      <td><p>first publication year of analysis, default 2012</p></td>
+    </tr>
+    <tr>
+      <th>analysis_stop</th>
+      <td><p>last publication year of analysis, default 2018</p></td>
     </tr>
     </table>
 

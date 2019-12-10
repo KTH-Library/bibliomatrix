@@ -1,3 +1,6 @@
+# Provide defaults for ABM analysis
+abm_defaults<- list(start_year = 2012, stop_year = 2018)
+  
 #' Retrieve data for ABM tables and graphs from master table
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -44,7 +47,7 @@ get_pubtype_order <- function(con){
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
-abm_table1 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
+abm_table1 <- function(con = con_bib(), unit_code, analysis_start = abm_defaults$start_year, analysis_stop = abm_defaults$stop_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -90,7 +93,7 @@ abm_table1 <- function(con = con_bib(), unit_code, analysis_start = 2012, analys
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table2 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
+abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_defaults$start_year, analysis_stop = abm_defaults$stop_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -147,7 +150,7 @@ sliding_intervals <- function(first, last, width){
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table3 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
+abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_defaults$start_year, analysis_stop = abm_defaults$stop_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -200,7 +203,7 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = 2012, analys
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table4 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
+abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_defaults$start_year, analysis_stop = abm_defaults$stop_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -251,7 +254,7 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = 2012, analys
 #' @import DBI dplyr tidyr purrr
 #' @export
 
-abm_table5 <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
+abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_defaults$start_year, analysis_stop = abm_defaults$stop_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
@@ -426,7 +429,7 @@ unit_info_internal <- function(con = con_bib(), unit, level, parent) {
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con = con_bib(), unit_code, analysis_start = 2012, analysis_stop = 2018){
+abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_defaults$start_year, analysis_stop = abm_defaults$start_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(unit_code = unit_code, pub_year = analysis_start:analysis_stop)

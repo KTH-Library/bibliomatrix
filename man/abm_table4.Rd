@@ -7,8 +7,8 @@
 abm_table4(
   con = con_bib(),
   unit_code,
-  analysis_start = 2012,
-  analysis_stop = 2018
+  analysis_start = abm_defaults$start_year,
+  analysis_stop = abm_defaults$stop_year
 )
 }
 \arguments{

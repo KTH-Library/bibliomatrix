@@ -5,10 +5,12 @@
 \title{Running this function launches a Plumber API presenting
 resources bundled in this package}
 \usage{
-run_api(teardown = FALSE)
+run_api(port = 8080, host = "0.0.0.0")
 }
 \arguments{
-\item{teardown}{logical indicating if the API should be shut down if running}
+\item{port}{the port to run on, default is 8080}
+
+\item{host}{the interface to bind to, default is all 0.0.0.0}
 }
 \description{
 Running this function launches a Plumber API presenting

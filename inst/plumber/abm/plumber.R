@@ -108,13 +108,16 @@ function(id, res) {
 #* @serializer contentType list(type = "text/plain;charset=utf-8")
 #* @tag ABM service status
 function() {
-  # TODO check the status properly
-  status_flag <- status_ldap <- status_db <- "OK"  # can be "ERROR" otherwise
+
+  status_ldap <- ifelse(status_ldap()$status == TRUE, "OK", "ERROR")
+  status_db <- ifelse(status_db()$status == TRUE, "OK", "ERROR")
+  status_renviron <- ifelse(status_renviron()$status == TRUE, "OK", "ERROR")
+  status_flag <- ifelse(all(status_ldap == "OK", status_db == "OK", status_renviron == "OK"), "OK", "ERROR")
   status_ver <- installed.packages()[ ,"Version"]["bibliomatrix"]
   sprintf(
-    "APPLICATION_STATUS: %s\nVERSION: %s\nLDAP: %s\nDATABASE: %s\n",
-    status_flag, status_ver, status_ldap, status_db
-  )
+    "APPLICATION_STATUS: %s\nVERSION: %s\nLDAP: %s\nDATABASE: %s\nRENVIRON: %s",
+    status_flag, status_ver, status_ldap, status_db, status_renviron
+  ) 
 }
 
 

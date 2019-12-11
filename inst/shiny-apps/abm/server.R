@@ -14,9 +14,11 @@ library(purrr)
 # to use this, first start the plumber API 
 # issue "make up" in the directory where the plumber.R API resides
 # (cd inst/plumber/abm; make up)
+ABM_API <- Sys.getenv("ABM_API")
+if (ABM_API == "") ABM_API <- "http://localhost:8080"
 
-ABM_API_UNIT <- "http://localhost:8080/unit/%s/flexdashboard?embeddata=true"
-ABM_API_EMP <- "http://localhost:8080/employee/%s/flexdashboard"
+ABM_API_UNIT <- paste0(ABM_API, "/unit/%s/flexdashboard?embeddata=true")
+ABM_API_EMP <- paste0(ABM_API, "/employee/%s/flexdashboard")
 
 server <- function(input, output, session) {
 

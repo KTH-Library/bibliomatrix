@@ -364,7 +364,7 @@ if(nrow(df_cf) > 0)
                   buttons = c("copy", "csv", "excel"),
                   filename = "ABM_field_normalized_citations")
                 ) %>% 
-    formatRound(2 & 4, digits = 1, mark = "") %>% 
+    formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>%
     formatPercentage(5, digits = 1) %>%
     abm_format_rows()
@@ -414,7 +414,7 @@ if(nrow(df_jcf) > 0)
                   buttons = c("copy", "csv", "excel"),
                   title = "ABM_journal_impact")
                 ) %>% 
-    formatRound(2 & 4, digits = 1, mark = "") %>% 
+    formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>% 
     formatPercentage(5, digits = 1) %>%
     abm_format_rows()

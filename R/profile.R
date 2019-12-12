@@ -65,6 +65,7 @@ kth_theme<- function(base_size=12, base_font=""){
       axis.title=element_text(family=family, 
                               size=base_size),
       axis.line=element_line(color=palette_kth()["gray"]),
-      panel.grid.minor=element_blank()
+      panel.grid.minor=element_blank(),
+      legend.position = "bottom"
     )
 }

@@ -196,7 +196,7 @@ Row
 
 ### **Background**
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This yields that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, are not included in the statistics.
+The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
 Statistics regarding citations and co-publishing are based on the subset of publications in DiVA that are registered in Web of Science.
 

@@ -48,14 +48,17 @@ palette_kth_info <- function() {
 #' KTH plot theme for ggplot
 #' 
 #' @return a ggplot theme
+#' @param base_size the basic font size used in graphs
+#' @param base_font the default font used in graphs
 #' @export
-kth_theme<- function(base_size=12, base_font=""){
+kth_theme<- function(base_size=12, base_font="Arial"){
   #library(ggthemes)
   #library(extrafont)
   
   # Note: How so solve specific fonts and their installation has to be checked.
+  # Probably best done in a separate function
   # KTH seems to use 'The Sans' online (same as Open Sans?)
-  family<- "Arial"
+  family<- base_font
   
   ggplot2::theme_minimal() %+replace%
     ggplot2::theme(

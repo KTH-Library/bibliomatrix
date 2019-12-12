@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -19,26 +18,27 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -47,9 +47,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -313,33 +313,38 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
 <p>First load some useful packages, including <code>bibliomatrix</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(bibliomatrix)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(stringr)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(readr)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(knitr)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">library</span>(bench)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="cf">if</span> (<span class="kw">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="op">==</span><span class="st"> &quot;Windows&quot;</span>) </a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">  <span class="kw">readRenviron</span>(<span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(bibliomatrix)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#&gt; Warning: package &#39;dplyr&#39; was built under R version 3.5.3</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(stringr)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#&gt; Warning: package &#39;stringr&#39; was built under R version 3.5.3</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(readr)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; Warning: package &#39;readr&#39; was built under R version 3.5.3</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">library</span>(knitr)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; Warning: package &#39;knitr&#39; was built under R version 3.5.3</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">library</span>(bench)</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; Warning: package &#39;bench&#39; was built under R version 3.5.3</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="cf">if</span> (<span class="kw">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="op">==</span><span class="st"> &quot;Windows&quot;</span>) </span>
+<span id="cb1-14"><a href="#cb1-14"></a>  <span class="kw">readRenviron</span>(<span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</span></code></pre></div>
 </div>
 <div id="data-for-annual-bibliometric-monitoring" class="section level2">
 <h2>Data for Annual Bibliometric Monitoring</h2>
 <p>In order to get data from the Microsoft SQL Server database, an <code>.Renviron</code> file is currently required with values being provided for the following envvars: <code>DBUSER</code> (the MSSQL Server service account name for the BIBMON db), <code>DBPASS</code>, <code>DBHOST</code> (the hostname for the MSSQL server) and <code>DBNAME</code> (use “BIBMON”).</p>
 <p>Once this has been provided in the <code>.Renviron</code> file, data for the first table in the Annual Bibiliometric Monitoring report can be retrieved:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># get data from the default data source (Microsoft SQL Server BIBMON database)</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">t1 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>()</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; Warning: Missing values are always removed in SQL.</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; Use `SUM(x, na.rm = TRUE)` to silence this warning</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; This warning is displayed only once per session.</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co"># display first few results</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">t1 <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="st">&quot;Total&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="kw">arrange</span>(<span class="kw">desc</span>(Total)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># get data from the default data source (Microsoft SQL Server BIBMON database)</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>t1 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>()</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="co">#&gt; Warning: Missing values are always removed in SQL.</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="co">#&gt; Use `SUM(x, na.rm = TRUE)` to silence this warning</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co">#&gt; This warning is displayed only once per session.</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># display first few results</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>t1 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>, <span class="st">&quot;Total&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="kw">arrange</span>(<span class="kw">desc</span>(Total)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -376,30 +381,30 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co"># get data but explicitly specify the data source</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">src1 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>))</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">db_sync</span>()  <span class="co">## sync a local sqlite3db with the remote source</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">src2 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>))</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co"># are the results the same?</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">identical</span>(src1, src2)</a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; [1] TRUE</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co"># what about performance?</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="kw">bench_time</span>(<span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>)))</a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;  process     real </span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; 523.55ms    1.15s</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw">bench_time</span>(<span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>)))</a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;   469ms   924ms</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co"># get data but explicitly specify the data source</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>src1 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>))</span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="kw">db_sync</span>()  <span class="co">## sync a local sqlite3db with the remote source</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>src2 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>))</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co"># are the results the same?</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="kw">identical</span>(src1, src2)</span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># what about performance?</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="kw">bench_time</span>(<span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>)))</span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt;  process     real </span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 828.12ms    1.87s</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="kw">bench_time</span>(<span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>)))</span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt;  process     real </span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt; 781.25ms    1.46s</span></span></code></pre></div>
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2>Data from LDAP / Active Directory</h2>
 <p>In order to get data from the Active Directory, an <code>.Renviron</code> file should be used with values being provided for the following envvars: <code>LDAP_USER</code> (service account name in LDAP for issuing queries with), <code>LDAP_PASS</code>, <code>LDAP_HOST</code> (the hostname for the LDAP server) and <code>LDAP_BASE</code> (for example “dc=ug,dc=kth,dc=se”).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># search Active Directory using an account name, return first 10 rows</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">ad_search</span>(<span class="st">&quot;markussk&quot;</span>, <span class="st">&quot;accountname&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># search Active Directory using an account name, return first 10 rows</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">ad_search</span>(<span class="st">&quot;markussk&quot;</span>, <span class="st">&quot;accountname&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -450,9 +455,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># search AD using a KTH identifier, same result, so return first row only</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">ad_search</span>(<span class="st">&quot;u1o2ujjd&quot;</span>, <span class="st">&quot;kthid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co"># search AD using a KTH identifier, same result, so return first row only</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="kw">ad_search</span>(<span class="st">&quot;u1o2ujjd&quot;</span>, <span class="st">&quot;kthid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -467,14 +472,14 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># default if search_type is not specified is to use KTH id</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#ad_search(&quot;u1o2ujjd&quot;)</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co"># display memberships for an Active Directory user with a specific KTH id</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw">ad_search</span>(<span class="st">&quot;u1o2ujjd&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_starts</span>(key, <span class="st">&quot;ug.*Affiliation&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">  </span><span class="kw">kable</span>() </a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="co"># default if search_type is not specified is to use KTH id</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">#ad_search(&quot;u1o2ujjd&quot;)</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># display memberships for an Active Directory user with a specific KTH id</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">ad_search</span>(<span class="st">&quot;u1o2ujjd&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_starts</span>(key, <span class="st">&quot;ug.*Affiliation&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="st">  </span><span class="kw">kable</span>() </span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -497,30 +502,30 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co"># function to return account name for a given KTH id</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">ad_accountname_from_kthid &lt;-<span class="st"> </span><span class="cf">function</span>(x)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="kw">ad_search</span>(x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(key <span class="op">==</span><span class="st"> &quot;sAMAccountName&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(value)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co"># use the above fcn to get the account name for a given kth id</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">ad_accountname_from_kthid</span>(<span class="st">&quot;u1o2ujjd&quot;</span>)</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; [1] &quot;markussk&quot;</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co"># several kth identifiers can be processed, for example:</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">kthids &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="st">&quot;u1kzf1xh</span></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="st">u1g9umtq</span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="st">u1jr9fll </span></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="st">u1ygqmuy</span></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="st">u13bp6vd</span></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="st">u18qe64m&quot;</span> <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="kw">read_lines</span>()</a>
-<a class="sourceLine" id="cb7-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb7-20" data-line-number="20"><span class="co"># display memberof entries beginning with &quot;ug&quot; for a given identifier</span></a>
-<a class="sourceLine" id="cb7-21" data-line-number="21"><span class="kw">ad_search</span>(kthids[<span class="dv">4</span>]) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-22" data-line-number="22"><span class="kw">ad_memberof</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-23" data-line-number="23"><span class="kw">filter</span>(<span class="kw">str_starts</span>(memberof, <span class="st">&quot;aff&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-24" data-line-number="24"><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co"># function to return account name for a given KTH id</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>ad_accountname_from_kthid &lt;-<span class="st"> </span><span class="cf">function</span>(x)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="kw">ad_search</span>(x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(key <span class="op">==</span><span class="st"> &quot;sAMAccountName&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(value)</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># use the above fcn to get the account name for a given kth id</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="kw">ad_accountname_from_kthid</span>(<span class="st">&quot;u1o2ujjd&quot;</span>)</span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co">#&gt; [1] &quot;markussk&quot;</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co"># several kth identifiers can be processed, for example:</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>kthids &lt;-<span class="st"> </span></span>
+<span id="cb7-12"><a href="#cb7-12"></a><span class="st">&quot;u1kzf1xh</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="st">u1g9umtq</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a><span class="st">u1jr9fll </span></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="st">u1ygqmuy</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="st">u13bp6vd</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="st">u18qe64m&quot;</span> <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="kw">read_lines</span>()</span>
+<span id="cb7-19"><a href="#cb7-19"></a></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co"># display memberof entries beginning with &quot;ug&quot; for a given identifier</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="kw">ad_search</span>(kthids[<span class="dv">4</span>]) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-22"><a href="#cb7-22"></a><span class="kw">ad_memberof</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="kw">filter</span>(<span class="kw">str_starts</span>(memberof, <span class="st">&quot;aff&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">

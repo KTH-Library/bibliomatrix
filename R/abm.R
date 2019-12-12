@@ -6,7 +6,8 @@
 abm_config<- function(){
   # This can later be expanded with more relevant defaults
   list(start_year = 2012, 
-       stop_year = 2018)
+       stop_year = 2018,
+       default_unit = "KTH")
 }
   
 #' Retrieve data for ABM tables and graphs from master table

@@ -83,7 +83,9 @@ server <- function(input, output, session) {
                         frameborder = 0, scrolling = 'auto')
         } else {
             cat("Embedding in iframe: ", dash_src, "\n")
-            tags$iframe(src = dash_src, width = "100%", height = "100%",
+            html <- httr::content(httr::GET(dash_src), as = "raw")
+            data_uri <- sprintf("data:text/html;base64,%s", base64enc::base64encode(html))
+            tags$iframe(src = data_uri, width = "100%", height = "100%",
                 frameborder = 0, scrolling = 'auto')
         }
         

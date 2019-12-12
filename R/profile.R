@@ -44,3 +44,27 @@ palette_kth_info <- function() {
     colorblind = FALSE
   )
 }
+
+#' KTH plot theme for ggplot
+#' 
+#' @return a ggplot theme
+#' @export
+kth_theme<- function(base_size=12, base_font=""){
+  #library(ggthemes)
+  #library(extrafont)
+  
+  # Note: How so solve specific fonts and their installation has to be checked.
+  # KTH seems to use 'The Sans' online (same as Open Sans?)
+  family<- "Arial"
+  
+  ggplot2::theme_minimal() %+replace%
+    ggplot2::theme(
+      axis.text=element_text(family=family, 
+                             size=base_size-2, 
+                             color=palette_kth()["gray"]),
+      axis.title=element_text(family=family, 
+                              size=base_size),
+      axis.line=element_line(color=palette_kth()["gray"]),
+      panel.grid.minor=element_blank()
+    )
+}

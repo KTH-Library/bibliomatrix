@@ -6,11 +6,10 @@ output:
     vertical_layout: scroll
     favicon: kth-logo.png
 params:
-  unit_code: KTH
+  unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE
-  
 ---
 
 ```{r setup, include=FALSE}

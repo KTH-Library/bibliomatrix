@@ -618,7 +618,7 @@ abm_graph_diva <- function(df){
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
     labs(x = NULL, y = NULL, fill = NULL) +
     scale_fill_manual(values = colvals) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create graph over WoS coverage by year
@@ -639,7 +639,7 @@ abm_graph_wos_coverage <- function(df){
     ylab(NULL) +
     coord_flip() +
     scale_y_continuous(labels=percent, breaks = seq(0,1,0.1), limits = c(0, 1)) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create graph over Cf by year
@@ -660,7 +660,7 @@ abm_graph_cf <- function(df){
     ylab(NULL) +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create graph over Top 10\% publications by year
@@ -682,7 +682,7 @@ abm_graph_top10 <- function(df){
   ylab(NULL) +
   geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
   scale_y_continuous(labels = percent, limits = c(0, ymax)) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create graph over jcf by year
@@ -703,7 +703,7 @@ abm_graph_jcf <- function(df){
     ylab(NULL) +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create graph over Top 20\% journals by year
@@ -725,7 +725,7 @@ abm_graph_top20 <- function(df){
     ylab(NULL) +
     geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
     scale_y_continuous(labels = percent, limits = c(0, ymax)) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create graph over international and Swedish non-university copublications by year
@@ -750,7 +750,7 @@ abm_graph_copub <- function(df){
     ylab(NULL) +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
     scale_color_manual(values = kth_cols) +
-    theme_minimal()
+    kth_theme()
 }
 
 #' Create waffle chart (5 rows, 20 columns) for any single percentage

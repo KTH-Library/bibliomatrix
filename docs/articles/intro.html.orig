@@ -183,19 +183,18 @@
 <span id="cb3-11"><a href="#cb3-11"></a></span>
 <span id="cb3-12"><a href="#cb3-12"></a><span class="co"># what about performance?</span></span>
 <span id="cb3-13"><a href="#cb3-13"></a><span class="kw">bench_time</span>(<span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"mssql"</span>)))</span>
-<<<<<<< HEAD
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 687.5ms   1.58s</span></span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="kw">bench_time</span>(<span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>)))</span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt;  process     real </span></span>
-<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt; 734.38ms    1.38s</span></span></code></pre></div>
-=======
 <span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt;  process     real </span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 593.75ms    1.91s</span></span>
+<<<<<<< HEAD
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 765.62ms    2.01s</span></span>
 <span id="cb3-16"><a href="#cb3-16"></a><span class="kw">bench_time</span>(<span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>)))</span>
 <span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt; 562.5ms   1.52s</span></span></code></pre></div>
->>>>>>> bd7a52febd27b720716a8e919e78a331f4d4f139
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt;   750ms   1.43s</span></span></code></pre></div>
+=======
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; 843.75ms    2.07s</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="kw">bench_time</span>(<span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>)))</span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; process    real </span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt; 937.5ms   1.78s</span></span></code></pre></div>
+>>>>>>> origin/master
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2 class="hasAnchor">

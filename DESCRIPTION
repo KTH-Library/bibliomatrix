@@ -1,6 +1,6 @@
 Package: bibliomatrix
 Title: Provide Functionality for Bibliometric Analytics
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
     as.person(c(
         "Gaël Serge Dubus <dubus@kth.se> [aut]", 
@@ -29,7 +29,7 @@ Imports:
     RSQLite (>= 2.1.2),
     dplyr (>= 0.8.3),
     odbc (>= 1.1.6),
-    purrr (>= 0.3.3),
+    purrr (>= 0.3.2),
     rappdirs (>= 0.3.1),
     stringr (>= 1.4.0),
     tidyr (>= 1.0.0),

@@ -4,14 +4,21 @@
 \alias{abm_table4}
 \title{Retrieve Table 4 (Journal impact) for ABM}
 \usage{
-abm_table4(con = con_bib(), unit_code, pub_year)
+abm_table4(
+  con = con_bib(),
+  unit_code,
+  analysis_start = abm_config()$start_year,
+  analysis_stop = abm_config()$stop_year
+)
 }
 \arguments{
 \item{con}{connection to db, default is to use mssql connection}
 
 \item{unit_code}{the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)}
 
-\item{pub_year}{publication year(s) to analyze (optional, assuming master table holds only relevant years)}
+\item{analysis_start}{first publication year of analysis, default 2012}
+
+\item{analysis_stop}{last publication year of analysis, default 2018}
 }
 \value{
 tibble with field normalized journal citation score and number/share of publications in top20 journals

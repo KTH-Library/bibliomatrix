@@ -2,6 +2,7 @@
 
 export("%>%")
 export(abm_bullet)
+export(abm_config)
 export(abm_dash_indices)
 export(abm_data)
 export(abm_format_rows)

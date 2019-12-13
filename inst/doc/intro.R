@@ -1,10 +1,10 @@
-## ---- include = FALSE---------------------------------------------------------
+## ---- include = FALSE----------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup, message=FALSE-----------------------------------------------------
+## ----setup, message=FALSE------------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 library(stringr)
@@ -15,7 +15,7 @@ library(bench)
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
-## ---- message=FALSE, fig.align='left'-----------------------------------------
+## ---- message=FALSE, fig.align='left'------------------------------------
 
 # get data from the default data source (Microsoft SQL Server BIBMON database)
 t1 <- abm_tab1()
@@ -41,7 +41,7 @@ bench_time(abm_tab1(con = con_bib("mssql")))
 bench_time(abm_tab1(con = con_bib("sqlite")))
 
 
-## ---- fig.align='left'--------------------------------------------------------
+## ---- fig.align='left'---------------------------------------------------
 # search Active Directory using an account name, return first 10 rows
 ad_search("markussk", "accountname") %>% head(10) %>% kable()
 

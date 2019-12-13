@@ -1,10 +1,10 @@
-## ---- include = FALSE---------------------------------------------------------
+## ---- include = FALSE----------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup, message=FALSE-----------------------------------------------------
+## ----setup, message=FALSE------------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 

@@ -58,7 +58,7 @@ server <- function(input, output, session) {
         
         req(input$unitid)
         
-        if (input$use_prerendered) {
+        if (input$use_prerendered == TRUE) {
             f <- file.path(prerender_cache_location(), 
                 paste0(input$unitid, ".html"))
             # txt <- read_lines(f)

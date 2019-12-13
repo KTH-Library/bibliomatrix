@@ -15,7 +15,7 @@ dashboardPage(skin = "black",
       class = "dropdown")),
   dashboardSidebar(
     uiOutput("units"),
-    checkboxInput("use_prerendered", "Use pre-rendered content", value = FALSE)
+    checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
   ),
   dashboardBody(
     box(width = 12, height = "90vh", 

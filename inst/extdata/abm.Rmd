@@ -6,11 +6,10 @@ output:
     vertical_layout: scroll
     favicon: kth-logo.png
 params:
-  unit_code: u1g9umtq
-  is_employee: TRUE
-  use_package_data: FALSE
-  embed_data: TRUE
-  
+  unit_code: !r bibliomatrix:::abm_config()$default_unit
+  is_employee: FALSE
+  use_package_data: TRUE
+  embed_data: FALSE
 ---
 
 ```{r setup, include=FALSE}
@@ -78,29 +77,59 @@ Overview
 Row  {data-height=240}
 ---------------------
 
-### Total publications (fractional counts)
+```{r}
+yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva))
+firstyear <- min(names(df_diva[yrfields]))
+lastyear <- max(names(df_diva[yrfields]))
+```
+
+### **Total publications `r lastyear`<br>(fractional counts)**
 
 ```{r, fig.width = 3, fig.height = 2}
 if (nrow(df_diva) > 0){
-  lastyear <- nth(names(df_diva), -3)
   total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
-  vb1 <- valueBox(
+  valueBox(
     value = round(total_pubs, 1),
     color = colors_vb[1],
     icon = "fa-chart-bar",
     href = "#publications-in-diva")
-  vb1
 } else {
 	print("No data")
 }
 
 ```
 
-### [Publication indicators](#citation-impact) {.no-padding}
+### **WoS coverage `r firstyear` - `r lastyear`<br>(peer reviewed)**
+
+```{r, fig.width = 3, fig.height = 2}
+if (nrow(df_diva) > 0){
+  totcov <-
+    df_diva %>%
+    filter(Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>% 
+    summarise(totcov = sum(P_frac * WoS_coverage) / sum(P_frac)) %>% 
+    pull(totcov)
+  valueBox(
+    value = paste(100*round(totcov, 3), "%"),
+    color = colors_vb[1],
+    icon = "fa-percent",
+    href = "#publications-in-diva")
+} else {
+	print("No data")
+}
+
+```
+
+```{r}
+last_interval <- ifelse(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0,
+                        nth(df_cf$interval, -2),
+                        "")
+```
+
+### **[Publication indicators `r last_interval`](#citation-impact)** {.no-padding}
 
 ```{r, fig.width = 3.5, fig.height = 2}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0){
-  last_interval <- nth(df_cf$interval, -2)
+if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  
   cf <- as.numeric(filter(df_cf, interval == last_interval)$cf)
   pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", value = cf, reference = 1.0, roundto = 2)
   
@@ -114,11 +143,15 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0){
 
 ```
 
-### [Journal indicators](#journal-impact)  {.no-padding}
+```{r}
+last_interval <- ifelse(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0,
+                        nth(df_jcf$interval, -2),
+                        "")
+```
+### **[Journal indicators `r last_interval`](#journal-impact)**  {.no-padding}
 
 ```{r, fig.width = 3.5, fig.height = 2}
-if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow > 0){
-  last_interval <- nth(df_jcf$interval, -2)
+if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   jcf <- as.numeric(filter(df_jcf, interval == last_interval)$jcf)
   jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", value = jcf, reference = 1.0, roundto = 2)
 
@@ -130,13 +163,14 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow > 0){
 
 ```
 
-### [Copublication](#co-publishing) {.no-padding}
 
+```{r}
+last_interval <- nth(df_copub$interval, -2)
+```
+### **[Copublication `r last_interval`](#co-publishing)** {.no-padding}
 ```{r, fig.width = 3, fig.height = 2}
 
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0){
-  last_interval <- nth(df_copub$interval, -2)
-
   nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
   nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100*nonuniv_share))
   waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
@@ -160,13 +194,13 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0){
 Row
 --------------------------------
 
-### Background
+### **Background**
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This yields that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, are not included in the statistics.
+The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
 Statistics regarding citations and co-publishing are based on the subset of publications in DiVA that are registered in Web of Science.
 
-### Further information
+### **Further information**
 
 - [Guide to the Annual Bibliometric Monitoring at KTH](https://intra.kth.se/bibliometri/public/link/attachment/Guide%20to%20the%20Annual%20Bibliometric%20Monitoring%20at%20KTH.pdf)
 - [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](https://intra.kth.se/bibliometri/public/link/attachment/Description%20of%20data,%20methods%20and%20indicators%20in%20KTH%20Annual%20Bibliometric%20Monitoring.pdf)
@@ -177,7 +211,7 @@ Statistics regarding citations and co-publishing are based on the subset of publ
 Row
 ----------------------
 
-### Publication data
+### **Publication data**
 
 ```{r, echo=FALSE, results="asis"}
 
@@ -226,11 +260,13 @@ if (params$embed_data == TRUE) {
 if (params$is_employee == TRUE) {
   out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
   cat(out)
+} else {
+  cat("Publication data is available only after login.")
 }
   
 ```
 
-### Attributions
+### **Attributions**
 
 ```{r, echo=FALSE, message=FALSE, results="asis"}
 wos_disclaimer()
@@ -244,37 +280,38 @@ Publications in DiVA
 Row
 ---------------------
 
-### Publication volume, fractionalized
+### **Publication volume, fractionalized**
 
 ```{r}
-DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage",
-                                 "DiVA publication type" = "Publication_Type_DiVA",
-                                 "Total" = "P_frac"),
-              rownames = FALSE,
-              extensions = "Buttons",
-              options = list(
-                bPaginate = FALSE,
-                pageLength = 100,
-                dom = 'Bt',
-                buttons = c("copy", "csv", "excel"),
-                title = "ABM_publications")
-              ) %>%
-  formatRound(2:9, digits = 1, mark = "") %>%
-  formatPercentage("WoS coverage", digits = 1) %>%
-  abm_format_rows()
+if(nrow(df_diva) > 0)
+  DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage",
+                                   "DiVA publication type" = "Publication_Type_DiVA",
+                                   "Total" = "P_frac"),
+                rownames = FALSE,
+                extensions = "Buttons",
+                options = list(
+                  bPaginate = FALSE,
+                  pageLength = 100,
+                  dom = 'Bt',
+                  buttons = c("copy", "csv", "excel"),
+                  title = "ABM_publications")
+                ) %>%
+    formatRound(2:9, digits = 1, mark = "") %>%
+    formatPercentage("WoS coverage", digits = 1) %>%
+    abm_format_rows()
 
 ```
 
 Row
 ---------------------
 
-### Publication volume 
+### **Publication volume**
 ```{r, fig.width=10, fig.height=5}
 if(nrow(df_diva) > 0)
   abm_graph_diva(df_diva)
 ```
 
-### Web of Science coverage
+### **Web of Science coverage**
 
 ```{r, fig.width=8, fig.height=5}
 if(nrow(df_diva) > 0)
@@ -289,51 +326,53 @@ Citation impact
 Row
 ---------------------
 
-###  Citations 3-year window, fractional counts
+### **Citations 3-year window, fractional counts**
 
 ```{r}
-DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
-                                  "Publications" = "P_frac",
-                                  "Total Citations" = "C3_frac",
-                                  "Average Citations" = "C3"),
-              rownames = FALSE,
-              extensions = "Buttons",
-              options = list(
-                bPaginate = FALSE,
-                dom = 'Bt',
-                buttons = c("copy", "csv", "excel"),
-                title = "ABM_citations")
-              ) %>% 
-  formatRound(2:4, digits = 1, mark = "") %>%
-  abm_format_rows()
+if(nrow(df_cit3y) > 0)
+  DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
+                                    "Publications" = "P_frac",
+                                    "Total Citations" = "C3_frac",
+                                    "Average Citations" = "C3"),
+                rownames = FALSE,
+                extensions = "Buttons",
+                options = list(
+                  bPaginate = FALSE,
+                  dom = 'Bt',
+                  buttons = c("copy", "csv", "excel"),
+                  title = "ABM_citations")
+                ) %>% 
+    formatRound(2:4, digits = 1, mark = "") %>%
+    abm_format_rows()
 ```
 
-###  Field normalized citations - Fractionalized (3-year moving average)
+### **Field normalized citations - Fractionalized (3-year moving average)**
 
 ```{r}
-DT::datatable(df_cf %>% rename("Publication years" = "interval",
-                               "Publications" = "P_frac",
-                               "Average Cf" = "cf",
-                               "Top 10% publications" = "top10_count",
-                               "Share Top 10%" = "top10_share"),
-              rownames = FALSE,
-              extensions = "Buttons",
-              options = list(
-                bPaginate = FALSE,
-                dom = 'Bt',
-                buttons = c("copy", "csv", "excel"),
-                filename = "ABM_field_normalized_citations")
-              ) %>% 
-  formatRound(2 & 4, digits = 1, mark = "") %>% 
-  formatRound(3, digits = 2, mark = "") %>%
-  formatPercentage(5, digits = 1) %>%
-  abm_format_rows()
+if(nrow(df_cf) > 0)
+  DT::datatable(df_cf %>% rename("Publication years" = "interval",
+                                 "Publications" = "P_frac",
+                                 "Average Cf" = "cf",
+                                 "Top 10% publications" = "top10_count",
+                                 "Share Top 10%" = "top10_share"),
+                rownames = FALSE,
+                extensions = "Buttons",
+                options = list(
+                  bPaginate = FALSE,
+                  dom = 'Bt',
+                  buttons = c("copy", "csv", "excel"),
+                  filename = "ABM_field_normalized_citations")
+                ) %>% 
+    formatRound(c(2, 4), digits = 1, mark = "") %>% 
+    formatRound(3, digits = 2, mark = "") %>%
+    formatPercentage(5, digits = 1) %>%
+    abm_format_rows()
 ```
 
 Row
 ---------------------
 
-###  Average field normalized citations (cf)
+### **Average field normalized citations (Cf)**
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
@@ -341,7 +380,7 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
 ```
 
 
-### %Top-10% 
+### **Share Top 10%**
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
@@ -357,32 +396,33 @@ Journal impact
 Row
 ---------------------
 
-### 3-year moving average, fractional counts
+### **3-year moving average, fractional counts**
 
 ```{r}
-DT::datatable(df_jcf %>% rename("Publication years" = "interval",
-                                "Publications" = "P_frac",
-                                "Average Journal Cf" = "jcf",
-                                "Publications in Top 20% journals" = "top20_count",
-                                "Share Top 20% journals" = "top20_share"),
-              rownames = FALSE,
-              extensions = "Buttons",
-              options = list(
-                bPaginate = FALSE,
-                dom = 'Bt',
-                buttons = c("copy", "csv", "excel"),
-                title = "ABM_journal_impact")
-              ) %>% 
-  formatRound(2 & 4, digits = 1, mark = "") %>% 
-  formatRound(3, digits = 2, mark = "") %>% 
-  formatPercentage(5, digits = 1) %>%
-  abm_format_rows()
+if(nrow(df_jcf) > 0)
+  DT::datatable(df_jcf %>% rename("Publication years" = "interval",
+                                  "Publications" = "P_frac",
+                                  "Average Journal Cf" = "jcf",
+                                  "Publications in Top 20% journals" = "top20_count",
+                                  "Share Top 20% journals" = "top20_share"),
+                rownames = FALSE,
+                extensions = "Buttons",
+                options = list(
+                  bPaginate = FALSE,
+                  dom = 'Bt',
+                  buttons = c("copy", "csv", "excel"),
+                  title = "ABM_journal_impact")
+                ) %>% 
+    formatRound(c(2, 4), digits = 1, mark = "") %>% 
+    formatRound(3, digits = 2, mark = "") %>% 
+    formatPercentage(5, digits = 1) %>%
+    abm_format_rows()
 ```
 
 Row
 ---------------------
 
-###  Field normalized journal indicator
+### **Field normalized journal indicator (JCf)**
 
 ```{r}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow > 0)
@@ -390,7 +430,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow > 0)
 ```
 
 
-### Journal Top-20% 
+### **Share Journal Top 20%**
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
@@ -405,31 +445,32 @@ Co-publishing
 Row
 ---------------------
 
-### International and Swedish non-university copublications (full counts)
+### **International and Swedish non-university copublications (full counts)**
 
 ```{r}
-DT::datatable(df_copub %>% rename("Publication years" = "interval",
-                                 "Publications" = "P_full",
-                                 "Swedish non-university copublications" = "nonuniv_count",
-                                 "Share Swedish non-university" = "nonuniv_share",
-                                 "International copublications" = "int_count",
-                                 "Share international" = "int_share"),
-              rownames = FALSE,
-              extensions = "Buttons",
-              options = list(
-                bPaginate = FALSE,
-                dom = 'Bt',
-                buttons = c("copy", "csv", "excel"),
-                title = "ABM_copublications")
-              ) %>%
-  formatPercentage(c(4,6), digits = 1) %>%
-  abm_format_rows()
+if(nrow(df_copub) > 0)
+  DT::datatable(df_copub %>% rename("Publication years" = "interval",
+                                   "Publications" = "P_full",
+                                   "Swedish non-university copublications" = "nonuniv_count",
+                                   "Share Swedish non-university" = "nonuniv_share",
+                                   "International copublications" = "int_count",
+                                   "Share international" = "int_share"),
+                rownames = FALSE,
+                extensions = "Buttons",
+                options = list(
+                  bPaginate = FALSE,
+                  dom = 'Bt',
+                  buttons = c("copy", "csv", "excel"),
+                  title = "ABM_copublications")
+                ) %>%
+    formatPercentage(c(4,6), digits = 1) %>%
+    abm_format_rows()
 ```
 
 Row
 -------
 
-### International and Swedish non-university copublication
+### **International and Swedish non-university copublication**
 
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0)

@@ -610,11 +610,13 @@ abm_graph_diva <- function(df){
     gather("year", "value", -Publication_Type_DiVA) %>%
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
+  colvals <- c(RColorBrewer::brewer.pal(12, "Set3"), "#8080B0")
+  
   ggplot(data = df_diva_long,
          aes(x = year)) +
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
     labs(x = NULL, y = NULL, fill = NULL) +
-    scale_fill_brewer(palette = "Set3") +
+    scale_fill_manual(values = colvals) +
     theme_minimal()
 }
 

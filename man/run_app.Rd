@@ -5,10 +5,16 @@
 \title{Running this function launches a Shiny web application presenting
 the datasets bundled in this package}
 \usage{
-run_app(example)
+run_app(example, port, host)
 }
 \arguments{
 \item{example}{the name of the bundled Shiny application example}
+
+\item{port}{the port to run on, default is the port set in the shiny.port option 
+if it exists or 3737 if it doesn't}
+
+\item{host}{the interface to bind to, default is the port set in the shiny.host option 
+if it exists or, if not, to bind to all interfaces, ie 0.0.0.0}
 }
 \description{
 Running this function launches a Shiny web application presenting

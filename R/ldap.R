@@ -218,6 +218,7 @@ ad_kthid <- function(accountname) {
 #' @export
 #' @importFrom dplyr filter pull
 #' @importFrom base64enc base64decode
+#' @importFrom stringr str_match
 ad_displayname <- function(kthid) {
   
   if (Sys.info()["sysname"] == "Windows"){

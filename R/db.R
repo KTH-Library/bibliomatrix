@@ -3,10 +3,10 @@
 #' This function returns a db connection to one of two possible pre-configured
 #' data sources containing Bibliometrics data
 #' 
-#' @param source_type one of "mssql" or "sqlite" with "mssql" being default
+#' @param source_type one of "mssql" or "sqlite" with "sqlite" being default
 #' @return database connection
 #' @export
-con_bib <- function(source_type = c("mssql", "sqlite")) 
+con_bib <- function(source_type = c("sqlite", "mssql")) 
 {
   type <- match.arg(source_type)
   switch(type,
@@ -32,6 +32,14 @@ con_bib_mssql <- function()
     stop("Please use an .Renviron with these envvars set", paste(envvars))
   }
   
+  if (Sys.getenv("DBTIMEOUT") == "") {
+    timeout <- 60
+  } else {
+    timeout <- strtoi(Sys.getenv("DBTIMEOUT"))
+    is_valid <- !is.na(timeout)
+    stopifnot(is_valid)
+  }
+  
   if(startsWith(Sys.getenv("OS"), "Windows")) {
     # encoding Windows-1252 curiously gives neat UTF-8 output from DB on Windows
     # (while encoding UTF-8 does not)
@@ -43,7 +51,7 @@ con_bib_mssql <- function()
       database = Sys.getenv("DBNAME"),
       UID = Sys.getenv("DBUSER"),
       PWD = Sys.getenv("DBPASS"),
-      timeout = 30,
+      timeout = timeout,
       encoding = "Windows-1252")
   } else {
     dbConnect(
@@ -54,7 +62,7 @@ con_bib_mssql <- function()
       database = Sys.getenv("DBNAME"),
       UID = Sys.getenv("DBUSER"),
       PWD = Sys.getenv("DBPASS"),
-      timeout = 30)
+      timeout = timeout)
   }
 }
 

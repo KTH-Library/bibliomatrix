@@ -208,10 +208,15 @@ if(wospubs < 10)
 wospubstext <- paste0(wospubstext, "</p>")
 cat(wospubstext)
 
-coveragetext <- paste0("<p>Web of Science coverage is ", 100*round(totcov, 3), "%. ")
-if(totcov >= 0.8) coveragetext <- paste0(coveragetext, "This is OK!</p>")
-if(totcov < 0.8 && totcov >= 0.6) coveragetext <- paste0(coveragetext, "<b>This is bad, proceed with caution!</b></p>")
-if(totcov < 0.6) coveragetext <- paste0(coveragetext, "<b>This is very bad, indicators can not be trusted!</b></p>")
+coveragejudge <- ifelse(totcov >= 0.8, "good",
+                        ifelse(totcov >= 0.65, "moderate",
+                               ifelse(totcov >= 0.5, "poor", "bad")))
+
+coveragetext <- glue::glue("<p>Web of Science coverage is <b>{coveragejudge}</b>, ", 100*round(totcov, 3), "%. ")
+if(coveragejudge == "moderate") coveragetext <- paste0(coveragetext, "<b>Proceed with caution.</b>")
+if(coveragejudge == "poor") coveragetext <- paste0(coveragetext, "<b>This is poor, indicators should be treated with extreme caution.</b>")
+if(coveragejudge == "bad") coveragetext <- paste0(coveragetext, "<b>This is very poor, indicators can not be trusted.</b>")
+coveragetext <- paste0(coveragetext, "</p>")
 cat(coveragetext)
 ```
 

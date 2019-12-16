@@ -3,13 +3,14 @@
 
 library(devtools)
 library(usethis)
+library(here)
 
 ## DO THIS when pushing
 
 document()
 check()
 # remember to update the bundled data
-source("data-raw/public_data.R")
+source(here("data-raw/public_data.R"))
 # first revert the .gitignore if it has been changed by below
 build_vignettes()
 pkgdown::build_site()

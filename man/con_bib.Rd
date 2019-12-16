@@ -4,10 +4,10 @@
 \alias{con_bib}
 \title{Connection to Bibliometrics data source for KTH}
 \usage{
-con_bib(source_type = c("mssql", "sqlite"))
+con_bib(source_type = c("sqlite", "mssql"))
 }
 \arguments{
-\item{source_type}{one of "mssql" or "sqlite" with "mssql" being default}
+\item{source_type}{one of "mssql" or "sqlite" with "sqlite" being default}
 }
 \value{
 database connection

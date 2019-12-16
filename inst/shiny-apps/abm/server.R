@@ -78,7 +78,7 @@ server <- function(input, output, session) {
                 w <- try(httr::GET(www), silent = TRUE)
                 if (!inherits(w, 'try-error') && httr::status_code(w) == 200) {
                     html <- httr::content(w, as = "raw")
-                    writeBin(html, f)
+                    writeBin(html, ff)
                 } else {
                     msg <- charToRaw(sprintf("<h1>API did not return data</h1>"))
                     f <- sprintf("data:text/html;base64,%s", base64enc::base64encode(msg))

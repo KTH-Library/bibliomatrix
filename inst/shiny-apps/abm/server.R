@@ -9,24 +9,31 @@ library(purrr)
 # deploy to shiny in root context
 #ln -s /usr/local/lib/R/site-library/bibliomatrix/shiny-apps/abm/* .
 
-#data("abm_public_kth")
-
-# to use this, first start the plumber API 
-# issue "make up" in the directory where the plumber.R API resides
-# (cd inst/plumber/abm; make up)
-
-ABM_API_UNIT <- "http://localhost:8080/unit/%s/flexdashboard?embeddata=true"
-ABM_API_EMP <- "http://localhost:8080/employee/%s/flexdashboard"
+ABM_API <- Sys.getenv("ABM_API")
+if (ABM_API == "") ABM_API <- "http://localhost:8080"
+ABM_API_UNIT <- paste0(ABM_API, "/unit/%s/flexdashboard?embeddata=true")
+ABM_API_EMP <- paste0(ABM_API, "/employee/%s/flexdashboard")
 
 server <- function(input, output, session) {
 
     ua <- Sys.getenv("SHINYPROXY_USERNAME")
-    if (ua == "") ua <- "sigbritt"
+    if (ua == "") ua <- "u1g9umtq@kth.se"
+    re_saml <- "(.*)@kth\\.se$"
+    is_saml <- function(x) stringr::str_detect(x, re_saml)
+    parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
     
     kthid <- function() {
+        # if shinyproxy with saml then we get user identity as kthid@kth.se
+        # if shinyproxy with ldap then we get user identity as LDAP accountname
         if (input$use_prerendered) return (177)
-        kthid <- ad_kthid(ua)
+        if (is_saml(ua)) {
+            kthid <- parse_id(ua)
+        } else {
+            # we are not using public content and not saml -> likely LDAP
+            kthid <- ad_kthid(ua)
+        }
         kthid <- setNames(kthid, ad_displayname(kthid))
+        return (kthid)
     }
     
     output$units <- renderUI({
@@ -49,6 +56,7 @@ server <- function(input, output, session) {
         # if the unit id not is for an org then use employee endpoint
         API <- ifelse(!input$unitid %in% abm_public_kth$meta$Diva_org_id, 
             ABM_API_EMP, ABM_API_UNIT)
+        # TODO: this probably will affect other users sessions and should be changed
         dash_src <<- sprintf(API, input$unitid)
         if (!input$use_prerendered)
             cat(dash_src, "\n")
@@ -80,8 +88,21 @@ server <- function(input, output, session) {
             tags$iframe(src = paste0(input$unitid, ".html"), width = "100%", height = "100%",
                         frameborder = 0, scrolling = 'auto')
         } else {
-            cat("Embedding in iframe: ", dash_src, "\n")
-            tags$iframe(src = dash_src, width = "100%", height = "100%",
+            f <- paste0(openssl::sha1(kthid()), ".html")
+            if (!file.exists(f)) {
+                cat("Embedding from: ", dash_src, "\n")
+                w <- httr::GET(dash_src)
+                if (httr::status_code(w) == 200) {
+                    html <- httr::content(w, as = "raw")
+                    loc_www <- system.file("shiny-apps", "abm", "www", package = "bibliomatrix")
+                    writeBin(html, file.path(loc_www, f))
+                } else {
+                    msg <- sprintf("<pre>Error from API at %s</pre>", dash_src)
+                    f <- sprintf("data:text/html;base64,%s", base64enc::base64encode(msg))
+                }
+            }
+            #data_uri <- sprintf("data:text/html;base64,%s", base64enc::base64encode(html))
+            tags$iframe(src = f, width = "100%", height = "100%",
                 frameborder = 0, scrolling = 'auto')
         }
         

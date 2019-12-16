@@ -218,25 +218,34 @@ ad_kthid <- function(accountname) {
 #' @export
 #' @importFrom dplyr filter pull
 #' @importFrom base64enc base64decode
+#' @importFrom stringr str_match
 ad_displayname <- function(kthid) {
   
-  label <- 
-    ad_search(kthid) %>% 
-    filter(key == "cn") %>% 
-    pull(value)
-  
-  if (is_empty(label))
+  if (Sys.info()["sysname"] == "Windows"){
+    # Fetch from DN because cn gets corrupt in ad_search() from Windows
+    DN <-
+      ad_search(kthid) %>%
+      filter(key == "DN") %>%
+      pull(value)
+    label <- stringr::str_match(DN, "^CN=(.*?),OU=")[2]
+  } else {
     label <- 
       ad_search(kthid) %>% 
-      filter(key == "displayName:") %>% 
-      pull(value) %>% base64enc::base64decode() %>% rawToChar()
+      filter(key == "cn") %>% 
+      pull(value)
+    
+    if (is_empty(label))
+      label <- 
+        ad_search(kthid) %>% 
+        filter(key == "displayName:") %>% 
+        pull(value) %>% base64enc::base64decode() %>% rawToChar()
+  }
   
   if (is_empty(label)) {
     warning("Couldn't look up kthid at LDAP, tried: ", kthid)
     label <- "Osqulda"
   }
-
+  
   return (label)
   
 }
-

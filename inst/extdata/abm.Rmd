@@ -6,11 +6,10 @@ output:
     vertical_layout: scroll
     favicon: kth-logo.png
 params:
-  unit_code: KTH
+  unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE
-  
 ---
 
 ```{r setup, include=FALSE}
@@ -224,7 +223,7 @@ Row
 --------------------------------
 ### **Background**
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This yields that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, are not included in the statistics.
+The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
 Statistics regarding citations and co-publishing are based on the subset of publications in DiVA that are registered in Web of Science.
 
@@ -288,6 +287,8 @@ if (params$embed_data == TRUE) {
 if (params$is_employee == TRUE) {
   out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
   cat(out)
+} else {
+  cat("Publication data is available only after login.")
 }
   
 ```
@@ -389,7 +390,7 @@ if(nrow(df_cf) > 0)
                   buttons = c("copy", "csv", "excel"),
                   filename = "ABM_field_normalized_citations")
                 ) %>% 
-    formatRound(2 & 4, digits = 1, mark = "") %>% 
+    formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>%
     formatPercentage(5, digits = 1) %>%
     abm_format_rows()
@@ -439,7 +440,7 @@ if(nrow(df_jcf) > 0)
                   buttons = c("copy", "csv", "excel"),
                   title = "ABM_journal_impact")
                 ) %>% 
-    formatRound(2 & 4, digits = 1, mark = "") %>% 
+    formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>% 
     formatPercentage(5, digits = 1) %>%
     abm_format_rows()

@@ -33,10 +33,9 @@ con_bib_mssql <- function()
   }
   
   if (Sys.getenv("DBTIMEOUT") == "") {
-    message("Found no DBTIMEOUT env var, setting db timeout to default 60s")
     timeout <- 60
   } else {
-    timeout <- strotoi(Sys.getenv("DBTIMEOUT"))
+    timeout <- strtoi(Sys.getenv("DBTIMEOUT"))
     is_valid <- !is.na(timeout)
     stopifnot(is_valid)
   }

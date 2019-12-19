@@ -16,11 +16,11 @@ db <- pool_bib()
 test_tab1 <- function(con = con_bib(), testlevel, unit_code){
   # Get reference table
   cols_pub <- c("Publication_Type_DiVA", "Doc_Year", "w_d_Sum")
-  cols_wos <- c("Publication_Type_DiVA", "wos_coverage_Mean")
+  cols_wos <- c("Publication_Type_DiVA", "w_d_Sum", "wos_coverage_Mean")
   refname <- paste0("publ_",testlevel,"_frac_aggr")
-  ref_raw <- con %>% tbl(refname) %>% filter(unit == unit_code) %>% select(cols_pub) %>% as.data.frame()
-  ref_wos <- con %>% tbl(refname) %>% filter(unit == unit_code && !is.na(wos_coverage_mean)) %>% select(cols_wos) %>% as.data.frame()
-  reftable <- ref_raw %>%
+  ref_pub <- con %>% tbl(refname) %>% filter(unit == unit_code && !is.na(Doc_Year)) %>% select(cols_pub) %>% arrange(Doc_Year) %>% as.data.frame()
+  ref_wos <- con %>% tbl(refname) %>% filter(unit == unit_code && is.na(Doc_Year)) %>% select(cols_wos) %>% as.data.frame()
+  reftable <- ref_pub %>%
     pivot_wider(names_from = Doc_Year, values_from = w_d_Sum) %>%
     inner_join(ref_wos, by = c("Publication_Type_DiVA")) %>%
     arrange(Publication_Type_DiVA) %>% 
@@ -28,9 +28,9 @@ test_tab1 <- function(con = con_bib(), testlevel, unit_code){
 
   # Get ABM table 
   abmtable <- abm_table1(con, unit_code) %>% arrange(Publication_Type_DiVA) %>%  as.data.frame()
-  
+
   # Check if tables are equal
-  all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance)
+  isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
 test_tab2 <- function(con = con_bib(), testlevel, unit_code) {
@@ -43,7 +43,7 @@ test_tab2 <- function(con = con_bib(), testlevel, unit_code) {
   abmtable <- abm_table2(con, unit_code) %>% as.data.frame()
   
   # Check if tables are equal
-  all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance)
+  isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
 test_tab3 <- function(con = con_bib(), testlevel, unit_code) {
@@ -56,7 +56,7 @@ test_tab3 <- function(con = con_bib(), testlevel, unit_code) {
   abmtable <- abm_table3(con, unit_code) %>% as.data.frame()
     
   # Check if tables are equal
-  all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance)
+  isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
 test_tab4 <- function(con = con_bib(), testlevel, unit_code) {
@@ -69,7 +69,7 @@ test_tab4 <- function(con = con_bib(), testlevel, unit_code) {
   abmtable <- abm_table4(con, unit_code) %>% as.data.frame()
     
   # Check if tables are equal
-  all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance)
+  isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
 test_tab5 <- function(con = con_bib(), testlevel, unit_code) {
@@ -82,7 +82,7 @@ test_tab5 <- function(con = con_bib(), testlevel, unit_code) {
   abmtable <- abm_table5(con, unit_code) %>% as.data.frame()
   
   # Check if tables are equal
-  all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance)
+  isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
 ### Run tests ###

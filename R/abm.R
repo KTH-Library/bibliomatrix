@@ -120,6 +120,10 @@ abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -168,9 +172,6 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
              Publication_Year %in% analysis_start:(analysis_stop - 1) & 
              !is.na(cf))
 
-  if(nrow(orgdata) == 0)
-    return(tibble(interval = "Total", P_frac = NA, cf = NA, top10_count = NA, top10_share = NA))
-
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
@@ -187,6 +188,10 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     ungroup()
   
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -220,9 +225,6 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
     filter(Publication_Type_WoS %in% c("Article", "Review") & 
              Publication_Year %in% analysis_start:(analysis_stop))
 
-  if(nrow(orgdata) == 0)
-    return(tibble(interval = "Total", P_frac = NA, jcf = NA, top20_count = NA, top20_share = NA))
-  
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
@@ -238,6 +240,10 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     ungroup()
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
   
   # Summary part of table
   table2 <-
@@ -272,9 +278,6 @@ abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
              Publication_Year %in% analysis_start:(analysis_stop)
             & !is.na(int))
 
-  if(nrow(orgdata) == 0)
-    return(tibble(interval = "Total", P_full = NA, nonuniv_count = NA, nonuniv_share = NA, int_count = NA, int_share = NA))
-
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
@@ -292,6 +295,10 @@ abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               int_share = mean(int, na.rm = T)) %>%
     ungroup()
   
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Summary part of table
   table2 <-
     orgdata %>%

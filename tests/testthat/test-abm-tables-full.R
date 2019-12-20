@@ -10,8 +10,6 @@ skip_full_abm_test <- TRUE
 # The accepted difference (counts as equal if diff < acc_tolerance)
 acc_tolerance <- 0.00001
 
-if(!skip_full_abm_test) db <- pool_bib()
-
 ### Define test functions ###
 test_tab1 <- function(con = con_bib(), testlevel, unit_code){
   # Get reference table
@@ -86,38 +84,41 @@ test_tab5 <- function(con = con_bib(), testlevel, unit_code) {
 }
 
 ### Run tests ###
+if(!skip_full_abm_test){
+  db <- pool_bib()
+  
+  # KTH and schools
+  schoolunits <- unit_info(level = c(0,1)) %>% pull(unit_code)
+  test_that("school_tables", {
+    skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
+    expect_true(all(sapply(schoolunits, function(x) test_tab1(con = db, testlevel = "school", unit_code = x))))
+    expect_true(all(sapply(schoolunits, function(x) test_tab2(con = db, testlevel = "school", unit_code = x))))
+    expect_true(all(sapply(schoolunits, function(x) test_tab3(con = db, testlevel = "school", unit_code = x))))
+    expect_true(all(sapply(schoolunits, function(x) test_tab4(con = db, testlevel = "school", unit_code = x))))
+    expect_true(all(sapply(schoolunits, function(x) test_tab5(con = db, testlevel = "school", unit_code = x))))
+  })
 
-# KTH and schools
-schoolunits <- unit_info(level = c(0,1)) %>% pull(unit_code)
-test_that("school_tables", {
-  skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
-  expect_true(all(sapply(schoolunits, function(x) test_tab1(con = db, testlevel = "school", unit_code = x))))
-  expect_true(all(sapply(schoolunits, function(x) test_tab2(con = db, testlevel = "school", unit_code = x))))
-  expect_true(all(sapply(schoolunits, function(x) test_tab3(con = db, testlevel = "school", unit_code = x))))
-  expect_true(all(sapply(schoolunits, function(x) test_tab4(con = db, testlevel = "school", unit_code = x))))
-  expect_true(all(sapply(schoolunits, function(x) test_tab5(con = db, testlevel = "school", unit_code = x))))
-})
+  # Departments
+  deptunits <- unit_info(level = 2) %>% pull(unit_code)
+  test_that("dept_tables", {
+    skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
+    expect_true(all(sapply(deptunits, function(x) test_tab1(con = db, testlevel = "dept", unit_code = x))))
+    expect_true(all(sapply(deptunits, function(x) test_tab2(con = db, testlevel = "dept", unit_code = x))))
+    expect_true(all(sapply(deptunits, function(x) test_tab3(con = db, testlevel = "dept", unit_code = x))))
+    expect_true(all(sapply(deptunits, function(x) test_tab4(con = db, testlevel = "dept", unit_code = x))))
+    expect_true(all(sapply(deptunits, function(x) test_tab5(con = db, testlevel = "dept", unit_code = x))))
+  })
+  
+  # Individual researchers
+  resunits <- abm_data(unit_level = 3) %>% pull(Unit_code) %>% unique()
+  test_that("res_tables", {
+    skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
+    expect_true(all(sapply(resunits, function(x) test_tab1(con = db, testlevel = "res", unit_code = x))))
+    expect_true(all(sapply(resunits, function(x) test_tab2(con = db, testlevel = "res", unit_code = x))))
+    expect_true(all(sapply(resunits, function(x) test_tab3(con = db, testlevel = "res", unit_code = x))))
+    expect_true(all(sapply(resunits, function(x) test_tab4(con = db, testlevel = "res", unit_code = x))))
+    expect_true(all(sapply(resunits, function(x) test_tab5(con = db, testlevel = "res", unit_code = x))))
+  })
 
-# Departments
-deptunits <- unit_info(level = 2) %>% pull(unit_code)
-test_that("dept_tables", {
-  skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
-  expect_true(all(sapply(deptunits, function(x) test_tab1(con = db, testlevel = "dept", unit_code = x))))
-  expect_true(all(sapply(deptunits, function(x) test_tab2(con = db, testlevel = "dept", unit_code = x))))
-  expect_true(all(sapply(deptunits, function(x) test_tab3(con = db, testlevel = "dept", unit_code = x))))
-  expect_true(all(sapply(deptunits, function(x) test_tab4(con = db, testlevel = "dept", unit_code = x))))
-  expect_true(all(sapply(deptunits, function(x) test_tab5(con = db, testlevel = "dept", unit_code = x))))
-})
-
-# Individual researchers
-resunits <- abm_data(unit_level = 3) %>% pull(Unit_code) %>% unique()
-test_that("res_tables", {
-  skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
-  expect_true(all(sapply(resunits, function(x) test_tab1(con = db, testlevel = "res", unit_code = x))))
-  expect_true(all(sapply(resunits, function(x) test_tab2(con = db, testlevel = "res", unit_code = x))))
-  expect_true(all(sapply(resunits, function(x) test_tab3(con = db, testlevel = "res", unit_code = x))))
-  expect_true(all(sapply(resunits, function(x) test_tab4(con = db, testlevel = "res", unit_code = x))))
-  expect_true(all(sapply(resunits, function(x) test_tab5(con = db, testlevel = "res", unit_code = x))))
-})
-
-if(!skip_full_abm_test) poolClose(db)
+  poolClose(db)
+}

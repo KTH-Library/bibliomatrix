@@ -10,7 +10,7 @@ skip_full_abm_test <- TRUE
 # The accepted difference (counts as equal if diff < acc_tolerance)
 acc_tolerance <- 0.00001
 
-db <- pool_bib()
+if(!skip_full_abm_test) db <- pool_bib()
 
 ### Define test functions ###
 test_tab1 <- function(con = con_bib(), testlevel, unit_code){
@@ -120,4 +120,4 @@ test_that("res_tables", {
   expect_true(all(sapply(resunits, function(x) test_tab5(con = db, testlevel = "res", unit_code = x))))
 })
 
-poolClose(db)
+if(!skip_full_abm_test) poolClose(db)

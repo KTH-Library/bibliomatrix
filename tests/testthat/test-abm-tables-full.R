@@ -60,7 +60,7 @@ test_tab3 <- function(con = con_bib(), testlevel, unit_code) {
 test_tab4 <- function(con = con_bib(), testlevel, unit_code) {
   # Get reference table
   cols<- c("jrv_label_year", "Pfrac_Sum", "jrv_mean_frac_Sum", "top20_sum_frac_Sum", "top20_mean_frac_Sum")
-  refname= paste0("jcf_glid_",testlevel,"_frac_aggr")
+  refname <- paste0("jcf_glid_",testlevel,"_frac_aggr")
   reftable <- con %>% tbl(refname) %>% filter(unit == unit_code) %>% select(cols) %>% as.data.frame()
   
   # Get ABM table
@@ -73,7 +73,7 @@ test_tab4 <- function(con = con_bib(), testlevel, unit_code) {
 test_tab5 <- function(con = con_bib(), testlevel, unit_code) {
   # Get reference table
   cols<- c("sp_label_year", "N", "swe_co_Sum", "swe_co_Mean", "int_Sum", "int_Mean")
-  refname= paste0("copub_glid_",testlevel,"_aggr")
+  refname <- paste0("copub_glid_",testlevel,"_aggr")
   reftable <- con %>% tbl(refname) %>% filter(unit == unit_code) %>% select(cols) %>% as.data.frame()
   
   # Get ABM table

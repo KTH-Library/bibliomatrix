@@ -206,7 +206,7 @@ Statistics regarding citations and co-publishing are based on the subset of publ
 - [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](Description%20of%20data,%20methods%20and%20indicators%20in%20KTH%20Annual%20Bibliometric%20Monitoring.pdf)
 - [Formal definitions of field normalized citation indicators at KTH](Formal%20definitions%20of%20field%20normalized%20citation%20indicators%20at%20KTH.pdf)
 - [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer)
-- [President decision about the Annual Bibliometric Monitoring](Beslut%0934%20Arlig%20bibliometrisk%20uppfoljning.pdf)
+- [President decision about the Annual Bibliometric Monitoring](Beslut%200934%20Arlig%20bibliometrisk%20uppfoljning.pdf)
 
 Row
 ----------------------

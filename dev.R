@@ -10,6 +10,7 @@ library(here)
 document()
 check()
 # remember to update the bundled data
+db_sync(overwrite_existing = TRUE)
 source(here("data-raw/public_data.R"))
 # first revert the .gitignore if it has been changed by below
 build_vignettes()

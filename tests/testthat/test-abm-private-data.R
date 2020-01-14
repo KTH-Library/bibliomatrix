@@ -33,9 +33,3 @@ u18qe64m"))
   expect_true(all_has_both)
   
 })
-
-has_unit(res[[6]])
-
-abm_table1(unit_code = "u18qe64m")
-
-db %>% tbl("masterfile") %>% collect() %>% filter(Unit_code == "u18qe64m")

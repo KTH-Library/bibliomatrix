@@ -23,7 +23,7 @@ Suggests:
     testthat (>= 2.1.0),
     knitr,
     bench
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 Imports: 
     DBI (>= 1.0.0),
     RSQLite (>= 2.1.2),

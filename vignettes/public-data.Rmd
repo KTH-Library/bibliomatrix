@@ -25,9 +25,7 @@ library(dplyr)
 # (If no database connection is given to unit_info), abm_public_kth$meta is used anyway)
 identical(unit_info(), abm_public_kth$meta)
 
-
 unit_info()
-
 
 # The unit_code is used in most functions related to ABM
 # For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id

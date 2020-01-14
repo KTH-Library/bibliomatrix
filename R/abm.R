@@ -553,7 +553,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #'   and "units" with a named list of results (set of 5 different tibbles for 
 #'   the tables and also the publication list).
 #' @importFrom stats setNames
-#' @importFrom DBI dbDisconnect
+#' @importFrom pool poolClose
 #' @export
 #' @examples 
 #' \dontrun{
@@ -573,7 +573,7 @@ abm_private_data <- function(unit_code) {
   if (missing(unit_code))
     stop("Please provide a kthid to be used as unit_code.")
   
-  db <- con_bib()
+  db <- pool_bib()
   
   # retrieve unit codes
   units_table <- 
@@ -581,8 +581,6 @@ abm_private_data <- function(unit_code) {
     collect() %>%
     arrange(-desc(org_level)) 
 
-  dbDisconnect(db)
-  
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
@@ -598,6 +596,8 @@ abm_private_data <- function(unit_code) {
   res <- list(unit_tables(unit_code))
   res <- setNames(res, unit_code)
   
+  poolClose(db)
+
   out <- list("meta" = units_table, "units" = res)
   
   return(out)  

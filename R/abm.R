@@ -406,6 +406,7 @@ hiersort <- function(df, idfield, levelfield, parentfield, sortfield) {
 #' @return tibble with information about ABM units
 #' @import DBI dplyr
 #' @importFrom stringr str_pad
+#' @export
 
 unit_info <- function(con){
   
@@ -459,7 +460,7 @@ abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_co
 #' @return a list with three slots - "meta" for organizational unit metadata info,
 #'   "units" with a named list of results (set of 5 different tibbles for each of the units)
 #'   and "pt_ordning" for DiVA publication type sort order
-#' @importFrom DBI dbDisconnect
+#' @importFrom pool poolClose
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -500,7 +501,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   if (file.exists(cache_location) & !overwrite_cache)
     return (readr::read_rds(cache_location))  
   
-  db <- con_bib()
+  db <- pool_bib()
 
   # retrieve unit codes
   units_table <- 
@@ -533,7 +534,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  dbDisconnect(db)
+  poolClose(db)
   
   out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order)
   

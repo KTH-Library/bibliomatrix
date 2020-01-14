@@ -30,54 +30,35 @@ You can install the latest development version of bibliomatrix from [GitHub](htt
 devtools::install_github("KTH-Library/bibliomatrix")
 ```
 
-## Example
+### Public data
 
-This is a basic example which shows you how to get some data when creating Annual Bibliometric Monitoring analytics:
+The package includes data from the KTH Annual Bibliometric Monitoring (ABM) public part.
 
 ```{r example, , warning=FALSE, message=FALSE}
 library(bibliomatrix)
 library(dplyr)
 
-# simple example showing how to filter some of the data for Table 1
-# in the ABM report for an organizational unit and restrict the
-# output to a specific set of columns
+# Simple example showing some KTH units for which ABM results are public
+abm_public_kth$meta %>%
+  select(unit_code, unit_long_en) %>%
+  head() %>%
+  knitr::kable()
 
-abm_tab1() %>% 
-# only show data given a specific unit id (KTH = 177), just five records
-filter(id == 177) %>%
-select(`Organizational Unit`, `Publication Type`, `WoS Coverage`) %>%
-slice(1:5) %>%
-knitr::kable()
+# KTH is level 0, schools level 1 and departments level 2.
+# Some basic information about KTH schools:
+abm_public_kth$meta %>%
+  filter(org_level == 1) %>%
+  select(Diva_org_id, unit_code, unit_short, unit_long_en) %>%
+  knitr::kable()
 
-```
+# Get ABM results for KTH
+kth_abm_tables <- abm_public_kth$units$KTH
 
-This is a basic example of how to retrieve data for the organizational units used in the Annual Bibliometric Monitoring:
-
-```{r}
-# get data for organizational units at 
-# level 1 (KTH), level 2 (Schools) and level 3 (Departments / Institutions)
-# NB: this table is not yet complete and some entries lack english translations
-
-org <- abm_units()
-
-# inspect some organizational unit ids at "level 2" ie at the school level
-
-org %>%
-filter(unit_level == 2) %>%
-knitr::kable()
-
-```
-
-Some data relating to a specific school using the organizational unit id:
-
-```{r, warning=FALSE, message=FALSE}
-
-abm_tab1() %>%
-filter(id == 879223) %>%
-select(-id, -pubtype_order, -c(starts_with("20"))) %>%
-# just show five rows
-slice(1:5) %>%
-knitr::kable()
+# Show parts of ABM table 1 for KTH
+kth_abm_tables[[1]] %>%
+  select(Publication_Type_DiVA, P_frac, WoS_coverage) %>%
+  filter(P_frac > 50) %>%
+  knitr::kable()
 ```
 
 ## Development

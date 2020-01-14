@@ -95,10 +95,7 @@ if (nrow(df_diva) > 0){
     color = colors_vb[1],
     icon = "fa-chart-bar",
     href = "#publications-in-diva")
-} else {
-	print("No data")
 }
-
 ```
 
 ### **WoS coverage `r firstyear` - `r lastyear`<br>(peer reviewed)**
@@ -115,8 +112,6 @@ if (nrow(df_diva) > 0){
     color = colors_vb[1],
     icon = "fa-percent",
     href = "#publications-in-diva")
-} else {
-	print("No data")
 }
 
 ```
@@ -139,8 +134,6 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   pub_bullet2 <- abm_bullet(label = "Share Top10% publications", value = top10_share, reference = 0.10, pct = TRUE)
   
   grid.arrange(pub_bullet1, pub_bullet2, ncol = 1)
-} else {
-	print("No data")
 }
 
 ```
@@ -161,7 +154,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, reference = 0.20, pct = TRUE)
   
   grid.arrange(jour_bullet1, jour_bullet2, ncol = 1)
-} else {print("No data")}
+}
 
 ```
 
@@ -186,10 +179,7 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0){
   
   grid.arrange(waffle1, waffle2, ncol = 1)
   #plotly::subplot(w1, w2, nrows = 2)
-} else {
-  print("No data")
 }
-
 ```
 
 

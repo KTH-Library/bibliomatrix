@@ -11,72 +11,71 @@ library(stringr)
 library(readr)
 library(knitr)
 library(bench)
+library(DBI)
+library(pool)
 
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
 ## ---- message=FALSE, fig.align='left'------------------------------------
+# Open a connection pool to the default data source (Microsoft SQL Server BIBMON database)
+bibmon <- pool_bib()
 
-# get data from the default data source (Microsoft SQL Server BIBMON database)
-t1 <- abm_tab1()
+# get data for ABM table 1
+t1 <- abm_table1(con = bibmon, unit_code = "KTH")
 
 # display first few results
 t1 %>% 
-slice(1:5) %>% 
-select(1:2, "Total") %>% 
-arrange(desc(Total)) %>% 
-kable()
+  slice(1:5) %>% 
+  select(1:2) %>% 
+  kable()
 
-# get data but explicitly specify the data source
-src1 <- abm_tab1(con = con_bib("mssql"))
-
-db_sync()  ## sync a local sqlite3db with the remote source
-src2 <- abm_tab1(con = con_bib("sqlite"))
+# You can build a sqlite3 databsae for local use (this will take a while the first time)
+db_sync()
+localdb <- pool_bib("sqlite")
+t2 <- abm_table1(con = localdb, unit_code = "KTH")
 
 # are the results the same?
-identical(src1, src2)
+identical(t1, t2)
 
 # what about performance?
-bench_time(abm_tab1(con = con_bib("mssql")))
-bench_time(abm_tab1(con = con_bib("sqlite")))
+bench_time(abm_table1(con = bibmon, unit_code = "KTH"))
+bench_time(abm_table1(con = localdb, unit_code = "KTH"))
 
+poolClose(bibmon)
+poolClose(localdb)
 
 ## ---- fig.align='left'---------------------------------------------------
 # search Active Directory using an account name, return first 10 rows
-ad_search("markussk", "accountname") %>% head(10) %>% kable()
+ad_search("agnel", "accountname") %>% head(10) %>% kable()
 
 # search AD using a KTH identifier, same result, so return first row only
-ad_search("u1o2ujjd", "kthid") %>% head(1) %>% kable()
+ad_search("u1z88syr", "kthid") %>% head(1) %>% kable()
 
 # default if search_type is not specified is to use KTH id
-#ad_search("u1o2ujjd")
+#ad_search("u1z88syr")
 
 # display memberships for an Active Directory user with a specific KTH id
-ad_search("u1o2ujjd") %>% 
+ad_search("u1z88syr") %>% 
   filter(str_starts(key, "ug.*Affiliation")) %>% 
   kable() 
 
-# function to return account name for a given KTH id
-ad_accountname_from_kthid <- function(x)
-  ad_search(x) %>% filter(key == "sAMAccountName") %>% pull(value)
-
-# use the above fcn to get the account name for a given kth id
-ad_accountname_from_kthid("u1o2ujjd")
+# some functions have been defined to "translate" between identificators
+ad_accountname("u1z88syr")
+ad_kthid("agnel")
 
 # several kth identifiers can be processed, for example:
-kthids <- 
+kthids <-
 "u1kzf1xh
 u1g9umtq
 u1jr9fll 
 u1ygqmuy
 u13bp6vd
-u18qe64m" %>% 
-read_lines()
+u18qe64m" %>% read_lines()
 
-# display memberof entries beginning with "ug" for a given identifier
+# display memberof entries beginning with "aff" for a given user
 ad_search(kthids[4]) %>% 
-ad_memberof() %>% 
-filter(str_starts(memberof, "aff")) %>%
-kable()
-
+  ad_memberof() %>% 
+  filter(str_starts(memberof, "aff")) %>%
+  kable()
 

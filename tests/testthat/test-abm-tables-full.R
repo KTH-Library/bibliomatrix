@@ -88,7 +88,7 @@ if(!skip_full_abm_test){
   db <- pool_bib()
   
   # KTH and schools
-  schoolunits <- unit_info(level = c(0,1)) %>% pull(unit_code)
+  schoolunits <- unit_info(db) %>% filter(org_level %in% c(0,1)) %>% pull(unit_code)
   test_that("school_tables", {
     skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
     expect_true(all(sapply(schoolunits, function(x) test_tab1(con = db, testlevel = "school", unit_code = x))))
@@ -99,7 +99,7 @@ if(!skip_full_abm_test){
   })
 
   # Departments
-  deptunits <- unit_info(level = 2) %>% pull(unit_code)
+  deptunits <- unit_info(db) %>% filter(org_level == 2) %>% pull(unit_code)
   test_that("dept_tables", {
     skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
     expect_true(all(sapply(deptunits, function(x) test_tab1(con = db, testlevel = "dept", unit_code = x))))

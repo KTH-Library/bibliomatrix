@@ -20,7 +20,7 @@ u18qe64m"))
 
   # if this is changed to include all entries ie kthids[1:6]
   # the test fails
-  res <- map(kthids[1:5], abm_private_data)
+  res <- map(kthids[1:6], abm_private_data)
 
   # check that returned results have meta and unit slots with data
   has_meta <- function(x) x %>% pluck("meta") %>% nrow() > 0
@@ -34,3 +34,8 @@ u18qe64m"))
   
 })
 
+has_unit(res[[6]])
+
+abm_table1(unit_code = "u18qe64m")
+
+db %>% tbl("masterfile") %>% collect() %>% filter(Unit_code == "u18qe64m")

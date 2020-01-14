@@ -8,7 +8,7 @@ output:
 params:
   unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
-  use_package_data: TRUE
+  use_package_data: FALSE
   embed_data: FALSE
 ---
 
@@ -39,12 +39,14 @@ run_unit <- params$unit_code
 # Retrieve result tables to use in tabs and key indicators
 
 if (params$use_package_data != TRUE) {
-  df_diva <- abm_table1(unit_code = run_unit) 
-  df_cit3y <- abm_table2(unit_code= run_unit)
-  df_cf <- abm_table3(unit_code= run_unit)
-  df_jcf <- abm_table4(unit_code= run_unit)
-  df_copub <- abm_table5(unit_code= run_unit)
-  unit_meta <- unit_info(unit = run_unit)
+  con <- pool_bib()
+  df_diva <- abm_table1(con = con, unit_code = run_unit) 
+  df_cit3y <- abm_table2(con = con, unit_code= run_unit)
+  df_cf <- abm_table3(con = con, unit_code= run_unit)
+  df_jcf <- abm_table4(con = con, unit_code= run_unit)
+  df_copub <- abm_table5(con = con, unit_code= run_unit)
+  unit_meta <- unit_info(con = con) %>% filter(unit_code == run_unit)
+  pool::poolClose(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
   df_cit3y <- pluck(abm_public_kth$units, params$unit_code, 2)

@@ -38,12 +38,12 @@ run_app <- function(example, port, host) {
   
   if (missing(port)) {
     port <- getOption("shiny.port")
-    if (!is.null(port)) port <- 3737
+    if (is.null(port)) port <- 3737
   }
 
   if (missing(host)) {
     host <- getOption("shiny.host")
-    if (!is.null(host)) host <- "0.0.0.0"
+    if (is.null(host)) host <- "0.0.0.0"
   }
   
   shiny::runApp(appDir, port = port, host = host, display.mode = "normal")

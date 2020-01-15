@@ -2,22 +2,17 @@
 % Please edit documentation in R/abm.R
 \name{unit_info}
 \alias{unit_info}
-\title{Retrieve information about ABM units (level 0-2)}
+\title{Retrieve information about ABM units (level 0-2) from database or from package data}
 \usage{
-unit_info(con = con_bib(), unit, level, parent)
+unit_info(con)
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
-
-\item{unit}{unit code(s) for selection}
-
-\item{level}{organizational level(s) for selection (0 = KTH, 1 = School, 2 = Department)}
-
-\item{parent}{selects organizations with specific parent(s)}
+\item{con}{connection to db}
 }
 \value{
-tibble with information about selected units
+tibble with information about ABM units
 }
 \description{
-Retrieve information about ABM units (level 0-2)
+If a database connection is given, abm_org_info is read from database,
+otherwise abm_public_kth$meta is returned
 }

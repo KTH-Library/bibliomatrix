@@ -1,10 +1,10 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ---- warning=FALSE, message=FALSE---------------------------------------
+## ---- warning=FALSE, message=FALSE--------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 
@@ -26,7 +26,7 @@ unit_info(level = 1)
 # The result can of course be further processed as any other dataset
 unit_info(parent = 6023) %>% select(unit_code, unit_long_en) %>% arrange(unit_long_en)
 
-## ---- warning=FALSE, message=FALSE---------------------------------------
+## ---- warning=FALSE, message=FALSE--------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 
@@ -44,7 +44,7 @@ kth_abm_tables$summaries
 # Note that numeric unit codes need to be enclosed with ` 
 abm_public_kth$units$`5851`$summaries
 
-## ---- warning=FALSE, message=FALSE---------------------------------------
+## ---- warning=FALSE, message=FALSE--------------------------------------------
 library(bibliomatrix)
 
 # The only use for the pubtype_order part of the public data is to present

@@ -6,7 +6,8 @@
 \usage{
 db_sync(
   tables_included,
-  tables_excluded = c("Document"),
+  tables_excluded = c("Document", "Bestresaddr_KTH", "DIVA_School_Dept",
+    "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE
 )
 }
@@ -15,7 +16,8 @@ db_sync(
 included, by default all tables are included except those excluded}
 
 \item{tables_excluded}{a vector of table names in the source db to be
-excluded, by default "Documents" is excluded, specify NULL to exclude}
+excluded, by default a number of tables are excluded, specify NULL
+to not explicitly exclude any tables}
 
 \item{overwrite_existing}{a logical to indicate whether destination tables
 should be overwritten if they already exist}

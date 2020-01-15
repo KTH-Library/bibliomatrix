@@ -1,10 +1,10 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup, message=FALSE------------------------------------------------
+## ----setup, message=FALSE-----------------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 library(stringr)
@@ -17,7 +17,7 @@ library(pool)
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
-## ---- message=FALSE, fig.align='left'------------------------------------
+## ---- message=FALSE, fig.align='left'-----------------------------------------
 # Open a connection pool to the default data source (Microsoft SQL Server BIBMON database)
 bibmon <- pool_bib()
 
@@ -45,7 +45,7 @@ bench_time(abm_table1(con = localdb, unit_code = "KTH"))
 poolClose(bibmon)
 poolClose(localdb)
 
-## ---- fig.align='left'---------------------------------------------------
+## ---- fig.align='left'--------------------------------------------------------
 # search Active Directory using an account name, return first 10 rows
 ad_search("agnel", "accountname") %>% head(10) %>% kable()
 

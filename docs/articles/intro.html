@@ -122,8 +122,8 @@
 <p>In order to get data from the Microsoft SQL Server database, an <code>.Renviron</code> file is currently required with values being provided for the following envvars: <code>DBUSER</code> (the MSSQL Server service account name for the BIBMON db), <code>DBPASS</code>, <code>DBHOST</code> (the hostname for the MSSQL server) and <code>DBNAME</code> (use “BIBMON”).</p>
 <p>Once this has been provided in the <code>.Renviron</code> file, data for the ABM tables can be retrieved.</p>
 <p><em>NOTE: For the public part of ABM, no database connection is needed, see <a href="public-data.html">Using bundled data in bibliomatrix</a>.</em></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Open a connection pool to the default data source (Microsoft SQL Server BIBMON database)</span></a>
-<a class="sourceLine" id="cb2-2" title="2">bibmon &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pool_bib.html">pool_bib</a></span>()</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Open a connection pool to Microsoft SQL Server BIBMON database</span></a>
+<a class="sourceLine" id="cb2-2" title="2">bibmon &lt;-<span class="st"> </span><span class="kw"><a href="../reference/pool_bib.html">pool_bib</a></span>(<span class="st">"mssql"</span>)</a>
 <a class="sourceLine" id="cb2-3" title="3"></a>
 <a class="sourceLine" id="cb2-4" title="4"><span class="co"># get data for ABM table 1</span></a>
 <a class="sourceLine" id="cb2-5" title="5">t1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">"KTH"</span>)</a>

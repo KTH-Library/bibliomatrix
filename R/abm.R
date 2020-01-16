@@ -34,7 +34,7 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
 
 #' Get order of publication type for ABM table 1
 #' 
-#' @param con connection to db - if no connection is given, attempt to use abm_public_kth data
+#' @param con connection to db - if no connection is given, use abm_public_kth data
 #' @return tibble with pt_ordning and diva_publiation_type
 #' @import DBI dplyr tidyr purrr
 #' @export
@@ -120,6 +120,10 @@ abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
     ungroup()
   
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -168,9 +172,6 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
              Publication_Year %in% analysis_start:(analysis_stop - 1) & 
              !is.na(cf))
 
-  if(nrow(orgdata) == 0)
-    return(tibble(interval = "Total", P_frac = NA, cf = NA, top10_count = NA, top10_share = NA))
-
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
@@ -187,6 +188,10 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
     ungroup()
   
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -220,9 +225,6 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
     filter(Publication_Type_WoS %in% c("Article", "Review") & 
              Publication_Year %in% analysis_start:(analysis_stop))
 
-  if(nrow(orgdata) == 0)
-    return(tibble(interval = "Total", P_frac = NA, jcf = NA, top20_count = NA, top20_share = NA))
-  
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
@@ -238,6 +240,10 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
     ungroup()
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
   
   # Summary part of table
   table2 <-
@@ -272,9 +278,6 @@ abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
              Publication_Year %in% analysis_start:(analysis_stop)
             & !is.na(int))
 
-  if(nrow(orgdata) == 0)
-    return(tibble(interval = "Total", P_full = NA, nonuniv_count = NA, nonuniv_share = NA, int_count = NA, int_share = NA))
-
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>% 
@@ -292,6 +295,10 @@ abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
               int_share = mean(int, na.rm = T)) %>%
     ungroup()
   
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -343,90 +350,79 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
        copub_internat = t5$int_share)
 }
 
-#' Retrieve information about ABM units (level 0-2)
+#' Sorting a hierarchical structure
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit unit code(s) for selection
-#' @param level organizational level(s) for selection (0 = KTH, 1 = School, 2 = Department)
-#' @param parent selects organizations with specific parent(s)
-#' @return tibble with information about selected units
-#' @import DBI dplyr tidyr purrr
-#' @export
-unit_info <- function(con = con_bib(), unit, level, parent){
-  
-  # TODO: should this function provide filter params?
-  # discuss: filtering could happen from outside
-  
-  res <- unit_info_internal(con, unit, level, parent)
+#' This function takes a data frame with a tree-like structure,
+#' sorts entries from each sub-level directly after it's parent
+#' and returns the id and the resulting sorting order
+#' 
+#' @param df the data frame to be sorted
+#' @param idfield the column name for the id field
+#' @param levelfield the column name for the hierarchical level
+#' @param parentfield the column name for the parent's id
+#' @param sortfield the column name for sorting within level
+#' 
+#' @return tibble with id and sorting order
+#' @import dplyr
+#' @noRd
+hiersort <- function(df, idfield, levelfield, parentfield, sortfield) {
 
-  if (!missing(level))
-    res <- res %>% filter(org_level %in% level)
+  workdf <- df[, c(idfield, levelfield, parentfield, sortfield)]
+  names(workdf) <- c("id", "level", "parent", "sortfield")
   
-  if (!missing(unit))
-    res <- res %>% filter(unit_code %in% unit)
+  levels <- unique(workdf$level) %>% sort()
   
-  if (!missing(parent))
-    res <- res %>% filter(parent_org_id %in% parent)
+  # Full sortname for first level is just sortfield
+  res <- workdf %>% filter(level == levels[1])
+  res$fullsort <- res$sortfield
   
-  res
+  # For each subsequent level, fetch fullsort from parent and add sortfield to get unit's fullsort, then add to res
+  for(lvl in levels[-1]){
+    lvlres <- workdf %>%
+      filter(level == lvl) %>%
+      select(id, parent, sortfield) %>%
+      inner_join(res %>% select(id, fullsort), by = c("parent" = "id")) %>%
+      mutate(fullsort = paste0(fullsort, sortfield))
+    res <- bind_rows(res, lvlres)
+  }
   
+  res <- select(res, id, fullsort)
+
+  names(res)[1] <- idfield
+  
+  res %>%
+    arrange(fullsort) %>%
+    mutate(sort_order = as.integer(rownames(.))) %>%
+    select(-fullsort)
 }
 
-#' Depth-first search ordered organizational units DAG (tree)'
+#' Retrieve information about ABM units (level 0-2) from database or from package data
 #' 
-#' This function checks data integrity for KTH organizational units data
-#' ensuring it is a tree (directed acyclic graph) and makes a dfs to
-#' order the tree and then converts it into a tibble adds two fields for
-#' display purposes - one space padded indented field and one which is
-#' space padded with a Unicode space character that doesn't get santized
-#' when used in HTML contexts (such as in a shinyInput filter)
-#' @return tibble with dfs ordered tree
-#' @importFrom igraph graph_from_data_frame V is_dag
+#' If a database connection is given, abm_org_info is read from database,
+#' otherwise abm_public_kth$meta is returned
+#' 
+#' @param con connection to db
+#'
+#' @return tibble with information about ABM units
+#' @import DBI dplyr
 #' @importFrom stringr str_pad
-#' @noRd
+#' @export
 
-unit_info_internal <- function(con = con_bib(), unit, level, parent) {
-
-  res <- con %>% tbl("abm_org_info") %>% collect()
+unit_info <- function(con){
+  
+  if(missing(con)){
+    abm_public_kth$meta 
+  } else {
+    abm_units <- con %>% tbl("abm_org_info") %>% collect()
     
-  treee <- 
-    res %>% 
-    select(Diva_org_id, parent_org_id, unit_long_en, org_level, everything()) %>%
-    arrange(-desc(org_level)) %>%
-    mutate(n_pad = org_level * 4) %>%
-    mutate(unit_long_en_indent1 = sprintf("%*s%s", n_pad, "", unit_long_en)) %>%
-    mutate(unit_long_en_indent2 = sprintf("%s%s", 
-      # for usage in html where leading white space gets sanitized
-      stringr::str_pad("", side = "left", width = n_pad, pad = "\U00A0"), 
-      unit_long_en)) %>%
-    select(-n_pad)
-  
-  v <- 
-    treee %>% 
-    select(from = 2, to = 1, everything()) %>%
-    # convention in igraph for root node id
-    mutate(from = recode(from, .missing = as.integer(1)))
-  
-  g <- igraph::graph_from_data_frame(v, directed = TRUE)
-  
-  if (!igraph::is_dag(g)) 
-    stop("Data integrity failed for abm_org_info tbl - it is not a tree structure!")
-    
-  #sc <- igraph::subcomponent(g, igraph::V(g)["177"], "out")
-  #plot(g, layout = layout.reingold.tilford(g, root=1))
-  #layout_as_tree(g, root = 1)
-  
-  root_id <- "177"  # hard coded for KTH
-  
-  out <- 
-    igraph::dfs(g, igraph::V(g)[root_id], "out")$order %>%
-    names() %>%
-    as.integer() %>%
-    tibble(Diva_org_id = .) %>% 
-    inner_join(treee, by = "Diva_org_id")
-  
-  out
-  
+    abm_units %>%
+      # Get full sort order
+      inner_join(hiersort(abm_units, "Diva_org_id", "org_level", "parent_org_id", "unit_long_en"), by = "Diva_org_id") %>%
+      # Add indented versions of unit_long_en, one with plain white space and one for usage in html where leading white space gets sanitized
+      mutate(unit_long_en_indent1 = str_pad(unit_long_en, side = "left", width = 4*org_level + stringr::str_length(unit_long_en)),
+             unit_long_en_indent2 = str_pad(unit_long_en, side = "left", width = 4*org_level + stringr::str_length(unit_long_en), pad = "\U00A0")) %>%
+      arrange(sort_order)
+  }
 }
 
 #' Retrieve publication list for ABM
@@ -464,6 +460,7 @@ abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_co
 #' @return a list with three slots - "meta" for organizational unit metadata info,
 #'   "units" with a named list of results (set of 5 different tibbles for each of the units)
 #'   and "pt_ordning" for DiVA publication type sort order
+#' @importFrom pool poolClose
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -504,13 +501,15 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   if (file.exists(cache_location) & !overwrite_cache)
     return (readr::read_rds(cache_location))  
   
+  db <- pool_bib()
+
   # retrieve unit codes
   units_table <- 
-    unit_info() %>%
+    unit_info(con = db) %>%
     collect() 
   
   units <- 
-    units_table %>% 
+    units_table %>%
     select(unit_code) %>% 
     pull(1)
   
@@ -527,13 +526,15 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       abm_table3(unit_code = x),
       abm_table4(unit_code = x),
       abm_table5(unit_code = x),
-      summaries = abm_dash_indices(con = pool_bib(), unit_code = x)
+      summaries = abm_dash_indices(con = db, unit_code = x)
     )
   }
   
   message("Patience, please. It takes a while to fetch the data into the cache.")
   res <- map(units, unit_tables)
   res <- setNames(res, units)
+  
+  poolClose(db)
   
   out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order)
   
@@ -552,6 +553,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #'   and "units" with a named list of results (set of 5 different tibbles for 
 #'   the tables and also the publication list).
 #' @importFrom stats setNames
+#' @importFrom pool poolClose
 #' @export
 #' @examples 
 #' \dontrun{
@@ -571,12 +573,14 @@ abm_private_data <- function(unit_code) {
   if (missing(unit_code))
     stop("Please provide a kthid to be used as unit_code.")
   
+  db <- pool_bib()
+  
   # retrieve unit codes
   units_table <- 
-    unit_info() %>%
+    unit_info(con = db) %>%
     collect() %>%
     arrange(-desc(org_level)) 
-  
+
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
@@ -592,6 +596,8 @@ abm_private_data <- function(unit_code) {
   res <- list(unit_tables(unit_code))
   res <- setNames(res, unit_code)
   
+  poolClose(db)
+
   out <- list("meta" = units_table, "units" = res)
   
   return(out)  

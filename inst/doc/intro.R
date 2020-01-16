@@ -18,8 +18,8 @@ if (Sys.info()["sysname"] == "Windows")
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
 ## ---- message=FALSE, fig.align='left'-----------------------------------------
-# Open a connection pool to the default data source (Microsoft SQL Server BIBMON database)
-bibmon <- pool_bib()
+# Open a connection pool to Microsoft SQL Server BIBMON database
+bibmon <- pool_bib("mssql")
 
 # get data for ABM table 1
 t1 <- abm_table1(con = bibmon, unit_code = "KTH")

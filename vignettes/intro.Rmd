@@ -48,8 +48,8 @@ Once this has been provided in the `.Renviron` file, data for the ABM tables can
 *NOTE: For the public part of ABM, no database connection is needed, see [Using bundled data in bibliomatrix](public-data.html).*
 
 ```{r, message=FALSE, fig.align='left'}
-# Open a connection pool to the default data source (Microsoft SQL Server BIBMON database)
-bibmon <- pool_bib()
+# Open a connection pool to Microsoft SQL Server BIBMON database
+bibmon <- pool_bib("mssql")
 
 # get data for ABM table 1
 t1 <- abm_table1(con = bibmon, unit_code = "KTH")

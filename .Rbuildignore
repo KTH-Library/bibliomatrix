@@ -18,3 +18,5 @@
 ^docs$
 ^pkgdown$
 ^\.travis\.yml$
+^inst/extdata/.*\.html$
+^inst/shiny-apps/abm/www/.*\.html$

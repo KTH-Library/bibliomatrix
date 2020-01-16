@@ -117,15 +117,20 @@ prerender <- function(refresh = FALSE) {
     
   render_with_progress <- function(orgid){
     pb$tick()$print()
-    filename <- file.path(dest, f_from_orgid(orgid))
     unit_code <- uc_from_orgid(orgid)
     dash <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
-    f <- rmarkdown::render(dash, output_file = filename, quiet = TRUE,
+    f <- function(fn, embed) {
+      rmarkdown::render(dash, output_file = fn, quiet = TRUE,
        params = list(
          unit_code = unit_code, 
          is_employee = FALSE, 
          use_package_data = TRUE, 
-         embed_data = FALSE))
+         embed_data = embed))
+    }
+    fn1 <- file.path(dest, f_from_orgid(orgid))
+    fn2 <- file.path(dest,f_from_orgid(paste0(orgid, "-embed")))
+    f(fn1, embed = FALSE)
+    f(fn2, embed = TRUE)
   }
   
 
@@ -133,11 +138,21 @@ prerender <- function(refresh = FALSE) {
   
   res <- map(orgid, render_with_progress)
   
-  loc_www <- system.file("shiny-apps", "abm", package = "bibliomatrix")
-  message("Updating shiny app cache at ", loc_www)
-  file.copy(dest, loc_www, recursive = TRUE, overwrite = TRUE)
-  
   return (res)
+}
+
+#' Update shiny apps www/cache with prerenderd 
+#' dashboard HTML content
+#' @param overwrite logical boolean default false
+#' @export
+#' @importFrom rappdirs app_dir
+prerender_cache_sync <- function(overwrite = FALSE) {
+  loc_www <- system.file("shiny-apps", "abm", "www", "cache", 
+    package = "bibliomatrix")
+  
+  message("Updating shiny app cache at ", loc_www)
+  fz <- list.files(prerender_cache_location(),full.names = TRUE)
+  file.copy(fz, loc_www, overwrite = overwrite)
 }
 
 #' Location for prerender cache with dashboard HTML content

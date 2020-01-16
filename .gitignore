@@ -6,4 +6,3 @@
 Meta
 .Renviron
 /inst/extdata/*.html
-/inst/shiny-apps/abm/www/*.html

@@ -19,4 +19,5 @@
 ^pkgdown$
 ^\.travis\.yml$
 ^inst/extdata/.*\.html$
-^inst/shiny-apps/abm/www/.*\.html$
+^inst/shiny-apps/abm/www/[0-9]{3,8}.*\.html$
+^inst/shiny-apps/abm/www/[0-9a-f]{32}.*\.html$

@@ -436,9 +436,9 @@ unit_info <- function(con){
 #' @export
 abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
-  # Get publication level data for selected unit (and filter on pub_year if given)
+  # Get publication level data for selected unit
   orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    filter(Publication_Year >= analysis_start & Publication_year <= analysis_stop) %>%
+    filter(Publication_Year >= analysis_start & Publication_Year <= analysis_stop) %>%
     select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
     collect()
   

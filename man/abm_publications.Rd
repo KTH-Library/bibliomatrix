@@ -8,7 +8,7 @@ abm_publications(
   con = con_bib(),
   unit_code,
   analysis_start = abm_config()$start_year,
-  analysis_stop = abm_config()$start_year
+  analysis_stop = abm_config()$stop_year
 )
 }
 \arguments{

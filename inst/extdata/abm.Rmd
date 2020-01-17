@@ -34,7 +34,7 @@ library(scales)
 library(glue)
 
 colors_vb <- palette_kth(4)
-run_unit <- "882650" # params$unit_code
+run_unit <- params$unit_code
 
 
 # Retrieve result tables to use in tabs and key indicators

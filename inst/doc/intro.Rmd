@@ -25,6 +25,7 @@ The main parts of the `bibliomatrix` package are:
 
 First load some useful packages, including `bibliomatrix`:
 
+
 ```{r setup, message=FALSE}
 library(bibliomatrix)
 library(dplyr)
@@ -51,8 +52,8 @@ Once this has been provided in the `.Renviron` file, data for the ABM tables can
 # Open a connection pool to Microsoft SQL Server BIBMON database
 bibmon <- pool_bib("mssql")
 
-# get data from the default data source (Microsoft SQL Server BIBMON database)
-t1 <- abm_tab1()
+# get data for ABM table 1
+t1 <- abm_table1(con = bibmon, unit_code = "KTH")
 
 # display first few results
 t1 %>% 

@@ -1,10 +1,10 @@
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----setup, message=FALSE------------------------------------------------
+## ----setup, message=FALSE-----------------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 library(stringr)
@@ -17,7 +17,9 @@ library(pool)
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
-## ---- message=FALSE, fig.align='left'------------------------------------
+## ---- message=FALSE, fig.align='left'-----------------------------------------
+# Open a connection pool to Microsoft SQL Server BIBMON database
+bibmon <- pool_bib("mssql")
 
 # get data for ABM table 1
 t1 <- abm_table1(con = bibmon, unit_code = "KTH")
@@ -28,7 +30,7 @@ t1 %>%
   select(1:2) %>% 
   kable()
 
-# You can build a sqlite3 database for local use (this will take a while the first time)
+# You can build a sqlite3 databsae for local use (this will take a while the first time)
 db_sync()
 localdb <- pool_bib("sqlite")
 t2 <- abm_table1(con = localdb, unit_code = "KTH")

@@ -31,9 +31,10 @@ library(gridExtra)
 library(bibliomatrix)
 library(tidyr)
 library(scales)
+library(glue)
 
 colors_vb <- palette_kth(4)
-run_unit <- params$unit_code
+run_unit <- "882650" # params$unit_code
 
 
 # Retrieve result tables to use in tabs and key indicators
@@ -46,12 +47,12 @@ if (params$use_package_data != TRUE) {
   df_copub <- abm_table5(unit_code= run_unit)
   unit_meta <- unit_info(unit = run_unit)
 } else {
-  df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
-  df_cit3y <- pluck(abm_public_kth$units, params$unit_code, 2)
-  df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
-  df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
-  df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
-  unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
+  df_diva <- pluck(abm_public_kth$units, run_unit, 1)
+  df_cit3y <- pluck(abm_public_kth$units, run_unit, 2)
+  df_cf <- pluck(abm_public_kth$units, run_unit, 3)
+  df_jcf <- pluck(abm_public_kth$units, run_unit, 4)
+  df_copub <- pluck(abm_public_kth$units, run_unit, 5)
+  unit_meta <- filter(abm_public_kth$meta, unit_code == run_unit)
 }
 
 if (params$is_employee) {
@@ -63,7 +64,7 @@ if (params$is_employee) {
   
   unit_label <- 
     abm_public_kth$meta %>% 
-    filter(unit_code == params$unit_code) %>%
+    filter(unit_code == run_unit) %>%
     pull(unit_long_en)
 }
 
@@ -175,16 +176,13 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0){
   nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
   nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100*nonuniv_share))
   waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
-#  w1 <- waffle1 %>% plotly::ggplotly()
 
   int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
   int_lbl <- sprintf("International: %d%%", round(100*int_share))
   waffle2 <- 
     abm_waffle_pct(int_share, label = int_lbl)
-#  w2 <- waffle2 %>% plotly::ggplotly()
-  
+
   grid.arrange(waffle1, waffle2, ncol = 1)
-  #plotly::subplot(w1, w2, nrows = 2)
 } else {
   print("No data")
 }
@@ -198,25 +196,25 @@ Row
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
 
-if (params$is_employee == TRUE)
+if (params$is_employee == TRUE){
   cat("<p><b>Bibliometric results for individual researchers should always be treated with caution.</b></p>")
-
-wospubstext <- paste("<p>Citation based indicators are based on", round(wospubs, 1), "publications.")
-if(wospubs < 10)
-  wospubstext <- paste0(wospubstext, " <b>That is very small, and makes indicators unreliable.</b>")
-wospubstext <- paste0(wospubstext, "</p>")
-cat(wospubstext)
-
-coveragejudge <- ifelse(totcov >= 0.8, "good",
-                        ifelse(totcov >= 0.65, "moderate",
-                               ifelse(totcov >= 0.5, "poor", "bad")))
-
-coveragetext <- glue::glue("<p>Web of Science coverage is <b>{coveragejudge}</b>, ", 100*round(totcov, 3), "%. ")
-if(coveragejudge == "moderate") coveragetext <- paste0(coveragetext, "<b>Proceed with caution.</b>")
-if(coveragejudge == "poor") coveragetext <- paste0(coveragetext, "<b>This is poor, indicators should be treated with extreme caution.</b>")
-if(coveragejudge == "bad") coveragetext <- paste0(coveragetext, "<b>This is very poor, indicators can not be trusted.</b>")
-coveragetext <- paste0(coveragetext, "</p>")
-cat(coveragetext)
+} else {
+  wospubtext <- glue("<p>Citation based indicators are based on {round(wospubs, 1)} publications.")
+  if(wospubs < 50)
+    wospubtext <- paste(wospubtext, " <b>Results for publication volumes below 50 are unreliable.</b>")
+  wospubtext <- paste(wospubtext, "</p>")
+  cat(wospubtext)
+  
+  coveragetext <- glue::glue("<p>Web of Science coverage for peer reviewed publications is <b>{100*round(totcov, 3)}%</b>.")
+  if(totcov >= 0.75)
+    coveragetext <- paste(coveragetext, "Coverage of 75% or above is considered <b<>adequate</b>.")
+  if(totcov < 0.75 & totcov >= 0.6)
+    coveragetext <- paste(coveragetext, "Coverage between 60% and 75% is considered <b>questionable</b>.")
+  if(totcov < 0.6)
+    coveragetext <- paste(coveragetext, "Coverage below 60% is considered <b>unreliable</b>.")
+  coveragetext <- paste(coveragetext, "</p>")
+  cat(coveragetext)
+}
 ```
 
 Row

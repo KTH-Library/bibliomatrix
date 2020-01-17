@@ -13,7 +13,7 @@ library(purrr)
 # NB cache location will vary dep on loading with Ctrl-Shift-L or not
 # TODO config below could be a fcn
 
-Sys.setenv("ABM_IS_PUBLIC" = "TRUE")
+#Sys.setenv("ABM_IS_PUBLIC" = "TRUE")
 #Sys.setenv("ABM_API" = "")
 
 ABM_IS_PUBLIC <- ifelse(Sys.getenv("ABM_IS_PUBLIC") != "", TRUE, FALSE)

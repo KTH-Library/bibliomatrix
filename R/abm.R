@@ -434,16 +434,17 @@ unit_info <- function(con){
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$start_year){
+abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
   # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(unit_code = unit_code, pub_year = analysis_start:analysis_stop)
-
-  ret <- orgdata %>% select(-c("w_subj", "Unit_Fraction_adj", "level")) %>% collect()
+  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
+    filter(Publication_Year >= analysis_start & Publication_year <= analysis_stop) %>%
+    select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
+    collect()
   
   if (!"Pool" %in% class(con)) dbDisconnect(con)
 
-  ret
+  orgdata
 }
   
 #' Public data from the Annual Bibliometric Monitoring project

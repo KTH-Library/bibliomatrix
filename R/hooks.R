@@ -148,7 +148,7 @@ prerender <- function(refresh = FALSE) {
 #' @importFrom rappdirs app_dir
 prerender_cache_sync <- function(overwrite = FALSE) {
   loc_www <- system.file("shiny-apps", "abm", "www", "cache", 
-    package = "bibliomatrix")
+    package = "bibliomatrix", mustWork = TRUE)
   
   message("Updating shiny app cache at ", loc_www)
   fz <- list.files(prerender_cache_location(),full.names = TRUE)

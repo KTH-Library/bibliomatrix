@@ -217,24 +217,22 @@
 <a class="sourceLine" id="cb2-25" data-line-number="25"></a>
 <a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co"># unit codes</span></a>
 <a class="sourceLine" id="cb2-27" data-line-number="27">p<span class="op">$</span>meta<span class="op">$</span>unit_code</a>
-<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt;  [1] "KTH"    "A"      "13604"  "5851"   "5857"   "5869"   "5884"  </span></a>
-<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;  [8] "875600" "I"      "6024"   "6030"   "6038"   "6048"   "6061"  </span></a>
-<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt; [15] "879306" "880900" "S"      "6092"   "6108"   "6115"   "6119"  </span></a>
-<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt; [22] "6128"   "6136"   "E"      "879225" "879226" "879227" "879228"</span></a>
-<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt; [29] "879229" "879230" "879231" "879232" "879233" "879234" "879235"</span></a>
-<a class="sourceLine" id="cb2-33" data-line-number="33"><span class="co">#&gt; [36] "879236" "879237" "879249" "879302" "879305" "C"      "879308"</span></a>
-<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co">#&gt; [43] "879309" "879310" "879311" "879312" "879314" "879315" "879316"</span></a>
-<a class="sourceLine" id="cb2-35" data-line-number="35"></a>
-<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="co"># unit code for Architecture</span></a>
-<a class="sourceLine" id="cb2-37" data-line-number="37">uc_arch &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="st">  </span>p<span class="op">$</span>meta <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-39" data-line-number="39"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(unit_code, unit_long_en) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-40" data-line-number="40"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(unit_long_en <span class="op">==</span><span class="st"> "Architecture"</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-41" data-line-number="41"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(unit_code)</a>
-<a class="sourceLine" id="cb2-42" data-line-number="42"></a>
-<a class="sourceLine" id="cb2-43" data-line-number="43"><span class="co"># table 5 for Architecture</span></a>
-<a class="sourceLine" id="cb2-44" data-line-number="44">tab5 &lt;-<span class="st"> </span>p<span class="op">$</span>units[[uc_arch]][[<span class="dv">5</span>]]</a>
-<a class="sourceLine" id="cb2-45" data-line-number="45">knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(tab5)</a></code></pre></div>
+<a class="sourceLine" id="cb2-28" data-line-number="28"><span class="co">#&gt;  [1] "KTH"    "E"      "882650" "882651" "882653" "882654" "S"      "882656"</span></a>
+<a class="sourceLine" id="cb2-29" data-line-number="29"><span class="co">#&gt;  [9] "6108"   "6115"   "6128"   "A"      "13604"  "5851"   "5857"   "5869"  </span></a>
+<a class="sourceLine" id="cb2-30" data-line-number="30"><span class="co">#&gt; [17] "5884"   "875600" "I"      "6024"   "6030"   "6038"   "6048"   "6061"  </span></a>
+<a class="sourceLine" id="cb2-31" data-line-number="31"><span class="co">#&gt; [25] "879306" "880900" "C"      "879308" "879309" "879310" "879311" "879312"</span></a>
+<a class="sourceLine" id="cb2-32" data-line-number="32"><span class="co">#&gt; [33] "879314" "879315" "879316"</span></a>
+<a class="sourceLine" id="cb2-33" data-line-number="33"></a>
+<a class="sourceLine" id="cb2-34" data-line-number="34"><span class="co"># unit code for Architecture</span></a>
+<a class="sourceLine" id="cb2-35" data-line-number="35">uc_arch &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb2-36" data-line-number="36"><span class="st">  </span>p<span class="op">$</span>meta <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-37" data-line-number="37"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(unit_code, unit_long_en) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-38" data-line-number="38"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(unit_long_en <span class="op">==</span><span class="st"> "Architecture"</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-39" data-line-number="39"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(unit_code)</a>
+<a class="sourceLine" id="cb2-40" data-line-number="40"></a>
+<a class="sourceLine" id="cb2-41" data-line-number="41"><span class="co"># table 5 for Architecture</span></a>
+<a class="sourceLine" id="cb2-42" data-line-number="42">tab5 &lt;-<span class="st"> </span>p<span class="op">$</span>units[[uc_arch]][[<span class="dv">5</span>]]</a>
+<a class="sourceLine" id="cb2-43" data-line-number="43">knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(tab5)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">interval</th>

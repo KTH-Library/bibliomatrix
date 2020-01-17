@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -378,22 +377,22 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </table>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co"># get data but explicitly specify the data source</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">src1 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>))</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">src1 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>))</a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">db_sync</span>()  <span class="co">## sync a local sqlite3db with the remote source</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">src2 &lt;-<span class="st"> </span><span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>))</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">src2 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>))</a>
 <a class="sourceLine" id="cb3-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co"># are the results the same?</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">identical</span>(src1, src2)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; [1] TRUE</span></a>
 <a class="sourceLine" id="cb3-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co"># what about performance?</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="kw">bench_time</span>(<span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>)))</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;mssql&quot;</span>)))</a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;   414ms   585ms</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw">bench_time</span>(<span class="kw">abm_tab1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>)))</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;   2.38s   5.19s</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> <span class="kw">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>)))</a>
 <a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;   399ms   399ms</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;   733ms   735ms</span></a></code></pre></div>
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2>Data from LDAP / Active Directory</h2>

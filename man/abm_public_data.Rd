@@ -31,22 +31,22 @@ To get fresh data cached, specify this flag.
 public <- abm_public_data()
 
 # get public data specifically for KTH and table 1
-unit_kth <- public \%>\% pluck("units", "KTH", 1)
+unit_kth <- public \\%>\\% pluck("units", "KTH", 1)
 
 # get summary data for KTH
-public \%>\% pluck("units", "KTH", "summaries")
+public \\%>\\% pluck("units", "KTH", "summaries")
  
 # get public data specifically for KTH and table 1
-unit_kth <- public \%>\% pluck("units", "KTH", 1)
+unit_kth <- public \\%>\\% pluck("units", "KTH", 1)
 
 # get public data for the school "I" and all five tables
-unit_i <- public \%>\% pluck("units", "I")
+unit_i <- public \\%>\\% pluck("units", "I")
 
 # get public data for the architecture institution, table 1
-uc <- public \%>\% pluck("meta") \%>\% 
-  filter(unit_long_en == "Architecture") \%>\% pull(unit_code)
+uc <- public \\%>\\% pluck("meta") \\%>\\% 
+  filter(unit_long_en == "Architecture") \\%>\\% pull(unit_code)
   
-public \%>\% pluck("units", uc, 1)
+public \\%>\\% pluck("units", uc, 1)
 
 }   
 }

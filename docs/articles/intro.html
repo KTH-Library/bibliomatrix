@@ -167,22 +167,22 @@
 </table>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co"># get data but explicitly specify the data source</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">src1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"mssql"</span>))</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">src1 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"mssql"</span>))</a>
 <a class="sourceLine" id="cb3-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="../reference/db_sync.html">db_sync</a></span>()  <span class="co">## sync a local sqlite3db with the remote source</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">src2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>))</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">src2 &lt;-<span class="st"> </span><span class="kw"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>))</a>
 <a class="sourceLine" id="cb3-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co"># are the results the same?</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(src1, src2)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; [1] TRUE</span></a>
 <a class="sourceLine" id="cb3-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co"># what about performance?</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="kw"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"mssql"</span>)))</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="kw"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="kw"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"mssql"</span>)))</a>
 <a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;   418ms   583ms</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="kw"><a href="../reference/abm_tab1.html">abm_tab1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>)))</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;   2.69s   5.67s</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="kw"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="kw"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="dt">con =</span> <span class="kw"><a href="../reference/con_bib.html">con_bib</a></span>(<span class="st">"sqlite"</span>)))</a>
 <a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;   411ms   411ms</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;   712ms   712ms</span></a></code></pre></div>
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2 class="hasAnchor">

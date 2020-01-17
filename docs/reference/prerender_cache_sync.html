@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Private data from the Annual Bibliometric Monitoring project — abm_private_data • bibliomatrix</title>
+<title>Update shiny apps www/cache with prerenderd 
+dashboard HTML content — prerender_cache_sync • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +36,10 @@
 
 
 
-<meta property="og:title" content="Private data from the Annual Bibliometric Monitoring project — abm_private_data" />
-<meta property="og:description" content="This returns an object which contains data for an individual researcher at KTH" />
+<meta property="og:title" content="Update shiny apps www/cache with prerenderd 
+dashboard HTML content — prerender_cache_sync" />
+<meta property="og:description" content="Update shiny apps www/cache with prerenderd 
+dashboard HTML content" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,41 +123,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Private data from the Annual Bibliometric Monitoring project</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
-    <div class="hidden name"><code>abm_private_data.Rd</code></div>
+    <h1>Update shiny apps www/cache with prerenderd 
+dashboard HTML content</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/hooks.R'><code>R/hooks.R</code></a></small>
+    <div class="hidden name"><code>prerender_cache_sync.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This returns an object which contains data for an individual researcher at KTH</p>
+    <p>Update shiny apps www/cache with prerenderd 
+dashboard HTML content</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_private_data</span>(<span class='no'>unit_code</span>)</pre>
+    <pre class="usage"><span class='fu'>prerender_cache_sync</span>(<span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>unit_code</th>
-      <td><p>the kthid for the researcher</p></td>
+      <th>overwrite</th>
+      <td><p>logical boolean default false</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list with two slots - "meta" for organizational unit metadata info 
-  and "units" with a named list of results (set of 5 different tibbles for 
-  the tables and also the publication list).</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#value">Value</a></li>
-      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>

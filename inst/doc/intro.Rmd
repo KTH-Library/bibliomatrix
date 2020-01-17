@@ -56,17 +56,17 @@ arrange(desc(Total)) %>%
 kable()
 
 # get data but explicitly specify the data source
-src1 <- abm_tab1(con = con_bib("mssql"))
+src1 <- abm_table1(con = con_bib("mssql"))
 
 db_sync()  ## sync a local sqlite3db with the remote source
-src2 <- abm_tab1(con = con_bib("sqlite"))
+src2 <- abm_table1(con = con_bib("sqlite"))
 
 # are the results the same?
 identical(src1, src2)
 
 # what about performance?
-bench_time(abm_tab1(con = con_bib("mssql")))
-bench_time(abm_tab1(con = con_bib("sqlite")))
+bench_time(abm_table1(con = con_bib("mssql")))
+bench_time(abm_table1(con = con_bib("sqlite")))
 
 ```
 

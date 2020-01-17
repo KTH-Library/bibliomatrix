@@ -23,80 +23,74 @@ You can install the latest development version of bibliomatrix from
 devtools::install_github("KTH-Library/bibliomatrix")
 ```
 
-## Example
+### Public data
 
-This is a basic example which shows you how to get some data when
-creating Annual Bibliometric Monitoring analytics:
+The package includes data from the KTH Annual Bibliometric Monitoring
+(ABM) public part.
 
 ``` r
 library(bibliomatrix)
 library(dplyr)
 
-# simple example showing how to filter some of the data for Table 1
-# in the ABM report for an organizational unit and restrict the
-# output to a specific set of columns
-
-abm_tab1() %>% 
-# only show data given a specific unit id (KTH = 177), just five records
-filter(id == 177) %>%
-select(`Organizational Unit`, `Publication Type`, `WoS Coverage`) %>%
-slice(1:5) %>%
-knitr::kable()
+# Simple example showing some KTH units for which ABM results are public
+abm_public_kth$meta %>%
+  select(unit_code, unit_long_en) %>%
+  head() %>%
+  knitr::kable()
 ```
 
-| Organizational Unit               | Publication Type              | WoS Coverage |
-| :-------------------------------- | :---------------------------- | -----------: |
-| KTH Royal Institute of Technology | Article, peer review          |    0.8623932 |
-| KTH Royal Institute of Technology | Article, other                |    0.8080809 |
-| KTH Royal Institute of Technology | Conference paper, peer review |    0.4840580 |
-| KTH Royal Institute of Technology | Conference paper, other       |    0.0255618 |
-| KTH Royal Institute of Technology | Book                          |    0.0262478 |
-
-This is a basic example of how to retrieve data for the organizational
-units used in the Annual Bibliometric Monitoring:
-
-``` r
-# get data for organizational units at 
-# level 1 (KTH), level 2 (Schools) and level 3 (Departments / Institutions)
-# NB: this table is not yet complete and some entries lack english translations
-
-org <- abm_units()
-
-# inspect some organizational unit ids at "level 2" ie at the school level
-
-org %>%
-filter(unit_level == 2) %>%
-knitr::kable()
-```
-
-| unit\_long\_swe                                    | unit\_id | unit\_level | unit\_abbrev | unit\_pid | unit\_long\_eng                                                             | unit\_sort |
-| :------------------------------------------------- | -------: | ----------: | :----------- | --------: | :-------------------------------------------------------------------------- | ---------: |
-| Skolan för kemi, bioteknologi och hälsa (CBH)      |   879224 |           2 | C            |       177 | School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH) |          2 |
-| Skolan för elektroteknik och datavetenskap (EECS)  |   879223 |           2 | E            |       177 | School of Electrical Engineering and Computer Science (EECS)                |          3 |
-| Skolan för industriell teknik och management (ITM) |     6023 |           2 | I            |       177 | School of Industrial Engineering and Management (ITM)                       |          4 |
-| Skolan för arkitektur och samhällsbyggnad (ABE)    |     5850 |           2 | A            |       177 | School of Architecture and the Built Environment (ABE)                      |          1 |
-| Skolan för teknikvetenskap (SCI)                   |     6091 |           2 | S            |       177 | School of Engineering Sciences (SCI)                                        |          5 |
-
-Some data relating to a specific school using the organizational unit
-id:
+| unit\_code | unit\_long\_en                                                 |
+| :--------- | :------------------------------------------------------------- |
+| KTH        | KTH Royal Institute of Technology                              |
+| A          | School of Architecture and the Built Environment (ABE)         |
+| 13604      | Sustainable development, Environmental science and Engineering |
+| 5851       | Architecture                                                   |
+| 5857       | Civil and Architectural Engineering                            |
+| 5869       | Real Estate and Construction Management                        |
 
 ``` r
 
-abm_tab1() %>%
-filter(id == 879223) %>%
-select(-id, -pubtype_order, -c(starts_with("20"))) %>%
-# just show five rows
-slice(1:5) %>%
-knitr::kable()
+# KTH is level 0, schools level 1 and departments level 2.
+# Some basic information about KTH schools:
+abm_public_kth$meta %>%
+  filter(org_level == 1) %>%
+  select(Diva_org_id, unit_code, unit_short, unit_long_en) %>%
+  knitr::kable()
 ```
 
-| Organizational Unit                                          | Publication Type              | WoS Coverage |      Total |
-| :----------------------------------------------------------- | :---------------------------- | -----------: | ---------: |
-| School of Electrical Engineering and Computer Science (EECS) | Article, peer review          |    0.8804322 | 1973.47216 |
-| School of Electrical Engineering and Computer Science (EECS) | Article, other                |    0.7437743 |   79.81710 |
-| School of Electrical Engineering and Computer Science (EECS) | Conference paper, peer review |    0.5764869 | 2876.21723 |
-| School of Electrical Engineering and Computer Science (EECS) | Conference paper, other       |    0.0556550 |  338.73677 |
-| School of Electrical Engineering and Computer Science (EECS) | Book                          |    0.1589574 |   13.52564 |
+| Diva\_org\_id | unit\_code | unit\_short | unit\_long\_en                                                              |
+| ------------: | :--------- | :---------- | :-------------------------------------------------------------------------- |
+|          5850 | A          | ABE         | School of Architecture and the Built Environment (ABE)                      |
+|          6023 | I          | ITM         | School of Industrial Engineering and Management (ITM)                       |
+|          6091 | S          | SCI         | School of Engineering Sciences (SCI)                                        |
+|        879223 | E          | EECS        | School of Electrical Engineering and Computer Science (EECS)                |
+|        879224 | C          | CBH         | School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH) |
+
+``` r
+
+# Get public ABM results for KTH
+kth_abm_tables <- abm_public_kth$units$KTH
+
+# Show parts of ABM table 1 for KTH
+kth_abm_tables[[1]] %>%
+  select(Publication_Type_DiVA, P_frac, WoS_coverage) %>%
+  filter(P_frac > 50) %>%
+  knitr::kable()
+```
+
+| Publication\_Type\_DiVA       |    P\_frac | WoS\_coverage |
+| :---------------------------- | ---------: | ------------: |
+| Article, peer review          | 10309.3983 |     0.8610068 |
+| Article, other                |   724.5560 |     0.8005819 |
+| Conference paper, peer review |  5624.8291 |     0.4847714 |
+| Conference paper, other       |  1752.4534 |     0.0218999 |
+| Book                          |   101.6951 |     0.0211416 |
+| Anthology (editor)            |    61.1000 |     0.0000000 |
+| Chapter in book               |   905.2467 |     0.0404047 |
+| Article, book review          |    95.1000 |     0.5899054 |
+| Report                        |   623.1819 |     0.0000000 |
+| Doctorate thesis              |  1976.0000 |     0.0000000 |
+| Licentiate thesis             |   749.0000 |     0.0000000 |
 
 ## Development
 

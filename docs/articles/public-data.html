@@ -100,27 +100,27 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bibliomatrix)</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
 <a class="sourceLine" id="cb1-3" title="3"></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="co"># To show the units included in the ABM, use either abm_public_kth$meta or the unit_info() function</span></a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw"><a href="../reference/unit_info.html">unit_info</a></span>(), abm_public_kth<span class="op">$</span>meta)</a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt; [1] FALSE</span></a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="kw"><a href="../reference/unit_info.html">unit_info</a></span>()</a>
-<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt; # A tibble: 35 x 10</span></a>
-<a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt;    Diva_org_id parent_org_id unit_long_en org_level unit_code unit_short</span></a>
-<a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt;          &lt;int&gt;         &lt;int&gt; &lt;chr&gt;            &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;     </span></a>
-<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt;  1         177            NA KTH Royal I…         0 KTH       KTH       </span></a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt;  2      879223           177 School of E…         1 E         EECS      </span></a>
-<a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt;  3      882650        879223 Computer Sc…         2 882650    &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt;  4      882651        879223 Intelligent…         2 882651    &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-15" title="15"><span class="co">#&gt;  5      882653        879223 Human Cente…         2 882653    &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-16" title="16"><span class="co">#&gt;  6      882654        879223 Electrical …         2 882654    &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-17" title="17"><span class="co">#&gt;  7        6091           177 School of E…         1 S         SCI       </span></a>
-<a class="sourceLine" id="cb1-18" title="18"><span class="co">#&gt;  8      882656          6091 Engineering…         2 882656    &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-19" title="19"><span class="co">#&gt;  9        6108          6091 Applied Phy…         2 6108      &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-20" title="20"><span class="co">#&gt; 10        6115          6091 Mathematics…         2 6115      &lt;NA&gt;      </span></a>
-<a class="sourceLine" id="cb1-21" title="21"><span class="co">#&gt; # … with 25 more rows, and 4 more variables: unit_long_sv &lt;chr&gt;, active &lt;int&gt;,</span></a>
-<a class="sourceLine" id="cb1-22" title="22"><span class="co">#&gt; #   unit_long_en_indent1 &lt;chr&gt;, unit_long_en_indent2 &lt;chr&gt;</span></a>
-<a class="sourceLine" id="cb1-23" title="23"></a>
-<a class="sourceLine" id="cb1-24" title="24"><span class="co"># The unit_info() function can take parameters for unit, level or parent.</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co"># To show the units included in the ABM, use either abm_public_kth$meta or the unit_info() function.</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co"># (If no database connection is given to unit_info), abm_public_kth$meta is used anyway)</span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw"><a href="../reference/unit_info.html">unit_info</a></span>(), abm_public_kth<span class="op">$</span>meta)</a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt; [1] TRUE</span></a>
+<a class="sourceLine" id="cb1-8" title="8"></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="kw"><a href="../reference/unit_info.html">unit_info</a></span>()</a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt; # A tibble: 35 x 11</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt;    Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt;          &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt;  1         177 KTH       KTH        KTH Royal I… Kungliga Te…            NA</span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt;  2        5850 A         ABE        School of A… Skolan för …           177</span></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="co">#&gt;  3        5851 5851      &lt;NA&gt;       Architecture Arkitektur            5850</span></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co">#&gt;  4        5857 5857      &lt;NA&gt;       Civil and A… Byggvetensk…          5850</span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="co">#&gt;  5      875600 875600    &lt;NA&gt;       Philosophy … Filosofi oc…          5850</span></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="co">#&gt;  6        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co">#&gt;  7       13604 13604     &lt;NA&gt;       Sustainable… Hållbar utv…          5850</span></a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="co">#&gt;  8        5884 5884      &lt;NA&gt;       Urban Plann… Samhällspla…          5850</span></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="co">#&gt;  9      879223 E         EECS       School of E… Skolan för …           177</span></a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co">#&gt; 10      882650 882650    &lt;NA&gt;       Computer Sc… Datavetensk…        879223</span></a>
+<a class="sourceLine" id="cb1-23" title="23"><span class="co">#&gt; # … with 25 more rows, and 5 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="co">#&gt; #   sort_order &lt;int&gt;, unit_long_en_indent1 &lt;chr&gt;, unit_long_en_indent2 &lt;chr&gt;</span></a>
 <a class="sourceLine" id="cb1-25" title="25"></a>
 <a class="sourceLine" id="cb1-26" title="26"><span class="co"># The unit_code is used in most functions related to ABM</span></a>
 <a class="sourceLine" id="cb1-27" title="27"><span class="co"># For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id</span></a>

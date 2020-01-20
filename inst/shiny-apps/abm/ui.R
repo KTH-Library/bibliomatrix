@@ -8,15 +8,15 @@ library(shinythemes)
 
 dashboardPage(skin = "black",
   dashboardHeader(title = "ABM KTH 2019", 
-    tags$li(a(href = 'https://infra.kth.se/bibliometri',
+    tags$li(a(href = 'https://intra.kth.se/bibliometri',
 #      img(src = "kth-logo.png", height = 30, width = 30),
       title = "KTHB",
       style = "padding-top:10px; padding-bottom:10px;"),
       class = "dropdown")),
-  dashboardSidebar(
-    uiOutput("units"),
-    checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
-  ),
+   dashboardSidebar(
+     uiOutput("units")
+  #   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
+   ),
   dashboardBody(
     box(width = 12, height = "90vh", 
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),

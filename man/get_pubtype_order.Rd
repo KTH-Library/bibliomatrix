@@ -7,7 +7,7 @@
 get_pubtype_order(con)
 }
 \arguments{
-\item{con}{connection to db - if no connection is given, attempt to use abm_public_kth data}
+\item{con}{connection to db - if no connection is given, use abm_public_kth data}
 }
 \value{
 tibble with pt_ordning and diva_publiation_type

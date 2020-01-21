@@ -8,7 +8,7 @@ output:
 params:
   unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
-  use_package_data: FALSE
+  use_package_data: TRUE
   embed_data: FALSE
 ---
 

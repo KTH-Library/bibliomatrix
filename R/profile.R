@@ -51,7 +51,7 @@ palette_kth_info <- function() {
 #' @param base_size the basic font size used in graphs
 #' @param base_font the default font used in graphs
 #' @export
-kth_theme<- function(base_size=12, base_font="Arial"){
+kth_theme<- function(base_size=12, base_font="sans"){
   #library(ggthemes)
   #library(extrafont)
   

@@ -1,6 +1,6 @@
 Package: bibliomatrix
 Title: Provide Functionality for Bibliometric Analytics
-Version: 0.1
+Version: 0.2
 Authors@R: 
     as.person(c(
         "Gaël Serge Dubus <dubus@kth.se> [aut]", 
@@ -23,7 +23,7 @@ Suggests:
     testthat (>= 2.1.0),
     knitr,
     bench
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 Imports: 
     DBI (>= 1.0.0),
     RSQLite (>= 2.1.2),

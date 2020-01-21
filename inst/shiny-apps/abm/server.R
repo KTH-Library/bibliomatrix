@@ -9,30 +9,48 @@ library(purrr)
 # deploy to shiny in root context
 #ln -s /usr/local/lib/R/site-library/bibliomatrix/shiny-apps/abm/* .
 
+# for test purposes
+# NB cache location will vary dep on loading with Ctrl-Shift-L or not
+# TODO config below could be a fcn
+
+#Sys.setenv("ABM_IS_PUBLIC" = "TRUE")
+#Sys.setenv("ABM_API" = "")
+
+ABM_IS_PUBLIC <- ifelse(Sys.getenv("ABM_IS_PUBLIC") != "", TRUE, FALSE)
 ABM_API <- Sys.getenv("ABM_API")
+
 if (ABM_API == "") ABM_API <- "http://localhost:8080"
-ABM_API_UNIT <- paste0(ABM_API, "/unit/%s/flexdashboard?embeddata=true")
+
+ABM_API_UNIT <- ifelse(ABM_IS_PUBLIC, 
+   paste0(ABM_API, "/unit/%s/flexdashboard"),
+   paste0(ABM_API, "/unit/%s/flexdashboard?embeddata=true")
+)
+
 ABM_API_EMP <- paste0(ABM_API, "/employee/%s/flexdashboard")
 
 server <- function(input, output, session) {
 
-    ua <- Sys.getenv("SHINYPROXY_USERNAME")
-    if (ua == "") ua <- "u1g9umtq@kth.se"
-    re_saml <- "(.*)@kth\\.se$"
-    is_saml <- function(x) stringr::str_detect(x, re_saml)
-    parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
-    
     kthid <- function() {
-        # if shinyproxy with saml then we get user identity as kthid@kth.se
-        # if shinyproxy with ldap then we get user identity as LDAP accountname
-        if (input$use_prerendered) return (177)
-        if (is_saml(ua)) {
-            kthid <- parse_id(ua)
+        if (!ABM_IS_PUBLIC) {
+            ua <- Sys.getenv("SHINYPROXY_USERNAME")
+            if (ua == "") ua <- "u1g9umtq@kth.se"
+            re_saml <- "(.*)@kth\\.se$"
+            is_saml <- function(x) stringr::str_detect(x, re_saml)
+            parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
+            
+            # if shinyproxy with saml then we get user identity as kthid@kth.se
+            # if shinyproxy with ldap then we get user identity as LDAP accountname
+            if (is_saml(ua)) {
+                kthid <- parse_id(ua)
+            } else {
+                # we are not using public content and not saml -> likely LDAP
+                kthid <- ad_kthid(ua)
+            }
+            kthid <- setNames(kthid, ad_displayname(kthid))
         } else {
-            # we are not using public content and not saml -> likely LDAP
-            kthid <- ad_kthid(ua)
+            kthid <- NULL
         }
-        kthid <- setNames(kthid, ad_displayname(kthid))
+        
         return (kthid)
     }
     
@@ -41,7 +59,7 @@ server <- function(input, output, session) {
         orgs <- abm_public_kth$meta$Diva_org_id %>% 
             set_names(abm_public_kth$meta$unit_long_en_indent2)
         
-        if (!input$use_prerendered)
+        if (!ABM_IS_PUBLIC)
             orgs <- c(kthid(), orgs)
         
         shiny::selectInput(inputId = "unitid", label = NULL, 
@@ -49,95 +67,55 @@ server <- function(input, output, session) {
             multiple = FALSE, selectize = FALSE, width = "100%")
     })
     
-    # using the API, which could be anywhere or external
-
-    observe({
-        req(input$unitid)
-        # if the unit id not is for an org then use employee endpoint
-        API <- ifelse(!input$unitid %in% abm_public_kth$meta$Diva_org_id, 
-            ABM_API_EMP, ABM_API_UNIT)
-        # TODO: this probably will affect other users sessions and should be changed
-        dash_src <<- sprintf(API, input$unitid)
-        if (!input$use_prerendered)
-            cat(dash_src, "\n")
-    })
+    dash_src <- function(id) {
+        if (id %in% abm_public_kth$meta$Diva_org_id)
+            return (sprintf(ABM_API_UNIT, id))
+        if (id == kthid())
+            return (sprintf(ABM_API_EMP, id))
+    }
+    
+    is_employee <- function(id) id == kthid()
     
     output$frame <- renderUI({
         
         req(input$unitid)
         
-        if (input$use_prerendered == TRUE) {
-            f <- file.path(prerender_cache_location(), 
-                paste0(input$unitid, ".html"))
-            # txt <- read_lines(f)
-            # s1 <- "<div class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">"
-            # s2 <- "<div class=\"navbar navbar-inverse\" role=\"navigation\">"
-            # txt <- str_replace(txt, s1, s2)
-            # write_lines(txt, f)
-#            f2 <- filter_fragment(f, search = "", replace = "")
-            # issue https://community.rstudio.com/t/generating-markdown-reports-from-shiny/8676/5
-            # includeHTML(f)
-            # active_dash <- file.path(system.file("shiny-apps", "abm", "www", package = "bibliomatrix"),
-            #     "activedash.html")
-            # cat("copying ", f, " to ", active_dash)
-            # res <- file.copy(f, "activedash.html", overwrite = TRUE)
-            # cat("outcome: res")
-            # embed_data <- function(path)
-            #     paste0("data:", mime::guess_type(path), ";base64,", 
-            #            base64enc::base64encode(path))
-            tags$iframe(src = paste0(input$unitid, ".html"), width = "100%", height = "100%",
-                        frameborder = 0, scrolling = 'auto')
+        loc_www <- system.file("shiny-apps", "abm", "www", "cache",
+           package = "bibliomatrix", mustWork = TRUE)
+        
+        if (ABM_IS_PUBLIC == TRUE) {
+            f <- paste0(input$unitid, ".html")
         } else {
-            f <- paste0(openssl::sha1(kthid()), ".html")
-            if (!file.exists(f)) {
-                cat("Embedding from: ", dash_src, "\n")
-                w <- httr::GET(dash_src)
-                if (httr::status_code(w) == 200) {
-                    html <- httr::content(w, as = "raw")
-                    loc_www <- system.file("shiny-apps", "abm", "www", package = "bibliomatrix")
-                    writeBin(html, file.path(loc_www, f))
-                } else {
-                    msg <- sprintf("<pre>Error from API at %s</pre>", dash_src)
-                    f <- sprintf("data:text/html;base64,%s", base64enc::base64encode(msg))
-                }
+            if (is_employee(input$unitid)) {
+                f <- paste0(openssl::sha1(input$unitid), ".html")
+            } else {
+                f <- paste0(input$unitid, "-embed.html")
             }
-            #data_uri <- sprintf("data:text/html;base64,%s", base64enc::base64encode(html))
-            tags$iframe(src = f, width = "100%", height = "100%",
-                frameborder = 0, scrolling = 'auto')
         }
         
-    })    
-    
-    # this could be used to render from within the package
-    
-    output$dash <- renderUI({
-        
-        req(input$unitid)
-        
-        if (input$unitid %in% abm_public_kth$meta$Diva_org_id) {
-            uc <- 
-                abm_public_kth$meta %>% 
-                filter(Diva_org_id == as.integer(input$unitid)) %>% 
-                pull(unit_code)
-           
-
-            report <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
-            f <- rmarkdown::render(report, params = list(unit_code = uc,
-                is_employee = FALSE, embed_data = FALSE, use_package_data = TRUE))
+        ff <- file.path(loc_www, f)
+        if (!file.exists(ff)) {
+            www <- dash_src(input$unitid)
+            cat("Not in cache, requesting from: ", www, "\n")
+            w <- try(httr::GET(www), silent = TRUE)
+            if (!inherits(w, 'try-error') && httr::status_code(w) == 200) {
+                html <- httr::content(w, as = "raw")
+            } else {
+                html <- charToRaw(sprintf("<h1>API at %s did not return data</h1>", www))
+                #f <- sprintf("data:text/html;base64,%s", base64enc::base64encode(msg))
+                f <- "error.html"
+                ff <- file.path(loc_www, f)
+            }
+            cat("Writing ", f, " to ", ff, "\n")
+            writeBin(html, ff)
         } else {
-            report <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
-            f <- rmarkdown::render(report, params = list(unit_code = input$unitid,
-                is_employee = TRUE, embed_data = TRUE, use_package_data = FALSE))
+            cat("Found in cache: ", f, "\n")
         }
-        includeHTML(f)
-        #readBin(f, "raw", n = file.info(f)$size)
-    })
-    
-    # TODO: think about caching content... to www? and use...
-    # tags$iframe(src = './myMarkdown.html', # put myMarkdown.html to /www
-    #             width = '100%', height = '800px', 
-    #             frameborder = 0, scrolling = 'auto'
-    # )
+        
+        tags$iframe(src = paste0("cache/", f), 
+            width = "100%", height = "100%",
+            frameborder = 0, scrolling = 'auto')
+    })    
     
 }
 

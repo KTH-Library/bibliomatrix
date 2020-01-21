@@ -5,10 +5,12 @@
 
 # Set this flag to FALSE when testing locally, leave TRUE to skip these tests on Travis
 # since Travis does not have access to closed data sources
+library(dplyr)
+
 skip_db_tests <- TRUE
 
-testunit<<- "13604"  # "5851" 13604 5857
-testlevel<<- "dept" #"dept" school
+testunit <<- "5851"  # "5851" 13604 5857
+testlevel <<- "dept" # "dept" school
 acc_tolerance<- 0.00001
 
 # Function to read reference data exported from previous ABM
@@ -112,7 +114,7 @@ test_that("Publ. volume test", {
   
   # Prepare calculated table
   calc_test<- abm_table1(unit_code=testunit)
-  calc_sort<- calc_test %>% arrange(Publication_Type_DiVA)
+  calc_sort<- calc_test %>% arrange(Publication_Type_DiVA) %>% as.data.frame()
   
   comp_result<- all.equal(ref_full, calc_sort, ignore_row_order= TRUE, check.names=FALSE, tolerance=acc_tolerance)
   expect_true(comp_result)

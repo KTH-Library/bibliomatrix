@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KTH plot theme for ggplot — kth_theme • bibliomatrix</title>
+<title>Generate text for Web of Science coverage warnings — coveragetext • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="KTH plot theme for ggplot — kth_theme" />
-<meta property="og:description" content="KTH plot theme for ggplot" />
+<meta property="og:title" content="Generate text for Web of Science coverage warnings — coveragetext" />
+<meta property="og:description" content="Generate text for Web of Science coverage warnings" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,33 +120,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>KTH plot theme for ggplot</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/profile.R'><code>R/profile.R</code></a></small>
-    <div class="hidden name"><code>kth_theme.Rd</code></div>
+    <h1>Generate text for Web of Science coverage warnings</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/elements.R'><code>R/elements.R</code></a></small>
+    <div class="hidden name"><code>coveragetext.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>KTH plot theme for ggplot</p>
+    <p>Generate text for Web of Science coverage warnings</p>
     </div>
 
-    <pre class="usage"><span class='fu'>kth_theme</span>(<span class='kw'>base_size</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>base_font</span> <span class='kw'>=</span> <span class='st'>"sans"</span>)</pre>
+    <pre class="usage"><span class='fu'>coveragetext</span>(<span class='no'>woscoverage</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>base_size</th>
-      <td><p>the basic font size used in graphs</p></td>
-    </tr>
-    <tr>
-      <th>base_font</th>
-      <td><p>the default font used in graphs</p></td>
+      <th>woscoverage</th>
+      <td><p>Web of Science coverage (between 0 and 1)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a ggplot theme</p>
+    <p>a string with an information text for the correct interval</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>KTH plot theme for ggplot — kth_theme • bibliomatrix</title>
+<title>Retrieve WoS coverage for peer reviewed DiVA publication types — abm_woscoverage • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="KTH plot theme for ggplot — kth_theme" />
-<meta property="og:description" content="KTH plot theme for ggplot" />
+<meta property="og:title" content="Retrieve WoS coverage for peer reviewed DiVA publication types — abm_woscoverage" />
+<meta property="og:description" content="Retrieve WoS coverage for peer reviewed DiVA publication types" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,33 +120,46 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>KTH plot theme for ggplot</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/profile.R'><code>R/profile.R</code></a></small>
-    <div class="hidden name"><code>kth_theme.Rd</code></div>
+    <h1>Retrieve WoS coverage for peer reviewed DiVA publication types</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
+    <div class="hidden name"><code>abm_woscoverage.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>KTH plot theme for ggplot</p>
+    <p>Retrieve WoS coverage for peer reviewed DiVA publication types</p>
     </div>
 
-    <pre class="usage"><span class='fu'>kth_theme</span>(<span class='kw'>base_size</span> <span class='kw'>=</span> <span class='fl'>12</span>, <span class='kw'>base_font</span> <span class='kw'>=</span> <span class='st'>"sans"</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_woscoverage</span>(
+  <span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(),
+  <span class='no'>unit_code</span>,
+  <span class='kw'>analysis_start</span> <span class='kw'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span>()$<span class='no'>start_year</span>,
+  <span class='kw'>analysis_stop</span> <span class='kw'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span>()$<span class='no'>stop_year</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>base_size</th>
-      <td><p>the basic font size used in graphs</p></td>
+      <th>con</th>
+      <td><p>connection to db, default is to use mssql connection</p></td>
     </tr>
     <tr>
-      <th>base_font</th>
-      <td><p>the default font used in graphs</p></td>
+      <th>unit_code</th>
+      <td><p>the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)</p></td>
+    </tr>
+    <tr>
+      <th>analysis_start</th>
+      <td><p>first publication year of analysis, if not given abm_config() is used</p></td>
+    </tr>
+    <tr>
+      <th>analysis_stop</th>
+      <td><p>last publication year of analysis, if not given abm_config() is used</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a ggplot theme</p>
+    <p>tibble with fractionalized and full counted WoS coverage by year and publication type</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

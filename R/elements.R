@@ -12,3 +12,19 @@ wos_disclaimer <- function(year){
        "Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: ",
        "\u00A9 Copyright Clarivate Analytics. {year}. All rights reserved. ")
 }
+
+#' Generate text for Web of Science coverage warnings
+#'
+#' @param woscoverage Web of Science coverage (between 0 and 1)
+#' @return a string with an information text for the correct interval
+#' @export
+coveragetext <- function(woscoverage){
+  if(woscoverage >= 0.75)
+    ret <- "Coverage of 75% or above is considered <b>adequate</b>."
+  if(woscoverage < 0.75 & woscoverage >= 0.6)
+    ret <- "Coverage between 60% and 75% is considered <b>questionable</b>."
+  if(woscoverage < 0.6)
+    ret <- "Coverage below 60% is considered <b>unreliable</b>."
+  ret
+}
+

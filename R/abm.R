@@ -143,6 +143,7 @@ abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
 #' @param last the largest integer in the range to use
 #' @param width the desired width of intervals
 #' @return data frame with label for each interval and one row for each year
+#' @export
 
 sliding_intervals <- function(first, last, width){
   
@@ -350,6 +351,15 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
        copub_internat = t5$int_share)
 }
 
+#' Retrieve WoS coverage for peer reviewed DiVA publication types
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param analysis_start first publication year of analysis, if not given abm_config() is used
+#' @param analysis_stop last publication year of analysis, if not given abm_config() is used
+#' @return tibble with fractionalized and full counted WoS coverage by year and publication type
+#' @import pool dplyr
+#' @export
 abm_woscoverage <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
 
   # Get publication level data for selected unit (and filter on pub_year if given)
@@ -625,12 +635,13 @@ abm_private_data <- function(unit_code) {
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
-      abm_table1(unit_code = x),
-      abm_table2(unit_code = x),
-      abm_table3(unit_code = x),
-      abm_table4(unit_code = x),
-      abm_table5(unit_code = x),
-      publications = abm_publications(unit_code = x)
+      abm_table1(con = db, unit_code = x),
+      abm_table2(con = db, unit_code = x),
+      abm_table3(con = db, unit_code = x),
+      abm_table4(con = db, unit_code = x),
+      abm_table5(con = db, unit_code = x),
+      abm_woscoverage(con = db, unit_code = x),
+      publications = abm_publications(con = db,unit_code = x)
     )
   }
   

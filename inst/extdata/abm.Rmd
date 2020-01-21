@@ -379,7 +379,7 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("<p>This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.</p>")
 
-years <- df_cit3y %>% pull(Publication_Year_ch) %>% as.integer()
+years <- df_cit3y %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
 mincov <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(woscov_frac) %>% min()
 minpubs <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumcov_full) %>% min()
 

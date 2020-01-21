@@ -350,6 +350,45 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
        copub_internat = t5$int_share)
 }
 
+abm_woscoverage <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+
+  # Get publication level data for selected unit (and filter on pub_year if given)
+  orgdata <- abm_data(con = con) %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
+    group_by(Publication_Year, Publication_Type_DiVA) %>%
+    summarise(p_frac = sum(Unit_fraction),
+              p_full = n(),
+              sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
+              sumcov_full = sum(wos_bin, na.rm = TRUE),
+              woscov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
+              woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
+    ungroup() %>%
+    collect()
+  
+  if (!"Pool" %in% class(con)) dbDisconnect(con)
+  
+  peerreviewed <- orgdata %>%
+    group_by(Publication_Year) %>%
+    summarise(p_frac = sum(p_frac),
+              p_full = sum(p_full),
+              sumcov_frac = sum(sumcov_frac),
+              sumcov_full = sum(sumcov_full)) %>%
+    mutate(woscov_frac = sumcov_frac / p_frac,
+           woscov_full = sumcov_full / p_full,
+           Publication_Type = "Peer reviewed")
+  
+  orgdata %>%
+    rename(Publication_Type = Publication_Type_DiVA) %>%
+    bind_rows(peerreviewed) %>%
+    arrange(Publication_Year, Publication_Type)
+}
+
+
 #' Sorting a hierarchical structure
 #' 
 #' This function takes a data frame with a tree-like structure,
@@ -522,11 +561,12 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
-      abm_table1(unit_code = x),
-      abm_table2(unit_code = x),
-      abm_table3(unit_code = x),
-      abm_table4(unit_code = x),
-      abm_table5(unit_code = x),
+      abm_table1(con = db, unit_code = x),
+      abm_table2(con = db, unit_code = x),
+      abm_table3(con = db, unit_code = x),
+      abm_table4(con = db, unit_code = x),
+      abm_table5(con = db, unit_code = x),
+      coverage = abm_woscoverage(con = db, unit_code = x),
       summaries = abm_dash_indices(con = db, unit_code = x)
     )
   }

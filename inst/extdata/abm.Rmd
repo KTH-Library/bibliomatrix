@@ -178,12 +178,6 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0){
     abm_waffle_pct(int_share, label = int_lbl)
 
   grid.arrange(waffle1, waffle2, ncol = 1)
-<<<<<<< HEAD
-} else {
-  print("No data")
-=======
-  #plotly::subplot(w1, w2, nrows = 2)
->>>>>>> master
 }
 ```
 

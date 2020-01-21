@@ -272,7 +272,7 @@ if (params$embed_data == TRUE && params$is_employee == TRUE) {
 ### **Attributions**
 
 ```{r, echo=FALSE, results="asis"}
-wos_disclaimer()
+glue("<a href=\"#disclaimer\">{wos_attribution()}</a>")
 ```
 
 Publications in DiVA
@@ -593,4 +593,16 @@ Row
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0)
   abm_graph_copub(df_copub)
 
+```
+
+Disclaimer
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+### **Clarivate**
+```{r, echo=FALSE, results="asis"}
+wos_disclaimer()
 ```

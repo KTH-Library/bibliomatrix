@@ -34,7 +34,7 @@ wos_disclaimer <- function(derived_product = "ABM",
     yeartext <- glue("{firstyear} - {lastyear}")
   }
   
-  if(missing(derived_product_long)){
+  if(derived_product_long %in% c("", derived_product || is.na(derived_product_long))){
     firstmention <- derived_product
   } else {
     firstmention <- glue("{derived_product_long} (referred to below as \u201c{derived_product}\u201d)")

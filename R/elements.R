@@ -34,31 +34,31 @@ wos_disclaimer <- function(derived_product = "ABM",
     yeartext <- glue("{firstyear} - {lastyear}")
   }
   
-  if(derived_product_long %in% c("", derived_product || is.na(derived_product_long))){
+  if(derived_product_long %in% c("", derived_product) || is.na(derived_product_long)){
     firstmention <- derived_product
   } else {
     firstmention <- glue("{derived_product_long} (referred to below as \u201c{derived_product}\u201d)")
   }
 
-  glue("<p>Copyright \u00A9 {yeartext}, Clarivate Analytics (US) LLC. All rights reserved. Clarivate Analytics (US) LLC LLC and its affiliates are referred to below as \u201cClarivate\u201d.
+  glue("Copyright \u00A9 {yeartext}, Clarivate Analytics (US) LLC. All rights reserved. Clarivate Analytics (US) LLC LLC and its affiliates are referred to below as \u201cClarivate\u201d.
   Clarivate or its third party providers own and retain all rights, title and interest, including but not limited to copyright, trademarks, patents, database rights, trade secrets,
   know-how, and all other intellectual property rights or forms of protection of similar nature or having
   equivalent effect, anywhere in the world, in certain data underlying the {firstmention} and user is not granted any
   proprietary interest therein or thereto. The Clarivate data underlying the {derived_product} constitutes confidential and trade
   secrets of Clarivate or its third party providers. Display, performance, reproduction, distribution of, or creation of derivative works or
   improvements from the Clarivate data underlying the {derived_product} in any form or manner is expressly prohibited, except
-  to the extent expressly permitted hereunder, or otherwise, with the prior written permission of Clarivate.</p>
+  to the extent expressly permitted hereunder, or otherwise, with the prior written permission of Clarivate.
   
-  <p>[User may copy, paste and distribute only an insubstantial amount of the Clarivate data contained in the {derived_product} provided that:<br>
-  (a) the distribution is incidental to or supports user\u2019s business purpose,<br>
+  [User may copy, paste and distribute only an insubstantial amount of the Clarivate data contained in the {derived_product} provided that:
+  (a) the distribution is incidental to or supports user\u2019s business purpose,
   (b) the data is not distributed by user in connectionwith information vending or commercial publishing (in any manner or format whatsoever),
-  not reproduced through the press or mass media or on the Internet, and<br>
-  (c) where practicable, clearly identifies Clarivate or its providers as the source of the data.<br>
-  Data will be considered in  \u201cinsubstantial amount\u201d if such amount<br>
-  (i) has no independent Clarivate value,<br>
-  (ii) could not be used by the recipient as a substitute for any product or service (including any download service) provided by Clarivate or a substantial part of it.]</p>
+  not reproduced through the press or mass media or on the Internet, and
+  (c) where practicable, clearly identifies Clarivate or its providers as the source of the data.
+  Data will be considered in  \u201cinsubstantial amount\u201d if such amount
+  (i) has no independent Clarivate value,
+  (ii) could not be used by the recipient as a substitute for any product or service (including any download service) provided by Clarivate or a substantial part of it.]
   
-  <p>NEITHER CLARIVATE NOR ITS THIRD PARTY PROVIDERS WARRANT THAT THE PROVISION OF THE DATA UNDERLYING THE
+  NEITHER CLARIVATE NOR ITS THIRD PARTY PROVIDERS WARRANT THAT THE PROVISION OF THE DATA UNDERLYING THE
   {toupper(derived_product)} WILL BE UNINTERRUPTED, ERROR FREE, TIMELY, COMPLETE OR ACCURATE, NOR DO THEY
   MAKE ANY WARRANTIES AS TO THE RESULTS TO BE OBTAINED FROM USE OF THE SAME. USE OF THE {toupper(derived_product)}
   AND RELIANCE THEREON IS AT USER\u2019S SOLE RISK. NEITHER CLARIVATE OR ITS THIRD PARTY PROVIDERS WILL IN
@@ -67,12 +67,12 @@ wos_disclaimer <- function(derived_product = "ABM",
   CORRUPTION, DAMAGES, CLAIMS, LIABILITIES OR LOSSES, REGARDLESS OF CAUSE, IN OR ARISING FROM THE USE OF
   THE {toupper(derived_product)}. THE CLARIVATE DATA UNDERLYING THE {toupper(derived_product)} IS PROVIDED ON AN \u201cAS
   IS\u201d BASIS AND WITHOUT WARRANTY OF ANY KIND. NO WARRANTIES EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT
-  LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, QUIET ENJOYMENT OR OTHERWISE IS PROVIDED HEREUNDER.</p>
+  LIMITED TO ANY IMPLIED WARRANTY OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, NON-INFRINGEMENT, QUIET ENJOYMENT OR OTHERWISE IS PROVIDED HEREUNDER.
   
-  </p>IN NO EVENT WILL CLARIVATE OR ITS THIRD PARTY PROVIDERS BE LIABLE FOR ANY DAMAGES, INCLUDING WITHOUT
+  IN NO EVENT WILL CLARIVATE OR ITS THIRD PARTY PROVIDERS BE LIABLE FOR ANY DAMAGES, INCLUDING WITHOUT
   LIMITATION DIRECT OR INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, LOSSES OR EXPENSES ARISING
   IN CONNECTION WITH {toupper(derived_product)} EVEN IF CLARIVATE OR ITS THIRD PARTY PROVIDERS OR THEIR REPRESENTATIVES ARE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES,
-  LOSSES OR EXPENSES. FURTHER, CLARIVATE OR ITS PARTY PROVIDERS SHALL NOT BE LIABLE IN ANY MANNER FOR {toupper(bibliometric_partner)}\u2019S PRODUCTS OR SERVICE.</p>")
+  LOSSES OR EXPENSES. FURTHER, CLARIVATE OR ITS PARTY PROVIDERS SHALL NOT BE LIABLE IN ANY MANNER FOR {toupper(bibliometric_partner)}\u2019S PRODUCTS OR SERVICE.")
 }
 
 #' Generate text for Web of Science coverage warnings

@@ -194,11 +194,11 @@ Statistics regarding citations and co-publishing are based on the subset of publ
 
 ### **Further information**
 
-- [Guide to the Annual Bibliometric Monitoring at KTH](https://intra.kth.se/bibliometri/public/link/attachment/Guide%20to%20the%20Annual%20Bibliometric%20Monitoring%20at%20KTH.pdf)
-- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](https://intra.kth.se/bibliometri/public/link/attachment/Description%20of%20data,%20methods%20and%20indicators%20in%20KTH%20Annual%20Bibliometric%20Monitoring.pdf)
-- [Formal definitions of field normalized citation indicators at KTH](https://www.kth.se/polopoly_fs/1.544479!/Formal%20definitions%20of%20field%20normalized%20citation%20indicators%20at%20KTH.pdf)
-- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer)
-- [President decision about the Annual Bibliometric Monitoring](https://intra.kth.se/bibliometri/public/link/attachment/Beslut%200934%20Arlig%20bibliometrisk%20uppfoljning.pdf)
+- [Guide to the Annual Bibliometric Monitoring at KTH](ABM_guide.pdf)
+- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](Description_data_and_methods_ABM.pdf)
+- [Formal definitions of field normalized citation indicators at KTH](Formal_definitions_field_normalized_citation.pdf)
+- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
+- [President decision about the Annual Bibliometric Monitoring](Beslut_ABM.pdf)
 
 Row
 ----------------------

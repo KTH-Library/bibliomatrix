@@ -222,7 +222,8 @@ db_sync_table <- function(
 #' @param tables_included a vector of table names in the source db to be 
 #'   included, by default all tables are included except those excluded
 #' @param tables_excluded a vector of table names in the source db to be
-#'   excluded, by default "Documents" is excluded, specify NULL to exclude 
+#'   excluded, by default a number of tables are excluded, specify NULL
+#'   to not explicitly exclude any tables
 #' @param overwrite_existing a logical to indicate whether destination tables
 #'   should be overwritten if they already exist
 #' @return invisible result with vector of boolean status flags for synced tables
@@ -230,7 +231,7 @@ db_sync_table <- function(
 #' @export
 db_sync <- function(
   tables_included, 
-  tables_excluded = c("Document"),
+  tables_excluded = c("Document", "Bestresaddr_KTH", "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE) 
 {
   
@@ -270,7 +271,7 @@ db_sync <- function(
     otherwise = FALSE)
 
   # iterate over all tables for side-effects of synching
-  message("excluded tables: ", tables_excluded)
+  message("excluded tables: ", paste(tables_excluded, collapse = ", "))
   message("syncing these tables from source db:\n", 
     if (length(tables)) paste(collapse = ", ", tables) else "none")
     

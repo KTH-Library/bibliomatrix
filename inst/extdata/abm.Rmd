@@ -8,7 +8,7 @@ output:
 params:
   unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
-  use_package_data: FALSE
+  use_package_data: TRUE
   embed_data: FALSE
 ---
 
@@ -249,8 +249,8 @@ if (params$embed_data == TRUE) {
 
 ```{r, echo=FALSE, results="asis"}
 
-if (params$is_employee == TRUE) {
-  out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary" target="_blank">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
+if (params$embed_data == TRUE && params$is_employee == TRUE) {
+  out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
   cat(out)
 } else {
   cat("Publication data is available only after login.")

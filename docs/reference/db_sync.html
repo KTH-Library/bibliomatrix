@@ -137,7 +137,8 @@ memory exceptions when moving large tables.</p>
 
     <pre class="usage"><span class='fu'>db_sync</span>(
   <span class='no'>tables_included</span>,
-  <span class='kw'>tables_excluded</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Document"</span>),
+  <span class='kw'>tables_excluded</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Document"</span>, <span class='st'>"Bestresaddr_KTH"</span>, <span class='st'>"DIVA_School_Dept"</span>,
+    <span class='st'>"Diva_departments"</span>, <span class='st'>"Doc_statistics"</span>),
   <span class='kw'>overwrite_existing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
 )</pre>
 
@@ -152,7 +153,8 @@ included, by default all tables are included except those excluded</p></td>
     <tr>
       <th>tables_excluded</th>
       <td><p>a vector of table names in the source db to be
-excluded, by default "Documents" is excluded, specify NULL to exclude</p></td>
+excluded, by default a number of tables are excluded, specify NULL
+to not explicitly exclude any tables</p></td>
     </tr>
     <tr>
       <th>overwrite_existing</th>

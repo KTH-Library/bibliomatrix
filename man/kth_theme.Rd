@@ -4,7 +4,7 @@
 \alias{kth_theme}
 \title{KTH plot theme for ggplot}
 \usage{
-kth_theme(base_size = 12, base_font = "Arial")
+kth_theme(base_size = 12, base_font = "sans")
 }
 \arguments{
 \item{base_size}{the basic font size used in graphs}

@@ -59,22 +59,25 @@ if (params$use_package_data != TRUE) {
   unit_meta <- filter(abm_public_kth$meta, unit_code == run_unit)
 }
 
-if (params$is_employee) {
-  
-  unit_label <- 
-    ad_displayname(kthid = params$unit_code)
-  
-} else {
+unit_level <- abm_public_kth$meta %>% 
+     filter(unit_code == run_unit) %>%
+     pull(org_level)
+
+#if (params$is_employee) {
+if(isTRUE(unit_level >= 0)){
   
   unit_label <- 
     abm_public_kth$meta %>% 
     filter(unit_code == run_unit) %>%
     pull(unit_long_en)
+  
+} else {
+  
+  unit_label <- 
+    ad_displayname(kthid = params$unit_code)
 }
 
-unit_level <- abm_public_kth$meta %>% 
-     filter(unit_code == run_unit) %>%
-     pull(org_level)
+
 
 ```
 

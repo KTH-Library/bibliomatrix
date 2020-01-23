@@ -72,6 +72,10 @@ if (params$is_employee) {
     pull(unit_long_en)
 }
 
+unit_level <- abm_public_kth$meta %>% 
+     filter(unit_code == run_unit) %>%
+     pull(org_level)
+
 ```
 
 Overview
@@ -183,14 +187,19 @@ Row
 
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
-if (params$is_employee == TRUE)
-  cat("<p><b>Bibliometric results for individual researchers should always be treated with caution.</b></p>")
-
-cat("<p>Impact and co-publication indicators are based on Web of Science publications only. ")
-
-if(params$is_employee == FALSE)
+if(isTRUE(unit_level >= 0)){
+  
   glue("Overall Web of Science coverage for peer reviewed publications in this unit is {100*round(totcov, 3)}%. ",
            "{ifelse(totcov < 0.75, coveragetext(totcov), '')}")
+
+    #if(params$is_employee == FALSE)
+} else {
+
+cat("<p><b>Bibliometric results for individual researchers should always be treated with caution.</b></p>")
+  
+}
+
+cat("<p>Impact and co-publication indicators are based on Web of Science publications only. ")
 
 cat("</p>")
 ```

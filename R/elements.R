@@ -7,10 +7,11 @@
 wos_attribution <- function(year){
   if(missing(year))
     year <- format(Sys.Date(), "%Y")
-  glue("Certain data included herein is derived from the Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), ",
+  glue("Certain data included herein are derived from the \u00A9 Science Citation Index Expended (SCIE), Social Sciences Citation Index (SSCI), ",
        "Arts & Humanities Citation Index (AHCI), Conference Proceedings Citation Index - Sciences (CPCI-S) and ",
-       "Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH), prepared by Clarivate Analytics, Philadelphia, Pennsylvania, USA: ",
-       "\u00A9 Copyright Clarivate Analytics. {year}. All rights reserved. ")
+       "Conference Proceedings Citation Index - Social Sciences & Humanities (CPCI -SSH) (2019) of Clarivate Analytics (US) LLC. All rights reserved. ",
+       "No part of these materials may be reproduced, stored in a retrieval system or transmitted in any form or by any means, ",
+       "including electronic, mechanical, photographic, magnetic or other means without the expressed permission of the KTH Library.")
 }
 
 #' Generate Web of Science disclaimer

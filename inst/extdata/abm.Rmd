@@ -63,7 +63,6 @@ unit_level <- abm_public_kth$meta %>%
      filter(unit_code == run_unit) %>%
      pull(org_level)
 
-#if (params$is_employee) {
 if(isTRUE(unit_level >= 0)){
   
   unit_label <- 

@@ -5,7 +5,7 @@
 \title{Retrieve Table 1 (Publications in DiVA) for ABM}
 \usage{
 abm_table1(
-  con = con_bib(),
+  con,
   unit_code,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year

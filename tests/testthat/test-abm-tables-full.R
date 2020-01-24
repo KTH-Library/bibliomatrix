@@ -4,7 +4,7 @@ library(testthat)
 library(pool)
 # Set this flag to FALSE when testing locally, leave TRUE to skip these tests on Travis
 # since Travis does not have access to closed data sources
-skip_full_abm_test <- FALSE
+skip_full_abm_test <- TRUE
 
 # The accepted difference (counts as equal if diff < acc_tolerance)
 acc_tolerance <- 0.00001

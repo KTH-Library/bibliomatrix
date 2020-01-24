@@ -33,19 +33,17 @@ library(tidyr)
 library(scales)
 
 colors_vb <- palette_kth(4)
-run_unit <- params$unit_code
-
 
 # Retrieve result tables to use in tabs and key indicators
 
 if (params$use_package_data != TRUE) {
   con <- pool_bib()
-  df_diva <- abm_table1(con = con, unit_code = run_unit) 
-  df_cit3y <- abm_table2(con = con, unit_code= run_unit)
-  df_cf <- abm_table3(con = con, unit_code= run_unit)
-  df_jcf <- abm_table4(con = con, unit_code= run_unit)
-  df_copub <- abm_table5(con = con, unit_code= run_unit)
-  unit_meta <- unit_info(con = con) %>% filter(unit_code == run_unit)
+  df_diva <- abm_table1(con = con, unit_code = params$unit_code) 
+  df_cit3y <- abm_table2(con = con, unit_code= params$unit_code)
+  df_cf <- abm_table3(con = con, unit_code= params$unit_code)
+  df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
+  df_copub <- abm_table5(con = con, unit_code= params$unit_code)
+  unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
@@ -232,7 +230,9 @@ if (params$embed_data == TRUE) {
   # export to xlsx format, into tempdir so we can embed a file link
   
   # data that we want to export
-  publications_kth <- abm_publications(unit_code = run_unit)
+  con <- pool_bib()
+  publications_kth <- abm_publications(con = con, unit_code = params$unit_code)
+  pool::poolClose(con)
   
   #install.packages("openxlsx")
   library(openxlsx)

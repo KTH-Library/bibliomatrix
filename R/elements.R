@@ -83,10 +83,10 @@ wos_disclaimer <- function(derived_product = "ABM",
 #' @export
 coveragetext <- function(woscoverage){
   if(woscoverage >= 0.75)
-    ret <- "Coverage of 75% or above is considered <b>adequate</b>."
+    ret <- "adequate"
   if(woscoverage < 0.75 & woscoverage >= 0.6)
-    ret <- "Coverage between 60% and 75% is considered <b>questionable</b>."
+    ret <- "moderate"
   if(woscoverage < 0.6)
-    ret <- "Coverage below 60% is considered <b>unreliable</b>."
+    ret <- "poor"
   ret
 }

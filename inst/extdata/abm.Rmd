@@ -6,7 +6,7 @@ output:
     vertical_layout: scroll
     favicon: kth-logo.png
 params:
-  unit_code: "882653" #!r bibliomatrix:::abm_config()$default_unit
+  unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE

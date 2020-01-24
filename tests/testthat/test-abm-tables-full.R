@@ -2,16 +2,15 @@
 library(dplyr)
 library(testthat)
 library(pool)
-
 # Set this flag to FALSE when testing locally, leave TRUE to skip these tests on Travis
 # since Travis does not have access to closed data sources
-skip_full_abm_test <- TRUE
+skip_full_abm_test <- FALSE
 
 # The accepted difference (counts as equal if diff < acc_tolerance)
 acc_tolerance <- 0.00001
 
 ### Define test functions ###
-test_tab1 <- function(con = con_bib(), testlevel, unit_code){
+test_tab1 <- function(con, testlevel, unit_code){
   # Get reference table
   cols_pub <- c("Publication_Type_DiVA", "Doc_Year", "w_d_Sum")
   cols_wos <- c("Publication_Type_DiVA", "w_d_Sum", "wos_coverage_Mean")
@@ -31,9 +30,9 @@ test_tab1 <- function(con = con_bib(), testlevel, unit_code){
   isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
-test_tab2 <- function(con = con_bib(), testlevel, unit_code) {
+test_tab2 <- function(con, testlevel, unit_code) {
   # Get reference table
-  cols <- cols<- c("publication_year", "p_frac_Sum", "c3_frac_Sum", "c3_frac_mean_Sum")
+  cols <- c("publication_year", "p_frac_Sum", "c3_frac_Sum", "c3_frac_mean_Sum")
   refname <- paste0("c3_",testlevel,"_frac_aggr")
   reftable <- con %>% tbl(refname) %>% filter(unit == unit_code) %>% select(cols) %>% as.data.frame()
   
@@ -44,7 +43,7 @@ test_tab2 <- function(con = con_bib(), testlevel, unit_code) {
   isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
-test_tab3 <- function(con = con_bib(), testlevel, unit_code) {
+test_tab3 <- function(con, testlevel, unit_code) {
   # Get reference table
   cols <- c("cf_label_year", "w_d_Sum", "cf_scxwo_Mean", "top10_scxwo_Sum", "top10_scxwo_Mean")
   refname <- paste0("cf_glid_",testlevel,"_frac_aggr")
@@ -57,7 +56,7 @@ test_tab3 <- function(con = con_bib(), testlevel, unit_code) {
   isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
-test_tab4 <- function(con = con_bib(), testlevel, unit_code) {
+test_tab4 <- function(con, testlevel, unit_code) {
   # Get reference table
   cols<- c("jrv_label_year", "Pfrac_Sum", "jrv_mean_frac_Sum", "top20_sum_frac_Sum", "top20_mean_frac_Sum")
   refname <- paste0("jcf_glid_",testlevel,"_frac_aggr")
@@ -70,7 +69,7 @@ test_tab4 <- function(con = con_bib(), testlevel, unit_code) {
   isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))
 }
 
-test_tab5 <- function(con = con_bib(), testlevel, unit_code) {
+test_tab5 <- function(con, testlevel, unit_code) {
   # Get reference table
   cols<- c("sp_label_year", "N", "swe_co_Sum", "swe_co_Mean", "int_Sum", "int_Mean")
   refname <- paste0("copub_glid_",testlevel,"_aggr")
@@ -85,6 +84,10 @@ test_tab5 <- function(con = con_bib(), testlevel, unit_code) {
 
 ### Run tests ###
 if(!skip_full_abm_test){
+  library(tidyr)
+  library(bibliomatrix)
+  library(pool)
+  
   db <- pool_bib()
   
   # KTH and schools
@@ -110,7 +113,7 @@ if(!skip_full_abm_test){
   })
   
   # Individual researchers
-  resunits <- abm_data(unit_level = 3) %>% pull(Unit_code) %>% unique()
+  resunits <- db %>% tbl("masterfile") %>% filter(level == 3) %>% pull(Unit_code) %>% unique()
   test_that("res_tables", {
     skip_if(skip_full_abm_test, "skipping (we might have no connection to database)")
     expect_true(all(sapply(resunits, function(x) test_tab1(con = db, testlevel = "res", unit_code = x))))
@@ -122,3 +125,4 @@ if(!skip_full_abm_test){
 
   poolClose(db)
 }
+

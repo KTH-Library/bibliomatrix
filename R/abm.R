@@ -123,11 +123,11 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
               C3 = sum(Citations_3yr * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     ungroup() %>%
+    collect() %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
-    select(-Publication_Year) %>%
     arrange(Publication_Year_ch) %>% 
-    collect()
-  
+    select(Publication_Year_ch, P_frac, C3_frac, C3)
+
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
@@ -141,7 +141,7 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
     mutate(Publication_Year_ch = "Total") %>%
     collect()
 
-  bind_rows(table1, table2) %>% select(Publication_Year_ch, P_frac, C3_frac, C3)
+  bind_rows(table1, table2)
 }
 
 #' Create integer intervals useful for e.g. sliding means

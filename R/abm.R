@@ -372,7 +372,7 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
 #' @return tibble with fractionalized and full counted WoS coverage by year and publication type
 #' @import pool dplyr
 #' @export
-abm_woscoverage <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
 
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(con = con) %>%
@@ -383,7 +383,7 @@ abm_woscoverage <- function(con = con_bib(), unit_code, analysis_start = abm_con
     mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
     select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(p_frac = sum(Unit_fraction),
+    summarise(p_frac = sum(Unit_fraction, na.rm = TRUE),
               p_full = n(),
               sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
               sumcov_full = sum(wos_bin, na.rm = TRUE),
@@ -391,8 +391,6 @@ abm_woscoverage <- function(con = con_bib(), unit_code, analysis_start = abm_con
               woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
     ungroup() %>%
     collect()
-  
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   peerreviewed <- orgdata %>%
     group_by(Publication_Year) %>%

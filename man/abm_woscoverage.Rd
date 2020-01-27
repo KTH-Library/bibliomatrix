@@ -5,7 +5,7 @@
 \title{Retrieve WoS coverage for peer reviewed DiVA publication types}
 \usage{
 abm_woscoverage(
-  con = con_bib(),
+  con,
   unit_code,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year

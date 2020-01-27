@@ -56,19 +56,23 @@ get_pubtype_order <- function(con){
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
-abm_table1 <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table1 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
-  # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
-    collect() %>% 
-    filter(Publication_Year %in% analysis_start:analysis_stop)
-
+  # Get publication level data for selected unit
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0))
+  
   # Year dependent part of table
   table1 <-
     orgdata %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(P_frac = sum(Unit_Fraction)) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE)) %>%
+    collect() %>%
+    arrange(Publication_Year) %>%
     pivot_wider(names_from = Publication_Year, values_from = P_frac) %>%
     ungroup()
   
@@ -76,14 +80,13 @@ abm_table1 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   table2 <-
     orgdata %>%
     group_by(Publication_Type_DiVA) %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              WoS_coverage = weighted.mean(wos_bin, Unit_Fraction, na.rm = T)) %>%
-    ungroup()
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              WoS_coverage = sum(wos_bin * Unit_Fraction, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE)) %>%
+    ungroup() %>% 
+    collect()
   
   pubtype_order <- get_pubtype_order(con)
-
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
-
+  
   table1 %>%
     inner_join(table2, by = "Publication_Type_DiVA") %>%
     inner_join(pubtype_order, by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
@@ -102,24 +105,29 @@ abm_table1 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
-  # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    collect() %>%
-    filter(Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial") &
-           Publication_Year %in% analysis_start:(analysis_stop - 2)) %>%
-    mutate(Publication_Year_ch = as.character(Publication_Year))
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop - 2 &
+             Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial"))
 
   # Year dependent part of table
   table1 <-
     orgdata %>%
-    group_by(Publication_Year_ch) %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
-              C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
-    ungroup()
-  
+    group_by(Publication_Year) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3 = sum(Citations_3yr * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup() %>%
+    collect() %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+    arrange(Publication_Year_ch) %>% 
+    select(Publication_Year_ch, P_frac, C3_frac, C3)
+
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
@@ -127,12 +135,11 @@ abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   # Summary part of table
   table2 <-
     orgdata %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = T),
-              C3 = weighted.mean(Citations_3yr, Unit_Fraction, na.rm = T)) %>%
-    mutate(Publication_Year_ch = "Total")
-
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3 = sum(Citations_3yr * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+    mutate(Publication_Year_ch = "Total") %>%
+    collect()
 
   bind_rows(table1, table2)
 }
@@ -144,7 +151,6 @@ abm_table2 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
 #' @param width the desired width of intervals
 #' @return data frame with label for each interval and one row for each year
 #' @export
-
 sliding_intervals <- function(first, last, width){
   
   starts <- seq(first, last - width + 1)
@@ -164,18 +170,21 @@ sliding_intervals <- function(first, last, width){
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
-  # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    collect() %>%
-    filter(Publication_Type_WoS %in% c("Article", "Review") &
-             Publication_Year %in% analysis_start:(analysis_stop - 1) & 
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop - 1 &
+             Publication_Type_WoS %in% c("Article", "Review") & 
              !is.na(cf))
-
-  # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
+  
+    # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
-    orgdata %>% 
+    orgdata %>%
+    collect() %>%
     inner_join(sliding_intervals(analysis_start, analysis_stop - 1, 3),
                by = c("Publication_Year" = "x"))
 
@@ -183,10 +192,10 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   table1 <-
     orgdata3year %>%
     group_by(interval) %>%
-    summarise(P_frac = sum(Unit_Fraction_adj),
-              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
-              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
+              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = TRUE),
+              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = TRUE),
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE)) %>%
     ungroup()
   
   # No summary row if no data
@@ -196,14 +205,13 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   # Summary part of table
   table2 <-
     orgdata %>%
-    summarise(P_frac = sum(Unit_Fraction_adj),
-              cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = T),
-              top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = T),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
+              cf = sum(cf * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
+              top10_count = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE),
+              top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) %>%
+    collect() %>% 
     mutate(interval = "Total")
 
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
-  
   bind_rows(table1, table2)
 }
 
@@ -218,17 +226,20 @@ abm_table3 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table4 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
-  # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    collect() %>%
-    filter(Publication_Type_WoS %in% c("Article", "Review") & 
-             Publication_Year %in% analysis_start:(analysis_stop))
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             Publication_Type_WoS %in% c("Article", "Review"))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
-    orgdata %>% 
+    orgdata %>%
+    collect() %>% 
     inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
                by = c("Publication_Year" = "x"))
   
@@ -236,10 +247,10 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   table1 <-
     orgdata3year %>%
     group_by(interval) %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = T),
-              top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
-              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
+              top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
+              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) %>%
     ungroup()
   
   # No summary row if no data
@@ -249,13 +260,12 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   # Summary part of table
   table2 <-
     orgdata %>%
-    summarise(P_frac = sum(Unit_Fraction),
-              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = T),
-              top20_count = sum(Jtop20*Unit_Fraction, na.rm = T),
-              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = T)) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              jcf = sum(jcf * Unit_Fraction, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
+              top20_count = sum(Jtop20 * Unit_Fraction, na.rm = TRUE),
+              top20_share = sum(Jtop20 * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+    collect() %>%
     mutate(interval = "Total")
-  
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   bind_rows(table1, table2)
 }
@@ -270,18 +280,21 @@ abm_table4 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
 #' @import DBI dplyr tidyr purrr
 #' @export
 
-abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
-  # Get publication level data for selected unit (and filter on pub_year if given), relevant WoS doctypes only
-  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    collect() %>%
-    filter(Publication_Type_WoS %in% c("Article", "Review") &
-             Publication_Year %in% analysis_start:(analysis_stop)
-            & !is.na(int))
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             Publication_Type_WoS %in% c("Article", "Review") &
+             !is.na(int))
 
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
-    orgdata %>% 
+    orgdata %>%
+    collect() %>% 
     inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
                by = c("Publication_Year" = "x"))
   
@@ -290,10 +303,10 @@ abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
     orgdata3year %>%
     group_by(interval) %>%
     summarise(P_full = n(),
-              nonuniv_count = sum(swe_nuniv, na.rm = T),
-              nonuniv_share = mean(swe_nuniv, na.rm = T),
-              int_count = sum(int, na.rm = T),
-              int_share = mean(int, na.rm = T)) %>%
+              nonuniv_count = sum(swe_nuniv, na.rm = TRUE),
+              nonuniv_share = mean(swe_nuniv, na.rm = TRUE),
+              int_count = sum(int, na.rm = TRUE),
+              int_share = mean(int, na.rm = TRUE)) %>%
     ungroup()
   
   # No summary row if no data
@@ -304,13 +317,12 @@ abm_table5 <- function(con = con_bib(), unit_code, analysis_start = abm_config()
   table2 <-
     orgdata %>%
     summarise(P_full = n(),
-              nonuniv_count = sum(swe_nuniv, na.rm = T),
-              nonuniv_share = mean(swe_nuniv, na.rm = T),
-              int_count = sum(int, na.rm = T),
-              int_share = mean(int, na.rm = T)) %>%
+              nonuniv_count = sum(swe_nuniv, na.rm = TRUE),
+              nonuniv_share = mean(swe_nuniv, na.rm = TRUE),
+              int_count = sum(int, na.rm = TRUE),
+              int_share = mean(int, na.rm = TRUE)) %>%
+    collect() %>%
     mutate(interval = "Total")
-  
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   bind_rows(table1, table2)
 }
@@ -483,16 +495,17 @@ unit_info <- function(con){
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_publications <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
 
   # Get publication level data for selected unit
-  orgdata <- abm_data(con = con, unit_code = unit_code) %>%
-    filter(Publication_Year >= analysis_start & Publication_Year <= analysis_stop) %>%
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
     select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
     collect()
   
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
-
   orgdata
 }
   

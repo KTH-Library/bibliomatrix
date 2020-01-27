@@ -5,7 +5,7 @@
 \title{Retrieve Table 2 (Citations 3-year window) for ABM}
 \usage{
 abm_table2(
-  con = con_bib(),
+  con,
   unit_code,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year

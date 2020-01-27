@@ -5,7 +5,7 @@
 \title{Retrieve Table 4 (Journal impact) for ABM}
 \usage{
 abm_table4(
-  con = con_bib(),
+  con,
   unit_code,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year

@@ -4,7 +4,7 @@ Version: 0.2
 Authors@R: 
     as.person(c(
         "Gaël Serge Dubus <dubus@kth.se> [aut]", 
-        "Tobias Jeppson <tjejp@kth.se> [aut]", 
+        "Tobias Jeppsson <tjep@kth.se> [aut]", 
         "Agne Larsson <agnel@kth.se> [aut]",
         "David Minguillo <davidmin@kth.se> [aut]", 
         "Markus Skyttner <markussk@kth.se> [aut, cre]"

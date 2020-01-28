@@ -201,7 +201,7 @@ if(isTRUE(unit_level >= 0)){
 
 } else {
 
-  cat("<p><b>Bibliometric results for individual researchers should always be treated with caution.</b></p>")
+  cat("<p><b>Bibliometric results for individual researchers should always be interpreted with caution.</b></p>")
 
 }
 ```
@@ -421,7 +421,7 @@ if(isTRUE(unit_level >= 0)){
 
 } else {
 
-  cat("<b>Bibliometric results for individual researchers should always be treated with caution.</b>")
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
 
@@ -456,7 +456,7 @@ if(isTRUE(unit_level >= 0)){
 
 } else {
 
-  cat("<b>Bibliometric results for individual researchers should always be treated with caution.</b>")
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
 ```
@@ -542,7 +542,7 @@ if(isTRUE(unit_level >= 0)){
 
 } else {
 
-  cat("<b>Bibliometric results for individual researchers should always be treated with caution.</b>")
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
 ```
@@ -624,7 +624,7 @@ if(isTRUE(unit_level >= 0)){
 
 } else {
 
-  cat("<b>Bibliometric results for individual researchers should always be treated with caution.</b>")
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
 ```

@@ -651,7 +651,7 @@ abm_private_data <- function(unit_code) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
-      abm_woscoverage(con = db, unit_code = x),
+      coverage = abm_woscoverage(con = db, unit_code = x),
       publications = abm_publications(con = db,unit_code = x)
     )
   }

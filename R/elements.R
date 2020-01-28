@@ -79,11 +79,13 @@ wos_disclaimer <- function(derived_product = "ABM",
 #' Generate text for Web of Science coverage warnings
 #'
 #' @param woscoverage Web of Science coverage (between 0 and 1)
-#' @return a string with an information text for the correct interval
+#' @return a string with coverage level based on given coverage
 #' @export
 coveragetext <- function(woscoverage){
+  if(woscoverage < 0 | woscoverage > 1)
+    stop("Invalid woscoverage, please give a number in the interval [0,1]")
   if(woscoverage >= 0.75)
-    ret <- "adequate"
+    ret <- "good"
   if(woscoverage < 0.75 & woscoverage >= 0.6)
     ret <- "moderate"
   if(woscoverage < 0.6)

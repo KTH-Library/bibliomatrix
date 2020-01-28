@@ -10,7 +10,7 @@ coveragetext(woscoverage)
 \item{woscoverage}{Web of Science coverage (between 0 and 1)}
 }
 \value{
-a string with an information text for the correct interval
+a string with coverage level based on given coverage
 }
 \description{
 Generate text for Web of Science coverage warnings

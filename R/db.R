@@ -228,30 +228,33 @@ db_sync_table <- function(
 #'   should be overwritten if they already exist
 #' @return invisible result with vector of boolean status flags for synced tables
 #' @importFrom purrr map set_names
+#' @importFrom odbc dbDisconnect
+#' @importFrom DBI dbDisconnect
 #' @export
 db_sync <- function(
   tables_included, 
   tables_excluded = c("Document", "Bestresaddr_KTH", "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE) 
 {
+  c1 <- con_bib_mssql()
   
   if (missing(tables_included)) {
-    t1 <- con_bib_mssql() %>% db_tables() %>% pull(table)
+    t1 <- c1 %>% db_tables() %>% pull(table)
   } else {
     t1 <- tables_included
   }
   
   tryCatch(
-    con_bib_sqlite(),
+    c2 <- con_bib_sqlite(),
     error = function(e) {
       if (str_starts(e$message, "No sqlite3 db")) {
         message("No sqlite3 db exists, probably first run, so creating one.")
-        con_bib_sqlite(create = TRUE)
+        c2 <- con_bib_sqlite(create = TRUE)
       }
     }
   )
   
-  t2_df <- con_bib_sqlite() %>% db_tables()
+  t2_df <- c2 %>% db_tables()
   t2 <- if (is.null(t2_df)) NULL else t2_df %>% pull(table)
 
   # inclusions  
@@ -277,7 +280,9 @@ db_sync <- function(
     
   res <- purrr::map_lgl(tables, sync_possibly)
   names(res) <- as.character(tables)
-#  purrr::set_names(res, as.character(tables))
+
+  odbc::dbDisconnect(c1)
+  DBI::dbDisconnect(c2)
   invisible(res)
 }
 

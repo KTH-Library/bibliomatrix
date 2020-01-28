@@ -108,10 +108,15 @@ if (nrow(df_diva) > 0){
 ### **WoS coverage `r firstyear` - `r lastyear`<br>(peer reviewed)**
 
 ```{r, fig.width = 3, fig.height = 2}
-if (nrow(df_diva) > 0){
-  totcov <- df_woscov %>% filter(Publication_Type == "Peer reviewed") %>% summarise(woscov = sum(sumcov_frac) / sum(p_frac)) %>% pull(woscov)
+if (nrow(df_diva) > 0) {
+  
+  totcov <- df_woscov %>% 
+    filter(Publication_Type == "Peer reviewed") %>% 
+    summarise(woscov = sum(sumcov_frac) / sum(p_frac)) %>% 
+    pull(woscov)
+  
   valueBox(
-    value = paste(100*round(totcov, 3), "%"),
+    value = paste(100 * round(totcov, 3), "%"),
     color = colors_vb[1],
     icon = "fa-percent",
     href = "#publications-in-diva")

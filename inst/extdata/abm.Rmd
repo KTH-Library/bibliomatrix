@@ -191,8 +191,8 @@ cat("<p>Impact and co-publication indicators are based on Web of Science publica
 
 if(isTRUE(unit_level >= 0)){
 
-  glue("<p>Overall Web of Science coverage for peer reviewed publications in this unit is",
-       "{ifelse(totcov < 0.75, paste0(' ', coveragetext(totcov), ','), '')} {100*round(totcov, 3)}%.</p>")
+  glue("<p>Overall Web of Science coverage for peer reviewed publications in this unit is ",
+       "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</p>")
 
 } else {
 

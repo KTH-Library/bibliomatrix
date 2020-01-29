@@ -22,7 +22,7 @@ globalz <- "
     wos_coverage_Mean wos_coverage_NA Doc_id wos_bin
     WoS_coverage df_copub df_jcf indicator int_share nonuniv_share
     top10_share top20_share year measure target
-    from n_pad unit_long_en Copublication formatStyle styleEqual uc_from_orgid
+    from n_pad unit_long_en Co-publication formatStyle styleEqual uc_from_orgid
     abm_public_kth get_pt_ordning parent fullsort sort_order
     C3 C3_frac Unit_fraction
 "

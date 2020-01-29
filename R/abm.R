@@ -760,13 +760,13 @@ abm_graph_copub <- function(df){
   df_copub_long<- df %>%
     select(interval, nonuniv_share, int_share) %>% 
     rename("Swedish Non-university" = nonuniv_share, "International" = int_share) %>% 
-    gather("Copublication", "value", -interval) %>% 
+    gather("Co-publication", "value", -interval) %>% 
     filter(!interval == "Total")
   
   ggplot(data = df_copub_long,
-         aes(x = interval, y = value, group = Copublication)) +
-    geom_line(aes(color = Copublication)) +
-    geom_point(aes(color = Copublication)) +
+         aes(x = interval, y = value, group = `Co-publication`)) +
+    geom_line(aes(color = `Co-publication`)) +
+    geom_point(aes(color = `Co-publication`)) +
     xlab(NULL) +
     ylab(NULL) +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +

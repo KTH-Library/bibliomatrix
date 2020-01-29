@@ -192,11 +192,16 @@ Statistics regarding citations and co-publishing are based on the subset of publ
 
 ### **Further information**
 
-- [Guide to the Annual Bibliometric Monitoring at KTH](ABM_guide.pdf)
-- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](Description_data_and_methods_ABM.pdf)
-- [Formal definitions of field normalized citation indicators at KTH](Formal_definitions_field_normalized_citation.pdf)
+```{r}
+# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
+STATIC <- "https://kth-library.github.io/abm"
+```
+
+- [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
+- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
+- [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
 - [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
-- [President decision about the Annual Bibliometric Monitoring](Beslut_ABM.pdf)
+- [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
 
 Row
 ----------------------

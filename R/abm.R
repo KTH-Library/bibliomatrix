@@ -625,6 +625,7 @@ abm_private_data <- function(unit_code) {
 #' @import ggplot2 dplyr
 #' @importFrom stats reorder
 #' @importFrom RColorBrewer brewer.pal
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_diva <- function(df){
   df_diva_long <- df %>%
@@ -637,18 +638,20 @@ abm_graph_diva <- function(df){
   ggplot(data = df_diva_long,
          aes(x = year)) +
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
+    theme_kth_osc() +
     labs(x = NULL, y = NULL, fill = NULL) +
     scale_fill_manual(values = colvals) +
-    kth_theme()
+    theme(legend.position = "bottom")
 }
 
 #' Create graph over WoS coverage by year
 #' 
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @importFrom stats reorder
-#' @importFrom scales percent
+#' @importFrom scales label_percent
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_wos_coverage <- function(df){
   kth_cols <- palette_kth()
@@ -656,11 +659,10 @@ abm_graph_wos_coverage <- function(df){
   ggplot(data = df,
          aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
     geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    theme_kth_osc() +
+    labs(x = NULL, y = NULL, fill = NULL) +
     coord_flip() +
-    scale_y_continuous(labels=percent, breaks = seq(0,1,0.1), limits = c(0, 1)) +
-    kth_theme()
+    scale_y_continuous(labels = label_percent(accuracy = 1), breaks = seq(0,1,0.1), limits = c(0, 1))
 }
 
 #' Create graph over Cf by year
@@ -668,6 +670,7 @@ abm_graph_wos_coverage <- function(df){
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_cf <- function(df){
   kth_cols <- palette_kth(4)
@@ -677,11 +680,10 @@ abm_graph_cf <- function(df){
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    theme_kth_osc() +
+    labs(x = NULL, y = NULL, fill = NULL) +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    kth_theme()
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"])
 }
 
 #' Create graph over Top 10\% publications by year
@@ -689,7 +691,8 @@ abm_graph_cf <- function(df){
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
-#' @importFrom scales percent
+#' @importFrom scales label_percent
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_top10 <- function(df){
   kth_cols <- palette_kth(4)
@@ -699,11 +702,10 @@ abm_graph_top10 <- function(df){
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
     geom_line(color = kth_cols["blue"]) +
-  xlab(NULL) +
-  ylab(NULL) +
-  geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
-  scale_y_continuous(labels = percent, limits = c(0, ymax)) +
-    kth_theme()
+    theme_kth_osc() +
+    labs(x = NULL, y = NULL, fill = NULL) +
+    geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = label_percent(accuracy = 1), limits = c(0, ymax))
 }
 
 #' Create graph over jcf by year
@@ -711,6 +713,7 @@ abm_graph_top10 <- function(df){
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_jcf <- function(df){
   kth_cols <- palette_kth(4)
@@ -720,11 +723,10 @@ abm_graph_jcf <- function(df){
          aes(x = interval, y = jcf, group=1)) +
     geom_point() + 
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    theme_kth_osc() +
+    labs(x = NULL, y = NULL, fill = NULL) +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    kth_theme()
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"])
 }
 
 #' Create graph over Top 20\% journals by year
@@ -733,6 +735,7 @@ abm_graph_jcf <- function(df){
 #' @return a ggplot object
 #' @import ggplot2 dplyr
 #' @importFrom scales percent
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_top20 <- function(df){
   kth_cols <- palette_kth(4)
@@ -742,11 +745,10 @@ abm_graph_top20 <- function(df){
          aes(x = interval, y = top20_share, group=1)) +
     geom_point() +
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    theme_kth_osc() +
+    labs(x = NULL, y = NULL, fill = NULL) +
     geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
-    scale_y_continuous(labels = percent, limits = c(0, ymax)) +
-    kth_theme()
+    scale_y_continuous(labels = label_percent(accuracy = 1), limits = c(0, ymax))
 }
 
 #' Create graph over international and Swedish non-university copublications by year
@@ -754,6 +756,7 @@ abm_graph_top20 <- function(df){
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_graph_copub <- function(df){
   kth_cols <- as.vector(palette_kth(4))
@@ -767,11 +770,11 @@ abm_graph_copub <- function(df){
          aes(x = interval, y = value, group = Copublication)) +
     geom_line(aes(color = Copublication)) +
     geom_point(aes(color = Copublication)) +
-    xlab(NULL) +
-    ylab(NULL) +
+    theme_kth_osc() +
+    labs(x = NULL, y = NULL, fill = NULL) +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
     scale_color_manual(values = kth_cols) +
-    kth_theme()
+    theme(legend.position = "bottom")
 }
 
 #' Create waffle chart (5 rows, 20 columns) for any single percentage
@@ -782,9 +785,11 @@ abm_graph_copub <- function(df){
 #'
 #' @return a ggplot object
 #' @import waffle
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_waffle_pct <- function(pct, 
-  col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
+                           col = as.character(c(palette_kth()["blue"], "gray")),
+                           label = NULL){
   if(pct < 0.0 | pct > 1.0)
     stop("Please give a number between 0 and 1")
   yes <- round(100*pct)
@@ -794,7 +799,10 @@ abm_waffle_pct <- function(pct,
          colors = col,
          legend_pos = "none",
          title = label) +
-    theme(plot.title=element_text(size = 12))
+    theme_kth_osc() +
+    theme(legend.position = "none",
+          axis.text = element_blank()) +
+    labs(x = NULL, y = NULL, fill = NULL)
 }
 
 #' Create bullet graph with reference line
@@ -806,6 +814,7 @@ abm_waffle_pct <- function(pct,
 #' @param pct boolean, set to TRUE if given value is a share (default = FALSE)
 #' @return a ggplot object
 #' @import ggplot2
+#' @importFrom ktheme theme_kth_osc
 #' @export
 abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
   if(pct){
@@ -825,8 +834,8 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
     geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.4) +
     geom_errorbar(aes(x = measure, ymin = target, ymax = target), color=kth_cols["cerise"], width = 0.9, size = 1.1) +
     coord_flip() +
+    theme_kth_osc() +
     theme(plot.title=element_text(size = 12),
-          axis.text.x=element_text(size=8),
           axis.title.x=element_blank(),
           axis.line.y=element_blank(),
           axis.text.y=element_blank(),
@@ -838,7 +847,8 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
           panel.grid.major=element_blank(),
           panel.grid.minor=element_blank(),
           plot.background=element_blank(),
-          aspect.ratio = 0.1)
+          aspect.ratio = 0.1
+          )
 }
 
 #' Make ABM table have last rows bold with gray background, other rows with white background

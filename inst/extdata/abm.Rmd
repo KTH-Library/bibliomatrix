@@ -287,6 +287,7 @@ if(nrow(df_diva) > 0)
                 rownames = FALSE,
                 extensions = "Buttons",
                 options = list(
+                  ordering = FALSE,
                   bPaginate = FALSE,
                   pageLength = 100,
                   dom = 'Bt',
@@ -334,6 +335,7 @@ if(nrow(df_cit3y) > 0)
                 rownames = FALSE,
                 extensions = "Buttons",
                 options = list(
+                  ordering = FALSE,
                   bPaginate = FALSE,
                   dom = 'Bt',
                   buttons = c("copy", "csv", "excel"),
@@ -355,6 +357,7 @@ if(nrow(df_cf) > 0)
                 rownames = FALSE,
                 extensions = "Buttons",
                 options = list(
+                  ordering = FALSE,
                   bPaginate = FALSE,
                   dom = 'Bt',
                   buttons = c("copy", "csv", "excel"),
@@ -405,6 +408,7 @@ if(nrow(df_jcf) > 0)
                 rownames = FALSE,
                 extensions = "Buttons",
                 options = list(
+                  ordering = FALSE,
                   bPaginate = FALSE,
                   dom = 'Bt',
                   buttons = c("copy", "csv", "excel"),
@@ -455,6 +459,7 @@ if(nrow(df_copub) > 0)
                 rownames = FALSE,
                 extensions = "Buttons",
                 options = list(
+                  ordering = FALSE,
                   bPaginate = FALSE,
                   dom = 'Bt',
                   buttons = c("copy", "csv", "excel"),

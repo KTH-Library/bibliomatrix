@@ -807,38 +807,45 @@ abm_waffle_pct <- function(pct,
 #' @return a ggplot object
 #' @import ggplot2
 #' @export
-abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
-  if(pct){
-    value <- 100*value
-    reference <- 100*reference
+abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
+{
+  if (pct) {
+    value <- 100 * value
+    reference <- 100 * reference
   }
+  
   value <- round(value, roundto)
 
-  title <- sprintf(paste0("%s = %.", roundto, "f%s"), label, value, ifelse(pct, "%", ""))
+  title <- sprintf(paste0("%s = %.", roundto, "f%s"), 
+    label, value, ifelse(pct, "%", ""))
 
-  bg.data <- data.frame(measure = label, target = reference, value = value)
-  kth_cols <- palette_kth()
+  blue <- tolower(palette_kth()["blue"])
+  cerise <- tolower(palette_kth()["cerise"])
 
-  ggplot(bg.data) +
+  ggplot(tibble(measure = label, target = reference, value = value)) +
     labs(title = title) +
-    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill="gray", stat="identity", width=0.7, alpha=1) +
-    geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.4) +
-    geom_errorbar(aes(x = measure, ymin = target, ymax = target), color=kth_cols["cerise"], width = 0.9, size = 1.1) +
+    geom_bar(aes(x = measure, y = max(2 * target, ceiling(value))), 
+      fill = "lightgray", stat = "identity", width = 0.7, alpha = 1) +
+    geom_bar(aes(x = measure, y = value), 
+      fill = blue,  stat = "identity", width = 0.4) +
+    geom_errorbar(aes(x = measure, ymin = target, ymax = target), 
+      color = cerise, width = 0.9, size = 1.1) +
     coord_flip() +
-    theme(plot.title=element_text(size = 12),
-          axis.text.x=element_text(size=8),
-          axis.title.x=element_blank(),
-          axis.line.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank(),
-          axis.title.y=element_blank(),
-          legend.position="none",
-          panel.background=element_blank(),
-          panel.border=element_blank(),
-          panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),
-          plot.background=element_blank(),
-          aspect.ratio = 0.1)
+    theme(
+      plot.title = element_text(size = 12, hjust = 0.05),
+      axis.text.x = element_text(size = 8),
+      axis.title.x = element_blank(),
+      axis.line.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.title.y = element_blank(),
+      legend.position = "none",
+      panel.background = element_blank(),
+      panel.border = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.background = element_blank()
+    )
 }
 
 #' Make ABM table have last rows bold with gray background, other rows with white background

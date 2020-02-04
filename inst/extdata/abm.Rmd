@@ -5,6 +5,7 @@ output:
     orientation: rows
     vertical_layout: scroll
     favicon: kth-logo.png
+    fig_mobile: FALSE
 params:
   unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
@@ -31,6 +32,8 @@ library(gridExtra)
 library(bibliomatrix)
 library(tidyr)
 library(scales)
+library(plotly)
+library(kableExtra)
 
 colors_vb <- palette_kth(4)
 
@@ -69,6 +72,7 @@ if (params$is_employee) {
 
 ```
 
+
 Overview
 ===========================
 
@@ -86,100 +90,143 @@ lastyear <- max(names(df_diva[yrfields]))
 ### **Publications in DiVA `r lastyear`<br>(fractional counts)**
 
 ```{r, fig.width = 3, fig.height = 2}
-if (nrow(df_diva) > 0){
+if (nrow(df_diva) > 0) {
+  
   total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
-  valueBox(
+  
+  vb1 <- valueBox(
     value = round(total_pubs, 1),
     color = colors_vb[1],
     icon = "fa-chart-bar",
     href = "#publications-in-diva")
+  
+  vb1
 }
+
 ```
 
 ### **WoS coverage `r firstyear` - `r lastyear`<br>(peer reviewed)**
 
 ```{r, fig.width = 3, fig.height = 2}
-if (nrow(df_diva) > 0){
-  totcov <-
-    df_diva %>%
-    filter(Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>% 
+if (nrow(df_diva) > 0) {
+  
+  totcov <- df_diva %>% filter(Publication_Type_DiVA %in% 
+      c("Article, peer review", "Conference paper, peer review")) %>% 
     summarise(totcov = sum(P_frac * WoS_coverage) / sum(P_frac)) %>% 
     pull(totcov)
-  valueBox(
+  
+  vb2 <- valueBox(
     value = paste(100*round(totcov, 3), "%"),
     color = colors_vb[1],
     icon = "fa-percent",
     href = "#publications-in-diva")
+  
+  vb2
 }
 
 ```
-
 ```{r}
-last_interval <- ifelse(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0,
-                        nth(df_cf$interval, -2),
-                        "")
+has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
+last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
+
 ```
 
-### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding}
+### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile}
 
 ```{r, fig.width = 3.5, fig.height = 2}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+library(patchwork)
+
+if (has_rows == TRUE) {
   
-  cf <- as.numeric(filter(df_cf, interval == last_interval)$cf)
-  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", value = cf, reference = 1.0, roundto = 2)
+  cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
+  
+  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", 
+    value = cf, reference = 1.0, roundto = 2)
   
   top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
-  pub_bullet2 <- abm_bullet(label = "Share Top10% publications", value = top10_share, reference = 0.10, pct = TRUE)
   
-  grid.arrange(pub_bullet1, pub_bullet2, ncol = 1)
+  pub_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+    value = top10_share, reference = 0.10, pct = TRUE)
+  
+  #bullets <- grid.arrange(pub_bullet1, pub_bullet2, ncol = 1)
+  
+  bullets <- pub_bullet1 / pub_bullet2
+  
+  bullets
 }
 
 ```
 
-```{r}
-last_interval <- ifelse(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0,
-                        nth(df_jcf$interval, -2),
-                        "")
-```
-### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding}
+### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile}
 
-```{r, fig.width = 3.5, fig.height = 2}
-if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  jcf <- as.numeric(filter(df_jcf, interval == last_interval)$jcf)
-  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", value = jcf, reference = 1.0, roundto = 2)
+```{r, fig.width=3.75, fig.height = 2}
+bullets
+```
+
+```{r}
+
+has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
+last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
+
+```
+### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .no-mobile}
+
+```{r, fig.width=3.75, fig.height = 2} 
+if (has_rows == TRUE) {
+  
+  jcf <- df_jcf %>% filter(interval == last_interval) %>% pull(jcf) %>% as.numeric()
+  
+  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", 
+    value = jcf, reference = 1.0, roundto = 2)
 
   top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
-  jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, reference = 0.20, pct = TRUE)
   
-  grid.arrange(jour_bullet1, jour_bullet2, ncol = 1)
+  jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, 
+    reference = 0.20, pct = TRUE)
+  
+  bullets <- jour_bullet1 / jour_bullet2
+  
+  bullets
 }
 
 ```
 
+### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .mobile}
+
+```{r, fig.width=3.75, fig.height = 2}
+bullets
+```
+
 
 ```{r}
+has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
 last_interval <- nth(df_copub$interval, -2)
 ```
-### **[Co-publishing `r last_interval`](#co-publishing)** {.no-padding}
-```{r, fig.width = 3, fig.height = 2}
 
-if(df_copub %>% filter(!is.na(P_full)) %>% nrow > 0){
+### **[Co-publishing `r last_interval`](#co-publishing)** {.no-padding .no-mobile}
+```{r, fig.width = 3.75, fig.height = 2.5}
+
+if (has_rows) {
+  
   nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
-  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100*nonuniv_share))
+  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
   waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
-#  w1 <- waffle1 %>% plotly::ggplotly()
 
   int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
   int_lbl <- sprintf("International: %d%%", round(100*int_share))
-  waffle2 <- 
-    abm_waffle_pct(int_share, label = int_lbl)
-#  w2 <- waffle2 %>% plotly::ggplotly()
+  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+
+  waffles <- waffle1 / waffle2
   
-  grid.arrange(waffle1, waffle2, ncol = 1)
-  #plotly::subplot(w1, w2, nrows = 2)
+  waffles
 }
 ```
 
+### **[Co-publishing `r last_interval`](#co-publishing)** {.no-padding .mobile}
+
+```{r, fig.width = 3.75, fig.height = 2.5}
+waffles
+```
 
 Row
 --------------------------------
@@ -277,43 +324,92 @@ Publications in DiVA
 Row
 ---------------------
 
-### **Publication volume, fractionalized**
+### **Publication volume, fractionalized** {.no-padding .no-mobile}
 
-```{r}
-if(nrow(df_diva) > 0)
-  DT::datatable(df_diva %>% rename("WoS coverage" = "WoS_coverage",
-                                   "DiVA publication type" = "Publication_Type_DiVA",
-                                   "Total" = "P_frac"),
-                rownames = FALSE,
-                extensions = "Buttons",
-                options = list(
-                  bPaginate = FALSE,
-                  pageLength = 100,
-                  dom = 'Bt',
-                  buttons = c("copy", "csv", "excel"),
-                  title = "ABM_publications")
-                ) %>%
+<!-- <div style='width:720px;margin:auto'> -->
+
+```{r, fig.width=3.75}
+if (nrow(df_diva) > 0) {
+  
+  df <- df_diva %>% rename(
+    "WoS coverage" = "WoS_coverage",
+    "DiVA publication type" = "Publication_Type_DiVA",
+    "Total" = "P_frac")
+  
+  dt <- 
+    DT::datatable(df,
+      rownames = FALSE,
+      extensions = c("Buttons"), #c("Buttons", "Scroller"), 
+      style = "bootstrap", class = "compact", width = "720",
+      options = list(
+        #deferRender = TRUE, scroller = TRUE, scrollX = TRUE,
+        ordering = FALSE,
+        bPaginate = FALSE,
+        pageLength = 100,
+        dom = 'Bt',
+        buttons = list("copy", "csv", "excel"),
+        title = "ABM_publications")
+      ) %>%
     formatRound(2:9, digits = 1, mark = "") %>%
     formatPercentage("WoS coverage", digits = 1) %>%
     abm_format_rows()
+  
+  dt
+}
 
 ```
+<!-- </div> -->
+
+### **Publication volume, fractionalized** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+
+df %>% 
+  mutate_at(vars(starts_with("201"), starts_with("Total")), round, digits = 1) %>%
+  mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
+  kable() %>% 
+  kable_styling(bootstrap_options = c("responsive")) %>%
+  scroll_box(width = "720px")
+```
+
 
 Row
 ---------------------
 
-### **Publication volume**
-```{r, fig.width=10, fig.height=5}
-if(nrow(df_diva) > 0)
-  abm_graph_diva(df_diva)
+### **Publication volume** {.no-padding .no-mobile}
+
+```{r, fig.width=10, fig.height=10}
+if (nrow(df_diva) > 0) {
+  p <- abm_graph_diva(df_diva)
+  p
+}
 ```
 
-### **Web of Science coverage**
+### **Publication volume** {.no-padding .mobile}
 
-```{r, fig.width=8, fig.height=5}
-if(nrow(df_diva) > 0)
-  abm_graph_wos_coverage(df_diva)
+```{r, fig.width=10, fig.height = 9.6, out.width=3.75}
+p
+#library(magick)
+# 3.75 x 4.8
+#ggsave("/tmp/plot.png", p, width = 3.75 * 2, height = 4.8 * 2)
+#image_read("/tmp/plot.png") %>% image_trim() %>% image_resize("360x460")
 ```
+
+### **Web of Science coverage** {.no-padding .no-mobile}
+
+```{r, fig.width=7, fig.height=8}
+if (nrow(df_diva) > 0) {
+  p <- abm_graph_wos_coverage(df_diva)
+  p
+}
+```
+
+### **Web of Science coverage** {.no-padding .mobile}
+
+```{r, fig.width=9, fig.height=6}
+p
+```
+
 
 Citation impact
 =====================================
@@ -323,48 +419,81 @@ Citation impact
 Row
 ---------------------
 
-### **Citations 3-year window, fractional counts**
+### **Citations 3-year window, fractional counts** {.no-mobile}
 
 ```{r}
-if(nrow(df_cit3y) > 0)
-  DT::datatable(df_cit3y %>% rename("Publication year" = "Publication_Year_ch",
-                                    "Publications" = "P_frac",
-                                    "Total Citations" = "C3_frac",
-                                    "Average Citations" = "C3"),
-                rownames = FALSE,
-                extensions = "Buttons",
-                options = list(
-                  bPaginate = FALSE,
-                  dom = 'Bt',
-                  buttons = c("copy", "csv", "excel"),
-                  title = "ABM_citations")
-                ) %>% 
+df <- df_cit3y %>% rename(
+  "Publication year" = "Publication_Year_ch",
+  "Publications" = "P_frac",
+  "Total Citations" = "C3_frac",
+  "Average Citations" = "C3"
+)
+
+if (nrow(df) > 0)
+  DT::datatable(df,
+    rownames = FALSE,
+    extensions = "Buttons",
+    options = list(
+      bPaginate = FALSE,
+      dom = 'Bt',
+      buttons = c("copy", "csv", "excel"),
+      title = "ABM_citations")
+    ) %>% 
     formatRound(2:4, digits = 1, mark = "") %>%
     abm_format_rows()
 ```
 
-### **Field normalized citations - Fractionalized (3-year moving average)**
+### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-if(nrow(df_cf) > 0)
-  DT::datatable(df_cf %>% rename("Publication years" = "interval",
-                                 "Publications" = "P_frac",
-                                 "Average Cf" = "cf",
-                                 "Top 10% publications" = "top10_count",
-                                 "Share Top 10%" = "top10_share"),
-                rownames = FALSE,
-                extensions = "Buttons",
-                options = list(
-                  bPaginate = FALSE,
-                  dom = 'Bt',
-                  buttons = c("copy", "csv", "excel"),
-                  filename = "ABM_field_normalized_citations")
-                ) %>% 
+
+df %>% 
+  mutate_at(vars(2:4), function(x) sprintf("%.1f", x)) %>%
+  kable() %>% 
+  kable_styling(bootstrap_options = c("responsive")) %>%
+  scroll_box(width = "720px")
+
+```
+
+### **Field normalized citations - Fractionalized (3-year moving average)** {.no-mobile}
+
+```{r} 
+df <- df_cf %>% rename(
+  "Publication years" = "interval",
+  "Publications" = "P_frac",
+  "Average Cf" = "cf",
+  "Top 10% publications" = "top10_count",
+  "Share Top 10%" = "top10_share")
+
+if (nrow(df) > 0) {
+  DT::datatable(df,
+    rownames = FALSE,
+    extensions = "Buttons",
+    options = list(
+      bPaginate = FALSE,
+      dom = 'Bt',
+      buttons = c("copy", "csv", "excel"),
+      filename = "ABM_field_normalized_citations")
+    ) %>% 
     formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>%
     formatPercentage(5, digits = 1) %>%
     abm_format_rows()
+}
 ```
+
+### **Field normalized citations - Fractionalized (3-year moving average)** {.no-padding .mobile}
+
+```{r}
+df %>% 
+  mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+  mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+  mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+  kable() %>% 
+  kable_styling(bootstrap_options = c("responsive")) %>%
+  scroll_box(width = "720px")
+```
+
 
 Row
 ---------------------
@@ -372,7 +501,7 @@ Row
 ### **Average field normalized citations (Cf)**
 
 ```{r}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
   abm_graph_cf(df_cf)
 ```
 
@@ -380,7 +509,7 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
 ### **Share Top 10%**
 
 ```{r}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow > 0)
   abm_graph_top10(df_cf)
 ```
 
@@ -393,28 +522,46 @@ Journal impact
 Row
 ---------------------
 
-### **3-year moving average, fractional counts**
+### **3-year moving average, fractional counts** {.no-mobile}
 
 ```{r}
-if(nrow(df_jcf) > 0)
-  DT::datatable(df_jcf %>% rename("Publication years" = "interval",
-                                  "Publications" = "P_frac",
-                                  "Average Journal Cf" = "jcf",
-                                  "Publications in Top 20% journals" = "top20_count",
-                                  "Share Top 20% journals" = "top20_share"),
-                rownames = FALSE,
-                extensions = "Buttons",
-                options = list(
-                  bPaginate = FALSE,
-                  dom = 'Bt',
-                  buttons = c("copy", "csv", "excel"),
-                  title = "ABM_journal_impact")
-                ) %>% 
+df <- df_jcf %>% rename(
+  "Publication years" = "interval",
+  "Publications" = "P_frac",
+  "Average Journal Cf" = "jcf",
+  "Publications in Top 20% journals" = "top20_count",
+  "Share Top 20% journals" = "top20_share"
+)
+
+if (nrow(df) > 0)
+  DT::datatable(df,
+    rownames = FALSE,
+    extensions = "Buttons",
+    options = list(
+      bPaginate = FALSE,
+      dom = 'Bt',
+      buttons = c("copy", "csv", "excel"),
+      title = "ABM_journal_impact")
+    ) %>% 
     formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>% 
     formatPercentage(5, digits = 1) %>%
     abm_format_rows()
 ```
+
+### **3-year moving average, fractional counts** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+df %>% 
+  mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+  mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+  mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+  kable() %>% 
+  kable_styling(bootstrap_options = c("responsive")) %>%
+  scroll_box(width = "720px")
+```
+
+
 
 Row
 ---------------------
@@ -442,27 +589,42 @@ Co-publishing
 Row
 ---------------------
 
-### **International and Swedish non-university co-publications (full counts)**
+### **International and Swedish non-university co-publications (full counts)** {.no-mobile}
 
 ```{r}
-if(nrow(df_copub) > 0)
-  DT::datatable(df_copub %>% rename("Publication years" = "interval",
-                                   "Publications" = "P_full",
-                                   "Swedish non-university co-publications" = "nonuniv_count",
-                                   "Share Swedish non-university" = "nonuniv_share",
-                                   "International co-publications" = "int_count",
-                                   "Share international" = "int_share"),
-                rownames = FALSE,
-                extensions = "Buttons",
-                options = list(
-                  bPaginate = FALSE,
-                  dom = 'Bt',
-                  buttons = c("copy", "csv", "excel"),
-                  title = "ABM_co-publications")
-                ) %>%
+df <- df_copub %>% rename(
+  "Publication years" = "interval",
+  "Publications" = "P_full",
+  "Swedish non-university co-publications" = "nonuniv_count",
+  "Share Swedish non-university" = "nonuniv_share",
+  "International co-publications" = "int_count",
+  "Share international" = "int_share")
+
+if (nrow(df) > 0) {
+  DT::datatable(df,
+    rownames = FALSE,
+    extensions = "Buttons",
+    options = list(
+      bPaginate = FALSE,
+      dom = 'Bt',
+      buttons = c("copy", "csv", "excel"),
+      title = "ABM_co-publications")
+    ) %>%
     formatPercentage(c(4,6), digits = 1) %>%
     abm_format_rows()
+}
 ```
+
+### **International and Swedish non-university co-publications (full counts)** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+df %>% 
+  mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
+  kable() %>% 
+  kable_styling(bootstrap_options = c("responsive")) %>%
+  scroll_box(width = "720px")
+```
+
 
 Row
 -------

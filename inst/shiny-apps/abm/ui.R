@@ -18,6 +18,14 @@ dashboardPage(skin = "black",
   #   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
    ),
   dashboardBody(
+    # this inline CSS is intented to retain indentations on iPhone (which seems )
+    tags$head(tags$style(HTML('
+      #unitid option {
+/*        color: #ad1d28 !important; */
+        text-align: left !important;
+        align-items: left !important;
+      }
+    '))),
     box(width = 12, height = "90vh", 
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),
       htmlOutput("frame")

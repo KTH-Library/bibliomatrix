@@ -365,8 +365,8 @@ if (nrow(df_diva) > 0) {
 ```{r, fig.width=3.75}
 
 df %>% 
-  mutate_at(vars(starts_with("201"), starts_with("Total")), round) %>%
-  mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.0f%%", x * 100)) %>%
+  mutate_at(vars(starts_with("201"), starts_with("Total")), round, digits = 1) %>%
+  mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
   kable() %>% 
   kable_styling(bootstrap_options = c("responsive")) %>%
   scroll_box(width = "720px")
@@ -427,7 +427,7 @@ df <- df_cit3y %>% rename(
   "Publications" = "P_frac",
   "Total Citations" = "C3_frac",
   "Average Citations" = "C3"
-)
+) %>% select("Publication year", "Publications", "Total Citations", "Average Citations")
 
 if (nrow(df) > 0)
   DT::datatable(df,
@@ -443,12 +443,12 @@ if (nrow(df) > 0)
     abm_format_rows()
 ```
 
-### **Citations 3-year window, fractional counts** {.no-mobile}
+### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
 
 df %>% 
-  mutate_at(vars(1:3), function(x) sprintf("%.1f", x)) %>%
+  mutate_at(vars(2:4), function(x) sprintf("%.1f", x)) %>%
   kable() %>% 
   kable_styling(bootstrap_options = c("responsive")) %>%
   scroll_box(width = "720px")

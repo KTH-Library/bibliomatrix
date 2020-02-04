@@ -427,7 +427,7 @@ df <- df_cit3y %>% rename(
   "Publications" = "P_frac",
   "Total Citations" = "C3_frac",
   "Average Citations" = "C3"
-) %>% select("Publication year", "Publications", "Total Citations", "Average Citations")
+)
 
 if (nrow(df) > 0)
   DT::datatable(df,

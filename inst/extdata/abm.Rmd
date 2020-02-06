@@ -260,7 +260,13 @@ if (params$embed_data == TRUE) {
   
   #install.packages("openxlsx")
   library(openxlsx)
-  excel_file <- file.path(tempdir(), "PublList_KTH.xlsx")
+  
+  # For schools, use unit_short for filename, otherwise use unit_code,
+  unitname <- ifelse(isTRUE(unit_level == 1),
+                     unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
+                     params$unit_code)
+
+  excel_file <- file.path(tempdir(), paste0("PublList_", unitname, ".xls"))
   
   # Create excel workbook and define and format sheets
   export_excel<- createWorkbook()
@@ -281,17 +287,17 @@ if (params$embed_data == TRUE) {
     title = "Download Publication List in Excel format",
     text = icon_download, 
     class = "btn btn-sm btn-primary")
+} else {
+  cat("Publication data is available only after login.")
 }
 ```
 
 
 ```{r, echo=FALSE, results="asis"}
 
-if (params$embed_data == TRUE && params$is_employee == TRUE) {
+if (params$is_employee == TRUE) {
   out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
   cat(out)
-} else {
-  cat("Publication data is available only after login.")
 }
   
 ```

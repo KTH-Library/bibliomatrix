@@ -256,7 +256,11 @@ if(isTRUE(unit_level >= 0)){
 
 } else {
 
-  cat("<p><b>Bibliometric results for individual researchers should always be interpreted with caution.</b></p>")
+  cat("<p><b>Bibliometric results for individual researchers should always be interpreted with caution. </b></br/>
+      This is because bibliometric indicators work best at an aggregated level, and at the individual level 
+      the publication profile of researchers, their collaboration networks and their subject specialization may 
+      interact with e.g. the field-normalization of citation indicators. The relatively low publication volume of 
+      individuals also makes indicator averages extremely unreliable. </p>")
 
 }
 ```

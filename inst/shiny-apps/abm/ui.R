@@ -20,8 +20,13 @@ dashboardPage(skin = "black",
   dashboardBody(
     # this inline CSS is intented to retain indentations on iPhone (which seems )
     tags$head(tags$style(HTML('
+      .selectize-dropdown {
+        width: auto !important;
+      }
+      .selectize-dropdown [data-selectable], .selectize-dropdown .optgroup-header {
+        white-space: nowrap;
+      }
       #unitid option {
-/*        color: #ad1d28 !important; */
         text-align: left !important;
         align-items: left !important;
       }

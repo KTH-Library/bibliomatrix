@@ -13,6 +13,14 @@ The goal of bibliomatrix is to provide a common set of functionality for
 the Annual Bibliometric Monitoring efforts from the Bibliometrics team
 at the KTH Library.
 
+## Contact
+
+If you have queries related to the content, functionality or methods
+used, please send an email to the KTH Library at <biblioteket@kth.se>.
+For technical queries or feature requests, please [open an
+issue](https://github.com/KTH-Library/bibliomatrix/issues) on this
+repository.
+
 ## Installation
 
 You can install the latest development version of bibliomatrix from
@@ -21,6 +29,13 @@ You can install the latest development version of bibliomatrix from
 ``` r
 # install.packages("devtools")
 devtools::install_github("KTH-Library/bibliomatrix")
+```
+
+If you don’t already have `devtools`, this package can be installed
+first with:
+
+``` r
+install.packages("devtools", dependencies = TRUE)
 ```
 
 ### Public data
@@ -39,14 +54,14 @@ abm_public_kth$meta %>%
   knitr::kable()
 ```
 
-| unit\_code | unit\_long\_en                                                 |
-| :--------- | :------------------------------------------------------------- |
-| KTH        | KTH Royal Institute of Technology                              |
-| A          | School of Architecture and the Built Environment (ABE)         |
-| 13604      | Sustainable development, Environmental science and Engineering |
-| 5851       | Architecture                                                   |
-| 5857       | Civil and Architectural Engineering                            |
-| 5869       | Real Estate and Construction Management                        |
+| unit\_code | unit\_long\_en                                         |
+| :--------- | :----------------------------------------------------- |
+| KTH        | KTH Royal Institute of Technology                      |
+| A          | School of Architecture and the Built Environment (ABE) |
+| 5851       | Architecture                                           |
+| 5857       | Civil and Architectural Engineering                    |
+| 875600     | Philosophy and History                                 |
+| 5869       | Real Estate and Construction Management                |
 
 ``` r
 
@@ -61,14 +76,14 @@ abm_public_kth$meta %>%
 | Diva\_org\_id | unit\_code | unit\_short | unit\_long\_en                                                              |
 | ------------: | :--------- | :---------- | :-------------------------------------------------------------------------- |
 |          5850 | A          | ABE         | School of Architecture and the Built Environment (ABE)                      |
-|          6023 | I          | ITM         | School of Industrial Engineering and Management (ITM)                       |
-|          6091 | S          | SCI         | School of Engineering Sciences (SCI)                                        |
 |        879223 | E          | EECS        | School of Electrical Engineering and Computer Science (EECS)                |
+|          6091 | S          | SCI         | School of Engineering Sciences (SCI)                                        |
 |        879224 | C          | CBH         | School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH) |
+|          6023 | I          | ITM         | School of Industrial Engineering and Management (ITM)                       |
 
 ``` r
 
-# Get public ABM results for KTH
+# Get ABM results for KTH
 kth_abm_tables <- abm_public_kth$units$KTH
 
 # Show parts of ABM table 1 for KTH

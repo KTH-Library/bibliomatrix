@@ -504,7 +504,7 @@ abm_publications <- function(con, unit_code, analysis_start = abm_config()$start
     select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
     collect()
   
-  orgdata
+  orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
   
 #' Public data from the Annual Bibliometric Monitoring project

@@ -494,6 +494,7 @@ if (nrow(df) > 0) {
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
+      ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
       buttons = c("copy", "csv", "excel"),
@@ -531,6 +532,7 @@ if (nrow(df) > 0) {
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
+      ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
       buttons = c("copy", "csv", "excel"),
@@ -664,6 +666,7 @@ if (nrow(df) > 0) {
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
+      ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
       buttons = c("copy", "csv", "excel"),
@@ -771,6 +774,7 @@ if (nrow(df) > 0) {
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
+      ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
       buttons = c("copy", "csv", "excel"),

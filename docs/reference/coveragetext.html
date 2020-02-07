@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Generate Web of Science disclaimer — wos_disclaimer • bibliomatrix</title>
+<title>Generate text for Web of Science coverage warnings — coveragetext • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Generate Web of Science disclaimer — wos_disclaimer" />
-<meta property="og:description" content="Generate Web of Science disclaimer" />
+<meta property="og:title" content="Generate text for Web of Science coverage warnings — coveragetext" />
+<meta property="og:description" content="Generate text for Web of Science coverage warnings" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -120,51 +120,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Generate Web of Science disclaimer</h1>
+    <h1>Generate text for Web of Science coverage warnings</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/elements.R'><code>R/elements.R</code></a></small>
-    <div class="hidden name"><code>wos_disclaimer.Rd</code></div>
+    <div class="hidden name"><code>coveragetext.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generate Web of Science disclaimer</p>
+    <p>Generate text for Web of Science coverage warnings</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wos_disclaimer</span>(
-  <span class='kw'>derived_product</span> <span class='kw'>=</span> <span class='st'>"ABM"</span>,
-  <span class='kw'>derived_product_long</span> <span class='kw'>=</span> <span class='st'>"KTH Annual Bibliometric Monitoring"</span>,
-  <span class='kw'>bibliometric_partner</span> <span class='kw'>=</span> <span class='st'>"KTH Royal School of Technology"</span>,
-  <span class='kw'>firstyear</span> <span class='kw'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span>()$<span class='no'>start_year</span>,
-  <span class='kw'>lastyear</span> <span class='kw'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span>()$<span class='no'>stop_year</span>
-)</pre>
+    <pre class="usage"><span class='fu'>coveragetext</span>(<span class='no'>woscoverage</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>derived_product</th>
-      <td><p>the product the disclaimer should be applied on (short name)</p></td>
-    </tr>
-    <tr>
-      <th>derived_product_long</th>
-      <td><p>a longer product name to use in the first mention of the product</p></td>
-    </tr>
-    <tr>
-      <th>bibliometric_partner</th>
-      <td><p>the bibliometric partner that provide the derived product</p></td>
-    </tr>
-    <tr>
-      <th>firstyear</th>
-      <td><p>the first year to use for copyright note, uses abm_config() if not given</p></td>
-    </tr>
-    <tr>
-      <th>lastyear</th>
-      <td><p>the last year to use for the copyright note, uses abm_config() if not given</p></td>
+      <th>woscoverage</th>
+      <td><p>Web of Science coverage (between 0 and 1)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a string with WoS disclamer</p>
+    <p>a string with coverage level based on given coverage</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

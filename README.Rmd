@@ -21,6 +21,10 @@ knitr::opts_chunk$set(
 
 The goal of bibliomatrix is to provide a common set of functionality for the Annual Bibliometric Monitoring efforts from the Bibliometrics team at the KTH Library.
 
+## Contact
+
+If you have queries related to the content, functionality or methods used, please send an email to the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se). For technical queries or feature requests, please [open an issue](https://github.com/KTH-Library/bibliomatrix/issues) on this repository.
+
 ## Installation
 
 You can install the latest development version of bibliomatrix from [GitHub](https://KTH-Library.github.com/bibliomatrix) with:
@@ -28,6 +32,12 @@ You can install the latest development version of bibliomatrix from [GitHub](htt
 ``` r
 # install.packages("devtools")
 devtools::install_github("KTH-Library/bibliomatrix")
+```
+
+If you don't already have `devtools`, this package can be installed first with:
+
+``` r
+install.packages("devtools", dependencies = TRUE)
 ```
 
 ### Public data

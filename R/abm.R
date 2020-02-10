@@ -363,6 +363,52 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
        copub_internat = t5$int_share)
 }
 
+#' Retrieve WoS coverage for peer reviewed DiVA publication types
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param analysis_start first publication year of analysis, if not given abm_config() is used
+#' @param analysis_stop last publication year of analysis, if not given abm_config() is used
+#' @return tibble with fractionalized and full counted WoS coverage by year and publication type
+#' @import pool dplyr
+#' @export
+abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+
+  # Get publication level data for selected unit (and filter on pub_year if given)
+  orgdata <- abm_data(con = con) %>%
+    filter(Unit_code == unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
+    group_by(Publication_Year, Publication_Type_DiVA) %>%
+    summarise(p_frac = sum(Unit_fraction, na.rm = TRUE),
+              p_full = n(),
+              sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
+              sumcov_full = sum(wos_bin, na.rm = TRUE),
+              woscov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
+              woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
+    ungroup() %>%
+    collect()
+  
+  peerreviewed <- orgdata %>%
+    group_by(Publication_Year) %>%
+    summarise(p_frac = sum(p_frac),
+              p_full = sum(p_full),
+              sumcov_frac = sum(sumcov_frac),
+              sumcov_full = sum(sumcov_full)) %>%
+    mutate(woscov_frac = sumcov_frac / p_frac,
+           woscov_full = sumcov_full / p_full,
+           Publication_Type = "Peer reviewed")
+  
+  orgdata %>%
+    rename(Publication_Type = Publication_Type_DiVA) %>%
+    bind_rows(peerreviewed) %>%
+    arrange(Publication_Year, Publication_Type)
+}
+
+
 #' Sorting a hierarchical structure
 #' 
 #' This function takes a data frame with a tree-like structure,
@@ -458,7 +504,7 @@ abm_publications <- function(con, unit_code, analysis_start = abm_config()$start
     select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
     collect()
   
-  orgdata
+  orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
   
 #' Public data from the Annual Bibliometric Monitoring project
@@ -541,6 +587,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
+      coverage = abm_woscoverage(con = db, unit_code = x),
       summaries = abm_dash_indices(con = db, unit_code = x)
     )
   }
@@ -604,7 +651,8 @@ abm_private_data <- function(unit_code) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
-      publications = abm_publications(con = db, unit_code = x)
+      coverage = abm_woscoverage(con = db, unit_code = x),
+      publications = abm_publications(con = db,unit_code = x)
     )
   }
   
@@ -763,13 +811,13 @@ abm_graph_copub <- function(df){
   df_copub_long<- df %>%
     select(interval, nonuniv_share, int_share) %>% 
     rename("Swedish Non-university" = nonuniv_share, "International" = int_share) %>% 
-    gather("Copublication", "value", -interval) %>% 
+    gather("Co-publication", "value", -interval) %>% 
     filter(!interval == "Total")
   
   ggplot(data = df_copub_long,
-         aes(x = interval, y = value, group = Copublication)) +
-    geom_line(aes(color = Copublication)) +
-    geom_point(aes(color = Copublication)) +
+         aes(x = interval, y = value, group = `Co-publication`)) +
+    geom_line(aes(color = `Co-publication`)) +
+    geom_point(aes(color = `Co-publication`)) +
     theme_kth_osc() +
     labs(x = NULL, y = NULL, fill = NULL) +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
@@ -816,39 +864,46 @@ abm_waffle_pct <- function(pct,
 #' @import ggplot2
 #' @importFrom ktheme theme_kth_osc
 #' @export
-abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE){
-  if(pct){
-    value <- 100*value
-    reference <- 100*reference
+abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
+{
+  if (pct) {
+    value <- 100 * value
+    reference <- 100 * reference
   }
+  
   value <- round(value, roundto)
 
-  title <- sprintf(paste0("%s = %.", roundto, "f%s"), label, value, ifelse(pct, "%", ""))
+  title <- sprintf(paste0("%s = %.", roundto, "f%s"), 
+    label, value, ifelse(pct, "%", ""))
 
-  bg.data <- data.frame(measure = label, target = reference, value = value)
-  kth_cols <- palette_kth()
+  blue <- tolower(palette_kth()["blue"])
+  cerise <- tolower(palette_kth()["cerise"])
 
-  ggplot(bg.data) +
+  ggplot(tibble(measure = label, target = reference, value = value)) +
     labs(title = title) +
-    geom_bar(aes(x = measure, y = max(2*target, ceiling(value))), fill="gray", stat="identity", width=0.7, alpha=1) +
-    geom_bar(aes(x = measure, y = value), fill = kth_cols["blue"],  stat = "identity", width = 0.4) +
-    geom_errorbar(aes(x = measure, ymin = target, ymax = target), color=kth_cols["cerise"], width = 0.9, size = 1.1) +
+    geom_bar(aes(x = measure, y = max(2 * target, ceiling(value))), 
+      fill = "lightgray", stat = "identity", width = 0.7, alpha = 1) +
+    geom_bar(aes(x = measure, y = value), 
+      fill = blue,  stat = "identity", width = 0.4) +
+    geom_errorbar(aes(x = measure, ymin = target, ymax = target), 
+      color = cerise, width = 0.9, size = 1.1) +
     coord_flip() +
     theme_kth_osc() +
-    theme(plot.title=element_text(size = 12),
-          axis.title.x=element_blank(),
-          axis.line.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank(),
-          axis.title.y=element_blank(),
-          legend.position="none",
-          panel.background=element_blank(),
-          panel.border=element_blank(),
-          panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),
-          plot.background=element_blank(),
-          aspect.ratio = 0.1
-          )
+    theme(
+      plot.title = element_text(size = 12, hjust = 0.05),
+      axis.text.x = element_text(size = 8),
+      axis.title.x = element_blank(),
+      axis.line.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.title.y = element_blank(),
+      legend.position = "none",
+      panel.background = element_blank(),
+      panel.border = element_blank(),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      plot.background = element_blank()
+    )
 }
 
 #' Make ABM table have last rows bold with gray background, other rows with white background

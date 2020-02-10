@@ -12,8 +12,11 @@ check()
 # remember to update the bundled data
 db_sync(overwrite_existing = TRUE)
 source(here("data-raw/public_data.R"))
+
+# changes to abm.Rmd may require Ctrl-Shift-B (for new interal pkg data to be installed)!
+
 # first revert the .gitignore if it has been changed by below
 build_vignettes()
 # git revert the .gitignore to remove the "doc" line in there
-pkgdown::build_site()
+build_site()
 file.copy("doc", "inst", recursive = TRUE)

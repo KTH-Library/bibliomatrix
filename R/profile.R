@@ -64,10 +64,10 @@ kth_theme<- function(base_size=12, base_font="sans"){
     ggplot2::theme(
       axis.text=element_text(family=family, 
                              size=base_size-2, 
-                             color=palette_kth()["gray"]),
+                             color=tolower(palette_kth()["gray"])),
       axis.title=element_text(family=family, 
                               size=base_size),
-      axis.line=element_line(color=palette_kth()["gray"]),
+      axis.line=element_line(color=tolower(palette_kth()["gray"])),
       panel.grid.minor=element_blank(),
       legend.position = "bottom"
     )

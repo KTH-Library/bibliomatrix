@@ -63,8 +63,8 @@ server <- function(input, output, session) {
             orgs <- c(kthid(), orgs)
         
         shiny::selectInput(inputId = "unitid", label = NULL, 
-            choices = orgs, selected = kthid(), size = 1,
-            multiple = FALSE, selectize = FALSE, width = "100%")
+            choices = orgs, selected = kthid(),
+            multiple = FALSE, selectize = TRUE, width = "100%")
     })
     
     dash_src <- function(id) {

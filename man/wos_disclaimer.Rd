@@ -4,13 +4,27 @@
 \alias{wos_disclaimer}
 \title{Generate Web of Science disclaimer}
 \usage{
-wos_disclaimer(year)
+wos_disclaimer(
+  derived_product = "ABM",
+  derived_product_long = "KTH Annual Bibliometric Monitoring",
+  bibliometric_partner = "KTH Royal School of Technology",
+  firstyear = abm_config()$start_year,
+  lastyear = abm_config()$stop_year
+)
 }
 \arguments{
-\item{year}{the year to use for copyright note, current year if not given}
+\item{derived_product}{the product the disclaimer should be applied on (short name)}
+
+\item{derived_product_long}{a longer product name to use in the first mention of the product}
+
+\item{bibliometric_partner}{the bibliometric partner that provide the derived product}
+
+\item{firstyear}{the first year to use for copyright note, uses abm_config() if not given}
+
+\item{lastyear}{the last year to use for the copyright note, uses abm_config() if not given}
 }
 \value{
-a string with WoS disclaimer for given year
+a string with WoS disclamer
 }
 \description{
 Generate Web of Science disclaimer

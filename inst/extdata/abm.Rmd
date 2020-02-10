@@ -840,3 +840,18 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 }
 ```
+
+Open Access
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Open Access publications, full counts** {.no-padding .no-mobile}
+
+
+Row
+-------
+### **Placeholder Open Access graph (as proportions?)**

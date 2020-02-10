@@ -53,7 +53,7 @@ Imports:
     RColorBrewer (>= 1.1.2),
     openssl (>= 1.4.1),
     patchwork,
-    kableExtra
+    kableExtra,
     ktheme
 Remotes: KTH-Library/ktheme
 URL: https://github.com/KTH-Library/bibliomatrix

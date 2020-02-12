@@ -426,7 +426,7 @@ if (nrow(df_diva) > 0) {
   df %>% 
     mutate_at(vars(starts_with("201"), starts_with("Total")), round, digits = 1) %>%
     mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
-    kable() %>% 
+    kable(align = c("l", rep("r", ncol(df) - 1))) %>% 
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 }
@@ -511,7 +511,7 @@ if (nrow(df) > 0) {
 if (nrow(df) > 0) {
   df %>% 
     mutate_at(vars(2:4), function(x) sprintf("%.1f", x)) %>%
-    kable() %>% 
+    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 }
@@ -553,7 +553,7 @@ if (nrow(df) > 0) {
     mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
     mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
     mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable() %>% 
+    kable(align = c("l", rep("r", ncol(df) - 1))) %>% 
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 }
@@ -687,7 +687,7 @@ if (nrow(df) > 0) {
     mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
     mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
     mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable() %>% 
+    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 }
@@ -791,7 +791,7 @@ if (nrow(df) > 0) {
 if (nrow(df) > 0) {
   df %>% 
     mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable() %>% 
+    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 }

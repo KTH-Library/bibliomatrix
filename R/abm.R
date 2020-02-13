@@ -327,6 +327,25 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   bind_rows(table1, table2)
 }
 
+
+#' Retrieve OA-data for ABM tables
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
+#' @return tibble with OA-status of all publications from selected organizational units
+#' @import DBI dplyr tidyr purrr
+#' @export
+
+abm_oa_data <- function(con = con_bib(), unit_code) {
+  res<- con %>% tbl("OA_status") %>% 
+    right_join(abm_data(con = con, unit_code = unit_code), by = "PID") %>% 
+    select("PID","oa_status","Publication_Type_DiVA", "Publication_Year", "DOI") 
+  
+  
+  res
+}
+
+
 #' Retrieve dashboard indicators for ABM
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -362,52 +381,6 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
        copub_nonuniv = t5$nonuniv_share,
        copub_internat = t5$int_share)
 }
-
-#' Retrieve WoS coverage for peer reviewed DiVA publication types
-#' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, if not given abm_config() is used
-#' @param analysis_stop last publication year of analysis, if not given abm_config() is used
-#' @return tibble with fractionalized and full counted WoS coverage by year and publication type
-#' @import pool dplyr
-#' @export
-abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
-
-  # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(con = con) %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop &
-             Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
-    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
-    group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(p_frac = sum(Unit_fraction, na.rm = TRUE),
-              p_full = n(),
-              sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
-              sumcov_full = sum(wos_bin, na.rm = TRUE),
-              woscov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
-              woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
-    ungroup() %>%
-    collect()
-  
-  peerreviewed <- orgdata %>%
-    group_by(Publication_Year) %>%
-    summarise(p_frac = sum(p_frac),
-              p_full = sum(p_full),
-              sumcov_frac = sum(sumcov_frac),
-              sumcov_full = sum(sumcov_full)) %>%
-    mutate(woscov_frac = sumcov_frac / p_frac,
-           woscov_full = sumcov_full / p_full,
-           Publication_Type = "Peer reviewed")
-  
-  orgdata %>%
-    rename(Publication_Type = Publication_Type_DiVA) %>%
-    bind_rows(peerreviewed) %>%
-    arrange(Publication_Year, Publication_Type)
-}
-
 
 #' Sorting a hierarchical structure
 #' 
@@ -587,7 +560,6 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
-      coverage = abm_woscoverage(con = db, unit_code = x),
       summaries = abm_dash_indices(con = db, unit_code = x)
     )
   }
@@ -651,8 +623,7 @@ abm_private_data <- function(unit_code) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
-      coverage = abm_woscoverage(con = db, unit_code = x),
-      publications = abm_publications(con = db,unit_code = x)
+      publications = abm_publications(con = db, unit_code = x)
     )
   }
   

@@ -346,6 +346,58 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 }
 
 
+#' Retrieve Table 6 (OA-status) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
+#' @return tibble with citations statistics by year and total
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+
+abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- abm_oa_data(con=con, unit_code = unit_code) %>%
+    filter(  Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop - 2 &
+             Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review"))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata %>% filter(!is.na(oa_status)) %>%
+    group_by(Publication_Year, oa_status) %>%
+    count()
+  
+  # table1 <-
+  #   orgdata %>%
+  #   group_by(Publication_Year, oa_status) %>%
+  #   summarise(counts = count(oa_status, na.rm = TRUE)) %>%
+  #   ungroup() %>%
+  #   collect() %>%
+  #   mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+  #   arrange(Publication_Year_ch) %>% 
+  #   select(Publication_Year_ch, P_frac, C3_frac, C3)
+  # 
+  # No summary row if no data
+  # if(nrow(table1) == 0)
+  #   return(table1)
+  
+  # Summary part of table
+  # table2 <-
+  #   orgdata %>%
+  #   summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+  #             C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+  #             C3 = sum(Citations_3yr * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+  #   mutate(Publication_Year_ch = "Total") %>%
+  #   collect()
+  # 
+  # bind_rows(table1, table2)
+}
+
+
 #' Retrieve dashboard indicators for ABM
 #' 
 #' @param con connection to db, default is to use mssql connection

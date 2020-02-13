@@ -363,7 +363,7 @@ if (params$embed_data == TRUE) {
 ```{r, echo=FALSE, results="asis"}
 
 if (params$is_employee == TRUE) {
-  out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
+  out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary" target="_blank">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
   cat(out)
 }
   

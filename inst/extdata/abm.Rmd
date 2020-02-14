@@ -333,7 +333,7 @@ if (params$embed_data == TRUE) {
                      unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
                      params$unit_code)
 
-  excel_file <- file.path(tempdir(), paste0("PublList_", unitname, ".xls"))
+  excel_file <- file.path(tempdir(), paste0("PublList_", unitname, ".xlsx"))
   
   # Create excel workbook and define and format sheets
   export_excel<- createWorkbook()

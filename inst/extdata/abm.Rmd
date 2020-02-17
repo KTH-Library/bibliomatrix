@@ -486,7 +486,9 @@ df <- df_cit3y %>% rename(
   "Publication year" = "Publication_Year_ch",
   "Publications" = "P_frac",
   "Total Citations" = "C3_frac",
-  "Average Citations" = "C3"
+  "Average Citations" = "C3",
+  "Uncited Publications" = "P_uncited",
+  "Share Uncited" = "Share_uncited"
 )
 
 if (nrow(df) > 0) {
@@ -500,7 +502,8 @@ if (nrow(df) > 0) {
       buttons = c("copy", "csv", "excel"),
       title = "ABM_citations")
     ) %>% 
-    formatRound(2:4, digits = 1, mark = "") %>%
+    formatRound(2:5, digits = 1, mark = "") %>%
+    formatPercentage("Share Uncited", digits = 1) %>%
     abm_format_rows()
 }
 ```
@@ -510,7 +513,8 @@ if (nrow(df) > 0) {
 ```{r}
 if (nrow(df) > 0) {
   df %>% 
-    mutate_at(vars(2:4), function(x) sprintf("%.1f", x)) %>%
+    mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
+    mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
     kable(align = c("l", rep("r", ncol(df) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")

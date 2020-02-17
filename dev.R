@@ -18,5 +18,6 @@ source(here("data-raw/public_data.R"))
 # first revert the .gitignore if it has been changed by below
 build_vignettes()
 # git revert the .gitignore to remove the "doc" line in there
+# Remember to update news.md before build_site()
 build_site()
 file.copy("doc", "inst", recursive = TRUE)

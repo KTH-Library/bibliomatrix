@@ -19,6 +19,7 @@ deploy:
   file_glob: true
   file: ! "${R_PKG}_*.tar.gz"
   skip_cleanup: true
+  overwrite: true
   on:
     repo: KTH-Library/bibliomatrix
     tags: true

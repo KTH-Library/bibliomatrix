@@ -89,9 +89,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="bibliomatrix-" class="section level1">
+<div id="bibliomatrix" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#bibliomatrix-" class="anchor"></a>bibliomatrix <img src="reference/figures/sticker.png" align="right">
+<a href="#bibliomatrix" class="anchor"></a>bibliomatrix <img src="reference/figures/sticker.png" align="right">
 </h1></div>
 <!-- badges: start -->
 
@@ -105,22 +105,22 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the latest development version of bibliomatrix from <a href="https://KTH-Library.github.com/bibliomatrix">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"KTH-Library/bibliomatrix"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># install.packages("devtools")</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"KTH-Library/bibliomatrix"</span>)</a></code></pre></div>
 <p>If you don’t already have <code>devtools</code>, this package can be installed first with:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <div id="public-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#public-data" class="anchor"></a>Public data</h3>
 <p>The package includes data from the KTH Annual Bibliometric Monitoring (ABM) public part.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bibliomatrix)</a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb3-3" title="3"></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="co"># Simple example showing some KTH units for which ABM results are public</span></a>
-<a class="sourceLine" id="cb3-5" title="5">abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="st">  </span><span class="kw">select</span>(unit_code, unit_long_en) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-8" title="8"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bibliomatrix)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># Simple example showing some KTH units for which ABM results are public</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(unit_code, unit_long_en) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">unit_code</th>
@@ -153,13 +153,13 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co"># KTH is level 0, schools level 1 and departments level 2.</span></a>
-<a class="sourceLine" id="cb4-3" title="3"><span class="co"># Some basic information about KTH schools:</span></a>
-<a class="sourceLine" id="cb4-4" title="4">abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(org_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="st">  </span><span class="kw">select</span>(Diva_org_id, unit_code, unit_short, unit_long_en) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co"># KTH is level 0, schools level 1 and departments level 2.</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># Some basic information about KTH schools:</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(org_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Diva_org_id, unit_code, unit_short, unit_long_en) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="11%">
@@ -206,15 +206,15 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="co"># Get ABM results for KTH</span></a>
-<a class="sourceLine" id="cb5-3" title="3">kth_abm_tables &lt;-<span class="st"> </span>abm_public_kth<span class="op">$</span>units<span class="op">$</span>KTH</a>
-<a class="sourceLine" id="cb5-4" title="4"></a>
-<a class="sourceLine" id="cb5-5" title="5"><span class="co"># Show parts of ABM table 1 for KTH</span></a>
-<a class="sourceLine" id="cb5-6" title="6">kth_abm_tables[[<span class="dv">1</span>]] <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="st">  </span><span class="kw">select</span>(Publication_Type_DiVA, P_frac, WoS_coverage) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-8" title="8"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(P_frac <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-9" title="9"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># Get ABM results for KTH</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">kth_abm_tables &lt;-<span class="st"> </span>abm_public_kth<span class="op">$</span>units<span class="op">$</span>KTH</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co"># Show parts of ABM table 1 for KTH</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">kth_abm_tables[[<span class="dv">1</span>]] <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(Publication_Type_DiVA, P_frac, WoS_coverage) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(P_frac <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Publication_Type_DiVA</th>

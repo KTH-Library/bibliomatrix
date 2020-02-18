@@ -1,25 +1,16 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
 language: r
 cache: packages
-
 apt_packages:
-  - libxml2-dev
-
-r_build_args: --no-build-vignettes
-r_check_args: --no-build-vignettes --no-vignettes
-
+- libxml2-dev
+r_build_args: "--no-build-vignettes"
+r_check_args: "--no-build-vignettes --no-vignettes"
 env:
   global:
-    - R_PKG="$(basename $TRAVIS_REPO_SLUG)"
-
+  - R_PKG="$(basename $TRAVIS_REPO_SLUG)"
 deploy:
   provider: releases
   api_key:
-    secure: ExoA0kJaw+U9skSHGhNF0KI8JpjfkfU7Ai61ILxgOUfpVQlGRjCqqT9gDzKfbNT/pBtoKZfL4ZfwnH+agULbJ9lr07YR0XKzG92nv0GNV/WhqX/NZxNvGowaEp5pmVegFJisnSPvuuiQekLta1KxvGoNkNHP87PZdDnEA8wmLdgHxJfM2Vc4s/yChcjKmaDnuGS6JhUgrxZwmUZEUgCB14ogibogvwQyWmsOkPxZgczsC75R0iUoe5tCQR44NxEvYQOopvAsqPuAcdBamnRVjK6NEhV6SJjf6axGDu4mjXs/t/dTLCJnJbA2WNSX5eyXiq8eTu5E0Isq8cSBPOAW6SunDO9TkPnR1DW+XIroS/TwjQp3UjfK8DDxOGdlV6Az8JElDZPcvGwR0LYowjuhNLo3ept+PQJYZRlE7fGikkjiI2ZlLrior/D+Lhhp5sQLxM9OgvcjQxA/crXZbjwxmNzrSDxmT8+gcOJNxh4BfqaXQflRNJkuvS4jovVEh9U/LjRF+vUSaw6EAbMK+8jeDVv3+CVu3B8LIroM09GKp7YV8776MBxyP6Dk7XKcOMnm2M1r99LKYB+UFEJX8VpFnTVxAfMAYmaWEQqJmZkm1+vDs6VXFfk00mIP1qme4byb0GOXV6VKtvZ3iGz7M5TMv+M8m/FPVdmw6vJz0Bp/tIs=
-  file_glob: true
-  file: ! "${R_PKG}_*.tar.gz"
-  cleanup: true
+    secure: nA0PdOzDTixY45MiEOBtqfnZ/v2/6a+k5GpV2Set7/HSnWXaPwIT1EOIx4OHMeXm9Miv87ge+eIqrg8MoxdrBfdNm6PXJ+q6AL+embpsMiFDAS3csFFtg0g8ZnzZd++dArFeC58l3RDiLtnSperASNeV3044RFbX7GKaKJrrszEKQwk0g+EdFvRlQw6Q2OSWQi6jELoxkV/Zi51zQUZiWZGmN5n2I7vRVhmfrFdUGBaihLCm7svWdtNMp4l9KHTR7n+VBAd/hJ/lZyLnAmCSKMxemvnCytuR6Ce2fkFD4VUdpYjAv22KjIhK0Z3FU6OkbMOA5myScQJvrpLRsmvVIhsBHOZ7vIFpbB+/BsfRb44UejHOP+nXUW3xTAn9AhEAEWEIa3fHb5ThxppcpOgHyvSJhKfWYmWGLAb/6kZFt5IfDa6ro2gjW3nxQwER2ZK0PWQrI5zuv4mtGfvby/zAcnfga3VwLQFGjllJn40Kj214rnKvRbviHJwSMYrXKO4OhJjE1LhR8xP5wzSZlAL4MbCVOat2BMUwEKAE+LnWLBW2pKJo8MWOctZ+Yd29c9aqFw7wuCzUqanPxq3jHTYo3YBYoaXqjsJ7rPNcHMQBqVfaMkNYRdZp245Vbc2geL96PoILx9iagO1UOaX9fUh0DJVE8hoQ2wuxUP9WsXcR3dQ=
+  file: blaha
   on:
     repo: KTH-Library/bibliomatrix
-    tags: true

@@ -11,6 +11,9 @@ deploy:
   provider: releases
   api_key:
     secure: nA0PdOzDTixY45MiEOBtqfnZ/v2/6a+k5GpV2Set7/HSnWXaPwIT1EOIx4OHMeXm9Miv87ge+eIqrg8MoxdrBfdNm6PXJ+q6AL+embpsMiFDAS3csFFtg0g8ZnzZd++dArFeC58l3RDiLtnSperASNeV3044RFbX7GKaKJrrszEKQwk0g+EdFvRlQw6Q2OSWQi6jELoxkV/Zi51zQUZiWZGmN5n2I7vRVhmfrFdUGBaihLCm7svWdtNMp4l9KHTR7n+VBAd/hJ/lZyLnAmCSKMxemvnCytuR6Ce2fkFD4VUdpYjAv22KjIhK0Z3FU6OkbMOA5myScQJvrpLRsmvVIhsBHOZ7vIFpbB+/BsfRb44UejHOP+nXUW3xTAn9AhEAEWEIa3fHb5ThxppcpOgHyvSJhKfWYmWGLAb/6kZFt5IfDa6ro2gjW3nxQwER2ZK0PWQrI5zuv4mtGfvby/zAcnfga3VwLQFGjllJn40Kj214rnKvRbviHJwSMYrXKO4OhJjE1LhR8xP5wzSZlAL4MbCVOat2BMUwEKAE+LnWLBW2pKJo8MWOctZ+Yd29c9aqFw7wuCzUqanPxq3jHTYo3YBYoaXqjsJ7rPNcHMQBqVfaMkNYRdZp245Vbc2geL96PoILx9iagO1UOaX9fUh0DJVE8hoQ2wuxUP9WsXcR3dQ=
-  file: blaha
+  file_glob: true
+  file: ! "${R_PKG}_*.tar.gz"
+  cleanup: true
   on:
     repo: KTH-Library/bibliomatrix
+    tags: true

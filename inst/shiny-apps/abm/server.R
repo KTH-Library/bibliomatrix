@@ -62,9 +62,14 @@ server <- function(input, output, session) {
         if (!ABM_IS_PUBLIC)
             orgs <- c(kthid(), orgs)
         
+        # Set selected org to KTH for now. In some future iteration,
+        # we migth want to select for example a school/department
+        # depending on who is logged in
+        selected_diva_org_id <- 177
+        
         shiny::selectInput(inputId = "unitid", label = NULL, 
-            choices = orgs, selected = kthid(),
-            multiple = FALSE, selectize = TRUE, width = "100%")
+                           choices = orgs, selected = selected_diva_org_id,
+                           multiple = FALSE, selectize = TRUE, width = "100%")
     })
     
     dash_src <- function(id) {

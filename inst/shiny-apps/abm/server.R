@@ -54,6 +54,11 @@ server <- function(input, output, session) {
         return (kthid)
     }
     
+    default_org_id <- function(kthid){
+        # Set selected org to KTH for now.
+        return(177)
+    }
+    
     output$units <- renderUI({
         
         orgs <- abm_public_kth$meta$Diva_org_id %>% 
@@ -63,8 +68,8 @@ server <- function(input, output, session) {
             orgs <- c(kthid(), orgs)
         
         shiny::selectInput(inputId = "unitid", label = NULL, 
-            choices = orgs, selected = kthid(),
-            multiple = FALSE, selectize = TRUE, width = "100%")
+                           choices = orgs, selected = default_org_id(kthid()),
+                           multiple = FALSE, selectize = TRUE, width = "100%")
     })
     
     dash_src <- function(id) {

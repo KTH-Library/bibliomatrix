@@ -55,7 +55,7 @@ server <- function(input, output, session) {
     }
     
     default_org_id <- function(kthid){
-        # Set default org to KTH for now.
+        # Set selected org to KTH for now.
         return(177)
     }
     

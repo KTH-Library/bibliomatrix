@@ -54,6 +54,11 @@ server <- function(input, output, session) {
         return (kthid)
     }
     
+    default_org_id <- function(kthid){
+        # Set selected org to KTH for now.
+        return(177)
+    }
+    
     output$units <- renderUI({
         
         orgs <- abm_public_kth$meta$Diva_org_id %>% 
@@ -62,13 +67,8 @@ server <- function(input, output, session) {
         if (!ABM_IS_PUBLIC)
             orgs <- c(kthid(), orgs)
         
-        # Set selected org to KTH for now. In some future iteration,
-        # we migth want to select for example a school/department
-        # depending on who is logged in
-        selected_diva_org_id <- 177
-        
         shiny::selectInput(inputId = "unitid", label = NULL, 
-                           choices = orgs, selected = selected_diva_org_id,
+                           choices = orgs, selected = default_org_id(kthid()),
                            multiple = FALSE, selectize = TRUE, width = "100%")
     })
     

@@ -352,7 +352,7 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 #' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
 #' @param analysis_start first publication year of analysis, default 2012
 #' @param analysis_stop last publication year of analysis, default 2018
-#' @return tibble with citations statistics by year and total
+#' @return tibble with OA stats per year
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
@@ -369,7 +369,11 @@ abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   table1 <-
     orgdata %>% filter(!is.na(oa_status)) %>%
     group_by(Publication_Year, oa_status) %>%
-    count()
+    summarise(n = count()) 
+  #%>%
+  #  mutate(freq = n / sum(n))
+  
+  table1
   
   # table1 <-
   #   orgdata %>%
@@ -395,6 +399,7 @@ abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   #   collect()
   # 
   # bind_rows(table1, table2)
+
 }
 
 

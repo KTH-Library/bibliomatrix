@@ -84,6 +84,8 @@ unit_file_label <- ifelse(isTRUE(unit_level == 1),
 
 current_date <- format(Sys.Date(), "%Y%m%d")
 
+abm_unit_title<- paste0("ABM: ",unit_label)
+
 
 ```
 
@@ -425,9 +427,9 @@ if (nrow(df_diva) > 0) {
         bPaginate = FALSE,
         pageLength = 100,
         dom = 'Bt',
-        buttons = list(list(extend = "copy"),
-                       list(extend = "csv", filename = filename),
-                       list(extend = "excel", filename = filename))
+        buttons = list(list(extend = "copy", title=abm_unit_title),
+                       list(extend = "csv", filename = filename, title=abm_unit_title),
+                       list(extend = "excel", filename = filename, title=abm_unit_title))
         )
       ) %>%
     formatRound(2:9, digits = 1, mark = "") %>%
@@ -534,9 +536,9 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = list(list(extend = "copy"),
-                     list(extend = "csv", filename = filename),
-                     list(extend = "excel", filename = filename))
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
     )
   ) %>% 
     formatRound(2:5, digits = 1, mark = "") %>%
@@ -581,9 +583,9 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = list(list(extend = "copy"),
-                     list(extend = "csv", filename = filename),
-                     list(extend = "excel", filename = filename))
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
       )
     ) %>% 
     formatRound(c(2, 4), digits = 1, mark = "") %>% 
@@ -729,9 +731,9 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = list(list(extend = "copy"),
-                     list(extend = "csv", filename = filename),
-                     list(extend = "excel", filename = filename))
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
     )
   ) %>% 
     formatRound(c(2, 4), digits = 1, mark = "") %>% 
@@ -850,9 +852,9 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = list(list(extend = "copy"),
-                     list(extend = "csv", filename = filename),
-                     list(extend = "excel", filename = filename))
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
       )
     ) %>%
     formatPercentage(c(4,6), digits = 1) %>%

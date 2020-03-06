@@ -14,6 +14,7 @@ dashboardPage(skin = "black",
       style = "padding-top:10px; padding-bottom:10px;"),
       class = "dropdown")),
    dashboardSidebar(
+     h4("Select unit:"),
      uiOutput("units")
   #   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
    ),

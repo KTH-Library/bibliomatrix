@@ -78,6 +78,14 @@ if(isTRUE(unit_level >= 0)){
 }
 
 
+unit_file_label <- ifelse(isTRUE(unit_level == 1),
+                          unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
+                          params$unit_code)
+
+current_date <- format(Sys.Date(), "%Y%m%d")
+
+abm_unit_title<- paste0("ABM: ",unit_label)
+
 
 ```
 
@@ -343,13 +351,9 @@ if (params$embed_data == TRUE) {
   
   #install.packages("openxlsx")
   library(openxlsx)
-  
-  # For schools, use unit_short for filename, otherwise use unit_code,
-  unitname <- ifelse(isTRUE(unit_level == 1),
-                     unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
-                     params$unit_code)
 
-  excel_file <- file.path(tempdir(), paste0("PublList_", unitname, ".xlsx"))
+  filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
+  excel_file <- file.path(tempdir(), filename)
   
   # Create excel workbook and define and format sheets
   export_excel<- createWorkbook()
@@ -411,6 +415,7 @@ if (nrow(df_diva) > 0) {
     "DiVA publication type" = "Publication_Type_DiVA",
     "Total" = "P_frac")
   
+  filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
   dt <- 
     DT::datatable(df,
       rownames = FALSE,
@@ -422,8 +427,10 @@ if (nrow(df_diva) > 0) {
         bPaginate = FALSE,
         pageLength = 100,
         dom = 'Bt',
-        buttons = list("copy", "csv", "excel"),
-        title = "ABM_publications")
+        buttons = list(list(extend = "copy", title=abm_unit_title),
+                       list(extend = "csv", filename = filename, title=abm_unit_title),
+                       list(extend = "excel", filename = filename, title=abm_unit_title))
+        )
       ) %>%
     formatRound(2:9, digits = 1, mark = "") %>%
     formatPercentage("WoS coverage", digits = 1) %>%
@@ -520,6 +527,8 @@ df <- df_cit3y %>% rename(
 )
 
 if (nrow(df) > 0) {
+  filename <- paste0("ABM_table2_", unit_file_label, "_", current_date)
+
   DT::datatable(df,
     rownames = FALSE,
     extensions = "Buttons",
@@ -527,9 +536,11 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = c("copy", "csv", "excel"),
-      title = "ABM_citations")
-    ) %>% 
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
+    )
+  ) %>% 
     formatRound(2:5, digits = 1, mark = "") %>%
     formatPercentage("Share Uncited", digits = 1) %>%
     abm_format_rows()
@@ -564,6 +575,7 @@ df <- df_cf %>% rename(
   "Share Top 10%" = "top10_share")
 
 if (nrow(df) > 0) {
+  filename <- paste0("ABM_table3_", unit_file_label, "_", current_date)
   DT::datatable(df,
     rownames = FALSE,
     extensions = "Buttons",
@@ -571,8 +583,10 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = c("copy", "csv", "excel"),
-      filename = "ABM_field_normalized_citations")
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
+      )
     ) %>% 
     formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>%
@@ -708,6 +722,8 @@ df <- df_jcf %>% rename(
 )
 
 if (nrow(df) > 0) {
+  filename <- paste0("ABM_table4_", unit_file_label, "_", current_date)
+
   DT::datatable(df,
     rownames = FALSE,
     extensions = "Buttons",
@@ -715,9 +731,11 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = c("copy", "csv", "excel"),
-      title = "ABM_journal_impact")
-    ) %>% 
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
+    )
+  ) %>% 
     formatRound(c(2, 4), digits = 1, mark = "") %>% 
     formatRound(3, digits = 2, mark = "") %>% 
     formatPercentage(5, digits = 1) %>%
@@ -825,6 +843,8 @@ df <- df_copub %>% rename(
   "Share international" = "int_share")
 
 if (nrow(df) > 0) {
+  filename <- paste0("ABM_table5_", unit_file_label, "_", current_date)
+  
   DT::datatable(df,
     rownames = FALSE,
     extensions = "Buttons",
@@ -832,8 +852,10 @@ if (nrow(df) > 0) {
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = c("copy", "csv", "excel"),
-      title = "ABM_co-publications")
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
+      )
     ) %>%
     formatPercentage(c(4,6), digits = 1) %>%
     abm_format_rows()

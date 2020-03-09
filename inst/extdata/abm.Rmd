@@ -48,6 +48,7 @@ if (params$use_package_data != TRUE) {
   df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
   df_copub <- abm_table5(con = con, unit_code= params$unit_code)
   df_woscov <- abm_woscoverage(con = con, unit_code = params$unit_code)
+  df_oa <- abm_oa_data(con = con, unit_code = params$unit_code)
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
 } else {
@@ -56,6 +57,7 @@ if (params$use_package_data != TRUE) {
   df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
   df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
   df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
+  df_oa <- pluck(abm_public_kth$units, params$unit_code, "oa")
   df_woscov <- pluck(abm_public_kth$units, params$unit_code, "coverage")
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
@@ -851,6 +853,28 @@ Row
 
 ### **Open Access publications, full counts** {.no-padding .no-mobile}
 
+```{r}
+df <- df_oa %>% rename(
+  "Publication years" = "Publication_Year_ch",
+  "Publications with known OA status" = "P_known",
+  "Open Access publications" = "oa_count",
+  "Share Open Access" = "oa_share")
+
+if (nrow(df) > 0) {
+  DT::datatable(df,
+    rownames = FALSE,
+    extensions = "Buttons",
+    options = list(
+      ordering = FALSE,
+      bPaginate = FALSE,
+      dom = 'Bt',
+      buttons = c("copy", "csv", "excel"),
+      title = "ABM_open_access")
+    ) %>%
+    formatPercentage(c(4,6), digits = 1) %>%
+    abm_format_rows()
+}
+```
 
 Row
 -------

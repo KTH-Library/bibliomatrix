@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm.R
 \name{abm_dash_indices}
 \alias{abm_dash_indices}
-\title{Retrieve dashboard indicators for ABM}
+\title{Retrieve Table 6 (OA-status) for ABM}
 \usage{
 abm_dash_indices(con = con_bib(), unit_code)
 }
@@ -10,10 +10,16 @@ abm_dash_indices(con = con_bib(), unit_code)
 \item{con}{connection to db, default is to use mssql connection}
 
 \item{unit_code}{the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)}
+
+\item{analysis_start}{first publication year of analysis, default 2012}
+
+\item{analysis_stop}{last publication year of analysis, default 2018}
 }
 \value{
+tibble with citations statistics by year and total
+
 list with indicator values for dashboard startpage
 }
 \description{
-Retrieve dashboard indicators for ABM
+Retrieve Table 6 (OA-status) for ABM
 }

@@ -332,17 +332,42 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' 
 #' @param con connection to db, default is to use mssql connection
 #' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
 #' @return tibble with OA-status of all publications from selected organizational units
 #' @import DBI dplyr tidyr purrr
 #' @export
-
-abm_oa_data <- function(con = con_bib(), unit_code) {
-  res<- con %>% tbl("OA_status") %>% 
+abm_oa_data <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+  oa_data <- con %>% tbl("OA_status") %>% 
     right_join(abm_data(con = con, unit_code = unit_code), by = "PID") %>% 
-    select("PID","oa_status","Publication_Type_DiVA", "Publication_Year", "DOI") 
+    select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI") 
   
-  
-  res
+  # Year dependent part of table
+  table1 <-
+      oa_data %>%
+      group_by(Publication_Year) %>%
+      filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
+      collect() %>%
+      summarise(P_known=n(),
+                oa_count=sum(as.logical(is_oa), na.rm=TRUE),
+                oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
+      ungroup() %>%
+      mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+      arrange(Publication_Year_ch) %>%
+      select(Publication_Year_ch, P_known, oa_count, oa_share)
+
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
+  # Summary part of table
+  table2 <- table1 %>%
+      summarise(Publication_Year_ch="Total",
+                P_known=sum(P_known),
+                oa_count=sum(oa_count),
+                oa_share=sum(oa_count)/sum(P_known))
+
+  bind_rows(table1, table2)
 }
 
 
@@ -356,7 +381,6 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
-
 abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit, relevant WoS doctypes only
@@ -371,30 +395,30 @@ abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year,
     group_by(Publication_Year, oa_status) %>%
     count()
   
-  # table1 <-
-  #   orgdata %>%
-  #   group_by(Publication_Year, oa_status) %>%
-  #   summarise(counts = count(oa_status, na.rm = TRUE)) %>%
-  #   ungroup() %>%
-  #   collect() %>%
-  #   mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
-  #   arrange(Publication_Year_ch) %>% 
-  #   select(Publication_Year_ch, P_frac, C3_frac, C3)
-  # 
+   table1 <-
+     orgdata %>%
+     group_by(Publication_Year, oa_status) %>%
+     summarise(counts = count(oa_status, na.rm = TRUE)) %>%
+     ungroup() %>%
+     collect() %>%
+     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+     arrange(Publication_Year_ch) %>% 
+     select(Publication_Year_ch, P_frac, C3_frac, C3)
+   
   # No summary row if no data
-  # if(nrow(table1) == 0)
-  #   return(table1)
+   if(nrow(table1) == 0)
+     return(table1)
   
   # Summary part of table
-  # table2 <-
-  #   orgdata %>%
-  #   summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
-  #             C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
-  #             C3 = sum(Citations_3yr * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
-  #   mutate(Publication_Year_ch = "Total") %>%
-  #   collect()
-  # 
-  # bind_rows(table1, table2)
+   table2 <-
+     orgdata %>%
+     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+               C3 = sum(Citations_3yr * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+     mutate(Publication_Year_ch = "Total") %>%
+     collect()
+   
+   bind_rows(table1, table2)
 }
 
 
@@ -405,6 +429,7 @@ abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @return list with indicator values for dashboard startpage
 #' @import DBI dplyr tidyr purrr
 #' @export
+
 abm_dash_indices <- function(con = con_bib(), unit_code){
   
   # Fetch table 1 for total number of publications and lastyear
@@ -657,7 +682,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
-      summaries = abm_dash_indices(con = db, unit_code = x)
+      coverage = abm_woscoverage(con = db, unit_code = x),
+      summaries = abm_dash_indices(con = db, unit_code = x),
+      oa = abm_oa_data(con = db, unit_code = x)
     )
   }
   
@@ -720,7 +747,9 @@ abm_private_data <- function(unit_code) {
       abm_table3(con = db, unit_code = x),
       abm_table4(con = db, unit_code = x),
       abm_table5(con = db, unit_code = x),
-      publications = abm_publications(con = db, unit_code = x)
+      coverage = abm_woscoverage(con = db, unit_code = x),
+      publications = abm_publications(con = db, unit_code = x),
+      oa = abm_oa_data(con = db, unit_code = x)
     )
   }
   

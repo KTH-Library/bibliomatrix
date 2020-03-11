@@ -854,11 +854,20 @@ Row
 ### **Open Access publications, full counts** {.no-padding .no-mobile}
 
 ```{r}
+#print(df_oa)
 df <- df_oa %>% rename(
   "Publication years" = "Publication_Year_ch",
+  "All publications" = "P_tot",
   "Publications with known OA status" = "P_known",
   "Open Access publications" = "oa_count",
-  "Share Open Access" = "oa_share")
+  "OA gold" = "gold_count",
+  "OA hybrid" = "hybrid_count",
+  "OA green" = "green_count",
+  "OA bronze" = "bronze_count",
+  "Not OA" = "closed_count",
+  "Share OA" = "oa_share")
+
+#df <- df_oa
 
 if (nrow(df) > 0) {
   DT::datatable(df,
@@ -871,7 +880,7 @@ if (nrow(df) > 0) {
       buttons = c("copy", "csv", "excel"),
       title = "ABM_open_access")
     ) %>%
-    formatPercentage(c(4,6), digits = 1) %>%
+    formatPercentage(10, digits = 1) %>%
     abm_format_rows()
 }
 ```
@@ -879,3 +888,8 @@ if (nrow(df) > 0) {
 Row
 -------
 ### **Placeholder Open Access graph (as proportions?)**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata(df_oa)
+}
+```

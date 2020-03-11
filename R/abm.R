@@ -340,21 +340,27 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 abm_oa_data <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
   oa_data <- con %>% tbl("OA_status") %>% 
     right_join(abm_data(con = con, unit_code = unit_code), by = "PID") %>% 
-    select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI") 
+    select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI")
   
   # Year dependent part of table
   table1 <-
       oa_data %>%
       group_by(Publication_Year) %>%
-      filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
+      #filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
       collect() %>%
-      summarise(P_known=n(),
+      summarise(P_tot=n(),
+                P_known=sum(as.logical(is_oa=="TRUE" | is_oa=="FALSE"), na.rm=TRUE),
                 oa_count=sum(as.logical(is_oa), na.rm=TRUE),
+                gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
+                hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
+                green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
+                bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
+                closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
                 oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
       ungroup() %>%
       mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
       arrange(Publication_Year_ch) %>%
-      select(Publication_Year_ch, P_known, oa_count, oa_share)
+      select(Publication_Year_ch, P_tot, P_known, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
 
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -363,8 +369,14 @@ abm_oa_data <- function(con = con_bib(), unit_code, analysis_start = abm_config(
   # Summary part of table
   table2 <- table1 %>%
       summarise(Publication_Year_ch="Total",
+                P_tot=sum(P_tot),
                 P_known=sum(P_known),
                 oa_count=sum(oa_count),
+                gold_count=sum(gold_count),
+                hybrid_count=sum(hybrid_count),
+                green_count=sum(green_count),
+                bronze_count=sum(bronze_count),
+                closed_count=sum(closed_count),
                 oa_share=sum(oa_count)/sum(P_known))
 
   bind_rows(table1, table2)
@@ -1007,4 +1019,36 @@ abm_format_rows <- function(t){
               target = "row",
               fontWeight = styleEqual("Total", "bold"),
               backgroundColor = styleEqual("Total", "#DDDDDD", "#FFFFFF"))
+}
+
+
+#' Create graph for Open Access data
+#' 
+#' @param df a data frame at the format produced by abm_oa_data()
+#' @return a pie chart
+#' @import ggplot2 dplyr
+#' @export
+abm_graph_oadata <- function(df){
+  unpaywall_cols <- c("#000000", "#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
+  #kth_cols <- as.vector(palette_kth(4))
+  df_oa_graphdata <- df %>%
+    filter(Publication_Year_ch == "Total") %>%
+    select(P_tot, gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
+    mutate(P_tot = P_tot - (gold_count + hybrid_count + green_count + bronze_count + closed_count)) %>%
+    rename("Unknown status" = P_tot, "Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Bronze" = bronze_count, "Not OA" = closed_count)
+  
+
+
+  pie(t(df_oa_graphdata), labels = names(df_oa_graphdata), main = "Overview of publications by OA type", col = unpaywall_cols)
+
+
+ # ggplot(data = df_copub_long,
+ #        aes(x = interval, y = value, group = `Co-publication`)) +
+ #   geom_line(aes(color = `Co-publication`)) +
+ #   geom_point(aes(color = `Co-publication`)) +
+ #   xlab(NULL) +
+ #   ylab(NULL) +
+ #   scale_y_continuous(labels = percent, limits = c(0, 1)) +
+ #   scale_color_manual(values = kth_cols) +
+ #   kth_theme()
 }

@@ -22,7 +22,8 @@ dashboardPage(skin = "black",
   ),
   dashboardSidebar(
     #tags$h4(textOutput("login")),
-    uiOutput("units")
+    uiOutput("units"),
+    uiOutput("switcher")
 #   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
   ),
   dashboardBody(

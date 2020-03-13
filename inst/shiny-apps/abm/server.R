@@ -73,7 +73,7 @@ server <- function(input, output, session) {
             orgs <- c(kthid(), orgs)
         
         shiny::selectInput(inputId = "unitid", label = "Select unit", 
-                           choices = orgs, selected = default_org_id(kthid()),
+                           choices = orgs, selected = 1, #default_org_id(kthid()),
                            multiple = FALSE, selectize = TRUE, width = "100%")
     })
     
@@ -86,6 +86,26 @@ server <- function(input, output, session) {
     
     is_employee <- function(id) id == kthid()
     
+    output$switcher <- renderUI({
+        if (!ABM_IS_PUBLIC) {
+            sidebarMenu(
+                id = "tabs",
+                menuItem("Switch to public app", href = ABM_URL_PUBLIC, 
+                         icon = icon("sign-out"), 
+                         badgeLabel = "Go", badgeColor = "blue")
+            )    
+        } else (
+            sidebarMenu(
+                id = "tabs",
+                menuItem(htmltools::HTML("Use your KTH account <br>to view your own data"), href = ABM_URL_PRIVATE, 
+                         icon = icon("sign-in"), 
+                         badgeLabel = "Go", badgeColor = "blue")
+            )    
+        )
+        
+    
+    })
+    
     output$login <- renderUI({
         if (!ABM_IS_PUBLIC) {
             out <- tags$li(class = "dropdown", 
@@ -93,8 +113,8 @@ server <- function(input, output, session) {
                 tags$li(class = "dropdown", 
                     tags$a(href = ABM_URL_PUBLIC,
                        class = "button button-primary button-sm",
-                       "Sign out", icon("sign-out"), " ... ",
-                       title = "Sign out and go to the public version of this application")
+                       "Switch to public app", icon("sign-out"), " ... ",
+                       title = "Switch to the public version of this application")
                 )
             )
         } else if (ABM_IS_PUBLIC == TRUE) {
@@ -103,8 +123,8 @@ server <- function(input, output, session) {
                 tags$li(class = "dropdown", 
                     tags$a(href = ABM_URL_PRIVATE, 
                         class = "button button-primary button-sm",
-                        "Sign in", icon("sign-in"), " ... ", img(src = "kth-logo.png", height = 30, width = 30),
-                        title = "Sign in here to view your own publications if you are a student or employed at KTH")
+                        "Use your KTH account", icon("sign-in"), " ... ", img(src = "kth-logo.png", height = 30, width = 30),
+                        title = "Switch to view your own publications if you are a KTH researcher")
                 )
             )            
         } else {

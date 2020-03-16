@@ -854,11 +854,9 @@ Row
 ### **Open Access publications, full counts** {.no-padding .no-mobile}
 
 ```{r}
-#print(df_oa)
 df <- df_oa %>% rename(
   "Publication years" = "Publication_Year_ch",
-  "All publications" = "P_tot",
-  "Publications with known OA status" = "P_known",
+  "Publications" = "P_tot",
   "Open Access publications" = "oa_count",
   "OA gold" = "gold_count",
   "OA hybrid" = "hybrid_count",
@@ -867,8 +865,6 @@ df <- df_oa %>% rename(
   "Not OA" = "closed_count",
   "Share OA" = "oa_share")
 
-#df <- df_oa
-
 if (nrow(df) > 0) {
   DT::datatable(df,
     rownames = FALSE,
@@ -876,20 +872,62 @@ if (nrow(df) > 0) {
     options = list(
       ordering = FALSE,
       bPaginate = FALSE,
-      dom = 'Bt',
+      dom = 'tB',
       buttons = c("copy", "csv", "excel"),
       title = "ABM_open_access")
     ) %>%
-    formatPercentage(10, digits = 1) %>%
+    formatPercentage(9, digits = 1) %>%
     abm_format_rows()
 }
 ```
 
 Row
 -------
-### **Placeholder Open Access graph (as proportions?)**
+### **Overview of Open Access publications, by OA type share**
 ```{r, fig.width=6, fig.height=4}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata(df_oa)
+  abm_graph_oadata_pie(df_oa)
 }
 ```
+
+### **Overview of Open Access publications, by OA type share (3D)**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_pie3D(df_oa)
+}
+```
+
+Row
+-------
+### **Evolution of Open Access publication types (stacked area)**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+}
+```
+
+### **Evolution of Open Access publication types (line chart)**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_types_linechart(df_oa)
+}
+```
+
+Row
+-------
+### **Information**
+
+The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
+
+In summary, the different OA types can be described as follows:
+
+- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
+
+- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
+
+- *Green:* The full text has been found in an institutional repository, such as DiVA.
+
+- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
+
+
+**Note**: The figures shown in the table are limited to peer-reviewed publications for which Unpaywall could determine the OA type. Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.

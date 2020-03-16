@@ -2,27 +2,18 @@
 % Please edit documentation in R/abm.R
 \name{abm_oa_data}
 \alias{abm_oa_data}
-\title{Retrieve OA-data for ABM tables}
+\title{Retrieve OA-data for ABM}
 \usage{
-abm_oa_data(
-  con = con_bib(),
-  unit_code,
-  analysis_start = abm_config()$start_year,
-  analysis_stop = abm_config()$stop_year
-)
+abm_oa_data(con = con_bib(), unit_code)
 }
 \arguments{
 \item{con}{connection to db, default is to use mssql connection}
 
 \item{unit_code}{for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)}
-
-\item{analysis_start}{first publication year of analysis, default 2012}
-
-\item{analysis_stop}{last publication year of analysis, default 2018}
 }
 \value{
 tibble with OA-status of all publications from selected organizational units
 }
 \description{
-Retrieve OA-data for ABM tables
+Retrieve OA-data for ABM
 }

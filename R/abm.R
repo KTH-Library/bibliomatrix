@@ -438,6 +438,26 @@ abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 
 }
 
+#' Retrieve co-publishing organizations for ABM tables
+#' 
+#' This function retrieves all co-publishing organizations for the selected ABM-unit, for all
+#' publications that has a UT-number (WebofScience_id). The returned tibble has one row per organization 
+#' and publication. 
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
+#' @return tibble with co-publishing organizations associated with each publication for the selected ABM-organization
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+  oa_data <- abm_data(con = con, unit_code = unit_code) %>% 
+    rename("UT" = "WebofScience_ID") %>%
+    left_join(con %>% tbl("Bestresaddr_KTH"), by = "UT") %>%  #by = c("WebofScience_ID" = "UT")
+    filter(!is.na(UT)) %>%
+    select("UT","Name_eng","Country_name","Org_type_code", "Unified_org_id")
+}
 
 #' Retrieve dashboard indicators for ABM
 #' 

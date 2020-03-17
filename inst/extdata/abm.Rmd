@@ -48,7 +48,7 @@ if (params$use_package_data != TRUE) {
   df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
   df_copub <- abm_table5(con = con, unit_code= params$unit_code)
   df_woscov <- abm_woscoverage(con = con, unit_code = params$unit_code)
-  df_oa <- abm_oa_data(con = con, unit_code = params$unit_code)
+  df_oa <- abm_table6(con = con, unit_code = params$unit_code)
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
 } else {
@@ -851,7 +851,7 @@ Open Access
 Row
 ---------------------
 
-### **Open Access publications, full counts** {.no-padding .no-mobile}
+### **Open Access publications, full counts** {.no-padding}
 
 ```{r}
 df <- df_oa %>% rename(
@@ -872,7 +872,7 @@ if (nrow(df) > 0) {
     options = list(
       ordering = FALSE,
       bPaginate = FALSE,
-      dom = 'tB',
+      dom = 'Bt',
       buttons = c("copy", "csv", "excel"),
       title = "ABM_open_access")
     ) %>%
@@ -881,37 +881,6 @@ if (nrow(df) > 0) {
 }
 ```
 
-Row
--------
-### **Overview of Open Access publications, by OA type share**
-```{r, fig.width=6, fig.height=4}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie(df_oa)
-}
-```
-
-### **Overview of Open Access publications, by OA type share (3D)**
-```{r, fig.width=6, fig.height=4}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie3D(df_oa)
-}
-```
-
-Row
--------
-### **Evolution of Open Access publication types (stacked area)**
-```{r, fig.width=6, fig.height=4}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
-}
-```
-
-### **Evolution of Open Access publication types (line chart)**
-```{r, fig.width=6, fig.height=4}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_types_linechart(df_oa)
-}
-```
 
 Row
 -------
@@ -931,3 +900,20 @@ In summary, the different OA types can be described as follows:
 
 
 **Note**: The figures shown in the table are limited to peer-reviewed publications for which Unpaywall could determine the OA type. Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
+
+
+Row
+-------
+### **Overview of Open Access publications, by OA type share**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_pie(df_oa)
+}
+```
+
+### **Evolution of Open Access publication types**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+}
+```

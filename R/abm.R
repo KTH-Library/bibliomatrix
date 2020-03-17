@@ -338,8 +338,20 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 abm_oa_data <- function(con = con_bib(), unit_code) {
   oa_data <- con %>% tbl("OA_status") %>% 
     right_join(abm_data(con = con, unit_code = unit_code), by = "PID") %>% 
-    select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI")
-  
+      select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI")
+}
+
+
+#' Retrieve Table 6 (OA data) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
+#' @return tibble with OA-status of all publications from selected organizational units
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table6 <- function(con = con_bib(), unit_code) {
+    oa_data <- abm_oa_data(con =con, unit_code = unit_code)
+    
   # Year-dependent part of table
   table1 <-
       oa_data %>%
@@ -553,9 +565,11 @@ abm_publications <- function(con, unit_code, analysis_start = abm_config()$start
     filter(Unit_code == unit_code &
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
-    collect()
-  
+      left_join(abm_oa_data(con, unit_code), by=c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
+      select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
+      mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
+      collect()
+        
   orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
   
@@ -641,7 +655,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       abm_table5(con = db, unit_code = x),
       coverage = abm_woscoverage(con = db, unit_code = x),
       summaries = abm_dash_indices(con = db, unit_code = x),
-      oa = abm_oa_data(con = db, unit_code = x)
+      oa = abm_table6(con = db, unit_code = x)
     )
   }
   
@@ -706,7 +720,7 @@ abm_private_data <- function(unit_code) {
       abm_table5(con = db, unit_code = x),
       coverage = abm_woscoverage(con = db, unit_code = x),
       publications = abm_publications(con = db, unit_code = x),
-      oa = abm_oa_data(con = db, unit_code = x)
+      oa = abm_table6(con = db, unit_code = x)
     )
   }
   
@@ -967,44 +981,20 @@ abm_format_rows <- function(t){
 #' 
 #' @param df a data frame at the format produced by abm_oa_data()
 #' @return a pie chart object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr plotrix
 #' @importFrom graphics pie
 #' @export
 abm_graph_oadata_pie <- function(df){
-  unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
+  #unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
   #kth_cols <- as.vector(palette_kth(4))
-  df_oa_graphdata <- df %>%
-    filter(Publication_Year_ch == "Total") %>%
-    select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
-    rename("Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Bronze" = bronze_count, "Not OA" = closed_count)
 
-  #pie(t(df_oa_graphdata), labels = names(df_oa_graphdata), main = "Overview of publications by OA type share", col = unpaywall_cols)
-  pie(t(df_oa_graphdata), labels = names(df_oa_graphdata), col = unpaywall_cols)
-
-  #FIX LABELS AND PERCENTS
-  #percentages <- df %>% filter(Publication_Year_ch == "Total") %>% mutate(gold_count = 100*gold_count/P_tot, hybrid_count = 100*hybrid_count/P_tot, green_count = 100*green_count/P_tot, bronze_count = 100*bronze_count/P_tot, closed_count = 100*closed_count/P_tot) %>% select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>% t() %>% format(digits=2)
-  #labls <- paste(names(df_oa_graphdata), "\n", percentages, " %", separator="")
-
-  #plot.new()
-  #mypie <- pie(t(df_oa_graphdata), main = "Overview of publications by OA type", col = unpaywall_cols, labels = c("", "", "", "", ""))
-  #pieangles <- floating.pie(x=t(df_oa_graphdata), main = "Overview of publications by OA type", col = unpaywall_cols)
-  #pie.labels(labels = labls, radius=1.2, angles=pieangles)
-}
-
-#' Create 3D pie chart for Open Access data
-#' 
-#' @param df a data frame at the format produced by abm_oa_data()
-#' @return a 3D pie chart object
-#' @import ggplot2 dplyr plotrix
-#' @export
-abm_graph_oadata_pie3D <- function(df){
     unpaywall_colors <- data.frame("Gold"="#F9BC01",
                                    "Hybrid"="#8D4EB4",
                                    "Green"="#20E168",
                                    "Bronze"="#CD7F32",
                                    "Closed"="#BBBBBB") %>%
         rename("Not OA"="Closed")
-
+    
     df_oa_graphdata <- df %>%
         filter(Publication_Year_ch == "Total") %>%
         select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
@@ -1014,7 +1004,7 @@ abm_graph_oadata_pie3D <- function(df){
                "Bronze" = bronze_count,
                "Not OA" = closed_count)
 
-    percentages <- df %>%
+        percentages <- df %>%
         filter(Publication_Year_ch == "Total") %>%
         mutate(gold_count = 100*gold_count/P_tot,
                hybrid_count = 100*hybrid_count/P_tot,
@@ -1033,14 +1023,13 @@ abm_graph_oadata_pie3D <- function(df){
         names(.) %in% names(df_oa_graphdata) %>%
         unpaywall_colors[.] %>%
         t()
-    
-    labls <- paste(names(df_oa_graphdata), "\n", percentages, " %", separator="")
-    
-    #thepie <- pie3D(t(df_oa_graphdata), main = "Overview of publications by OA type", col = unpaywall_cols, explode=0.1, theta=pi/3, start=pi/3)
-    thepie <- pie3D(t(df_oa_graphdata), col = unpaywall_colors, explode=0.05)
-    
-    pie3D.labels(thepie, labels = labls, labelcex=0.8, radius=1.2)
+
+  labls <- paste(names(df_oa_graphdata), "\n", percentages, " %", separator="")
+  pie(t(df_oa_graphdata),  labels = c("","","","","",""), col = unpaywall_colors, cex = 0.8, radius = 0.8)
+  pieangles <- floating.pie(x=t(df_oa_graphdata), col = unpaywall_colors)
+  pie.labels(labels = labls, radius = 1.1, angles = pieangles, cex = 0.8)
 }
+
 
 #' Create stacked area graph for Open Access data
 #' 

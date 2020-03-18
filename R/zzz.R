@@ -32,7 +32,6 @@ globalz <- "
 # HACK: add global fcns / vars with spaces in the name
 spacenames <- c(
   "Organizational Unit",
-  "OA type",
   "OA type:"
 )
 

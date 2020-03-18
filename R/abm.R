@@ -350,45 +350,76 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_table6 <- function(con = con_bib(), unit_code) {
+    
     oa_data <- abm_oa_data(con =con, unit_code = unit_code)
     
-  # Year-dependent part of table
-  table1 <-
-      oa_data %>%
-      group_by(Publication_Year) %>%
-      filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
-      collect() %>%
-      summarise(P_tot=n(),
-                oa_count=sum(as.logical(is_oa), na.rm=TRUE),
-                gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
-                hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
-                green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
-                bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
-                closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
-                oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
-      ungroup() %>%
-      mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
-      arrange(Publication_Year_ch) %>%
-      select(Publication_Year_ch, P_tot, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
+    # Year-dependent part of table
+    table1 <-
+        oa_data %>%
+        group_by(Publication_Year) %>%
+        filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
+        collect() %>%
+        summarise(P_tot=n(),
+                  oa_count=sum(as.logical(is_oa), na.rm=TRUE),
+                  gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
+                  hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
+                  green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
+                  bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
+                  closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
+                  oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
+        ungroup() %>%
+        mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+        arrange(Publication_Year_ch) %>%
+        select(Publication_Year_ch, P_tot, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
+    
+    # Insert blank years
+    years_to_add <- table1[!(as.character(as.numeric(table1$Publication_Year_ch)+1) %in% table1$Publication_Year_ch)
+                           & !is.na(lead(table1$Publication_Year_ch)),"Publication_Year_ch"] %>%
+        mapply(function (x) as.numeric(x)+1, .)
+    
+    for (year in years_to_add){
+        if (length(year) > 0){
+            plusyear = 1
+            while (!(as.character(year+plusyear) %in% table1$Publication_Year_ch)){
+                years_to_add <- append(years_to_add, year+plusyear)
+                plusyear <- plusyear + 1
+            }
+        }
+    }
 
-  # No summary row if no data
-  if(nrow(table1) == 0)
-    return(table1)
+    for (year in years_to_add){
+        if (length(year) > 0){
+            table1 <- table1 %>% rbind(data.frame(Publication_Year_ch = as.character(year),
+                                                  P_tot = integer(1),
+                                                  oa_count = integer(1),
+                                                  gold_count = integer(1),
+                                                  hybrid_count = integer(1),
+                                                  green_count = integer(1),
+                                                  bronze_count = integer(1),
+                                                  closed_count = integer(1),
+                                                  oa_share = 0))
+        }
+    } 
+    
+    table1 <- table1 %>% arrange(Publication_Year_ch)
+    
+    # No summary row if no data
+    if(nrow(table1) == 0)
+        return(table1)
 
-  # Summary part of table
-  table2 <- table1 %>%
-      summarise(Publication_Year_ch="Total",
-                P_tot=sum(P_tot),
-                #=sum(P_known),
-                oa_count=sum(oa_count),
-                gold_count=sum(gold_count),
-                hybrid_count=sum(hybrid_count),
-                green_count=sum(green_count),
-                bronze_count=sum(bronze_count),
-                closed_count=sum(closed_count),
-                oa_share=sum(oa_count)/sum(P_tot))
-
-  bind_rows(table1, table2)
+    # Summary part of table
+    table2 <- table1 %>%
+        summarise(Publication_Year_ch="Total",
+                  P_tot=sum(P_tot),
+                  oa_count=sum(oa_count),
+                  gold_count=sum(gold_count),
+                  hybrid_count=sum(hybrid_count),
+                  green_count=sum(green_count),
+                  bronze_count=sum(bronze_count),
+                  closed_count=sum(closed_count),
+                  oa_share=sum(oa_count)/sum(P_tot))
+    
+    bind_rows(table1, table2)
 }
 
 
@@ -1055,31 +1086,4 @@ abm_graph_oadata_stackedarea <- function(df){
       ylab(NULL) +
       kth_theme()
 
-}
-
-#' Create graph over OA types by year
-#' 
-#' @param df a data frame at the format produced by abm_oa_data()
-#' @return a ggplot object
-#' @import ggplot2 dplyr
-#' @export
-abm_graph_oadata_types_linechart <- function(df){
-  df_oa_graphdata <- df %>%
-      select(Publication_Year_ch, P_tot, hybrid_count, gold_count, green_count, bronze_count, closed_count) %>%
-      cbind(oa_count=df$P_tot-df$closed_count) %>%
-      filter(Publication_Year_ch != "Total") %>%
-      rename("All publications" = P_tot, "Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Bronze" = bronze_count, "Not OA" = closed_count, "Total OA" = oa_count) %>% 
-      gather("OA type", "value", -Publication_Year_ch)
-
-  #TODO: dashed lines for OA types?
-  ggplot(data = df_oa_graphdata,
-         aes(x = Publication_Year_ch, y = value, group = `OA type`)) +
-    geom_line(aes(color = `OA type`)) +
-    geom_point(aes(color = `OA type`)) +
-    xlab(NULL) +
-    ylab(NULL) +
-    scale_color_manual(values = c("#000000", "#CD7F32", "#F9BC01", "#20E168", "#8D4EB4", "#BBBBBB", "#FC92E9")) +
-    kth_theme()
-
-  #TODO: reorganize the legend
 }

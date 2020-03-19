@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>List member of properties from LDAP search — ad_memberof • bibliomatrix</title>
+<title>Create pie chart for Open Access data — abm_graph_oadata_pie • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="List member of properties from LDAP search — ad_memberof" />
-<meta property="og:description" content="List member of properties from LDAP search" />
+<meta property="og:title" content="Create pie chart for Open Access data — abm_graph_oadata_pie" />
+<meta property="og:description" content="Create pie chart for Open Access data" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,29 +123,29 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>List member of properties from LDAP search</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/ldap.R'><code>R/ldap.R</code></a></small>
-    <div class="hidden name"><code>ad_memberof.Rd</code></div>
+    <h1>Create pie chart for Open Access data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
+    <div class="hidden name"><code>abm_graph_oadata_pie.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>List member of properties from LDAP search</p>
+    <p>Create pie chart for Open Access data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ad_memberof</span>(<span class='no'>search_results</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_graph_oadata_pie</span>(<span class='no'>df</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>search_results</th>
-      <td><p>a tibble with search results from the `ad_search()` fcn</p></td>
+      <th>df</th>
+      <td><p>a data frame at the format produced by abm_oa_data()</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with memberof LDIF values</p>
+    <p>a pie chart object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

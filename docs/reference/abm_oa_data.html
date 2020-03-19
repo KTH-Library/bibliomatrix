@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>List member of properties from LDAP search — ad_memberof • bibliomatrix</title>
+<title>Retrieve OA-data for ABM — abm_oa_data • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="List member of properties from LDAP search — ad_memberof" />
-<meta property="og:description" content="List member of properties from LDAP search" />
+<meta property="og:title" content="Retrieve OA-data for ABM — abm_oa_data" />
+<meta property="og:description" content="Retrieve OA-data for ABM" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -123,29 +123,33 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>List member of properties from LDAP search</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/ldap.R'><code>R/ldap.R</code></a></small>
-    <div class="hidden name"><code>ad_memberof.Rd</code></div>
+    <h1>Retrieve OA-data for ABM</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
+    <div class="hidden name"><code>abm_oa_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>List member of properties from LDAP search</p>
+    <p>Retrieve OA-data for ABM</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ad_memberof</span>(<span class='no'>search_results</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_oa_data</span>(<span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(), <span class='no'>unit_code</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>search_results</th>
-      <td><p>a tibble with search results from the `ad_search()` fcn</p></td>
+      <th>con</th>
+      <td><p>connection to db, default is to use mssql connection</p></td>
+    </tr>
+    <tr>
+      <th>unit_code</th>
+      <td><p>for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with memberof LDIF values</p>
+    <p>tibble with OA-status of all publications from selected organizational units</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

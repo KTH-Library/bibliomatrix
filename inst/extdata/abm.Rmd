@@ -48,6 +48,7 @@ if (params$use_package_data != TRUE) {
   df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
   df_copub <- abm_table5(con = con, unit_code= params$unit_code)
   df_woscov <- abm_woscoverage(con = con, unit_code = params$unit_code)
+  df_oa <- abm_table6(con = con, unit_code = params$unit_code)
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
 } else {
@@ -56,6 +57,7 @@ if (params$use_package_data != TRUE) {
   df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
   df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
   df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
+  df_oa <- pluck(abm_public_kth$units, params$unit_code, "oa")
   df_woscov <- pluck(abm_public_kth$units, params$unit_code, "coverage")
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
@@ -921,5 +923,80 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+Open Access
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Open Access publications, full counts** {.no-padding}
+
+```{r}
+df <- df_oa %>% rename(
+  "Publication years" = "Publication_Year_ch",
+  "Publications" = "P_tot",
+  "Open Access publications" = "oa_count",
+  "OA gold" = "gold_count",
+  "OA hybrid" = "hybrid_count",
+  "OA green" = "green_count",
+  "OA bronze" = "bronze_count",
+  "Not OA" = "closed_count",
+  "Share OA" = "oa_share")
+
+if (nrow(df) > 0) {
+  DT::datatable(df,
+    rownames = FALSE,
+    extensions = "Buttons",
+    options = list(
+      ordering = FALSE,
+      bPaginate = FALSE,
+      dom = 'Bt',
+      buttons = c("copy", "csv", "excel"),
+      title = "ABM_open_access")
+    ) %>%
+    formatPercentage(9, digits = 1) %>%
+    abm_format_rows()
+}
+```
+
+
+Row
+-------
+### **Information**
+
+The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
+
+In summary, the different OA types can be described as follows:
+
+- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
+
+- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
+
+- *Green:* The full text has been found in an institutional repository, such as DiVA.
+
+- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
+
+
+**Note**: The figures shown in the table are limited to peer-reviewed publications for which Unpaywall could determine the OA type. Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
+
+
+Row
+-------
+### **Overview of Open Access publications, by OA type share**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_pie(df_oa)
+}
+```
+
+### **Evolution of Open Access publication types**
+```{r, fig.width=6, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
 }
 ```

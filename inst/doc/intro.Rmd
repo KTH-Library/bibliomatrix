@@ -25,7 +25,6 @@ The main parts of the `bibliomatrix` package are:
 
 First load some useful packages, including `bibliomatrix`:
 
-
 ```{r setup, message=FALSE}
 library(bibliomatrix)
 library(dplyr)

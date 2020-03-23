@@ -1009,8 +1009,8 @@ About
 Row
 ---------------------
 
-### **About - placeholder** {.no-padding}
+### **Background / overview (?)** {.no-padding}
 
-### **Placeholder 2nd column** {.no-padding}
+### **Indicator glossary** {.no-padding}
 
-### **Placeholder 3nd column** {.no-padding}
+### **Contact info and metadata for results(?)** {.no-padding}

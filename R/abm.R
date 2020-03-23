@@ -452,11 +452,40 @@ abm_table6 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
-  oa_data <- abm_data(con = con, unit_code = unit_code) %>% 
+  copub_data <- abm_data(con = con, unit_code = unit_code) %>% 
     rename("UT" = "WebofScience_ID") %>%
     left_join(con %>% tbl("Bestresaddr_KTH"), by = "UT") %>%  #by = c("WebofScience_ID" = "UT")
     filter(!is.na(UT)) %>%
-    select("UT","Name_eng","Country_name","Org_type_code", "Unified_org_id")
+    select("UT","Name_eng","Country_name","Org_type_code", "Unified_org_id", "Publication_Year")
+}
+
+#' Retrieve Table 7 (co-pub orgs) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
+#' @return tibble with org counts
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table7 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- abm_copub_data(con=con, unit_code = unit_code) %>%
+    filter( Publication_Year >= analysis_start &
+               Publication_Year <= analysis_stop - 2 ) %>%
+    distinct(UT, Name_eng) %>%
+    collect()
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata %>% 
+    group_by(Name_eng) %>%
+    summarise(count = n()) %>%
+    arrange(desc(count))
+  
+  table1
+  
 }
 
 #' Retrieve dashboard indicators for ABM

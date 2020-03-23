@@ -93,24 +93,31 @@
 <!-- badges: start -->
 
 <p>The goal of bibliomatrix is to provide a common set of functionality for the Annual Bibliometric Monitoring efforts from the Bibliometrics team at the KTH Library.</p>
+<div id="contact" class="section level2">
+<h2 class="hasAnchor">
+<a href="#contact" class="anchor"></a>Contact</h2>
+<p>If you have queries related to the content, functionality or methods used, please send an email to the KTH Library at <a href="mailto:biblioteket@kth.se" class="email">biblioteket@kth.se</a>. For technical queries or feature requests, please <a href="https://github.com/KTH-Library/bibliomatrix/issues">open an issue</a> on this repository.</p>
+</div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install the latest development version of bibliomatrix from <a href="https://KTH-Library.github.com/bibliomatrix">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># install.packages("devtools")</span></a>
-<a class="sourceLine" id="cb1-2" title="2">devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"KTH-Library/bibliomatrix"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages("devtools")</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>devtools<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span>(<span class="st">"KTH-Library/bibliomatrix"</span>)</span></code></pre></div>
+<p>If you don’t already have <code>devtools</code>, this package can be installed first with:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"devtools"</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <div id="public-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#public-data" class="anchor"></a>Public data</h3>
 <p>The package includes data from the KTH Annual Bibliometric Monitoring (ABM) public part.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bibliomatrix)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb2-3" title="3"></a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co"># Simple example showing some KTH units for which ABM results are public</span></a>
-<a class="sourceLine" id="cb2-5" title="5">abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="st">  </span><span class="kw">select</span>(unit_code, unit_long_en) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(bibliomatrix)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(dplyr)</span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># Simple example showing some KTH units for which ABM results are public</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="st">  </span><span class="kw">select</span>(unit_code, unit_long_en) <span class="op">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>() <span class="op">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">unit_code</th>
@@ -126,16 +133,16 @@
 <td align="left">School of Architecture and the Built Environment (ABE)</td>
 </tr>
 <tr class="odd">
-<td align="left">13604</td>
-<td align="left">Sustainable development, Environmental science and Engineering</td>
-</tr>
-<tr class="even">
 <td align="left">5851</td>
 <td align="left">Architecture</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">5857</td>
 <td align="left">Civil and Architectural Engineering</td>
+</tr>
+<tr class="odd">
+<td align="left">875600</td>
+<td align="left">Philosophy and History</td>
 </tr>
 <tr class="even">
 <td align="left">5869</td>
@@ -143,13 +150,13 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="co"># KTH is level 0, schools level 1 and departments level 2.</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="co"># Some basic information about KTH schools:</span></a>
-<a class="sourceLine" id="cb3-4" title="4">abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(org_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-6" title="6"><span class="st">  </span><span class="kw">select</span>(Diva_org_id, unit_code, unit_short, unit_long_en) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="co"># KTH is level 0, schools level 1 and departments level 2.</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="co"># Some basic information about KTH schools:</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>abm_public_kth<span class="op">$</span>meta <span class="op">%&gt;%</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(org_level <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="st">  </span><span class="kw">select</span>(Diva_org_id, unit_code, unit_short, unit_long_en) <span class="op">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="11%">
@@ -171,10 +178,10 @@
 <td align="left">School of Architecture and the Built Environment (ABE)</td>
 </tr>
 <tr class="even">
-<td align="right">6023</td>
-<td align="left">I</td>
-<td align="left">ITM</td>
-<td align="left">School of Industrial Engineering and Management (ITM)</td>
+<td align="right">879223</td>
+<td align="left">E</td>
+<td align="left">EECS</td>
+<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
 </tr>
 <tr class="odd">
 <td align="right">6091</td>
@@ -183,28 +190,28 @@
 <td align="left">School of Engineering Sciences (SCI)</td>
 </tr>
 <tr class="even">
-<td align="right">879223</td>
-<td align="left">E</td>
-<td align="left">EECS</td>
-<td align="left">School of Electrical Engineering and Computer Science (EECS)</td>
-</tr>
-<tr class="odd">
 <td align="right">879224</td>
 <td align="left">C</td>
 <td align="left">CBH</td>
 <td align="left">School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH)</td>
 </tr>
+<tr class="odd">
+<td align="right">6023</td>
+<td align="left">I</td>
+<td align="left">ITM</td>
+<td align="left">School of Industrial Engineering and Management (ITM)</td>
+</tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="co"># Get public ABM results for KTH</span></a>
-<a class="sourceLine" id="cb4-3" title="3">kth_abm_tables &lt;-<span class="st"> </span>abm_public_kth<span class="op">$</span>units<span class="op">$</span>KTH</a>
-<a class="sourceLine" id="cb4-4" title="4"></a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co"># Show parts of ABM table 1 for KTH</span></a>
-<a class="sourceLine" id="cb4-6" title="6">kth_abm_tables[[<span class="dv">1</span>]] <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="st">  </span><span class="kw">select</span>(Publication_Type_DiVA, P_frac, WoS_coverage) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(P_frac <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co"># Get ABM results for KTH</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>kth_abm_tables &lt;-<span class="st"> </span>abm_public_kth<span class="op">$</span>units<span class="op">$</span>KTH</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="co"># Show parts of ABM table 1 for KTH</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>kth_abm_tables[[<span class="dv">1</span>]] <span class="op">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="st">  </span><span class="kw">select</span>(Publication_Type_DiVA, P_frac, WoS_coverage) <span class="op">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span>(P_frac <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a><span class="st">  </span>knitr<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Publication_Type_DiVA</th>

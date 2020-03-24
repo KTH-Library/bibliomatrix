@@ -934,7 +934,7 @@ Open Access
 Row
 ---------------------
 
-### **Open Access publications, full counts** {.no-padding}
+### **Open Access publications, full counts** {.no-mobile}
 
 ```{r}
 df <- df_oa %>% rename(
@@ -966,6 +966,20 @@ if (nrow(df) > 0) {
 }
 ```
 
+### **Open Access publications, full counts** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+if (nrow(df) > 0) {
+  df %>% 
+    mutate_at(vars(9), function(x) sprintf("%.1f%%", x * 100)) %>%
+    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
+    kable_styling(bootstrap_options = c("responsive")) %>%
+    scroll_box(width = "720px")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+}
+```
+
 
 Row
 -------
@@ -989,8 +1003,8 @@ In summary, the different OA types can be described as follows:
 
 Row
 -------
-### **Overview of Open Access publications, by OA type share**
-```{r, fig.width=6, fig.height=4}
+### **Overview of Open Access publications, by OA type share** {.no-mobile}
+```{r, fig.width=4, fig.height=4}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oadata_pie(df_oa)
 } else {
@@ -998,8 +1012,26 @@ if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 }
 ```
 
-### **Evolution of Open Access publication types**
-```{r, fig.width=6, fig.height=4}
+### **Overview of Open Access publications, by OA type share** {.no-padding .mobile}
+```{r, fig.width=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_pie(df_oa)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Evolution of the number of publications, by OA type** {.no-mobile}
+```{r, fig.width=6.5, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Evolution of the number of publications, by OA type** {.no-padding .mobile}
+```{r, fig.width=5}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oadata_stackedarea(df_oa)
 } else {

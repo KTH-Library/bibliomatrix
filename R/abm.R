@@ -718,7 +718,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   poolClose(db)
   
-  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order, "indicator_desriptions" = indicator_descriptions)
+  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order, "indicator_descriptions" = indicator_descriptions)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 

@@ -9,7 +9,7 @@ abm_config<- function(){
        stop_year = 2018,
        default_unit = "KTH")
 }
-  
+
 #' Retrieve data for ABM tables and graphs from master table
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -46,6 +46,20 @@ get_pubtype_order <- function(con){
   }
 }
 
+#' Get displayname and descriptions for indicators
+#' 
+#' @param con connection to db - if no connection is given, use abm_public_kth data
+#' @return tibble with names and descriptions
+#' @import DBI dplyr tidyr purrr
+#' @export
+get_indic_descriptions <- function(con){
+  if(!missing(con)){
+    con %>% tbl("indicator_descriptions") %>% collect()
+  } else {
+    abm_public_kth$indicator_descriptions
+  }
+}
+
 #' Retrieve Table 1 (Publications in DiVA) for ABM
 #' 
 #' @param con connection to db, default is to use mssql connection
@@ -57,7 +71,7 @@ get_pubtype_order <- function(con){
 #' @importFrom stats weighted.mean
 #' @export
 abm_table1 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-
+  
   # Get publication level data for selected unit
   orgdata <- con %>%
     tbl("masterfile") %>%
@@ -106,7 +120,7 @@ abm_table1 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @export
 
 abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-
+  
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- con %>%
     tbl("masterfile") %>%
@@ -115,7 +129,7 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
              Publication_Year <= analysis_stop - 2 &
              Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial")) %>%
     mutate(uncited = ifelse(Citations_3yr > 0, 0, 1))
-
+  
   # Year dependent part of table
   table1 <-
     orgdata %>%
@@ -130,11 +144,11 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     arrange(Publication_Year_ch) %>% 
     select(Publication_Year_ch, P_frac, C3_frac, C3, P_uncited, Share_uncited)
-
+  
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
-
+  
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -145,7 +159,7 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     mutate(Publication_Year_ch = "Total") %>%
     collect()
-
+  
   bind_rows(table1, table2)
 }
 
@@ -176,7 +190,7 @@ sliding_intervals <- function(first, last, width){
 #' @export
 
 abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-
+  
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- con %>%
     tbl("masterfile") %>%
@@ -186,13 +200,13 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
              Publication_Type_WoS %in% c("Article", "Review") & 
              !is.na(cf))
   
-    # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
+  # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>%
     collect() %>%
     inner_join(sliding_intervals(analysis_start, analysis_stop - 1, 3),
                by = c("Publication_Year" = "x"))
-
+  
   # Year dependent part of table
   table1 <-
     orgdata3year %>%
@@ -206,7 +220,7 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
-
+  
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -216,7 +230,7 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) %>%
     collect() %>% 
     mutate(interval = "Total")
-
+  
   bind_rows(table1, table2)
 }
 
@@ -232,7 +246,7 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @export
 
 abm_table4 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-
+  
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- con %>%
     tbl("masterfile") %>%
@@ -240,7 +254,7 @@ abm_table4 <- function(con, unit_code, analysis_start = abm_config()$start_year,
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              Publication_Type_WoS %in% c("Article", "Review"))
-
+  
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>%
@@ -286,7 +300,7 @@ abm_table4 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @export
 
 abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-
+  
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- con %>%
     tbl("masterfile") %>%
@@ -295,7 +309,7 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
              Publication_Year <= analysis_stop &
              Publication_Type_WoS %in% c("Article", "Review") &
              !is.na(int))
-
+  
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>%
@@ -317,7 +331,7 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
-
+  
   # Summary part of table
   table2 <-
     orgdata %>%
@@ -343,7 +357,7 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 abm_oa_data <- function(con = con_bib(), unit_code) {
   oa_data <- con %>% tbl("OA_status") %>% 
     right_join(abm_data(con = con, unit_code = unit_code), by = "PID") %>% 
-      select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI")
+    select("PID","oa_status","is_oa","Publication_Type_DiVA", "Publication_Year", "DOI")
 }
 
 
@@ -355,76 +369,76 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_table6 <- function(con = con_bib(), unit_code) {
-    
-    oa_data <- abm_oa_data(con =con, unit_code = unit_code)
-    
-    # Year-dependent part of table
-    table1 <-
-        oa_data %>%
-        group_by(Publication_Year) %>%
-        filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
-        collect() %>%
-        summarise(P_tot=n(),
-                  oa_count=sum(as.logical(is_oa), na.rm=TRUE),
-                  gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
-                  hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
-                  green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
-                  bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
-                  closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
-                  oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
-        ungroup() %>%
-        mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
-        arrange(Publication_Year_ch) %>%
-        select(Publication_Year_ch, P_tot, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
-    
-    # Insert blank years
-    years_to_add <- table1[!(as.character(as.numeric(table1$Publication_Year_ch)+1) %in% table1$Publication_Year_ch)
-                           & !is.na(lead(table1$Publication_Year_ch)),"Publication_Year_ch"] %>%
-        mapply(function (x) as.numeric(x)+1, .)
-    
-    for (year in years_to_add){
-        if (length(year) > 0){
-            plusyear = 1
-            while (!(as.character(year+plusyear) %in% table1$Publication_Year_ch)){
-                years_to_add <- append(years_to_add, year+plusyear)
-                plusyear <- plusyear + 1
-            }
-        }
+  
+  oa_data <- abm_oa_data(con =con, unit_code = unit_code)
+  
+  # Year-dependent part of table
+  table1 <-
+    oa_data %>%
+    group_by(Publication_Year) %>%
+    filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
+    collect() %>%
+    summarise(P_tot=n(),
+              oa_count=sum(as.logical(is_oa), na.rm=TRUE),
+              gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
+              hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
+              green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
+              bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
+              closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
+              oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
+    ungroup() %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+    arrange(Publication_Year_ch) %>%
+    select(Publication_Year_ch, P_tot, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
+  
+  # Insert blank years
+  years_to_add <- table1[!(as.character(as.numeric(table1$Publication_Year_ch)+1) %in% table1$Publication_Year_ch)
+                         & !is.na(lead(table1$Publication_Year_ch)),"Publication_Year_ch"] %>%
+    mapply(function (x) as.numeric(x)+1, .)
+  
+  for (year in years_to_add){
+    if (length(year) > 0){
+      plusyear = 1
+      while (!(as.character(year+plusyear) %in% table1$Publication_Year_ch)){
+        years_to_add <- append(years_to_add, year+plusyear)
+        plusyear <- plusyear + 1
+      }
     }
-
-    for (year in years_to_add){
-        if (length(year) > 0){
-            table1 <- table1 %>% rbind(data.frame(Publication_Year_ch = as.character(year),
-                                                  P_tot = integer(1),
-                                                  oa_count = integer(1),
-                                                  gold_count = integer(1),
-                                                  hybrid_count = integer(1),
-                                                  green_count = integer(1),
-                                                  bronze_count = integer(1),
-                                                  closed_count = integer(1),
-                                                  oa_share = 0))
-        }
-    } 
-    
-    table1 <- table1 %>% arrange(Publication_Year_ch)
-    
-    # No summary row if no data
-    if(nrow(table1) == 0)
-        return(table1)
-
-    # Summary part of table
-    table2 <- table1 %>%
-        summarise(Publication_Year_ch="Total",
-                  P_tot=sum(P_tot),
-                  oa_count=sum(oa_count),
-                  gold_count=sum(gold_count),
-                  hybrid_count=sum(hybrid_count),
-                  green_count=sum(green_count),
-                  bronze_count=sum(bronze_count),
-                  closed_count=sum(closed_count),
-                  oa_share=sum(oa_count)/sum(P_tot))
-    
-    bind_rows(table1, table2)
+  }
+  
+  for (year in years_to_add){
+    if (length(year) > 0){
+      table1 <- table1 %>% rbind(data.frame(Publication_Year_ch = as.character(year),
+                                            P_tot = integer(1),
+                                            oa_count = integer(1),
+                                            gold_count = integer(1),
+                                            hybrid_count = integer(1),
+                                            green_count = integer(1),
+                                            bronze_count = integer(1),
+                                            closed_count = integer(1),
+                                            oa_share = 0))
+    }
+  } 
+  
+  table1 <- table1 %>% arrange(Publication_Year_ch)
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <- table1 %>%
+    summarise(Publication_Year_ch="Total",
+              P_tot=sum(P_tot),
+              oa_count=sum(oa_count),
+              gold_count=sum(gold_count),
+              hybrid_count=sum(hybrid_count),
+              green_count=sum(green_count),
+              bronze_count=sum(bronze_count),
+              closed_count=sum(closed_count),
+              oa_share=sum(oa_count)/sum(P_tot))
+  
+  bind_rows(table1, table2)
 }
 
 
@@ -440,7 +454,7 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
   # Fetch table 1 for total number of publications and lastyear
   t1 <- abm_table1(con = con, unit_code = unit_code)
   lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
-
+  
   # Fetch table 3 for cf and top10
   t3 <- abm_table3(con = con, unit_code = unit_code) %>%
     filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
@@ -454,7 +468,7 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
   if (!"Pool" %in% class(con)) dbDisconnect(con)
-
+  
   list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
        cf = t3$cf,
        top10_share = t3$top10_share,
@@ -474,7 +488,7 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
 #' @import pool dplyr
 #' @export
 abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
-
+  
   # Get publication level data for selected unit (and filter on pub_year if given)
   orgdata <- abm_data(con = con) %>%
     filter(Unit_code == unit_code &
@@ -525,7 +539,7 @@ abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_
 #' @import dplyr
 #' @noRd
 hiersort <- function(df, idfield, levelfield, parentfield, sortfield) {
-
+  
   workdf <- df[, c(idfield, levelfield, parentfield, sortfield)]
   names(workdf) <- c("id", "level", "parent", "sortfield")
   
@@ -546,7 +560,7 @@ hiersort <- function(df, idfield, levelfield, parentfield, sortfield) {
   }
   
   res <- select(res, id, fullsort)
-
+  
   names(res)[1] <- idfield
   
   res %>%
@@ -594,21 +608,21 @@ unit_info <- function(con){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_publications <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-
+  
   # Get publication level data for selected unit
   orgdata <- con %>%
     tbl("masterfile") %>%
     filter(Unit_code == unit_code &
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-      left_join(abm_oa_data(con, unit_code), by=c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
-      select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
-      mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
-      collect()
-        
+    left_join(abm_oa_data(con, unit_code), by=c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
+    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
+    mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
+    collect()
+  
   orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
-  
+
 #' Public data from the Annual Bibliometric Monitoring project
 #' 
 #' This returns an object which contains data for the various higher 
@@ -665,7 +679,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
     return (readr::read_rds(cache_location))  
   
   db <- pool_bib()
-
+  
   # retrieve unit codes
   units_table <- 
     unit_info(con = db) %>%
@@ -678,8 +692,11 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   # retrieve sort order for DiVA publication types
   pubtype_order <-
-    get_pubtype_order(con = pool_bib()) %>%
+    get_pubtype_order(con = db) %>%
     arrange(pt_ordning)
+  
+  indicator_descriptions <-
+    get_indic_descriptions(con = db)
   
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
@@ -701,11 +718,11 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   poolClose(db)
   
-  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order)
+  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order, "indicator_desriptions" = indicator_descriptions)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 
-
+  
   return(out)  
 }
 
@@ -745,7 +762,7 @@ abm_private_data <- function(unit_code) {
     unit_info(con = db) %>%
     collect() %>%
     arrange(-desc(org_level)) 
-
+  
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
     tabs <- list(
@@ -764,7 +781,7 @@ abm_private_data <- function(unit_code) {
   res <- setNames(res, unit_code)
   
   poolClose(db)
-
+  
   out <- list("meta" = units_table, "units" = res)
   
   return(out)  
@@ -824,7 +841,7 @@ abm_graph_wos_coverage <- function(df){
 abm_graph_cf <- function(df){
   kth_cols <- palette_kth(4)
   ymax <- max(2, ceiling(max(df$cf)))
-
+  
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
@@ -851,10 +868,10 @@ abm_graph_top10 <- function(df){
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
     geom_line(color = kth_cols["blue"]) +
-  xlab(NULL) +
-  ylab(NULL) +
-  geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
-  scale_y_continuous(labels = percent, limits = c(0, ymax)) +
+    xlab(NULL) +
+    ylab(NULL) +
+    geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = percent, limits = c(0, ymax)) +
     kth_theme()
 }
 
@@ -867,7 +884,7 @@ abm_graph_top10 <- function(df){
 abm_graph_jcf <- function(df){
   kth_cols <- palette_kth(4)
   ymax <- max(2, ceiling(max(df$jcf)))
-
+  
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = jcf, group=1)) +
     geom_point() + 
@@ -936,7 +953,7 @@ abm_graph_copub <- function(df){
 #' @import waffle
 #' @export
 abm_waffle_pct <- function(pct, 
-  col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
+                           col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
   if(pct < 0.0 | pct > 1.0)
     stop("Please give a number between 0 and 1")
   yes <- round(100*pct)
@@ -967,21 +984,21 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
   }
   
   value <- round(value, roundto)
-
+  
   title <- sprintf(paste0("%s = %.", roundto, "f%s"), 
-    label, value, ifelse(pct, "%", ""))
-
+                   label, value, ifelse(pct, "%", ""))
+  
   blue <- tolower(palette_kth()["blue"])
   cerise <- tolower(palette_kth()["cerise"])
-
+  
   ggplot(tibble(measure = label, target = reference, value = value)) +
     labs(title = title) +
     geom_bar(aes(x = measure, y = max(2 * target, ceiling(value))), 
-      fill = "lightgray", stat = "identity", width = 0.7, alpha = 1) +
+             fill = "lightgray", stat = "identity", width = 0.7, alpha = 1) +
     geom_bar(aes(x = measure, y = value), 
-      fill = blue,  stat = "identity", width = 0.4) +
+             fill = blue,  stat = "identity", width = 0.4) +
     geom_errorbar(aes(x = measure, ymin = target, ymax = target), 
-      color = cerise, width = 0.9, size = 1.1) +
+                  color = cerise, width = 0.9, size = 1.1) +
     coord_flip() +
     theme(
       plot.title = element_text(size = 12, hjust = 0.05),
@@ -1023,43 +1040,43 @@ abm_format_rows <- function(t){
 abm_graph_oadata_pie <- function(df){
   #unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
   #kth_cols <- as.vector(palette_kth(4))
-
-    unpaywall_colors <- data.frame("Gold"="#F9BC01",
-                                   "Hybrid"="#8D4EB4",
-                                   "Green"="#20E168",
-                                   "Bronze"="#CD7F32",
-                                   "Closed"="#BBBBBB") %>%
-        rename("Not OA"="Closed")
-    
-    df_oa_graphdata <- df %>%
-        filter(Publication_Year_ch == "Total") %>%
-        select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
-        rename("Gold" = gold_count,
-               "Hybrid" = hybrid_count,
-               "Green" = green_count,
-               "Bronze" = bronze_count,
-               "Not OA" = closed_count)
-
-        percentages <- df %>%
-        filter(Publication_Year_ch == "Total") %>%
-        mutate(gold_count = 100*gold_count/P_tot,
-               hybrid_count = 100*hybrid_count/P_tot,
-               green_count = 100*green_count/P_tot,
-               bronze_count = 100*bronze_count/P_tot,
-               closed_count = 100*closed_count/P_tot) %>%
-        select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
-        t() %>%
-        format(digits=2) %>%
-        t()
-
-    #Remove empty categories
-    df_oa_graphdata <- df_oa_graphdata[,t(df_oa_graphdata)[,1]!=0]
-    percentages <- percentages[,t(percentages)[,1] %>% as.numeric() != 0]
-    unpaywall_colors <- unpaywall_colors %>%
-        names(.) %in% names(df_oa_graphdata) %>%
-        unpaywall_colors[.] %>%
-        t()
-
+  
+  unpaywall_colors <- data.frame("Gold"="#F9BC01",
+                                 "Hybrid"="#8D4EB4",
+                                 "Green"="#20E168",
+                                 "Bronze"="#CD7F32",
+                                 "Closed"="#BBBBBB") %>%
+    rename("Not OA"="Closed")
+  
+  df_oa_graphdata <- df %>%
+    filter(Publication_Year_ch == "Total") %>%
+    select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
+    rename("Gold" = gold_count,
+           "Hybrid" = hybrid_count,
+           "Green" = green_count,
+           "Bronze" = bronze_count,
+           "Not OA" = closed_count)
+  
+  percentages <- df %>%
+    filter(Publication_Year_ch == "Total") %>%
+    mutate(gold_count = 100*gold_count/P_tot,
+           hybrid_count = 100*hybrid_count/P_tot,
+           green_count = 100*green_count/P_tot,
+           bronze_count = 100*bronze_count/P_tot,
+           closed_count = 100*closed_count/P_tot) %>%
+    select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
+    t() %>%
+    format(digits=2) %>%
+    t()
+  
+  #Remove empty categories
+  df_oa_graphdata <- df_oa_graphdata[,t(df_oa_graphdata)[,1]!=0]
+  percentages <- percentages[,t(percentages)[,1] %>% as.numeric() != 0]
+  unpaywall_colors <- unpaywall_colors %>%
+    names(.) %in% names(df_oa_graphdata) %>%
+    unpaywall_colors[.] %>%
+    t()
+  
   labls <- paste(names(df_oa_graphdata), "\n", percentages, " %", separator="")
   pie(t(df_oa_graphdata),  labels = c("","","","","",""), col = unpaywall_colors, cex = 0.8, radius = 0.8)
   pieangles <- floating.pie(x=t(df_oa_graphdata), col = unpaywall_colors)
@@ -1081,14 +1098,14 @@ abm_graph_oadata_stackedarea <- function(df){
     rename("Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Bronze" = bronze_count, "Not OA" = closed_count)
   
   xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year_ch") %>%
-      rename("OA type:"=variable)
-
+    rename("OA type:"=variable)
+  
   ggplot(xymelt, aes(x = Publication_Year_ch, y = value, fill = `OA type:`, group = `OA type:`)) +
-      scale_fill_manual(values=unpaywall_cols) + 
-      geom_area() +
-      #TODO: geom_line() +  ?
-      xlab(NULL) +
-      ylab(NULL) +
-      kth_theme()
-
+    scale_fill_manual(values=unpaywall_cols) + 
+    geom_area() +
+    #TODO: geom_line() +  ?
+    xlab(NULL) +
+    ylab(NULL) +
+    kth_theme()
+  
 }

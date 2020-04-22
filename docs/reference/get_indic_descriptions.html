@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Public data with Annual Bibliometric Monitoring for KTH assembed in 2019 — abm_public_kth • bibliomatrix</title>
+<title>Get displayname and descriptions for indicators — get_indic_descriptions • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,10 +35,8 @@
 
 
 
-<meta property="og:title" content="Public data with Annual Bibliometric Monitoring for KTH assembed in 2019 — abm_public_kth" />
-<meta property="og:description" content="A nested named list with two slots - a) &quot;meta&quot; with a tibble 
-containing organizational unit information from KTH, including unit codes 
-and b) &quot;units&quot; - a named list with a set of five tibbles per units" />
+<meta property="og:title" content="Get displayname and descriptions for indicators — get_indic_descriptions" />
+<meta property="og:description" content="Get displayname and descriptions for indicators" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -125,36 +123,36 @@ and b) &quot;units&quot; - a named list with a set of five tibbles per units" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Public data with Annual Bibliometric Monitoring for KTH assembed in 2019</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/package-bibliomatrix.R'><code>R/package-bibliomatrix.R</code></a></small>
-    <div class="hidden name"><code>abm_public_kth.Rd</code></div>
+    <h1>Get displayname and descriptions for indicators</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
+    <div class="hidden name"><code>get_indic_descriptions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A nested named list with two slots - a) "meta" with a tibble 
-containing organizational unit information from KTH, including unit codes 
-and b) "units" - a named list with a set of five tibbles per units</p>
+    <p>Get displayname and descriptions for indicators</p>
     </div>
 
-    <pre class="usage"><span class='no'>abm_public_kth</span></pre>
+    <pre class="usage"><span class='fu'>get_indic_descriptions</span>(<span class='no'>con</span>)</pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>con</th>
+      <td><p>connection to db - if no connection is given, use abm_public_kth data</p></td>
+    </tr>
+    </table>
 
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An object of class <code>list</code> of length 4.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The data comes from a function call to <code><a href='abm_public_data.html'>abm_public_data</a></code>
-which requires database credentials being present in the .Renviron file. 
-For information regarding how to access the data for various units at KTH,
-please look at the examples for the <code><a href='abm_public_data.html'>abm_public_data</a></code> function.</p>
+    <p>tibble with names and descriptions</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#format">Format</a></li>
-      <li><a href="#details">Details</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      <li><a href="#value">Value</a></li>
     </ul>
 
   </div>

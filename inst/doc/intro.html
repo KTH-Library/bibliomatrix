@@ -1,26 +1,14 @@
 <!DOCTYPE html>
+
 <html>
+
 <head>
-<<<<<<< HEAD
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-
-<title>Getting started</title>
-
-<script type="text/javascript">
-window.onload = function() {
-  var imgs = document.getElementsByTagName('img'), i, img;
-  for (i = 0; i < imgs.length; i++) {
-    img = imgs[i];
-    // center an image if it is the only element of its parent
-    if (img.parentElement.childElementCount === 1)
-      img.parentElement.style.textAlign = 'center';
-=======
 
 <meta charset="utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
@@ -47,7 +35,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -55,60 +43,68 @@ pre.numberSource a.sourceLine::before
     -ms-user-select: none; user-select: none;
     padding: 0 4px; width: 4em;
     color: #aaaaaa;
->>>>>>> master
   }
-};
-</script>
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
-<!-- Styles for R syntax highlighter -->
-<style type="text/css">
-   pre .operator,
-   pre .paren {
-     color: rgb(104, 118, 135)
-   }
-
-   pre .literal {
-     color: #990073
-   }
-
-   pre .number {
-     color: #099;
-   }
-
-   pre .comment {
-     color: #998;
-     font-style: italic
-   }
-
-   pre .keyword {
-     color: #900;
-     font-weight: bold
-   }
-
-   pre .identifier {
-     color: rgb(0, 0, 0);
-   }
-
-   pre .string {
-     color: #d14;
-   }
 </style>
-
-<!-- R syntax highlighter -->
-<script type="text/javascript">
-var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
-hljs.initHighlightingOnLoad();
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
 </script>
 
 
 
-<<<<<<< HEAD
-<style type="text/css">
-body, td {
-   font-family: sans-serif;
-   background-color: white;
-   font-size: 13px;
-=======
 <style type="text/css">body {
 background-color: #fff;
 margin: 1em auto;
@@ -119,9 +115,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -168,139 +161,107 @@ border-width: 1px;
 border-style: inset;
 line-height: 18px;
 padding: 5px 5px;
->>>>>>> master
 }
-
-body {
-  max-width: 800px;
-  margin: auto;
-  padding: 1em;
-  line-height: 20px;
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
 }
-
-tt, code, pre {
-   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+table thead, table tr.even {
+background-color: #f7f7f7;
 }
-
-h1 {
-   font-size:2.2em;
+p {
+margin: 0.5em 0;
 }
-
-h2 {
-   font-size:1.8em;
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
 }
-
-h3 {
-   font-size:1.4em;
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
 }
-
-h4 {
-   font-size:1.0em;
+dl {
+margin-left: 0;
 }
-
-h5 {
-   font-size:0.9em;
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
 }
-
-h6 {
-   font-size:0.8em;
+dl dt {
+font-weight: bold;
 }
-
-a:visited {
-   color: rgb(50%, 0%, 50%);
+ul {
+margin-top: 0;
 }
-
-pre, img {
-  max-width: 100%;
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
 }
 pre {
-  overflow-x: auto;
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
 }
-pre code {
-   display: block; padding: 0.5em;
+pre:not([class]) {
+background-color: #f7f7f7;
 }
-
 code {
-  font-size: 92%;
-  border: 1px solid #ccc;
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
 }
-
-code[class] {
-  background-color: #F8F8F8;
+p > code, li > code {
+padding: 2px 0px;
 }
-
-table, td, th {
-  border: none;
+div.figure {
+text-align: center;
 }
-
-blockquote {
-   color:#666666;
-   margin:0;
-   padding-left: 1em;
-   border-left: 0.5em #EEE solid;
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
 }
-
-hr {
-   height: 0px;
-   border-bottom: none;
-   border-top-width: thin;
-   border-top-style: dotted;
-   border-top-color: #999999;
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
 }
-
-@media print {
-   * {
-      background: transparent !important;
-      color: black !important;
-      filter:none !important;
-      -ms-filter: none !important;
-   }
-
-   body {
-      font-size:12pt;
-      max-width:100%;
-   }
-
-   a, a:visited {
-      text-decoration: underline;
-   }
-
-   hr {
-      visibility: hidden;
-      page-break-before: always;
-   }
-
-   pre, blockquote {
-      padding-right: 1em;
-      page-break-inside: avoid;
-   }
-
-   tr, img {
-      page-break-inside: avoid;
-   }
-
-   img {
-      max-width: 100% !important;
-   }
-
-   @page :left {
-      margin: 15mm 20mm 15mm 10mm;
-   }
-
-   @page :right {
-      margin: 15mm 10mm 15mm 20mm;
-   }
-
-   p, h2, h3 {
-      orphans: 3; widows: 3;
-   }
-
-   h2, h3 {
-      page-break-after: avoid;
-   }
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
 }
-<<<<<<< HEAD
-=======
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
 a:hover {
 color: #6666ff; }
 a:visited {
@@ -322,378 +283,271 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
->>>>>>> master
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
+
 
 
 
 </head>
 
 <body>
-<p>The main parts of the <code>bibliomatrix</code> package are:</p>
 
+
+
+
+<h1 class="title toc-ignore">Introduction to usage of <code>bibliomatrix</code></h1>
+
+
+
+<p>The main parts of the <code>bibliomatrix</code> package are:</p>
 <ul>
 <li>Functions to access bibliometric and LDAP/AD data from KTH (those need credentials to work)</li>
 <li>A public dataset for the KTH Annual Bibliometric Monitoring (ABM)</li>
 <li>A Shiny app and a flexdashboard layout for presenting the ABM</li>
 <li>Functions related to filling the ABM presenation with results</li>
 </ul>
-
+<div id="getting-started" class="section level2">
 <h2>Getting started</h2>
-
 <p>First load some useful packages, including <code>bibliomatrix</code>:</p>
-<<<<<<< HEAD
-
-<pre><code class="r">library(bibliomatrix)
-library(dplyr)
-library(stringr)
-library(readr)
-library(knitr)
-library(bench)
-library(DBI)
-library(pool)
-
-if (Sys.info()[&quot;sysname&quot;] == &quot;Windows&quot;) 
-  readRenviron(file.path(Sys.getenv(&quot;R_USER&quot;), &quot;.Renviron&quot;))
-</code></pre>
-
-=======
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(bibliomatrix)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(stringr)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(readr)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">library</span>(knitr)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">library</span>(bench)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">library</span>(DBI)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="kw">library</span>(pool)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="cf">if</span> (<span class="kw">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="op">==</span><span class="st"> &quot;Windows&quot;</span>) </a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">  <span class="kw">readRenviron</span>(<span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(bibliomatrix)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(stringr)</a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">library</span>(readr)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">library</span>(knitr)</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="kw">library</span>(bench)</a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="kw">library</span>(DBI)</a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="kw">library</span>(pool)</a>
+<a class="sourceLine" id="cb1-9" title="9"></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="cf">if</span> (<span class="kw">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="op">==</span><span class="st"> &quot;Windows&quot;</span>) </a>
+<a class="sourceLine" id="cb1-11" title="11">  <span class="kw">readRenviron</span>(<span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</a></code></pre></div>
 </div>
 <div id="data-for-annual-bibliometric-monitoring-abm" class="section level2">
->>>>>>> master
 <h2>Data for Annual Bibliometric Monitoring (ABM)</h2>
-
-<p>In order to get data from the Microsoft SQL Server database, an <code>.Renviron</code> file is currently required with values being provided for the following envvars: <code>DBUSER</code> (the MSSQL Server service account name for the BIBMON db), <code>DBPASS</code>, <code>DBHOST</code> (the hostname for the MSSQL server) and <code>DBNAME</code> (use &ldquo;BIBMON&rdquo;).</p>
-
+<p>In order to get data from the Microsoft SQL Server database, an <code>.Renviron</code> file is currently required with values being provided for the following envvars: <code>DBUSER</code> (the MSSQL Server service account name for the BIBMON db), <code>DBPASS</code>, <code>DBHOST</code> (the hostname for the MSSQL server) and <code>DBNAME</code> (use “BIBMON”).</p>
 <p>Once this has been provided in the <code>.Renviron</code> file, data for the ABM tables can be retrieved.</p>
-
 <p><em>NOTE: For the public part of ABM, no database connection is needed, see <a href="public-data.html">Using bundled data in bibliomatrix</a>.</em></p>
-<<<<<<< HEAD
-
-<pre><code class="r"># Open a connection pool to Microsoft SQL Server BIBMON database
-bibmon &lt;- pool_bib(&quot;mssql&quot;)
-
-# get data for ABM table 1
-t1 &lt;- abm_table1(con = bibmon, unit_code = &quot;KTH&quot;)
-
-# display first few results
-t1 %&gt;% 
-  slice(1:5) %&gt;% 
-  select(1:2) %&gt;% 
-  kable()
-</code></pre>
-
-<table><thead>
-<tr>
-=======
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># Open a connection pool to Microsoft SQL Server BIBMON database</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">bibmon &lt;-<span class="st"> </span><span class="kw">pool_bib</span>(<span class="st">&quot;mssql&quot;</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># get data for ABM table 1</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">t1 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co"># display first few results</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">t1 <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="st">  </span><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># Open a connection pool to Microsoft SQL Server BIBMON database</span></a>
+<a class="sourceLine" id="cb2-2" title="2">bibmon &lt;-<span class="st"> </span><span class="kw">pool_bib</span>(<span class="st">&quot;mssql&quot;</span>)</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co"># get data for ABM table 1</span></a>
+<a class="sourceLine" id="cb2-5" title="5">t1 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</a>
+<a class="sourceLine" id="cb2-6" title="6"></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co"># display first few results</span></a>
+<a class="sourceLine" id="cb2-8" title="8">t1 <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-10" title="10"><span class="st">  </span><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-11" title="11"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
->>>>>>> master
 <th align="left">Publication_Type_DiVA</th>
 <th align="right">2012</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">Article, peer review</td>
 <td align="right">1329.232082</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">Article, other</td>
 <td align="right">122.787757</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">Conference paper, peer review</td>
 <td align="right">920.234917</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">Conference paper, other</td>
 <td align="right">386.325115</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">Book</td>
 <td align="right">9.319048</td>
 </tr>
-<<<<<<< HEAD
-</tbody></table>
-
-<pre><code class="r">
-# You can build a sqlite3 databsae for local use (this will take a while the first time)
-db_sync()
-localdb &lt;- pool_bib(&quot;sqlite&quot;)
-t2 &lt;- abm_table1(con = localdb, unit_code = &quot;KTH&quot;)
-
-# are the results the same?
-identical(t1, t2)
-#&gt; [1] TRUE
-
-# what about performance?
-bench_time(abm_table1(con = bibmon, unit_code = &quot;KTH&quot;))
-#&gt; process    real 
-#&gt;   515ms   538ms
-bench_time(abm_table1(con = localdb, unit_code = &quot;KTH&quot;))
-#&gt; process    real 
-#&gt;   454ms   454ms
-
-poolClose(bibmon)
-poolClose(localdb)
-</code></pre>
-
-<h2>Data from LDAP / Active Directory</h2>
-
-<p>In order to get data from the Active Directory, an <code>.Renviron</code> file should be used with values being provided for the following envvars: <code>LDAP_USER</code> (service account name in LDAP for issuing queries with), <code>LDAP_PASS</code>, <code>LDAP_HOST</code> (the hostname for the LDAP server) and <code>LDAP_BASE</code> (for example &ldquo;dc=ug,dc=kth,dc=se&rdquo;).</p>
-
-<pre><code class="r"># search Active Directory using an account name, return first 10 rows
-ad_search(&quot;agnel&quot;, &quot;accountname&quot;) %&gt;% head(10) %&gt;% kable()
-</code></pre>
-
-<table><thead>
-<tr>
-=======
 </tbody>
 </table>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co"># You can build a sqlite3 databsae for local use (this will take a while the first time)</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">db_sync</span>()</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">localdb &lt;-<span class="st"> </span><span class="kw">pool_bib</span>(<span class="st">&quot;sqlite&quot;</span>)</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">t2 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co"># are the results the same?</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw">identical</span>(t1, t2)</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; [1] FALSE</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co"># what about performance?</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;   232ms   278ms</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;   117ms   117ms</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="kw">poolClose</span>(bibmon)</a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="kw">poolClose</span>(localdb)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co"># You can build a sqlite3 databsae for local use (this will take a while the first time)</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">db_sync</span>()</a>
+<a class="sourceLine" id="cb3-4" title="4">localdb &lt;-<span class="st"> </span><span class="kw">pool_bib</span>(<span class="st">&quot;sqlite&quot;</span>)</a>
+<a class="sourceLine" id="cb3-5" title="5">t2 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</a>
+<a class="sourceLine" id="cb3-6" title="6"></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co"># are the results the same?</span></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="kw">identical</span>(t1, t2)</a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt; [1] FALSE</span></a>
+<a class="sourceLine" id="cb3-10" title="10"></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co"># what about performance?</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</a>
+<a class="sourceLine" id="cb3-13" title="13"><span class="co">#&gt; process    real </span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="co">#&gt;   203ms   347ms</span></a>
+<a class="sourceLine" id="cb3-15" title="15"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</a>
+<a class="sourceLine" id="cb3-16" title="16"><span class="co">#&gt; process    real </span></a>
+<a class="sourceLine" id="cb3-17" title="17"><span class="co">#&gt;   250ms   235ms</span></a>
+<a class="sourceLine" id="cb3-18" title="18"></a>
+<a class="sourceLine" id="cb3-19" title="19"><span class="kw">poolClose</span>(bibmon)</a>
+<a class="sourceLine" id="cb3-20" title="20"><span class="kw">poolClose</span>(localdb)</a></code></pre></div>
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2>Data from LDAP / Active Directory</h2>
 <p>In order to get data from the Active Directory, an <code>.Renviron</code> file should be used with values being provided for the following envvars: <code>LDAP_USER</code> (service account name in LDAP for issuing queries with), <code>LDAP_PASS</code>, <code>LDAP_HOST</code> (the hostname for the LDAP server) and <code>LDAP_BASE</code> (for example “dc=ug,dc=kth,dc=se”).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># search Active Directory using an account name, return first 10 rows</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">ad_search</span>(<span class="st">&quot;agnel&quot;</span>, <span class="st">&quot;accountname&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="co"># search Active Directory using an account name, return first 10 rows</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">ad_search</span>(<span class="st">&quot;agnel&quot;</span>, <span class="st">&quot;accountname&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
->>>>>>> master
 <th align="left">key</th>
 <th align="left">value</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">DN</td>
 <td align="left">CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">objectClass</td>
 <td align="left">top</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">objectClass</td>
 <td align="left">person</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">objectClass</td>
 <td align="left">organizationalPerson</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">objectClass</td>
 <td align="left">user</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">cn</td>
 <td align="left">Agne Larsson (agnel)</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">sn</td>
 <td align="left">Larsson</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">c</td>
 <td align="left">SE</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">l</td>
 <td align="left">Stockholm</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">st</td>
 <td align="left">Stockholm</td>
 </tr>
-<<<<<<< HEAD
-</tbody></table>
-
-<pre><code class="r">
-# search AD using a KTH identifier, same result, so return first row only
-ad_search(&quot;u1z88syr&quot;, &quot;kthid&quot;) %&gt;% head(1) %&gt;% kable()
-</code></pre>
-
-<table><thead>
-<tr>
-=======
 </tbody>
 </table>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># search AD using a KTH identifier, same result, so return first row only</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">ad_search</span>(<span class="st">&quot;u1z88syr&quot;</span>, <span class="st">&quot;kthid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="co"># search AD using a KTH identifier, same result, so return first row only</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw">ad_search</span>(<span class="st">&quot;u1z88syr&quot;</span>, <span class="st">&quot;kthid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
->>>>>>> master
 <th align="left">key</th>
 <th align="left">value</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">DN</td>
 <td align="left">CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se</td>
 </tr>
-<<<<<<< HEAD
-</tbody></table>
-
-<pre><code class="r">
-# default if search_type is not specified is to use KTH id
-#ad_search(&quot;u1z88syr&quot;)
-
-# display memberships for an Active Directory user with a specific KTH id
-ad_search(&quot;u1z88syr&quot;) %&gt;% 
-  filter(str_starts(key, &quot;ug.*Affiliation&quot;)) %&gt;% 
-  kable() 
-</code></pre>
-
-<table><thead>
-<tr>
-=======
 </tbody>
 </table>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co"># default if search_type is not specified is to use KTH id</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#ad_search(&quot;u1z88syr&quot;)</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co"># display memberships for an Active Directory user with a specific KTH id</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw">ad_search</span>(<span class="st">&quot;u1z88syr&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_starts</span>(key, <span class="st">&quot;ug.*Affiliation&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">  </span><span class="kw">kable</span>() </a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="co"># default if search_type is not specified is to use KTH id</span></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#ad_search(&quot;u1z88syr&quot;)</span></a>
+<a class="sourceLine" id="cb6-4" title="4"></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co"># display memberships for an Active Directory user with a specific KTH id</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="kw">ad_search</span>(<span class="st">&quot;u1z88syr&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_starts</span>(key, <span class="st">&quot;ug.*Affiliation&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="st">  </span><span class="kw">kable</span>() </a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
->>>>>>> master
 <th align="left">key</th>
 <th align="left">value</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">ugPrimaryAffiliation</td>
 <td align="left">staff</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">ugAffiliation</td>
 <td align="left">staff</td>
 </tr>
-<tr>
+<tr class="odd">
 <td align="left">ugAffiliation</td>
 <td align="left">member</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">ugAffiliation</td>
 <td align="left">employee</td>
 </tr>
-<<<<<<< HEAD
-</tbody></table>
-
-<pre><code class="r">
-# some functions have been defined to &quot;translate&quot; between identificators
-ad_accountname(&quot;u1z88syr&quot;)
-#&gt; [1] &quot;agnel&quot;
-ad_kthid(&quot;agnel&quot;)
-#&gt; [1] &quot;u1z88syr&quot;
-
-# several kth identifiers can be processed, for example:
-kthids &lt;-
-&quot;u1kzf1xh
-u1g9umtq
-u1jr9fll 
-u1ygqmuy
-u13bp6vd
-u18qe64m&quot; %&gt;% read_lines()
-
-# display memberof entries beginning with &quot;aff&quot; for a given user
-ad_search(kthids[4]) %&gt;% 
-  ad_memberof() %&gt;% 
-  filter(str_starts(memberof, &quot;aff&quot;)) %&gt;%
-  kable()
-</code></pre>
-
-<table><thead>
-<tr>
-=======
 </tbody>
 </table>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co"># some functions have been defined to &quot;translate&quot; between identificators</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">ad_accountname</span>(<span class="st">&quot;u1z88syr&quot;</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] &quot;agnel&quot;</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="kw">ad_kthid</span>(<span class="st">&quot;agnel&quot;</span>)</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; [1] &quot;u1z88syr&quot;</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co"># several kth identifiers can be processed, for example:</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">kthids &lt;-</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="st">&quot;u1kzf1xh</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="st">u1g9umtq</span></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="st">u1jr9fll </span></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="st">u1ygqmuy</span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="st">u13bp6vd</span></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="st">u18qe64m&quot;</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">read_lines</span>()</a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17"><span class="co"># display memberof entries beginning with &quot;aff&quot; for a given user</span></a>
-<a class="sourceLine" id="cb7-18" data-line-number="18"><span class="kw">ad_search</span>(kthids[<span class="dv">4</span>]) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="st">  </span><span class="kw">ad_memberof</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-20" data-line-number="20"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_starts</span>(memberof, <span class="st">&quot;aff&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-21" data-line-number="21"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"></a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co"># some functions have been defined to &quot;translate&quot; between identificators</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">ad_accountname</span>(<span class="st">&quot;u1z88syr&quot;</span>)</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">#&gt; [1] &quot;agnel&quot;</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="kw">ad_kthid</span>(<span class="st">&quot;agnel&quot;</span>)</a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">#&gt; [1] &quot;u1z88syr&quot;</span></a>
+<a class="sourceLine" id="cb7-7" title="7"></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="co"># several kth identifiers can be processed, for example:</span></a>
+<a class="sourceLine" id="cb7-9" title="9">kthids &lt;-</a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="st">&quot;u1kzf1xh</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="st">u1g9umtq</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="st">u1jr9fll </span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="st">u1ygqmuy</span></a>
+<a class="sourceLine" id="cb7-14" title="14"><span class="st">u13bp6vd</span></a>
+<a class="sourceLine" id="cb7-15" title="15"><span class="st">u18qe64m&quot;</span> <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">read_lines</span>()</a>
+<a class="sourceLine" id="cb7-16" title="16"></a>
+<a class="sourceLine" id="cb7-17" title="17"><span class="co"># display memberof entries beginning with &quot;aff&quot; for a given user</span></a>
+<a class="sourceLine" id="cb7-18" title="18"><span class="kw">ad_search</span>(kthids[<span class="dv">4</span>]) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-19" title="19"><span class="st">  </span><span class="kw">ad_memberof</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb7-20" title="20"><span class="st">  </span><span class="kw">filter</span>(<span class="kw">str_starts</span>(memberof, <span class="st">&quot;aff&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-21" title="21"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
->>>>>>> master
 <th align="left">memberof</th>
 </tr>
-</thead><tbody>
-<tr>
+</thead>
+<tbody>
+<tr class="odd">
 <td align="left">aff_faculty</td>
 </tr>
-<tr>
+<tr class="even">
 <td align="left">aff_staff</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 </body>
-
 </html>

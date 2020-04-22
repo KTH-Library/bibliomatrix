@@ -88,6 +88,36 @@ current_date <- format(Sys.Date(), "%Y%m%d")
 
 abm_unit_title<- paste0("ABM: ",unit_label)
 
+getheader <- function(indics){
+  getcell <- function(indic){
+    indicrow <- get_indic_descriptions() %>%
+      filter(tolower(varname) == tolower(indic))
+    if(nrow(indicrow) == 1){
+      disp <- indicrow %>% pull(displayname)
+      popup <- indicrow %>% pull(description_short)
+    } else {
+      disp = indic
+      popup = ""
+    }
+    glue("th('{disp}', title = '{popup}')")
+  }
+  cells <- paste(lapply(indics, getcell), collapse = ",")
+  paste0("htmltools::withTags(table(class = 'display', thead(tr(", cells, "))))")
+}
+
+getcolnames <- function(indics){
+  getname <- function(indic){
+    newname <- get_indic_descriptions() %>%
+      filter(tolower(varname) == tolower(indic)) %>%
+      pull(displayname)
+    if(is_empty(newname)){
+      indic
+    } else {
+      newname
+    }
+  }
+  sapply(indics, getname)
+}
 
 ```
 
@@ -411,34 +441,31 @@ Row
 
 ```{r, fig.width=3.75}
 if (nrow(df_diva) > 0) {
-  
-  df <- df_diva %>% rename(
-    "WoS coverage" = "WoS_coverage",
-    "DiVA publication type" = "Publication_Type_DiVA",
-    "Total" = "P_frac")
-  
+
   filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
-  dt <- 
-    DT::datatable(df,
-      rownames = FALSE,
-      extensions = c("Buttons"), #c("Buttons", "Scroller"), 
-      style = "bootstrap", class = "compact", width = "720",
-      options = list(
-        #deferRender = TRUE, scroller = TRUE, scrollX = TRUE,
-        ordering = FALSE,
-        bPaginate = FALSE,
-        pageLength = 100,
-        dom = 'Bt',
-        buttons = list(list(extend = "copy", title=abm_unit_title),
-                       list(extend = "csv", filename = filename, title=abm_unit_title),
-                       list(extend = "excel", filename = filename, title=abm_unit_title))
-        )
-      ) %>%
-    formatRound(2:9, digits = 1, mark = "") %>%
-    formatPercentage("WoS coverage", digits = 1) %>%
-    abm_format_rows()
   
-  dt
+  header <- eval(parse(text = getheader(names(df_diva))))
+  
+  DT::datatable(df_diva,
+    container = header,
+    rownames = FALSE,
+    extensions = c("Buttons"), #c("Buttons", "Scroller"), 
+    style = "bootstrap", class = "compact", width = "720",
+    options = list(
+      #deferRender = TRUE, scroller = TRUE, scrollX = TRUE,
+      ordering = FALSE,
+      bPaginate = FALSE,
+      pageLength = 100,
+      dom = 'Bt',
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
+      )
+    ) %>%
+    formatRound(2:9, digits = 1, mark = "") %>%
+    formatPercentage(10, digits = 1) %>%
+    abm_format_rows()
+
 } else {
   shiny::HTML("<p><i>There are no publications available for this table</i></p>")
 }
@@ -450,10 +477,11 @@ if (nrow(df_diva) > 0) {
 
 ```{r, fig.width=3.75}
 if (nrow(df_diva) > 0) {
-  df %>% 
+  df_diva %>% 
     mutate_at(vars(starts_with("201"), starts_with("Total")), round, digits = 1) %>%
     mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
-    kable(align = c("l", rep("r", ncol(df) - 1))) %>% 
+    kable(col.names = getcolnames(names(df_diva)),
+          align = c("l", rep("r", ncol(df_diva) - 1))) %>% 
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 } else {
@@ -519,19 +547,13 @@ Row
 ### **Citations 3-year window, fractional counts** {.no-mobile}
 
 ```{r}
-df <- df_cit3y %>% rename(
-  "Publication year" = "Publication_Year_ch",
-  "Publications" = "P_frac",
-  "Total Citations" = "C3_frac",
-  "Average Citations" = "C3",
-  "Uncited Publications" = "P_uncited",
-  "Share Uncited" = "Share_uncited"
-)
-
-if (nrow(df) > 0) {
+if (nrow(df_cit3y) > 0) {
   filename <- paste0("ABM_table2_", unit_file_label, "_", current_date)
+  
+  header <- eval(parse(text = getheader(names(df_cit3y))))
 
-  DT::datatable(df,
+  DT::datatable(df_cit3y,
+    container = header,
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -544,7 +566,7 @@ if (nrow(df) > 0) {
     )
   ) %>% 
     formatRound(2:5, digits = 1, mark = "") %>%
-    formatPercentage("Share Uncited", digits = 1) %>%
+    formatPercentage(6, digits = 1) %>%
     abm_format_rows()
 } else {
   shiny::HTML("<p><i>There are no publications available for this table</i></p>")
@@ -554,11 +576,12 @@ if (nrow(df) > 0) {
 ### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-if (nrow(df) > 0) {
-  df %>% 
+if (nrow(df_cit3y) > 0) {
+  df_cit3y %>% 
     mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
     mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
+    kable(col.names = getcolnames(names(df_cit3y)),
+          align = c("l", rep("r", ncol(df_cit3y) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 } else {
@@ -569,16 +592,13 @@ if (nrow(df) > 0) {
 ### **Field normalized citations - Fractionalized (3-year moving average)** {.no-mobile}
 
 ```{r} 
-df <- df_cf %>% rename(
-  "Publication years" = "interval",
-  "Publications" = "P_frac",
-  "Average Cf" = "cf",
-  "Top 10% publications" = "top10_count",
-  "Share Top 10%" = "top10_share")
-
-if (nrow(df) > 0) {
+if (nrow(df_cf) > 0) {
   filename <- paste0("ABM_table3_", unit_file_label, "_", current_date)
-  DT::datatable(df,
+  
+  header <- eval(parse(text = getheader(names(df_cf))))
+   
+  DT::datatable(df_cf,
+    container = header,
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -602,12 +622,13 @@ if (nrow(df) > 0) {
 ### **Field normalized citations - Fractionalized (3-year moving average)** {.no-padding .mobile}
 
 ```{r}
-if (nrow(df) > 0) {
-  df %>% 
+if (nrow(df_cf) > 0) {
+  df_cf %>% 
     mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
     mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
     mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(align = c("l", rep("r", ncol(df) - 1))) %>% 
+    kable(col.names = getcolnames(names(df_cf)),
+          align = c("l", rep("r", ncol(df_cf) - 1))) %>% 
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 } else {
@@ -715,18 +736,13 @@ Row
 ### **3-year moving average, fractional counts** {.no-mobile}
 
 ```{r}
-df <- df_jcf %>% rename(
-  "Publication years" = "interval",
-  "Publications" = "P_frac",
-  "Average Journal Cf" = "jcf",
-  "Publications in Top 20% journals" = "top20_count",
-  "Share Top 20% journals" = "top20_share"
-)
-
-if (nrow(df) > 0) {
+if (nrow(df_jcf) > 0) {
   filename <- paste0("ABM_table4_", unit_file_label, "_", current_date)
 
-  DT::datatable(df,
+  header <- eval(parse(text = getheader(names(df_jcf))))
+ 
+  DT::datatable(df_jcf,
+    container = header,
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -751,12 +767,13 @@ if (nrow(df) > 0) {
 ### **3-year moving average, fractional counts** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df) > 0) {
-  df %>% 
+if (nrow(df_jcf) > 0) {
+  df_jcf %>% 
     mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
     mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
     mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
+    kable(col.names = getcolnames(names(df_jcf)),
+          align = c("l", rep("r", ncol(df_jcf) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 } else {
@@ -836,18 +853,13 @@ Row
 ### **International and Swedish non-university co-publications (full counts)** {.no-mobile}
 
 ```{r}
-df <- df_copub %>% rename(
-  "Publication years" = "interval",
-  "Publications" = "P_full",
-  "Swedish non-university co-publications" = "nonuniv_count",
-  "Share Swedish non-university" = "nonuniv_share",
-  "International co-publications" = "int_count",
-  "Share international" = "int_share")
-
-if (nrow(df) > 0) {
+if (nrow(df_copub) > 0) {
   filename <- paste0("ABM_table5_", unit_file_label, "_", current_date)
+
+  header <- eval(parse(text = getheader(names(df_copub))))
   
-  DT::datatable(df,
+  DT::datatable(df_copub,
+    container = header,
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -869,10 +881,11 @@ if (nrow(df) > 0) {
 ### **International and Swedish non-university co-publications (full counts)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df) > 0) {
-  df %>% 
+if (nrow(df_copub) > 0) {
+  df_copub %>% 
     mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
+    kable(col.names = getcolnames(names(df_copub)),
+          align = c("l", rep("r", ncol(df_copub) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 } else {
@@ -937,27 +950,24 @@ Row
 ### **Open Access publications, full counts** {.no-mobile}
 
 ```{r}
-df <- df_oa %>% rename(
-  "Publication years" = "Publication_Year_ch",
-  "Publications" = "P_tot",
-  "Open Access publications" = "oa_count",
-  "OA gold" = "gold_count",
-  "OA hybrid" = "hybrid_count",
-  "OA green" = "green_count",
-  "OA bronze" = "bronze_count",
-  "Not OA" = "closed_count",
-  "Share OA" = "oa_share")
+if (nrow(df_oa) > 0) {
 
-if (nrow(df) > 0) {
-  DT::datatable(df,
+  filename <- paste0("ABM_open_access_", unit_file_label, "_", current_date)
+
+  header <- eval(parse(text = getheader(names(df_oa))))
+   
+  DT::datatable(df_oa,
+    container = header,
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
       ordering = FALSE,
       bPaginate = FALSE,
       dom = 'Bt',
-      buttons = c("copy", "csv", "excel"),
-      title = "ABM_open_access")
+      buttons = list(list(extend = "copy", title=abm_unit_title),
+                     list(extend = "csv", filename = filename, title=abm_unit_title),
+                     list(extend = "excel", filename = filename, title=abm_unit_title))
+      )
     ) %>%
     formatPercentage(9, digits = 1) %>%
     abm_format_rows()
@@ -969,10 +979,11 @@ if (nrow(df) > 0) {
 ### **Open Access publications, full counts** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df) > 0) {
-  df %>% 
+if (nrow(df_oa) > 0) {
+  df_oa %>% 
     mutate_at(vars(9), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(align = c("l", rep("r", ncol(df) - 1))) %>%
+    kable(col.names = getcolnames(names(df_oa)),
+          align = c("l", rep("r", ncol(df_oa) - 1))) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
 } else {

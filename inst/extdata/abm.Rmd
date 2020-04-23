@@ -668,9 +668,9 @@ if(isTRUE(unit_level >= 0)){
   mincov <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(woscov_frac) %>% min()
   minpubs <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumcov_full) %>% min()
 
-  cat(glue("Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication types Article, peer review and Conference paper, peer review)<br>"))
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
 
   if(minpubs < 50)
     cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
@@ -703,9 +703,9 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(woscov_cf$woscov_frac)
   minpubs <- min(woscov_cf$sumcov_full)
 
-  cat(glue("Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication type Article, peer review)<br>"))
+           "(DiVA publication type Article, peer review)<br></span>"))
 
   if(minpubs < 50)
     cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
@@ -829,9 +829,9 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(woscov_jcf$woscov_frac)
   minpubs <- min(woscov_jcf$sumcov_full)
 
-  cat(glue("Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication type Article, peer review)<br>"))
+           "(DiVA publication type Article, peer review)<br></span>"))
 
   if(minpubs < 50)
     cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
@@ -946,9 +946,9 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(woscov_copub$woscov_full)
   minpubs <- min(df_copub$P_full)
 
-  cat(glue("Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication type Article, peer review)<br>"))
+           "(DiVA publication type Article, peer review)<br></span>"))
 
   if(minpubs < 50)
     cat("<b>Indicators based on < 50 publications are considered unreliable</b>")

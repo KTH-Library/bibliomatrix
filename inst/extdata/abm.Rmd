@@ -265,7 +265,7 @@ has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
 last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 ```
 
-### **[Co-publishing `r last_interval`](#co-publishing)** {.no-padding .no-mobile}
+### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
 ```{r, fig.width = 3.75, fig.height = 2.5}
 
 if (has_rows == TRUE) {
@@ -286,7 +286,7 @@ if (has_rows == TRUE) {
 }
 ```
 
-### **[Co-publishing `r last_interval`](#co-publishing)** {.no-padding .mobile}
+### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile}
 
 ```{r, fig.width = 3.75, fig.height = 2.5}
 if (has_rows == TRUE) {
@@ -301,7 +301,7 @@ Row
 
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
-cat("<p>Impact and co-publication indicators are based on Web of Science publications only.</p>")
+cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
 
 if(isTRUE(unit_level >= 0)){
 
@@ -325,7 +325,7 @@ Row
 
 The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
-Statistics regarding citations and co-publishing are based on the subset of publications in DiVA that are registered in Web of Science.
+Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
 
 ### **Further information**
 
@@ -859,13 +859,13 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 
-Co-publishing
+Co&#8209;publishing
 =====================================
 
 Row
 ---------------------
 
-### **International and Swedish non-university co-publications (full counts)** {.no-mobile}
+### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -900,7 +900,7 @@ if (nrow(df_copub) > 0) {
 }
 ```
 
-### **International and Swedish non-university co-publications (full counts)** {.no-padding .mobile}
+### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
 if (nrow(df_copub) > 0) {
@@ -952,7 +952,7 @@ if(isTRUE(unit_level >= 0)){
 
 Row
 -------
-### **International and Swedish non-university co-publication**
+### **International and Swedish non-university co&#8209;publication**
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
@@ -968,11 +968,14 @@ Row
 ---------------------
 
 ### **Open Access publications, full counts** {.no-mobile}
-
+<!-- The DT table headers may have a right alignment issue due to some whitespace issue artifact from disabled sorting? -->
 <style type="text/css">
 div.dt-buttons {
   position:relative;
   float:right;
+}
+.table th {
+  text-align: right;
 }
 </style>
 

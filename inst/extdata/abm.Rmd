@@ -100,10 +100,10 @@ getheader <- function(indics){
       disp = indic
       popup = ""
     }
-    glue("th('{disp}', title = '{popup}')")
+    glue("th('{disp}', class = 'display dt-left', style = 'padding-left: 10px; padding-right: 10px;', title = '{popup}')")
   }
   cells <- paste(lapply(indics, getcell), collapse = ",")
-  paste0("htmltools::withTags(table(class = 'display', thead(tr(", cells, "))))")
+  paste0("htmltools::withTags(table(class = 'display dt-right', thead(tr(", cells, "))))")
 }
 
 getcolnames <- function(indics){
@@ -123,9 +123,9 @@ getcolnames <- function(indics){
 ```
 
 <style>
-
+<!-- TODO: this does not work in responsive mobile mode -->
 .navbar-header{
-  width: 0;
+  width: 0px;
   visibility: hidden;
 }
 
@@ -469,6 +469,7 @@ if (nrow(df_diva) > 0) {
     extensions = c("Buttons"), #c("Buttons", "Scroller"), 
     style = "bootstrap", class = "compact", width = "720",
     options = list(
+#      columnDefs = list(list(className = 'dt-right', targets = c(1:length(names(df_diva)) - 1))),
       #deferRender = TRUE, scroller = TRUE, scrollX = TRUE,
       ordering = FALSE,
       bPaginate = FALSE,

@@ -1,5 +1,5 @@
 ---
-title: "`r params$unit_code`"
+title: "ABM 2019: `r params$unit_code`"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows
@@ -79,6 +79,7 @@ if(isTRUE(unit_level >= 0)){
     ad_displayname(kthid = params$unit_code)
 }
 
+unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
 
 unit_file_label <- ifelse(isTRUE(unit_level == 1),
                           unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
@@ -120,6 +121,15 @@ getcolnames <- function(indics){
 }
 
 ```
+
+<style>
+
+.navbar-header{
+  width: 0;
+  visibility: hidden;
+}
+
+</style>
 
 
 Overview

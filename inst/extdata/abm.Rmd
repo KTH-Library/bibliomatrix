@@ -125,6 +125,8 @@ getcolnames <- function(indics){
 Overview
 ===========================
 
+#### `r unit_label`
+
 Row  {data-height=240}
 ---------------------
 
@@ -428,6 +430,8 @@ wos_attribution()
 Publications in DiVA
 =====================================
 
+#### `r unit_label`
+
 Row
 ---------------------
 
@@ -541,6 +545,8 @@ if (nrow(df_diva) > 0) {
 
 Citation impact
 =====================================
+
+#### `r unit_label`
 
 Row
 ---------------------
@@ -740,6 +746,8 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 Journal impact
 =====================================
 
+#### `r unit_label`
+
 Row
 ---------------------
 
@@ -862,6 +870,8 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 Co&#8209;publishing
 =====================================
 
+#### `r unit_label`
+
 Row
 ---------------------
 
@@ -963,6 +973,8 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 
 Open Access
 =====================================
+
+#### `r unit_label`
 
 Row
 ---------------------

@@ -146,7 +146,7 @@ firstyear <- min(names(df_diva[yrfields]))
 lastyear <- max(names(df_diva[yrfields]))
 ```
 
-### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
+### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)** 
 
 ```{r, fig.width = 3, fig.height = 2}
 if (nrow(df_diva) > 0) {
@@ -166,7 +166,7 @@ if (nrow(df_diva) > 0) {
 
 ```
 
-### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
+### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)** 
 
 ```{r, fig.width = 3, fig.height = 2}
 if (nrow(df_woscov %>% filter(Publication_Type == "Peer reviewed")) > 0) {
@@ -194,7 +194,7 @@ last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
 
 ```
 
-### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile}
+### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile }
 
 ```{r, fig.width = 3.5, fig.height = 2}
 library(patchwork)
@@ -221,7 +221,7 @@ if (has_rows == TRUE) {
 }
 ```
 
-### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile}
+### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile }
 
 ```{r, fig.width=3.75, fig.height = 2}
 if (has_rows == TRUE){
@@ -237,7 +237,7 @@ has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
 last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
 
 ```
-### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .no-mobile}
+### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .no-mobile }
 
 ```{r, fig.width=3.75, fig.height = 2} 
 if (has_rows == TRUE) {
@@ -261,7 +261,7 @@ if (has_rows == TRUE) {
 
 ```
 
-### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .mobile}
+### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .mobile }
 
 ```{r, fig.width=3.75, fig.height = 2}
 if (has_rows == TRUE){
@@ -277,7 +277,7 @@ has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
 last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 ```
 
-### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
+### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile }
 ```{r, fig.width = 3.75, fig.height = 2.5}
 
 if (has_rows == TRUE) {
@@ -298,7 +298,7 @@ if (has_rows == TRUE) {
 }
 ```
 
-### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile}
+### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile }
 
 ```{r, fig.width = 3.75, fig.height = 2.5}
 if (has_rows == TRUE) {
@@ -312,6 +312,7 @@ Row
 --------------------------------
 
 ### **Notes**
+
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
 
@@ -333,30 +334,7 @@ if(isTRUE(unit_level >= 0)){
 
 Row
 --------------------------------
-### **Background**
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
-
-Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
-
-### **Further information**
-
-```{r}
-# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
-STATIC <- "https://kth-library.github.io/abm"
-```
-
-- [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
-- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
-- [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
-- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
-- [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
-
-For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
-
-
-Row
-----------------------
 
 ### **Publication data**
 
@@ -431,6 +409,31 @@ if (params$is_employee == TRUE) {
   
 ```
 
+Row {.tabset .tabset-fade}
+---------------------
+
+### **Background** 
+
+The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
+
+Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
+
+### **Further information**
+
+```{r}
+# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
+STATIC <- "https://kth-library.github.io/abm"
+```
+
+- [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
+- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
+- [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
+- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
+- [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
+
+For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
+
+
 ### **Attributions**
 
 ```{r, echo=FALSE, results="asis"}
@@ -442,7 +445,7 @@ Publications in DiVA
 
 #### `r unit_label`
 
-Row
+Row {.tabset .tabset-fade .no-mobile}
 ---------------------
 
 ### **Publication volume, fractionalized** {.no-padding .no-mobile}
@@ -491,6 +494,32 @@ if (nrow(df_diva) > 0) {
 ```
 <!-- </div> -->
 
+### **Publication volume** {.no-padding .no-mobile}
+
+```{r, fig.width=10, fig.height=7}
+if (nrow(df_diva) > 0) {
+  p <- abm_graph_diva(df_diva)
+  p
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Web of Science coverage** {.no-padding .no-mobile}
+
+```{r, fig.width=10, fig.height=7}
+if (nrow(df_diva) > 0) {
+  p <- abm_graph_wos_coverage(df_diva)
+  p
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+Row {.tabset .tabset-fade .mobile}
+---------------------
+
 ### **Publication volume, fractionalized** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
@@ -508,20 +537,6 @@ if (nrow(df_diva) > 0) {
 ```
 
 
-Row
----------------------
-
-### **Publication volume** {.no-padding .no-mobile}
-
-```{r, fig.width=10, fig.height=10}
-if (nrow(df_diva) > 0) {
-  p <- abm_graph_diva(df_diva)
-  p
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
 ### **Publication volume** {.no-padding .mobile}
 
 ```{r, fig.width=10, fig.height = 9.6, out.width=3.75}
@@ -532,16 +547,6 @@ if (nrow(df_diva) > 0) {
 }
 ```
 
-### **Web of Science coverage** {.no-padding .no-mobile}
-
-```{r, fig.width=7, fig.height=8}
-if (nrow(df_diva) > 0) {
-  p <- abm_graph_wos_coverage(df_diva)
-  p
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
 
 ### **Web of Science coverage** {.no-padding .mobile}
 
@@ -559,10 +564,10 @@ Citation impact
 
 #### `r unit_label`
 
-Row
+Row {.tabset .tabset-fade .no-mobile}
 ---------------------
 
-### **Citations 3-year window, fractional counts** {.no-mobile}
+### **Citations 3-year window** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -578,6 +583,10 @@ if (nrow(df_cit3y) > 0) {
 
   DT::datatable(df_cit3y,
     container = header,
+    caption = htmltools::tags$caption(
+      style = 'caption-side: top; text-align: left;',
+        'Citations 3-year window, fractional counts. ', 
+        htmltools::em('This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.')),
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -597,23 +606,7 @@ if (nrow(df_cit3y) > 0) {
 }
 ```
 
-### **Citations 3-year window, fractional counts** {.mobile}
-
-```{r}
-if (nrow(df_cit3y) > 0) {
-  df_cit3y %>% 
-    mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
-    mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_cit3y)),
-          align = c("l", rep("r", ncol(df_cit3y) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
-```
-
-### **Field normalized citations - Fractionalized (3-year moving average)** {.no-mobile}
+### **Field normalized citations** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -628,6 +621,10 @@ if (nrow(df_cf) > 0) {
    
   DT::datatable(df_cf,
     container = header,
+    caption = htmltools::tags$caption(
+      style = 'caption-side: top; text-align: left;',
+        'Field normalized citations - Fractionalized (3-year moving average). ', 
+        htmltools::em('This table is based on Web of Science publication types Article and Review.')),    
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -648,30 +645,31 @@ if (nrow(df_cf) > 0) {
 }
 ```
 
-### **Field normalized citations - Fractionalized (3-year moving average)** {.no-padding .mobile}
+### **Average field normalized citations (Cf)** {.no-mobile}
 
 ```{r}
-if (nrow(df_cf) > 0) {
-  df_cf %>% 
-    mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
-    mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
-    mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_cf)),
-          align = c("l", rep("r", ncol(df_cf) - 1))) %>% 
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  abm_graph_cf(df_cf)
 } else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 
-Row
---------------------
+### **Share Top 10%** {.no-mobile}
 
-### **Notes**
+```{r}
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  abm_graph_top10(df_cf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Notes** {.no-mobile}
+
 ```{r, echo=FALSE, results="asis"}
-cat("This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
+cat("The table showing data for citations using 3-year windows and fractional counts is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
 
 if(isTRUE(unit_level >= 0)){
 
@@ -695,9 +693,8 @@ if(isTRUE(unit_level >= 0)){
 
 ```
 
-### **Notes**
 ```{r, echo=FALSE, results="asis"}
-cat("This table is based on Web of Science publication types Article and Review.<br>")
+cat("The table showing data for field normalized citations uses fractionalized 3-year moving average publication counts and is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
 
@@ -729,10 +726,44 @@ if(isTRUE(unit_level >= 0)){
 ```
 
 
-Row
+Row {.tabset .tabset-fade .mobile}
 ---------------------
 
-### **Average field normalized citations (Cf)**
+### **Citations 3-year window** {.mobile}
+
+```{r}
+if (nrow(df_cit3y) > 0) {
+  df_cit3y %>% 
+    mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
+    mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
+    kable(caption = "Citations 3-year window, fractional counts", col.names = getcolnames(names(df_cit3y)),
+          align = c("l", rep("r", ncol(df_cit3y) - 1))) %>%
+    kable_styling(bootstrap_options = c("responsive")) %>%
+    scroll_box(width = "720px")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+}
+```
+
+
+### **Field normalized citations** {.no-padding .mobile}
+
+```{r}
+if (nrow(df_cf) > 0) {
+  df_cf %>% 
+    mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+    mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+    mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+    kable(caption = "Field normalized citations - Fractionalized (3-year moving average)", col.names = getcolnames(names(df_cf)),
+          align = c("l", rep("r", ncol(df_cf) - 1))) %>% 
+    kable_styling(bootstrap_options = c("responsive")) %>%
+    scroll_box(width = "720px")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+}
+```
+
+### **Average field normalized citations (Cf)** {.mobile}
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
@@ -743,7 +774,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 ```
 
 
-### **Share Top 10%**
+### **Share Top 10%** {.mobile}
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
@@ -753,13 +784,71 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 }
 ```
 
+### **Notes** {.mobile}
+
+```{r, echo=FALSE, results="asis"}
+cat("The table showing data for citations using 3-year windows and fractional counts is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  years <- df_cit3y %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  mincov <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(woscov_frac) %>% min()
+  minpubs <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumcov_full) %>% min()
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+
+
+```
+
+```{r, echo=FALSE, results="asis"}
+cat("The table showing data for field normalized citations uses fractionalized 3-year moving average publication counts and is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  intervals <- df_cf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_cf <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_cf <- woscov_cf %>% 
+    inner_join(sliding_intervals(min(woscov_cf$Publication_Year), max(woscov_cf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(woscov_frac = sum(sumcov_frac) / sum(p_frac),
+              sumcov_full = sum(sumcov_full))
+
+  mincov <- min(woscov_cf$woscov_frac)
+  minpubs <- min(woscov_cf$sumcov_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
 
 Journal impact
 =====================================
 
 #### `r unit_label`
 
-Row
+Row {.tabset .tabset-fade .no-mobile}
 ---------------------
 
 ### **3-year moving average, fractional counts** {.no-mobile}
@@ -779,6 +868,10 @@ if (nrow(df_jcf) > 0) {
  
   DT::datatable(df_jcf,
     container = header,
+    caption = htmltools::tags$caption(
+      style = 'caption-side: top; text-align: left;',
+        '3-year moving average, fractional counts ',     
+        htmltools::em('This table is based on Web of Science publication types Article and Review.')),
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -800,29 +893,29 @@ if (nrow(df_jcf) > 0) {
 
 ```
 
-### **3-year moving average, fractional counts** {.no-padding .mobile}
+### **Field normalized journal indicator (JCf)** {.no-mobile}
 
-```{r, fig.width=3.75}
-if (nrow(df_jcf) > 0) {
-  df_jcf %>% 
-    mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
-    mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
-    mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_jcf)),
-          align = c("l", rep("r", ncol(df_jcf) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
+```{r}
+if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_jcf(df_jcf)
 } else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 
+### **Share Journal Top 20%** {.no-mobile}
 
-Row
------------------
+```{r}
+if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_top20(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
 
-### **Notes**
+### **Notes** {.no-mobile}
+
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
@@ -854,10 +947,29 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-Row
+
+Row {.tabset .tabset-fade .mobile}
 ---------------------
 
-### **Field normalized journal indicator (JCf)**
+### **3-year moving average, fractional counts** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+if (nrow(df_jcf) > 0) {
+  df_jcf %>% 
+    mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+    mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+    mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+    kable(col.names = getcolnames(names(df_jcf)),
+          align = c("l", rep("r", ncol(df_jcf) - 1))) %>%
+    kable_styling(bootstrap_options = c("responsive")) %>%
+    scroll_box(width = "720px")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+}
+```
+
+
+### **Field normalized journal indicator (JCf)** {.mobile}
 
 ```{r}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -868,7 +980,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 
 
-### **Share Journal Top 20%**
+### **Share Journal Top 20%** {.mobile}
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -878,15 +990,48 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 
+
+### **Notes** {.mobile}
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+  intervals <- df_jcf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_jcf <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_jcf <- woscov_jcf %>% 
+    inner_join(sliding_intervals(min(woscov_jcf$Publication_Year), max(woscov_jcf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(woscov_frac = sum(sumcov_frac) / sum(p_frac),
+              sumcov_full = sum(sumcov_full))
+
+  mincov <- min(woscov_jcf$woscov_frac)
+  minpubs <- min(woscov_jcf$sumcov_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
+
 Co&#8209;publishing
 =====================================
 
 #### `r unit_label`
 
-Row
+Row {.tabset .tabset-fade .no-mobile}
 ---------------------
 
-### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+### **Co&#8209;publications** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -903,6 +1048,10 @@ if (nrow(df_copub) > 0) {
   
   DT::datatable(df_copub,
     container = header,
+    caption = htmltools::tags$caption(
+      style = 'caption-side: top; text-align: left;',
+        'International and Swedish non-university co-publications (full counts) ',     
+        htmltools::em(' ')),    
     rownames = FALSE,
     extensions = "Buttons",
     options = list(
@@ -921,28 +1070,20 @@ if (nrow(df_copub) > 0) {
 }
 ```
 
-### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
-
-```{r, fig.width=3.75}
-if (nrow(df_copub) > 0) {
-  df_copub %>% 
-    mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_copub)),
-          align = c("l", rep("r", ncol(df_copub) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
+### **Co&#8209;publication over time** {.no-mobile}
+```{r, fig.width=6, fig.height=4}
+if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+  abm_graph_copub(df_copub)
 } else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 
-Row
------------------
+### **Notes** {.no-mobile}
 
-### **Notes**
 ```{r, echo=FALSE, results="asis"}
-cat("This table is based on Web of Science publication types Article and Review.<br>")
+cat("The data is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
   intervals <- df_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
@@ -971,9 +1112,26 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-Row
--------
-### **International and Swedish non-university co&#8209;publication**
+
+Row {.tabset .tabset-fade .mobile}
+-----------------
+
+### **Co&#8209;publications** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+if (nrow(df_copub) > 0) {
+  df_copub %>% 
+    mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
+    kable(caption = "International and Swedish non-university co-publications (full counts)", col.names = getcolnames(names(df_copub)),
+          align = c("l", rep("r", ncol(df_copub) - 1))) %>%
+    kable_styling(bootstrap_options = c("responsive")) %>%
+    scroll_box(width = "720px")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+}
+```
+
+### **Co&#8209;publication over time** {.mobile}
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
@@ -982,12 +1140,45 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 }
 ```
 
+
+### **Notes** {.mobile}
+
+```{r, echo=FALSE, results="asis"}
+cat("The data is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+  intervals <- df_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_copub <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_copub <- woscov_copub %>% 
+    inner_join(sliding_intervals(min(woscov_copub$Publication_Year), max(woscov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(woscov_full = sum(sumcov_full) / sum(p_full))
+
+  mincov <- min(woscov_copub$woscov_full)
+  minpubs <- min(df_copub$P_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at worst <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
+
 Open Access
 =====================================
 
 #### `r unit_label`
 
-Row
+Row {.tabset .tabset-fade .no-mobile}
 ---------------------
 
 ### **Open Access publications, full counts** {.no-mobile}
@@ -1029,25 +1220,25 @@ if (nrow(df_oa) > 0) {
 }
 ```
 
-### **Open Access publications, full counts** {.no-padding .mobile}
-
-```{r, fig.width=3.75}
-if (nrow(df_oa) > 0) {
-  df_oa %>% 
-    mutate_at(vars(9), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_oa)),
-          align = c("l", rep("r", ncol(df_oa) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
+### **Overview by OA type** {.no-mobile}
+```{r, fig.width=4, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_pie(df_oa)
 } else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
+### **OA publications over time, by type** {.no-mobile}
+```{r, fig.width=6.5, fig.height=4}
+if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
 
-Row
--------
-### **Notes**
+### **Notes** {.no-mobile}
 
 The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
 
@@ -1065,18 +1256,29 @@ In summary, the different OA types can be described as follows:
 **N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
 
 
-Row
--------
-### **Overview of Open Access publications, by OA type share** {.no-mobile}
-```{r, fig.width=4, fig.height=4}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie(df_oa)
+Row {.tabset .tabset-fade .mobile}
+---------------------
+
+### **Open Access publications, full counts** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+if (nrow(df_oa) > 0) {
+  df_oa %>% 
+    mutate_at(vars(9), function(x) sprintf("%.1f%%", x * 100)) %>%
+    kable(col.names = getcolnames(names(df_oa)),
+          align = c("l", rep("r", ncol(df_oa) - 1))) %>%
+    kable_styling(bootstrap_options = c("responsive")) %>%
+    scroll_box(width = "720px")
 } else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
 }
 ```
 
-### **Overview of Open Access publications, by OA type share** {.no-padding .mobile}
+
+### **Overview by OA type** {.no-padding .mobile}
+
+Overview of Open Access publications, by OA type share
+
 ```{r, fig.width=4}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oadata_pie(df_oa)
@@ -1085,16 +1287,8 @@ if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 }
 ```
 
-### **Evolution of the number of publications, by OA type** {.no-mobile}
-```{r, fig.width=6.5, fig.height=4}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
 
-### **Evolution of the number of publications, by OA type** {.no-padding .mobile}
+### **OA publications over time, by type** {.no-padding .mobile}
 ```{r, fig.width=5}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oadata_stackedarea(df_oa)
@@ -1102,3 +1296,20 @@ if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
+### **Notes** {.mobile}
+
+The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
+
+In summary, the different OA types can be described as follows:
+
+- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
+
+- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
+
+- *Green:* The full text has been found in an institutional repository, such as DiVA.
+
+- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
+
+
+**N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.

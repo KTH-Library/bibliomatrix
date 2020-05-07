@@ -426,7 +426,19 @@ if (params$is_employee == TRUE) {
   out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary" target="_blank">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
   cat(out)
 }
-  
+
+```
+
+```{r, echo=FALSE, results="asis"}
+
+# TODO: Attribution?
+
+if (params$embed_data == TRUE && params$is_employee != TRUE) {
+  out <- sprintf('<a href="%s" class="btn btn-sm btn-primary" target="_blank">Explore Altmetric Research Output for %s</a>',
+               unit_meta$altmetric_href, unit_label)
+  cat(out)
+}
+
 ```
 
 ### **Attributions**

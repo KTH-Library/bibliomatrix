@@ -317,8 +317,8 @@ cat("<p>Impact and co&#8209;publication indicators are based on Web of Science p
 
 if(isTRUE(unit_level >= 0)){
 
-  glue("<p>Overall Web of Science coverage for peer reviewed publications in this unit is ",
-       "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</p>")
+  glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
+       "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</span></p>")
 
 } else {
 

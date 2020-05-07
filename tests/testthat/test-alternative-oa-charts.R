@@ -1,5 +1,8 @@
+skip_chart_tests <- TRUE
+
 test_that("alternative oa charts work", {
-  
+
+  skip_if(skip_chart_tests, "by default skipping since Travis cannot sync db")  
   df1 <- abm_table6(con = con_bib_sqlite(), unit_code = "KTH")
   df2 <- abm_table6(con = con_bib_mssql(), unit_code = "KTH")
   p1 <- abm_graph_oadata_linegraphs(df1, "plotly")

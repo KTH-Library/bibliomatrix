@@ -6,7 +6,7 @@
 \usage{
 db_sync(
   tables_included,
-  tables_excluded = c("Document", "Bestresaddr_KTH", "DIVA_School_Dept",
+  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", "DIVA_School_Dept",
     "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE
 )

@@ -110,7 +110,7 @@ abm_graph_oadata_share <- function(df, type = c("ggplot", "plotly", "ggiraph")) 
 #      geom_col(position = 'stack', width = 1, color = "white") +
 #    geom_text(aes(label = paste0("n = ", count)), color = "gray", hjust = -0.2) +
     geom_text(aes(label = paste0(perc_text, " (n = ", count, ")"), y = value),
-              vjust = 1, hjust = -0.2, color = "gray") +
+              vjust = 1, hjust = -0.2, color = "black") +
     theme_kth() +
     scale_y_continuous(limits = c(0, max(t1$value) * 1.2), breaks = c(0:5 * 10), labels = function(x) paste0(x, "%"), position = "right") +
     theme(

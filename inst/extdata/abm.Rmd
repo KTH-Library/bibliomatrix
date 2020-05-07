@@ -76,10 +76,10 @@ if(isTRUE(unit_level >= 0)){
 } else {
   
   unit_label <- 
-    ad_displayname(kthid = params$unit_code)
+    ad_displayname2(kthid = params$unit_code)
 }
 
-unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
+#unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
 
 unit_file_label <- ifelse(isTRUE(unit_level == 1),
                           unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
@@ -377,10 +377,8 @@ if (params$embed_data == TRUE) {
     withTags(p(a(text, href = href, download = name, ...)))
   }
   
-  icon_download <- htmltools::tag("i", list(
-    class = "fa fa-download", 
-    paste("Publication data for", unit_label)))
-  
+  icon_download <- htmltools::tagList(htmltools::tag("i", list(class = "fa fa-download")), 
+    HTML(paste("Publication list for", unit_label))) 
   icon_download <- htmltools::attachDependencies(icon_download,
     flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
   
@@ -1068,27 +1066,27 @@ In summary, the different OA types can be described as follows:
 Row
 -------
 ### **Overview of Open Access publications, by OA type share** {.no-mobile}
-```{r, fig.width=4, fig.height=4}
+```{r, fig.width=6, fig.height=6}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie(df_oa)
+  abm_graph_oadata_piechart(df_oa, type = "plotly")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Overview of Open Access publications, by OA type share** {.no-padding .mobile}
-```{r, fig.width=4}
+```{r, fig.width=8}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie(df_oa)
+  abm_graph_oadata_piechart(df_oa, type = "plotly")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Evolution of the number of publications, by OA type** {.no-mobile}
-```{r, fig.width=6.5, fig.height=4}
+```{r, fig.width=8, fig.height=8}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
+  abm_graph_oadata_stackedarea_plotly(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -1097,7 +1095,7 @@ if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 ### **Evolution of the number of publications, by OA type** {.no-padding .mobile}
 ```{r, fig.width=5}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
+  abm_graph_oadata_stackedarea_plotly(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

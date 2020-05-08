@@ -1002,7 +1002,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
              fill = "lightgray", stat = "identity", width = 0.7, alpha = 1) +
     geom_bar(aes(x = measure, y = value), 
              fill = blue,  stat = "identity", width = 0.4) +
-    geom_errorbar(aes(x = measure, ymin = target, ymax = target), 
+    geom_errorbar(aes(x = measure, y = target, ymin = target, ymax = target), 
                   color = cerise, width = 0.9, size = 1.1) +
     coord_flip() +
     theme(

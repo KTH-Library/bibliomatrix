@@ -542,7 +542,7 @@ if (nrow(df_diva) > 0) {
 }
 ```
 
-### **Web of Science coverage** {.no-padding .no-mobile}
+### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 
 ```{r, fig.width=7, fig.height=8}
 if (nrow(df_diva) > 0) {
@@ -553,7 +553,7 @@ if (nrow(df_diva) > 0) {
 }
 ```
 
-### **Web of Science coverage** {.no-padding .mobile}
+### **Web of Science coverage by publication type** {.no-padding .mobile}
 
 ```{r, fig.width=9, fig.height=6}
 if (nrow(df_diva) > 0) {
@@ -623,7 +623,7 @@ if (nrow(df_cit3y) > 0) {
 }
 ```
 
-### **Field normalized citations - Fractionalized (3-year moving average)** {.no-mobile}
+### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -658,7 +658,7 @@ if (nrow(df_cf) > 0) {
 }
 ```
 
-### **Field normalized citations - Fractionalized (3-year moving average)** {.no-padding .mobile}
+### **Field normalized citationsm, fractionalized (3-year moving average)** {.no-padding .mobile}
 
 ```{r}
 if (nrow(df_cf) > 0) {
@@ -753,7 +753,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 ```
 
 
-### **Share Top 10%**
+### **Share of publications among Top 10% cited**
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
@@ -772,7 +772,7 @@ Journal impact
 Row
 ---------------------
 
-### **3-year moving average, fractional counts** {.no-mobile}
+### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -810,7 +810,7 @@ if (nrow(df_jcf) > 0) {
 
 ```
 
-### **3-year moving average, fractional counts** {.no-padding .mobile}
+### **Journal impact, fractionalized (3-year moving average)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
 if (nrow(df_jcf) > 0) {
@@ -867,7 +867,7 @@ if(isTRUE(unit_level >= 0)){
 Row
 ---------------------
 
-### **Field normalized journal indicator (JCf)**
+### **Field normalized journal impact (JCf)**
 
 ```{r}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -878,7 +878,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 
 
-### **Share Journal Top 20%**
+### **Share of publications in Top 20% journals**
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {

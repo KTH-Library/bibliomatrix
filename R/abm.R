@@ -811,9 +811,12 @@ abm_graph_diva <- function(df){
   ggplot(data = df_diva_long,
          aes(x = year)) +
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
-    labs(x = NULL, y = NULL, fill = NULL) +
+    labs(x = "Publication year",
+         y = "Number of publications (fractional)",
+         fill = NULL) +
     scale_fill_manual(values = colvals) +
-    kth_theme()
+    kth_theme() +
+    theme(axis.title.y = element_text(vjust = 2.5))
 }
 
 #' Create graph over WoS coverage by year
@@ -831,9 +834,9 @@ abm_graph_wos_coverage <- function(df){
          aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
     geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
     xlab(NULL) +
-    ylab(NULL) +
+    ylab("WoS coverage") +
     coord_flip() +
-    scale_y_continuous(labels=percent, breaks = seq(0,1,0.1), limits = c(0, 1)) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), breaks = seq(0,1,0.1), limits = c(0, 1)) +
     kth_theme()
 }
 
@@ -851,8 +854,8 @@ abm_graph_cf <- function(df){
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    xlab("Publication years") +
+    ylab("Average Cf") +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
     kth_theme()
@@ -873,10 +876,10 @@ abm_graph_top10 <- function(df){
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    xlab("Publication years") +
+    ylab("Share Top 10%") +
     geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
-    scale_y_continuous(labels = percent, limits = c(0, ymax)) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     kth_theme()
 }
 
@@ -894,8 +897,8 @@ abm_graph_jcf <- function(df){
          aes(x = interval, y = jcf, group=1)) +
     geom_point() + 
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    xlab("Publication years") +
+    ylab("Average Journal Cf") +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
     kth_theme()
@@ -916,10 +919,10 @@ abm_graph_top20 <- function(df){
          aes(x = interval, y = top20_share, group=1)) +
     geom_point() +
     geom_line(color = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab(NULL) +
+    xlab("Publication years") +
+    ylab("Share Journal Top 20%") +
     geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
-    scale_y_continuous(labels = percent, limits = c(0, ymax)) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     kth_theme()
 }
 
@@ -941,8 +944,8 @@ abm_graph_copub <- function(df){
          aes(x = interval, y = value, group = `Co-publication`)) +
     geom_line(aes(color = `Co-publication`)) +
     geom_point(aes(color = `Co-publication`)) +
-    xlab(NULL) +
-    ylab(NULL) +
+    xlab("Publication years") +
+    ylab("Share of publications") +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
     scale_color_manual(values = kth_cols) +
     kth_theme()
@@ -1109,8 +1112,7 @@ abm_graph_oadata_stackedarea <- function(df){
     scale_fill_manual(values=unpaywall_cols) + 
     geom_area() +
     #TODO: geom_line() +  ?
-    xlab(NULL) +
-    ylab(NULL) +
+    xlab("Publication year") +
+    ylab("Number of publications") +
     kth_theme()
-  
 }

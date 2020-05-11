@@ -829,9 +829,9 @@ abm_graph_diva <- function(df){
 #' @export
 abm_graph_wos_coverage <- function(df){
   kth_cols <- palette_kth()
-  df <- df %>% left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+  df <- df %>% left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) %>% filter(WoS_coverage != 0)
   ggplot(data = df,
-         aes(x = reorder(Publication_Type_DiVA, -pt_ordning))) +
+         aes(x = reorder(Publication_Type_DiVA, WoS_coverage))) +
     geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
     xlab(NULL) +
     ylab("WoS coverage") +

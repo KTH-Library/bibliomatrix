@@ -5,17 +5,17 @@
 \title{Create alternate waffle chart (with plotly)}
 \usage{
 abm_waffle_pct_plotly(
-  share,
+  pct,
   col = as.character(c(palette_kth()["blue"], "gray")),
   label = NULL
 )
 }
 \arguments{
+\item{pct}{a percentage expressed as a decimal number 0 <= pct <= 1}
+
 \item{col}{a vector with colors for filling (optional)}
 
 \item{label}{a title for the chart, displayed above the waffle (optional)}
-
-\item{pct}{a percentage expressed as a decimal number 0 <= pct <= 1}
 }
 \value{
 a plotly object

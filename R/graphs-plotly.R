@@ -136,9 +136,9 @@ abm_bullet_plotly2 <- function(
 #' @import ggplot2 ktheme
 #' @importFrom plotly add_trace config layout ggplotly
 #' @export
-abm_waffle_pct_plotly <- function(share, col = as.character(c(palette_kth()["blue"], "gray")), label = NULL) {
+abm_waffle_pct_plotly <- function(pct, col = as.character(c(palette_kth()["blue"], "gray")), label = NULL) {
   p1 <- 
-    abm_waffle_pct(share, col, label) + 
+    abm_waffle_pct(pct, col, label) + 
     theme(panel.spacing = unit(0, "lines")) +
     labs(title = NULL)
   

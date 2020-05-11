@@ -89,6 +89,8 @@ current_date <- format(Sys.Date(), "%Y%m%d")
 
 abm_unit_title<- paste0("ABM: ",unit_label)
 
+
+
 getheader <- function(indics){
   getcell <- function(indic){
     indicrow <- get_indic_descriptions() %>%
@@ -100,6 +102,7 @@ getheader <- function(indics){
       disp = indic
       popup = ""
     }
+    disp <- disp %>% nowrap_hyphen_sub()
     glue("th('{disp}', class = 'display dt-left', style = 'padding-left: 10px; padding-right: 10px;', title = '{popup}')")
   }
   cells <- paste(lapply(indics, getcell), collapse = ",")
@@ -317,6 +320,7 @@ cat("<p>Impact and co&#8209;publication indicators are based on Web of Science p
 
 if(isTRUE(unit_level >= 0)){
 
+  #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
   glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
        "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</span></p>")
 
@@ -329,6 +333,17 @@ if(isTRUE(unit_level >= 0)){
       individuals also makes indicator averages very unreliable. </p>")
 
 }
+```
+
+```{r, echo = FALSE}
+# library(sweetalertR)
+# sweetalert('ul.examples li.message-html button',
+# 	title = "HTML Read more ...",
+# 	text = sprintf("<a href='%s' target='_blank'>Read more ...</a>", 
+#     "https://kth-library.github.io/abm/ABM_guide.pdf"),
+# 	html = TRUE
+# )
+
 ```
 
 Row

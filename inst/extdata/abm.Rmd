@@ -314,6 +314,12 @@ if (has_rows == TRUE) {
 Row
 --------------------------------
 
+```{r}
+# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
+STATIC <- "https://kth-library.github.io/abm"
+```
+
+
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
@@ -335,16 +341,7 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-```{r, echo = FALSE}
-# library(sweetalertR)
-# sweetalert('ul.examples li.message-html button',
-# 	title = "HTML Read more ...",
-# 	text = sprintf("<a href='%s' target='_blank'>Read more ...</a>", 
-#     "https://kth-library.github.io/abm/ABM_guide.pdf"),
-# 	html = TRUE
-# )
-
-```
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 --------------------------------
@@ -356,11 +353,6 @@ Statistics regarding citations and co&#8209;publishing are based on the subset o
 
 ### **Further information**
 
-```{r}
-# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
-STATIC <- "https://kth-library.github.io/abm"
-```
-
 - [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
 - [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
 - [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
@@ -368,7 +360,6 @@ STATIC <- "https://kth-library.github.io/abm"
 - [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
 
 For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
-
 
 Row
 ----------------------
@@ -722,6 +713,8 @@ if(isTRUE(unit_level >= 0)){
 
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -755,6 +748,7 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 ---------------------
@@ -881,6 +875,8 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+
 Row
 ---------------------
 
@@ -997,6 +993,8 @@ if(isTRUE(unit_level >= 0)){
 
 }
 ```
+
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 -------

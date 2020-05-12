@@ -63,7 +63,7 @@ Imports:
     flexdashboard (>= 0.5.1.1),
     mime (>= 0.9),
     ktheme,
-    kthapi,
+    kthapi
 Remotes: KTH-Library/kthapi, KTH-Library/ktheme
 URL: https://github.com/KTH-Library/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues

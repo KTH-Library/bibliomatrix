@@ -823,7 +823,7 @@ abm_graph_diva <- function(df){
 #' 
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @importFrom stats reorder
 #' @importFrom scales percent
 #' @export
@@ -837,7 +837,7 @@ abm_graph_wos_coverage <- function(df){
     ylab("WoS coverage") +
     coord_flip() +
     scale_y_continuous(labels = percent_format(accuracy = 5L), breaks = seq(0,1,0.1), limits = c(0, 1)) +
-    kth_theme()
+    theme_kth()
 }
 
 #' Create graph over Cf by year

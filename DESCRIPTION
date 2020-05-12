@@ -58,8 +58,12 @@ Imports:
     kableExtra,
     ggiraph (>= 0.7.0),
     plotly (>= 4.9.2.1),
+    htmltools (>= 0.4.0),
+    openxlsx (>= 4.1.4),
+    flexdashboard (>= 0.5.1.1),
+    mime (>= 0.9),
     ktheme,
-    kthapi
+    kthapi,
 Remotes: KTH-Library/kthapi, KTH-Library/ktheme
 URL: https://github.com/KTH-Library/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues

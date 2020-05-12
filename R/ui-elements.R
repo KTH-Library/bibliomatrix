@@ -50,7 +50,8 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @param unit_label the label for the organizational unit
 #' @param unit_code the unit code for the organizational unit
 #' @param unit_file_label the label for the download
-#' @import htmltools openxlsx
+#' @import htmltools openxlsx flexdashboard
+#' @importFrom mime guess_type
 #' @export
 abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label) {
   
@@ -112,7 +113,9 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
 #' @param start_year first year of total interval of years
 #' @param stop_year last year of total interval of years
 #' @param unit_label the unit label to use in case of no data
-#' @import htmltools glue ktheme
+#' @import htmltools ktheme
+#' @importFrom glue glue
+#' @importFrom flexdashboard valueBox
 #' @export
 abm_ui_summary_pubs <- function(df_diva, lastyear,  
     start_year, stop_year, unit_label) {

@@ -1025,45 +1025,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
     )
 }
 
-#' Make ABM table have last rows bold with gray background, other rows with white background
-#'
-#' @param t the table to be formatted
-#' @export
-abm_format_rows <- function(t){
-  formatStyle(table = t,
-              columns = 1,
-              target = "row",
-              fontWeight = styleEqual("Total", "bold"),
-              backgroundColor = styleEqual("Total", "#DDDDDD", "#FFFFFF"))
-}
 
-#' Make ABM diva table have last 2 columns with gray background, penultimate with dark gray left border
-#'
-#' @param t the table to be formatted
-#' @param column_name the name of the column to be formatted among c("P_frac","WoS_coverage")
-#' @param has_left_border boolean to indicate if the column should have a left border
-#' @export
-abm_format_columns_divatable <- function(t, column_name, has_left_border){
-  formatStyle(table = t,
-              columns = column_name,
-              target = "cell",
-              fontWeight = "bold",
-              backgroundColor = "#EEEEEE",
-              borderLeft = ifelse(has_left_border, "1px solid #CCCCCC", "")
-              )
-}
-
-#' Make ABM diva table header have last 2 columns with gray background, penultimate with dark gray left border
-#'
-#' @param header the diva table header to be formatted
-#' @export
-abm_format_header_divatable <- function(header){
-  header %>%
-    sub("th\\('Publications', class = 'display dt-left', style = '",
-        "th('Publications', class = 'display dt-left', style = 'background-color:#EEEEEE; border-left: 1px solid #CCCCCC; ",.) %>%
-    sub("th\\('WoS coverage', class = 'display dt-left', style = '",
-        "th('WoS coverage', class = 'display dt-left', style = 'background-color:#EEEEEE; ",.)
-}
 
 #' Create pie chart for Open Access data
 #' 

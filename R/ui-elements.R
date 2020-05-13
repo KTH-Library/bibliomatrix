@@ -135,3 +135,439 @@ abm_ui_summary_pubs <- function(df_diva, lastyear,
     HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {start_year} - {stop_year}</i></p>"))
   }
 }
+
+#' Make ABM table have last rows bold with gray background, other rows with white background
+#'
+#' @param t the table to be formatted
+#' @importFrom DT formatStyle styleEqual
+#' @noRd
+abm_format_rows <- function(t) {
+  DT::formatStyle(table = t,
+    columns = 1,
+    target = "row",
+    fontWeight = DT::styleEqual("Total", "bold"),
+    backgroundColor = DT::styleEqual("Total", "#DDDDDD", "#FFFFFF"))
+}
+
+
+#' @importFrom DT formatStyle
+#' @noRd
+abm_format_columns_divatable <- function(t, column_name, has_left_border) {
+  DT::formatStyle(table = t,
+    columns = column_name,
+    target = "cell",
+    fontWeight = "bold",
+    backgroundColor = "#EEEEEE",
+    borderLeft = ifelse(has_left_border, "1px solid #CCCCCC", "")
+  )
+}
+
+#' @importFrom DT formatStyle
+#' @noRd
+abm_format_header_divatable <- function(header) {
+  header %>%
+    sub("th\\('Publications', class = 'display dt-left', style = '",
+        "th('Publications', class = 'display dt-left', style = 'background-color:#EEEEEE; border-left: 1px solid #CCCCCC; ", .) %>%
+    sub("th\\('WoS coverage', class = 'display dt-left', style = '",
+        "th('WoS coverage', class = 'display dt-left', style = 'background-color:#EEEEEE; ", .)
+}
+
+getheader <- function(indics) {
+  getcell <- function(indic) {
+    indicrow <- get_indic_descriptions() %>%
+      filter(tolower(varname) == tolower(indic))
+    if(nrow(indicrow) == 1){
+      disp <- indicrow %>% pull(displayname)
+      popup <- indicrow %>% pull(description_short)
+    } else {
+      disp = indic
+      popup = ""
+    }
+    disp <- disp %>% nowrap_hyphen_sub()
+    glue("th('{disp}', class = 'display dt-left', style = 'padding-left: 10px; padding-right: 10px;', title = '{popup}')")
+  }
+  cells <- paste(lapply(indics, getcell), collapse = ",")
+  paste0("htmltools::withTags(table(class = 'display dt-right', thead(tr(", cells, "))))")
+}
+
+getcolnames <- function(indics) {
+  getname <- function(indic) {
+    newname <- get_indic_descriptions() %>%
+      filter(tolower(varname) == tolower(indic)) %>%
+      pull(displayname)
+    if(is_empty(newname)){
+      indic
+    } else {
+      newname
+    }
+  }
+  sapply(indics, getname)
+}
+
+
+#' Datatable for DiVA publications
+#' 
+#' @param df_diva data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_diva) > 0) {
+    
+    filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_diva)) %>% abm_format_header_divatable()))
+    
+    DT::datatable(df_diva,
+      container = header,
+      rownames = FALSE,
+      extensions = c("Buttons"),
+      style = "bootstrap", class = "compact", width = "720",
+      options = list(
+        ordering = FALSE,
+        bPaginate = FALSE,
+        pageLength = 100,
+        dom = 'tB',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+        )) %>%
+      DT::formatRound(2:9, digits = 1, mark = "") %>%
+      DT::formatPercentage(10, digits = 1) %>%
+      abm_format_rows() %>%
+      abm_format_columns_divatable("P_frac", TRUE) %>%
+      abm_format_columns_divatable("WoS_coverage", FALSE)
+    
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' HTML table for DiVA publications
+#' 
+#' @param df_diva data frame with DiVA publication data in a specific format
+#' @import htmltools
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box column_spec
+#' @export
+abm_ui_kable_diva <- function(df_diva) {
+  
+  if (nrow(df_diva) > 0) {
+    df_diva %>%
+      mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage"), round, digits = 1) %>%
+      mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_diva)),
+            align = c("l", rep("r", ncol(df_diva) - 1))) %>%
+      column_spec(9, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
+      column_spec(10, background = "#EEEEEE", include_thead = TRUE) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for 3 year citations
+#' 
+#' @param df_city3y data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
+
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_city3y) > 0) {
+    filename <- paste0("ABM_table2_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_city3y))))
+    
+    DT::datatable(df_city3y,
+      container = header,
+      rownames = FALSE,
+      extensions = "Buttons",
+      options = list(
+        ordering = FALSE,
+        bPaginate = FALSE,
+        dom = 'tB',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+        )) %>%
+      DT::formatRound(2:5, digits = 1, mark = "") %>%
+      DT::formatPercentage(6, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for 3 year citations
+#' 
+#' @param df_city3y data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_city3y <- function(df_city3y) {
+  if (nrow(df_city3y) > 0) {
+    df_city3y %>% 
+      mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_city3y)),
+            align = c("l", rep("r", ncol(df_city3y) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' Datatable for 3 year citations (cf)
+#' 
+#' @param df_cf data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_cf) > 0) {
+    filename <- paste0("ABM_table3_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_cf))))
+    
+    DT::datatable(df_cf,
+      container = header,
+      rownames = FALSE,
+      extensions = "Buttons",
+      options = list(
+        ordering = FALSE,
+        bPaginate = FALSE,
+        dom = 'tB',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+      )
+    ) %>% 
+      formatRound(c(2, 4), digits = 1, mark = "") %>% 
+      formatRound(3, digits = 2, mark = "") %>%
+      formatPercentage(5, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for 3 year citations (cf)
+#' 
+#' @param df_cf data frame with DiVA publication data in a specific format
+#' @import htmltools
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_cf <- function(df_cf) {
+  if (nrow(df_cf) > 0) {
+    df_cf %>% 
+      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+      mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_cf)),
+            align = c("l", rep("r", ncol(df_cf) - 1))) %>% 
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for journal impact (jcf)
+#' 
+#' @param df_jcf data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_jcf) > 0) {
+    filename <- paste0("ABM_table4_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_jcf))))
+    
+    DT::datatable(df_jcf,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                    )) %>% 
+      formatRound(c(2, 4), digits = 1, mark = "") %>% 
+      formatRound(3, digits = 2, mark = "") %>% 
+      formatPercentage(5, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' HTML table for journal impact (jcf)
+#' 
+#' @param df_jcf data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_jcf <- function(df_jcf) {
+  if (nrow(df_jcf) > 0) {
+    df_jcf %>% 
+      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+      mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_jcf)),
+            align = c("l", rep("r", ncol(df_jcf) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for co-publication
+#' 
+#' @param df_copub data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_copub <- function(df_copub, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_copub) > 0) {
+    filename <- paste0("ABM_table5_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_copub))))
+    
+    DT::datatable(df_copub,
+      container = header,
+      rownames = FALSE,
+      extensions = "Buttons",
+      options = list(
+        ordering = FALSE,
+        bPaginate = FALSE,
+        dom = 'tB',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+        )) %>%
+      formatPercentage(c(4,6), digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for co-publication
+#' 
+#' @param df_copub data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_copub <- function(df_copub) {
+  if (nrow(df_copub) > 0) {
+    df_copub %>% 
+      mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_copub)),
+            align = c("l", rep("r", ncol(df_copub) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+
+#' Datatable for open access publications
+#' 
+#' @param df_oa data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_oa <- function(df_oa, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_oa) > 0) {
+    
+    filename <- paste0("ABM_open_access_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_oa))))
+    
+    DT::datatable(df_oa,
+      container = header,
+      rownames = FALSE,
+      extensions = "Buttons",
+      options = list(
+        ordering = FALSE,
+        bPaginate = FALSE,
+        dom = 'tB',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+      )) %>%
+      formatPercentage(9, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+  
+}
+
+#' HTML table for open access publications
+#' 
+#' @param df_oa data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_oa <- function(df_oa) {
+  if (nrow(df_oa) > 0) {
+    df_oa %>% 
+      mutate_at(vars(9), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_oa)),
+            align = c("l", rep("r", ncol(df_oa) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}

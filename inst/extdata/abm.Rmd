@@ -463,13 +463,13 @@ if (nrow(df_diva) > 0) {
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
-```
+``` 
 
 ### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 
 ```{r, fig.width=7, fig.height=8}
 if (nrow(df_diva) > 0) {
-  p <- abm_graph_wos_coverage(df_diva)
+  p <- abm_graph_wos_coverage_plotly(df_diva)
   p
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -514,7 +514,7 @@ abm_ui_datatable_city3y(
 ### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-abm_ui_kable_city3y(df_city3y)
+abm_ui_kable_city3y(df_cit3y)
 ```
 
 ### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}

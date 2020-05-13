@@ -76,18 +76,18 @@ if(isTRUE(unit_level >= 0)){
 } else {
   
   unit_label <- 
-    ad_displayname(kthid = params$unit_code)
+    ad_displayname2(kthid = params$unit_code)
 }
 
-unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
+#unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
 
-unit_file_label <- ifelse(isTRUE(unit_level == 1),
-                          unit_info() %>% filter(unit_code == params$unit_code) %>% pull(unit_short),
-                          params$unit_code)
+
 
 current_date <- format(Sys.Date(), "%Y%m%d")
 
 abm_unit_title<- paste0("ABM: ",unit_label)
+
+
 
 getheader <- function(indics){
   getcell <- function(indic){
@@ -100,6 +100,7 @@ getheader <- function(indics){
       disp = indic
       popup = ""
     }
+    disp <- disp %>% nowrap_hyphen_sub()
     glue("th('{disp}', class = 'display dt-left', style = 'padding-left: 10px; padding-right: 10px;', title = '{popup}')")
   }
   cells <- paste(lapply(indics, getcell), collapse = ",")
@@ -311,14 +312,21 @@ if (has_rows == TRUE) {
 Row
 --------------------------------
 
+```{r}
+# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
+STATIC <- "https://kth-library.github.io/abm"
+```
+
+
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
 
 if(isTRUE(unit_level >= 0)){
 
-  glue("<p>Overall Web of Science coverage for peer reviewed publications in this unit is ",
-       "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</p>")
+  #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
+  glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
+       "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</span></p>")
 
 } else {
 
@@ -331,6 +339,8 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+
 Row
 --------------------------------
 ### **Background**
@@ -341,11 +351,6 @@ Statistics regarding citations and co&#8209;publishing are based on the subset o
 
 ### **Further information**
 
-```{r}
-# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
-STATIC <- "https://kth-library.github.io/abm"
-```
-
 - [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
 - [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
 - [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
@@ -354,81 +359,43 @@ STATIC <- "https://kth-library.github.io/abm"
 
 For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
 
-
 Row
 ----------------------
 
 ### **Publication data**
 
-```{r, echo=FALSE, results="asis"}
+```{r, echo=FALSE}
 
-if (params$embed_data == TRUE) {
-  
-  library(htmltools)
-  
-  embed_data <- function(path)
-    paste0("data:", mime::guess_type(path), ";base64,", 
-      base64enc::base64encode(path))
-  
-  embed_file_link <- function(path,
-    href = embed_data(path),
-    name = basename(path),
-    text = paste("Download", name), ...) {
-    withTags(p(a(text, href = href, download = name, ...)))
-  }
-  
-  icon_download <- htmltools::tag("i", list(
-    class = "fa fa-download", 
-    paste("Publication data for", unit_label)))
-  
-  icon_download <- htmltools::attachDependencies(icon_download,
-    flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
-  
-  # export to xlsx format, into tempdir so we can embed a file link
-  
-  # data that we want to export
-  con <- pool_bib()
-  publications_kth <- abm_publications(con = con, unit_code = params$unit_code)
-  pool::poolClose(con)
-  
-  #install.packages("openxlsx")
-  library(openxlsx)
+# download button for publication list
+unit_file_label <- params$unit_code
+if (isTRUE(unit_level == 1))
+  unit_file_label <- 
+    unit_info() %>% 
+    filter(unit_code == params$unit_code) %>% 
+    pull(unit_short)
+    
+abm_ui_button_publist(
+  is_loggedin = params$embed_data, 
+  unit_label = unit_label, 
+  unit_code = params$unit_code, 
+  unit_file_label
+)
 
-  filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
-  excel_file <- file.path(tempdir(), filename)
-  
-  # Create excel workbook and define and format sheets
-  export_excel<- createWorkbook()
-  addWorksheet(export_excel, "Data")
-  addWorksheet(export_excel, "Attribution")
-  attrib_style <- createStyle(wrapText = TRUE, fontSize = 13, textDecoration = "Bold")
-  addStyle(export_excel, "Attribution", attrib_style, cols=1, rows=1:5)
-  setColWidths(export_excel, "Attribution", cols = 1, widths = 100)
-  
-  # Write data to excel sheet
-  writeData(export_excel, sheet = "Data", x = publications_kth)
-  writeData(export_excel, sheet = "Attribution", x = wos_attribution(), colNames = FALSE)
-  
-  # Save excel file
-  saveWorkbook(export_excel, excel_file, overwrite=TRUE)  # risky to state overwrite=TRUE?
-  
-  embed_file_link(excel_file,
-    title = "Download Publication List in Excel format",
-    text = icon_download, 
-    class = "btn btn-sm btn-primary")
-} else {
-  cat("Publication data is available only after login.")
-}
-```
-
-
-```{r, echo=FALSE, results="asis"}
-
+# DiVA Dream Portal button
 if (params$is_employee == TRUE) {
-  out <- '<a href="https://kth.diva-portal.org/dream" class="btn btn-sm btn-primary" target="_blank">Edit your publication data in DiVA</a><p>Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring.</p>'
-  cat(out)
+  abm_ui_button_diva()
+  htmltools::withTags(br())
 }
-  
+
+# Altmetric Explorer button  
+if (params$embed_data == TRUE && params$is_employee != TRUE) {
+  abm_ui_button_altmetric(
+    unit_meta$altmetric_count, 
+    unit_meta$altmetric_href, 
+    unit_label
+  )
+}
+
 ```
 
 ### **Attributions**
@@ -457,36 +424,12 @@ div.dt-buttons {
 </style>
 
 ```{r, fig.width=3.75}
-if (nrow(df_diva) > 0) {
 
-  filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
-  
-  header <- eval(parse(text = getheader(names(df_diva))))
-  
-  DT::datatable(df_diva,
-    container = header,
-    rownames = FALSE,
-    extensions = c("Buttons"), #c("Buttons", "Scroller"), 
-    style = "bootstrap", class = "compact", width = "720",
-    options = list(
-#      columnDefs = list(list(className = 'dt-right', targets = c(1:length(names(df_diva)) - 1))),
-      #deferRender = TRUE, scroller = TRUE, scrollX = TRUE,
-      ordering = FALSE,
-      bPaginate = FALSE,
-      pageLength = 100,
-      dom = 'tB',
-      buttons = list(list(extend = "copy", title=abm_unit_title),
-                     list(extend = "csv", filename = filename, title=abm_unit_title),
-                     list(extend = "excel", filename = filename, title=abm_unit_title))
-      )
-    ) %>%
-    formatRound(2:9, digits = 1, mark = "") %>%
-    formatPercentage(10, digits = 1) %>%
-    abm_format_rows() 
-
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_datatable_diva(
+  df_diva, 
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
 
 ```
 <!-- </div> -->
@@ -494,17 +437,7 @@ if (nrow(df_diva) > 0) {
 ### **Publication volume, fractionalized** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df_diva) > 0) {
-  df_diva %>% 
-    mutate_at(vars(starts_with("201"), starts_with("Total")), round, digits = 1) %>%
-    mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_diva)),
-          align = c("l", rep("r", ncol(df_diva) - 1))) %>% 
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_kable_diva(df_diva)
 ```
 
 
@@ -532,7 +465,7 @@ if (nrow(df_diva) > 0) {
 }
 ```
 
-### **Web of Science coverage** {.no-padding .no-mobile}
+### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 
 ```{r, fig.width=7, fig.height=8}
 if (nrow(df_diva) > 0) {
@@ -543,7 +476,7 @@ if (nrow(df_diva) > 0) {
 }
 ```
 
-### **Web of Science coverage** {.no-padding .mobile}
+### **Web of Science coverage by publication type** {.no-padding .mobile}
 
 ```{r, fig.width=9, fig.height=6}
 if (nrow(df_diva) > 0) {
@@ -571,98 +504,40 @@ div.dt-buttons {
 }
 </style>
 ```{r}
-if (nrow(df_cit3y) > 0) {
-  filename <- paste0("ABM_table2_", unit_file_label, "_", current_date)
-  
-  header <- eval(parse(text = getheader(names(df_cit3y))))
-
-  DT::datatable(df_cit3y,
-    container = header,
-    rownames = FALSE,
-    extensions = "Buttons",
-    options = list(
-      ordering = FALSE,
-      bPaginate = FALSE,
-      dom = 'tB',
-      buttons = list(list(extend = "copy", title=abm_unit_title),
-                     list(extend = "csv", filename = filename, title=abm_unit_title),
-                     list(extend = "excel", filename = filename, title=abm_unit_title))
-    )
-  ) %>% 
-    formatRound(2:5, digits = 1, mark = "") %>%
-    formatPercentage(6, digits = 1) %>%
-    abm_format_rows()
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_datatable_city3y(
+  df_cit3y, 
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
 ```
 
 ### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-if (nrow(df_cit3y) > 0) {
-  df_cit3y %>% 
-    mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
-    mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_cit3y)),
-          align = c("l", rep("r", ncol(df_cit3y) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_kable_city3y(df_city3y)
 ```
 
-### **Field normalized citations - Fractionalized (3-year moving average)** {.no-mobile}
+### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
   float:right;
 }
 </style>
-```{r} 
-if (nrow(df_cf) > 0) {
-  filename <- paste0("ABM_table3_", unit_file_label, "_", current_date)
-  
-  header <- eval(parse(text = getheader(names(df_cf))))
-   
-  DT::datatable(df_cf,
-    container = header,
-    rownames = FALSE,
-    extensions = "Buttons",
-    options = list(
-      ordering = FALSE,
-      bPaginate = FALSE,
-      dom = 'tB',
-      buttons = list(list(extend = "copy", title=abm_unit_title),
-                     list(extend = "csv", filename = filename, title=abm_unit_title),
-                     list(extend = "excel", filename = filename, title=abm_unit_title))
-      )
-    ) %>% 
-    formatRound(c(2, 4), digits = 1, mark = "") %>% 
-    formatRound(3, digits = 2, mark = "") %>%
-    formatPercentage(5, digits = 1) %>%
-    abm_format_rows()
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
-```
-
-### **Field normalized citations - Fractionalized (3-year moving average)** {.no-padding .mobile}
 
 ```{r}
-if (nrow(df_cf) > 0) {
-  df_cf %>% 
-    mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
-    mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
-    mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_cf)),
-          align = c("l", rep("r", ncol(df_cf) - 1))) %>% 
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_datatable_cf(
+  df_cf,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Field normalized citations, fractionalized (3-year moving average)** {.no-padding .mobile}
+
+```{r}
+abm_ui_kable_cf(df_cf)
 ```
 
 
@@ -694,6 +569,8 @@ if(isTRUE(unit_level >= 0)){
 
 
 ```
+
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 ### **Notes**
 ```{r, echo=FALSE, results="asis"}
@@ -728,6 +605,7 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 ---------------------
@@ -743,7 +621,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 ```
 
 
-### **Share Top 10%**
+### **Share of publications among Top 10% cited**
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
@@ -762,7 +640,7 @@ Journal impact
 Row
 ---------------------
 
-### **3-year moving average, fractional counts** {.no-mobile}
+### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -772,52 +650,18 @@ div.dt-buttons {
 </style>
 
 ```{r}
-if (nrow(df_jcf) > 0) {
-  filename <- paste0("ABM_table4_", unit_file_label, "_", current_date)
-
-  header <- eval(parse(text = getheader(names(df_jcf))))
- 
-  DT::datatable(df_jcf,
-    container = header,
-    rownames = FALSE,
-    extensions = "Buttons",
-    options = list(
-      ordering = FALSE,
-      bPaginate = FALSE,
-      dom = 'tB',
-      buttons = list(list(extend = "copy", title=abm_unit_title),
-                     list(extend = "csv", filename = filename, title=abm_unit_title),
-                     list(extend = "excel", filename = filename, title=abm_unit_title))
-    )
-  ) %>% 
-    formatRound(c(2, 4), digits = 1, mark = "") %>% 
-    formatRound(3, digits = 2, mark = "") %>% 
-    formatPercentage(5, digits = 1) %>%
-    abm_format_rows()
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
-
+abm_ui_datatable_jcf(
+  df_jcf,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
 ```
 
-### **3-year moving average, fractional counts** {.no-padding .mobile}
+### **Journal impact, fractionalized (3-year moving average)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df_jcf) > 0) {
-  df_jcf %>% 
-    mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
-    mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
-    mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_jcf)),
-          align = c("l", rep("r", ncol(df_jcf) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_kable_jcf(df_jcf)
 ```
-
-
 
 Row
 -----------------
@@ -854,10 +698,12 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+
 Row
 ---------------------
 
-### **Field normalized journal indicator (JCf)**
+### **Field normalized journal impact (JCf)**
 
 ```{r}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -868,7 +714,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 
 
-### **Share Journal Top 20%**
+### **Share of publications in Top 20% journals**
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -896,44 +742,17 @@ div.dt-buttons {
 </style>
 
 ```{r}
-if (nrow(df_copub) > 0) {
-  filename <- paste0("ABM_table5_", unit_file_label, "_", current_date)
-
-  header <- eval(parse(text = getheader(names(df_copub))))
-  
-  DT::datatable(df_copub,
-    container = header,
-    rownames = FALSE,
-    extensions = "Buttons",
-    options = list(
-      ordering = FALSE,
-      bPaginate = FALSE,
-      dom = 'tB',
-      buttons = list(list(extend = "copy", title=abm_unit_title),
-                     list(extend = "csv", filename = filename, title=abm_unit_title),
-                     list(extend = "excel", filename = filename, title=abm_unit_title))
-      )
-    ) %>%
-    formatPercentage(c(4,6), digits = 1) %>%
-    abm_format_rows()
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_datatable_copub(
+  df_copub,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
 ```
 
 ### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df_copub) > 0) {
-  df_copub %>% 
-    mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_copub)),
-          align = c("l", rep("r", ncol(df_copub) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_kable_copub(df_copub)
 ```
 
 
@@ -971,6 +790,8 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
+[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+
 Row
 -------
 ### **International and Swedish non-university co&#8209;publication**
@@ -1003,45 +824,18 @@ div.dt-buttons {
 </style>
 
 ```{r}
-if (nrow(df_oa) > 0) {
+abm_ui_datatable_oa(
+  df_oa,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
 
-  filename <- paste0("ABM_open_access_", unit_file_label, "_", current_date)
-
-  header <- eval(parse(text = getheader(names(df_oa))))
-   
-  DT::datatable(df_oa,
-    container = header,
-    rownames = FALSE,
-    extensions = "Buttons",
-    options = list(
-      ordering = FALSE,
-      bPaginate = FALSE,
-      dom = 'tB',
-      buttons = list(list(extend = "copy", title=abm_unit_title),
-                     list(extend = "csv", filename = filename, title=abm_unit_title),
-                     list(extend = "excel", filename = filename, title=abm_unit_title))
-      )
-    ) %>%
-    formatPercentage(9, digits = 1) %>%
-    abm_format_rows()
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
 ```
 
 ### **Open Access publications, full counts** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
-if (nrow(df_oa) > 0) {
-  df_oa %>% 
-    mutate_at(vars(9), function(x) sprintf("%.1f%%", x * 100)) %>%
-    kable(col.names = getcolnames(names(df_oa)),
-          align = c("l", rep("r", ncol(df_oa) - 1))) %>%
-    kable_styling(bootstrap_options = c("responsive")) %>%
-    scroll_box(width = "720px")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this table</i></p>")
-}
+abm_ui_kable_oa(df_oa)
 ```
 
 
@@ -1068,27 +862,27 @@ In summary, the different OA types can be described as follows:
 Row
 -------
 ### **Overview of Open Access publications, by OA type share** {.no-mobile}
-```{r, fig.width=4, fig.height=4}
+```{r, fig.width=6, fig.height=6}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie(df_oa)
+  abm_graph_oadata_piechart(df_oa, type = "plotly")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Overview of Open Access publications, by OA type share** {.no-padding .mobile}
-```{r, fig.width=4}
+```{r, fig.width=8}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_pie(df_oa)
+  abm_graph_oadata_piechart(df_oa, type = "plotly")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Evolution of the number of publications, by OA type** {.no-mobile}
-```{r, fig.width=6.5, fig.height=4}
+```{r, fig.width=8, fig.height=8}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
+  abm_graph_oadata_stackedarea_plotly(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -1097,7 +891,7 @@ if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 ### **Evolution of the number of publications, by OA type** {.no-padding .mobile}
 ```{r, fig.width=5}
 if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
+  abm_graph_oadata_stackedarea_plotly(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

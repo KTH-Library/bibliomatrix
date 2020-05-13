@@ -167,7 +167,7 @@ abm_format_columns_divatable <- function(t, column_name, has_left_border) {
 abm_format_header_divatable <- function(header) {
   header %>%
     sub("th\\('Publications', class = 'display dt-left', style = '",
-        "th('Publications', class = 'display dt-left', style = 'background-color:#EEEEEE; border-left: 1px solid #CCCCCC; ", .) %>%
+        "th('Total', class = 'display dt-left', style = 'background-color:#EEEEEE; border-left: 1px solid #CCCCCC; ", .) %>%
     sub("th\\('WoS coverage', class = 'display dt-left', style = '",
         "th('WoS coverage', class = 'display dt-left', style = 'background-color:#EEEEEE; ", .)
 }
@@ -241,8 +241,8 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
       DT::formatRound(2:9, digits = 1, mark = "") %>%
       DT::formatPercentage(10, digits = 1) %>%
       abm_format_rows() %>%
-      abm_format_columns_divatable("P_frac", TRUE) %>%
-      abm_format_columns_divatable("WoS_coverage", FALSE)
+      abm_format_columns_divatable("P_frac", has_left_border = TRUE) %>%
+      abm_format_columns_divatable("WoS_coverage", has_left_border = FALSE)
     
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))

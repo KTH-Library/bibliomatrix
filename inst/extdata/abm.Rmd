@@ -428,7 +428,7 @@ if (nrow(df_diva) > 0) {
 
   filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
   
-  header <- eval(parse(text = getheader(names(df_diva))))
+  header <- eval(parse(text = getheader(names(df_diva)) %>% abm_format_header_divatable()))
   
   DT::datatable(df_diva,
     container = header,
@@ -449,7 +449,9 @@ if (nrow(df_diva) > 0) {
     ) %>%
     formatRound(2:9, digits = 1, mark = "") %>%
     formatPercentage(10, digits = 1) %>%
-    abm_format_rows() 
+    abm_format_rows() %>%
+    abm_format_columns_divatable("P_frac", TRUE) %>%
+    abm_format_columns_divatable("WoS_coverage", FALSE)
 
 } else {
   shiny::HTML("<p><i>There are no publications available for this table</i></p>")
@@ -463,12 +465,15 @@ if (nrow(df_diva) > 0) {
 ```{r, fig.width=3.75}
 if (nrow(df_diva) > 0) {
   df_diva %>% 
-    mutate_at(vars(starts_with("201"), starts_with("Total")), round, digits = 1) %>%
+    mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage"), round, digits = 1) %>%
     mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
     kable(col.names = getcolnames(names(df_diva)),
           align = c("l", rep("r", ncol(df_diva) - 1))) %>% 
+    column_spec(9, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
+    column_spec(10, background = "#EEEEEE", include_thead = TRUE) %>%
     kable_styling(bootstrap_options = c("responsive")) %>%
     scroll_box(width = "720px")
+    
 } else {
   shiny::HTML("<p><i>There are no publications available for this table</i></p>")
 }

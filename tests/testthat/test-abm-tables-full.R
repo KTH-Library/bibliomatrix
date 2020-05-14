@@ -34,10 +34,11 @@ test_tab2 <- function(con, testlevel, unit_code) {
   # Get reference table
   cols <- c("publication_year", "p_frac_Sum", "c3_frac_Sum", "c3_frac_mean_Sum")
   refname <- paste0("c3_",testlevel,"_frac_aggr")
+  abmcols<-c("Publication_Year_ch","P_frac", "C3_frac", "C3")
   reftable <- con %>% tbl(refname) %>% filter(unit == unit_code) %>% select(cols) %>% as.data.frame()
   
   # Get ABM table
-  abmtable <- abm_table2(con, unit_code) %>% as.data.frame()
+  abmtable <- abm_table2(con, unit_code) %>% select(abmcols) %>% as.data.frame()
   
   # Check if tables are equal
   isTRUE(all.equal(reftable, abmtable, check.names = FALSE, tolerance = acc_tolerance))

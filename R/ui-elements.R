@@ -55,6 +55,8 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @export
 abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label) {
   
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
   if (is_loggedin == TRUE) {
     
     embed_data <- function(path)
@@ -264,8 +266,8 @@ abm_ui_kable_diva <- function(df_diva) {
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
-      column_spec(9, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
-      column_spec(10, background = "#EEEEEE", include_thead = TRUE) %>%
+      column_spec(column = ncol(df_diva) - 1, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
+      column_spec(column = ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "720px")
   } else {

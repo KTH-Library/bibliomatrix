@@ -480,7 +480,7 @@ abm_ui_datatable_city3y(
 ### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-abm_ui_kable_city3y(df_cit3y)
+abm_ui_kable_cit3y(df_cit3y)
 ```
 
 ### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}

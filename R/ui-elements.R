@@ -313,18 +313,18 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
 
 #' HTML table for 3 year citations
 #' 
-#' @param df_city3y data frame with DiVA publication data in a specific format
+#' @param df_cit3y data frame with DiVA publication data in a specific format
 #' @import htmltools 
 #' @importFrom knitr kable
 #' @importFrom kableExtra kable_styling scroll_box
 #' @export
-abm_ui_kable_city3y <- function(df_city3y) {
-  if (nrow(df_city3y) > 0) {
-    df_city3y %>% 
+abm_ui_kable_cit3y <- function(df_cit3y) {
+  if (nrow(df_cit3y) > 0) {
+    df_cit3y %>% 
       mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
       mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
-      kable(col.names = getcolnames(names(df_city3y)),
-            align = c("l", rep("r", ncol(df_city3y) - 1))) %>%
+      kable(col.names = getcolnames(names(df_cit3y)),
+            align = c("l", rep("r", ncol(df_cit3y) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "720px")
   } else {

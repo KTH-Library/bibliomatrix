@@ -38,6 +38,10 @@ test_that("plotly charts work for KTH", {
   
   plotly::subplot(subplot(w1), subplot(w2), nrows = 2)
   
+  abm_graph_diva(df_diva) + theme_kth()
+  abm_graph_wos_coverage(df_diva) + theme_kth_osc()
+  abm_graph_wos_coverage_plotly(df_diva)
+  
   expect_true(TRUE)
   
 })

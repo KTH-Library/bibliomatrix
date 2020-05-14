@@ -284,7 +284,7 @@ STATIC <- "https://kth-library.github.io/abm"
 ```
 
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
@@ -509,7 +509,7 @@ abm_ui_kable_cf(df_cf)
 Row
 --------------------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
@@ -536,7 +536,7 @@ if(isTRUE(unit_level >= 0)){
 
 ```
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -629,7 +629,7 @@ abm_ui_kable_jcf(df_jcf)
 Row
 -----------------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -721,7 +721,7 @@ abm_ui_kable_copub(df_copub)
 Row
 -----------------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -802,7 +802,8 @@ abm_ui_kable_oa(df_oa)
 
 Row
 -------
-### **Notes**
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
 

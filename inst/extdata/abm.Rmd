@@ -87,40 +87,6 @@ current_date <- format(Sys.Date(), "%Y%m%d")
 
 abm_unit_title<- paste0("ABM: ",unit_label)
 
-
-
-getheader <- function(indics){
-  getcell <- function(indic){
-    indicrow <- get_indic_descriptions() %>%
-      filter(tolower(varname) == tolower(indic))
-    if(nrow(indicrow) == 1){
-      disp <- indicrow %>% pull(displayname)
-      popup <- indicrow %>% pull(description_short)
-    } else {
-      disp = indic
-      popup = ""
-    }
-    disp <- disp %>% nowrap_hyphen_sub()
-    glue("th('{disp}', class = 'display dt-left', style = 'padding-left: 10px; padding-right: 10px;', title = '{popup}')")
-  }
-  cells <- paste(lapply(indics, getcell), collapse = ",")
-  paste0("htmltools::withTags(table(class = 'display dt-right', thead(tr(", cells, "))))")
-}
-
-getcolnames <- function(indics){
-  getname <- function(indic){
-    newname <- get_indic_descriptions() %>%
-      filter(tolower(varname) == tolower(indic)) %>%
-      pull(displayname)
-    if(is_empty(newname)){
-      indic
-    } else {
-      newname
-    }
-  }
-  sapply(indics, getname)
-}
-
 ```
 
 <style>
@@ -285,14 +251,14 @@ if (has_rows == TRUE) {
   
   nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
   nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-  waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+  waffle1 <- abm_waffle_pct_plotly(nonuniv_share, label = nonuniv_lbl) 
 
   int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
   int_lbl <- sprintf("International: %d%%", round(100*int_share))
-  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+  waffle2 <- abm_waffle_pct_plotly(int_share, label = int_lbl)
 
-  waffles <- waffle1 / waffle2
-  
+#  waffles <- waffle1 / waffle2
+  waffles <- subplot(waffle1, waffle2, nrows = 2)
   waffles
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -448,7 +414,7 @@ Row
 
 ```{r, fig.width=10, fig.height=10}
 if (nrow(df_diva) > 0) {
-  p <- abm_graph_diva(df_diva)
+  p <- abm_graph_diva_plotly(df_diva)
   p
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -469,7 +435,7 @@ if (nrow(df_diva) > 0) {
 
 ```{r, fig.width=7, fig.height=8}
 if (nrow(df_diva) > 0) {
-  p <- abm_graph_wos_coverage(df_diva)
+  p <- abm_graph_wos_coverage_plotly(df_diva)
   p
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -514,7 +480,7 @@ abm_ui_datatable_city3y(
 ### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-abm_ui_kable_city3y(df_city3y)
+abm_ui_kable_city3y(df_cit3y)
 ```
 
 ### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}
@@ -614,7 +580,7 @@ Row
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_cf(df_cf)
+  abm_graph_cf_plotly(df_cf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -625,7 +591,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_top10(df_cf)
+  abm_graph_top10_plotly(df_cf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -707,7 +673,7 @@ Row
 
 ```{r}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_jcf(df_jcf)
+  abm_graph_jcf_plotly(df_jcf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -718,7 +684,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_top20(df_jcf)
+  abm_graph_top20_plotly(df_jcf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -797,7 +763,7 @@ Row
 ### **International and Swedish non-university co&#8209;publication**
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
-  abm_graph_copub(df_copub)
+  abm_graph_copub_plotly(df_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

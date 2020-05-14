@@ -171,12 +171,34 @@ if (has_rows == TRUE) {
   cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
   
   pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", 
-    value = cf, reference = 1.0, roundto = 2)
+    value = cf, reference = 1.0, roundto = 2) #+ 
+    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
+    # ggplot2::theme(plot.margin = margin(0, 0, 10, 0)) +
+    # ggplot2::theme(
+    #   axis.title.x = element_blank(),
+    #   axis.line.y = element_blank(),
+    #   axis.text.y = element_blank(),
+    #   axis.ticks.y = element_blank(),
+    #   axis.title.y = element_blank(),
+    #   panel.grid.major.y = element_blank(),
+    #   panel.grid.minor = element_blank()
+    # )
   
   top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
   
   pub_bullet2 <- abm_bullet(label = "Share Top10% publications", 
-    value = top10_share, reference = 0.10, pct = TRUE)
+    value = top10_share, reference = 0.10, pct = TRUE) #+ 
+    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
+    # ggplot2::theme(plot.margin = margin(0, 0, 0, 0)) +
+    # ggplot2::theme(
+    #   axis.title.x = element_blank(),
+    #   axis.line.y = element_blank(),
+    #   axis.text.y = element_blank(),
+    #   axis.ticks.y = element_blank(),
+    #   axis.title.y = element_blank(),
+    #   panel.grid.major.y = element_blank(),
+    #   panel.grid.minor = element_blank()
+    # )
   
   #bullets <- grid.arrange(pub_bullet1, pub_bullet2, ncol = 1)
   

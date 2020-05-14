@@ -827,17 +827,30 @@ abm_graph_diva <- function(df){
 #' @importFrom stats reorder
 #' @importFrom scales percent
 #' @export
-abm_graph_wos_coverage <- function(df){
+abm_graph_wos_coverage <- function(df) {
+  
   kth_cols <- palette_kth()
-  df <- df %>% left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) %>% filter(WoS_coverage != 0)
+  
+  df <- 
+    df %>% 
+    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) %>% 
+    filter(WoS_coverage != 0)
+  
   ggplot(data = df,
-         aes(x = reorder(Publication_Type_DiVA, WoS_coverage))) +
-    geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
-    xlab(NULL) +
-    ylab("WoS coverage") +
-    coord_flip() +
-    scale_y_continuous(labels = percent_format(accuracy = 5L), breaks = seq(0,1,0.1), limits = c(0, 1)) +
-    theme_kth()
+    aes(x = reorder(Publication_Type_DiVA  %>% 
+                     gsub(", ",",\n",.) %>% 
+                     gsub(" \\(","\n(",.), WoS_coverage), 
+       text = paste('coverage:', sprintf("%.1f", 100 * WoS_coverage), '%')
+    )) +
+  geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
+  xlab(NULL) +
+  ylab("WoS coverage") +
+  coord_flip() +
+  scale_y_continuous(labels = percent_format(accuracy = 5L), 
+    breaks = seq(0, 1, 0.2), limits = c(0, 1)) +
+  kth_theme() + 
+  #theme_kth(axis_text_size = rel(1.1)) + #, ticks = TRUE) +
+  theme(axis.text.y  = element_text(hjust = 0))
 }
 
 #' Create graph over Cf by year

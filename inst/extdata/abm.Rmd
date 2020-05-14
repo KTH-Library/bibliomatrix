@@ -32,7 +32,7 @@ library(gridExtra)
 library(bibliomatrix)
 library(tidyr)
 library(scales)
-library(plotly)
+#library(plotly)
 library(kableExtra)
 library(glue)
 
@@ -86,40 +86,6 @@ if(isTRUE(unit_level >= 0)){
 current_date <- format(Sys.Date(), "%Y%m%d")
 
 abm_unit_title<- paste0("ABM: ",unit_label)
-
-
-
-getheader <- function(indics){
-  getcell <- function(indic){
-    indicrow <- get_indic_descriptions() %>%
-      filter(tolower(varname) == tolower(indic))
-    if(nrow(indicrow) == 1){
-      disp <- indicrow %>% pull(displayname)
-      popup <- indicrow %>% pull(description_short)
-    } else {
-      disp = indic
-      popup = ""
-    }
-    disp <- disp %>% nowrap_hyphen_sub()
-    glue("th('{disp}', class = 'display dt-left', style = 'padding-left: 10px; padding-right: 10px;', title = '{popup}')")
-  }
-  cells <- paste(lapply(indics, getcell), collapse = ",")
-  paste0("htmltools::withTags(table(class = 'display dt-right', thead(tr(", cells, "))))")
-}
-
-getcolnames <- function(indics){
-  getname <- function(indic){
-    newname <- get_indic_descriptions() %>%
-      filter(tolower(varname) == tolower(indic)) %>%
-      pull(displayname)
-    if(is_empty(newname)){
-      indic
-    } else {
-      newname
-    }
-  }
-  sapply(indics, getname)
-}
 
 ```
 
@@ -292,7 +258,7 @@ if (has_rows == TRUE) {
   waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
 
   waffles <- waffle1 / waffle2
-  
+#  waffles <- subplot(waffle1, waffle2, nrows = 2)
   waffles
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -318,7 +284,8 @@ STATIC <- "https://kth-library.github.io/abm"
 ```
 
 
-### **Notes**
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
 
@@ -338,8 +305,6 @@ if(isTRUE(unit_level >= 0)){
 
 }
 ```
-
-[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 --------------------------------
@@ -463,7 +428,7 @@ if (nrow(df_diva) > 0) {
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
-```
+``` 
 
 ### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 
@@ -514,7 +479,7 @@ abm_ui_datatable_city3y(
 ### **Citations 3-year window, fractional counts** {.mobile}
 
 ```{r}
-abm_ui_kable_city3y(df_city3y)
+abm_ui_kable_cit3y(df_cit3y)
 ```
 
 ### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}
@@ -544,7 +509,8 @@ abm_ui_kable_cf(df_cf)
 Row
 --------------------
 
-### **Notes**
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
 
@@ -570,9 +536,8 @@ if(isTRUE(unit_level >= 0)){
 
 ```
 
-[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
-### **Notes**
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
@@ -604,8 +569,6 @@ if(isTRUE(unit_level >= 0)){
 
 }
 ```
-
-[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 ---------------------
@@ -666,7 +629,8 @@ abm_ui_kable_jcf(df_jcf)
 Row
 -----------------
 
-### **Notes**
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
@@ -697,8 +661,6 @@ if(isTRUE(unit_level >= 0)){
 
 }
 ```
-
-[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 ---------------------
@@ -759,7 +721,8 @@ abm_ui_kable_copub(df_copub)
 Row
 -----------------
 
-### **Notes**
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
@@ -789,8 +752,6 @@ if(isTRUE(unit_level >= 0)){
 
 }
 ```
-
-[<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank"}
 
 Row
 -------
@@ -841,7 +802,8 @@ abm_ui_kable_oa(df_oa)
 
 Row
 -------
-### **Notes**
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
 
@@ -862,36 +824,40 @@ In summary, the different OA types can be described as follows:
 Row
 -------
 ### **Overview of Open Access publications, by OA type share** {.no-mobile}
+
 ```{r, fig.width=6, fig.height=6}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "plotly")
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_piechart(df_oa, type = "ggplot")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Overview of Open Access publications, by OA type share** {.no-padding .mobile}
+
 ```{r, fig.width=8}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "plotly")
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_piechart(df_oa, type = "ggplot")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Evolution of the number of publications, by OA type** {.no-mobile}
+
 ```{r, fig.width=8, fig.height=8}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea_plotly(df_oa)
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
 ### **Evolution of the number of publications, by OA type** {.no-padding .mobile}
+
 ```{r, fig.width=5}
-if(df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea_plotly(df_oa)
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

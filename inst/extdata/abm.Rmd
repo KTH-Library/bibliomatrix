@@ -1,5 +1,5 @@
 ---
-title: "ABM 2019: `r params$unit_code`"
+title: "ABM"
 output: 
   flexdashboard::flex_dashboard:
     orientation: rows

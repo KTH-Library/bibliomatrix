@@ -18,7 +18,7 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
   t1 <- 
     df %>% 
     filter(Publication_Year_ch == "Total") %>%
-    select_at(.vars = vars(-contains("oa_count") & ends_with("count"))) %>%
+    select_at(.vars = vars(-contains("oa_count"), ends_with("count"))) %>%
     pivot_longer(cols = ends_with("_count"), names_to = "group", names_pattern = "(.*?)_count", values_to = "count") %>%
     mutate(value = 100 * count / sum(count, na.rm = TRUE)) %>%
     mutate(group = tools::toTitleCase(group))  %>%
@@ -90,7 +90,7 @@ abm_graph_oadata_share <- function(df, type = c("ggplot", "plotly", "ggiraph")) 
   t1 <- 
     df %>% 
     filter(Publication_Year_ch == "Total") %>%
-    select_at(.vars = vars(-contains("oa_count") & ends_with("count"))) %>%
+    select_at(.vars = vars(-contains("oa_count"), ends_with("count"))) %>%
     pivot_longer(cols = ends_with("_count"), names_to = "group", names_pattern = "(.*?)_count", values_to = "count") %>%
     mutate(value = 100 * count / sum(count, na.rm = TRUE)) %>%
     mutate(group = tools::toTitleCase(group))  %>%

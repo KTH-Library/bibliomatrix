@@ -201,10 +201,10 @@ Book
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">bibmon</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   195ms   472ms</span>
+<span class="co">#&gt;   145ms   231ms</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   140ms   139ms</span>
+<span class="co">#&gt;   126ms   125ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">bibmon</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">localdb</span>)</pre></body></html></div>

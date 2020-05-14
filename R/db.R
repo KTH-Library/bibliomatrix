@@ -300,15 +300,15 @@ db_sqlite_location <- function() {
 #' This function returns a db connection to one of two possible pre-configured
 #' data sources containing Bibliometrics data
 #' 
-#' @param source_type one of "mssql" or "sqlite" with "mssql" being default
+#' @param source_type one of "sqlite" or "mssql" with "sqlite" being default
 #' @return database connection
 #' @export
-pool_bib <- function(source_type = c("mssql", "sqlite"))
+pool_bib <- function(source_type = c("sqlite", "mssql"))
 {
   type <- match.arg(source_type)
   switch(type,
-         mssql = pool_bib_mssql(),
-         sqlite = pool_bib_sqlite()
+         sqlite = pool_bib_sqlite(),
+         mssql = pool_bib_mssql()
   )
 }
 

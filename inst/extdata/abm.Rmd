@@ -429,7 +429,7 @@ if (nrow(df_diva) > 0) {
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
-```
+``` 
 
 ### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 

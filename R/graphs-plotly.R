@@ -174,7 +174,7 @@ abm_graph_diva_plotly <- function(df)
 #' @importFrom plotly ggplotly
 #' @export
 abm_graph_wos_coverage_plotly <- function(df)
-  abm_graph_wos_coverage(df) %>% ggplotly()
+  abm_graph_wos_coverage(df) %>% ggplotly(tooltip = "text")
 
 #' Create graph over DiVA publication types by year, using plotly
 #' 

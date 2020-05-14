@@ -341,31 +341,55 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb2-11" data-line-number="11"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
-<tr class="header">
-<th align="left">Publication_Type_DiVA</th>
-<th align="right">2012</th>
+<tr>
+<th style="text-align:left;">
+Publication_Type_DiVA
+</th>
+<th style="text-align:right;">
+2012
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">Article, peer review</td>
-<td align="right">1337.624938</td>
+<tr>
+<td style="text-align:left;">
+Article, peer review
+</td>
+<td style="text-align:right;">
+1337.624938
+</td>
 </tr>
-<tr class="even">
-<td align="left">Article, other</td>
-<td align="right">122.640138</td>
+<tr>
+<td style="text-align:left;">
+Article, other
+</td>
+<td style="text-align:right;">
+122.640138
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Conference paper, peer review</td>
-<td align="right">921.162783</td>
+<tr>
+<td style="text-align:left;">
+Conference paper, peer review
+</td>
+<td style="text-align:right;">
+921.162783
+</td>
 </tr>
-<tr class="even">
-<td align="left">Conference paper, other</td>
-<td align="right">386.991782</td>
+<tr>
+<td style="text-align:left;">
+Conference paper, other
+</td>
+<td style="text-align:right;">
+386.991782
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Book</td>
-<td align="right">9.319048</td>
+<tr>
+<td style="text-align:left;">
+Book
+</td>
+<td style="text-align:right;">
+9.319048
+</td>
 </tr>
 </tbody>
 </table>
@@ -382,10 +406,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co"># what about performance?</span></a>
 <a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</a>
 <a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;   192ms   433ms</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;   166ms   253ms</span></a>
 <a class="sourceLine" id="cb3-15" data-line-number="15"><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</a>
 <a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; process    real </span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;   146ms   146ms</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;   137ms   137ms</span></a>
 <a class="sourceLine" id="cb3-18" data-line-number="18"></a>
 <a class="sourceLine" id="cb3-19" data-line-number="19"><span class="kw">poolClose</span>(bibmon)</a>
 <a class="sourceLine" id="cb3-20" data-line-number="20"><span class="kw">poolClose</span>(localdb)</a></code></pre></div>
@@ -397,51 +421,95 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">ad_search</span>(<span class="st">&quot;agnel&quot;</span>, <span class="st">&quot;accountname&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
-<tr class="header">
-<th align="left">key</th>
-<th align="left">value</th>
+<tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+value
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">DN</td>
-<td align="left">CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se</td>
+<tr>
+<td style="text-align:left;">
+DN
+</td>
+<td style="text-align:left;">
+CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se
+</td>
 </tr>
-<tr class="even">
-<td align="left">objectClass</td>
-<td align="left">top</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+top
+</td>
 </tr>
-<tr class="odd">
-<td align="left">objectClass</td>
-<td align="left">person</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+person
+</td>
 </tr>
-<tr class="even">
-<td align="left">objectClass</td>
-<td align="left">organizationalPerson</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+organizationalPerson
+</td>
 </tr>
-<tr class="odd">
-<td align="left">objectClass</td>
-<td align="left">user</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+user
+</td>
 </tr>
-<tr class="even">
-<td align="left">cn</td>
-<td align="left">Agne Larsson (agnel)</td>
+<tr>
+<td style="text-align:left;">
+cn
+</td>
+<td style="text-align:left;">
+Agne Larsson (agnel)
+</td>
 </tr>
-<tr class="odd">
-<td align="left">sn</td>
-<td align="left">Larsson</td>
+<tr>
+<td style="text-align:left;">
+sn
+</td>
+<td style="text-align:left;">
+Larsson
+</td>
 </tr>
-<tr class="even">
-<td align="left">c</td>
-<td align="left">SE</td>
+<tr>
+<td style="text-align:left;">
+c
+</td>
+<td style="text-align:left;">
+SE
+</td>
 </tr>
-<tr class="odd">
-<td align="left">l</td>
-<td align="left">Stockholm</td>
+<tr>
+<td style="text-align:left;">
+l
+</td>
+<td style="text-align:left;">
+Stockholm
+</td>
 </tr>
-<tr class="even">
-<td align="left">st</td>
-<td align="left">Stockholm</td>
+<tr>
+<td style="text-align:left;">
+st
+</td>
+<td style="text-align:left;">
+Stockholm
+</td>
 </tr>
 </tbody>
 </table>
@@ -450,15 +518,23 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">ad_search</span>(<span class="st">&quot;u1z88syr&quot;</span>, <span class="st">&quot;kthid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>(<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
-<tr class="header">
-<th align="left">key</th>
-<th align="left">value</th>
+<tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+value
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">DN</td>
-<td align="left">CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se</td>
+<tr>
+<td style="text-align:left;">
+DN
+</td>
+<td style="text-align:left;">
+CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se
+</td>
 </tr>
 </tbody>
 </table>
@@ -472,27 +548,47 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">  </span><span class="kw">kable</span>() </a></code></pre></div>
 <table>
 <thead>
-<tr class="header">
-<th align="left">key</th>
-<th align="left">value</th>
+<tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+value
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">ugPrimaryAffiliation</td>
-<td align="left">staff</td>
+<tr>
+<td style="text-align:left;">
+ugPrimaryAffiliation
+</td>
+<td style="text-align:left;">
+staff
+</td>
 </tr>
-<tr class="even">
-<td align="left">ugAffiliation</td>
-<td align="left">staff</td>
+<tr>
+<td style="text-align:left;">
+ugAffiliation
+</td>
+<td style="text-align:left;">
+staff
+</td>
 </tr>
-<tr class="odd">
-<td align="left">ugAffiliation</td>
-<td align="left">member</td>
+<tr>
+<td style="text-align:left;">
+ugAffiliation
+</td>
+<td style="text-align:left;">
+member
+</td>
 </tr>
-<tr class="even">
-<td align="left">ugAffiliation</td>
-<td align="left">employee</td>
+<tr>
+<td style="text-align:left;">
+ugAffiliation
+</td>
+<td style="text-align:left;">
+employee
+</td>
 </tr>
 </tbody>
 </table>
@@ -519,16 +615,22 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <a class="sourceLine" id="cb7-21" data-line-number="21"><span class="st">  </span><span class="kw">kable</span>()</a></code></pre></div>
 <table>
 <thead>
-<tr class="header">
-<th align="left">memberof</th>
+<tr>
+<th style="text-align:left;">
+memberof
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td align="left">aff_faculty</td>
+<tr>
+<td style="text-align:left;">
+aff_faculty
+</td>
 </tr>
-<tr class="even">
-<td align="left">aff_staff</td>
+<tr>
+<td style="text-align:left;">
+aff_staff
+</td>
 </tr>
 </tbody>
 </table>

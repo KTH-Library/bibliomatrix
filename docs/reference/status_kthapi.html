@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Sync the MS SQL Server database BIBMON to a local SQLite3 db — db_sync • bibliomatrix</title>
+<title>Status message related to KTH API availability — status_kthapi • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,8 @@
 
 
 
-<meta property="og:title" content="Sync the MS SQL Server database BIBMON to a local SQLite3 db — db_sync" />
-<meta property="og:description" content="This function syncs db tables from an mssql source db and
-writes the data into a local SQLite3 db using buffering, with
-chunk size set to 1e4 items per chunk, in order to avoid out of
-memory exceptions when moving large tables." />
+<meta property="og:title" content="Status message related to KTH API availability — status_kthapi" />
+<meta property="og:description" content="Status message related to KTH API availability" />
 
 
 
@@ -129,49 +126,21 @@ memory exceptions when moving large tables." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Sync the MS SQL Server database BIBMON to a local SQLite3 db</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/db.R'><code>R/db.R</code></a></small>
-    <div class="hidden name"><code>db_sync.Rd</code></div>
+    <h1>Status message related to KTH API availability</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/status.R'><code>R/status.R</code></a></small>
+    <div class="hidden name"><code>status_kthapi.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function syncs db tables from an mssql source db and
-writes the data into a local SQLite3 db using buffering, with
-chunk size set to 1e4 items per chunk, in order to avoid out of
-memory exceptions when moving large tables.</p>
+    <p>Status message related to KTH API availability</p>
     </div>
 
-    <pre class="usage"><span class='fu'>db_sync</span>(
-  <span class='no'>tables_included</span>,
-  <span class='kw'>tables_excluded</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"OA_status"</span>, <span class='st'>"Document"</span>, <span class='st'>"Bestresaddr_KTH"</span>, <span class='st'>"DIVA_School_Dept"</span>,
-    <span class='st'>"Diva_departments"</span>, <span class='st'>"Doc_statistics"</span>),
-  <span class='kw'>overwrite_existing</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
-)</pre>
+    <pre class="usage"><span class='fu'>status_kthapi</span>()</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>tables_included</th>
-      <td><p>a vector of table names in the source db to be 
-included, by default all tables are included except those excluded</p></td>
-    </tr>
-    <tr>
-      <th>tables_excluded</th>
-      <td><p>a vector of table names in the source db to be
-excluded, by default a number of tables are excluded, specify NULL
-to not explicitly exclude any tables</p></td>
-    </tr>
-    <tr>
-      <th>overwrite_existing</th>
-      <td><p>a logical to indicate whether destination tables
-should be overwritten if they already exist</p></td>
-    </tr>
-    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>invisible result with vector of boolean status flags for synced tables</p>
+    <p>list with two slots for status message and status</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

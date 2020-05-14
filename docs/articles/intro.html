@@ -137,30 +137,54 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fl">1</span>:<span class="fl">2</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
 <table class="table">
-<thead><tr class="header">
-<th align="left">Publication_Type_DiVA</th>
-<th align="right">2012</th>
+<thead><tr>
+<th style="text-align:left;">
+Publication_Type_DiVA
+</th>
+<th style="text-align:right;">
+2012
+</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">Article, peer review</td>
-<td align="right">1337.624938</td>
+<tr>
+<td style="text-align:left;">
+Article, peer review
+</td>
+<td style="text-align:right;">
+1337.624938
+</td>
 </tr>
-<tr class="even">
-<td align="left">Article, other</td>
-<td align="right">122.640138</td>
+<tr>
+<td style="text-align:left;">
+Article, other
+</td>
+<td style="text-align:right;">
+122.640138
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Conference paper, peer review</td>
-<td align="right">921.162783</td>
+<tr>
+<td style="text-align:left;">
+Conference paper, peer review
+</td>
+<td style="text-align:right;">
+921.162783
+</td>
 </tr>
-<tr class="even">
-<td align="left">Conference paper, other</td>
-<td align="right">386.991782</td>
+<tr>
+<td style="text-align:left;">
+Conference paper, other
+</td>
+<td style="text-align:right;">
+386.991782
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Book</td>
-<td align="right">9.319048</td>
+<tr>
+<td style="text-align:left;">
+Book
+</td>
+<td style="text-align:right;">
+9.319048
+</td>
 </tr>
 </tbody>
 </table>
@@ -177,10 +201,10 @@
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">bibmon</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   186ms   307ms</span>
+<span class="co">#&gt;   160ms   244ms</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   141ms   173ms</span>
+<span class="co">#&gt;   136ms   136ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">bibmon</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">localdb</span>)</pre></body></html></div>
@@ -192,50 +216,94 @@
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># search Active Directory using an account name, return first 10 rows</span>
 <span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"agnel"</span>, <span class="st">"accountname"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
 <table class="table">
-<thead><tr class="header">
-<th align="left">key</th>
-<th align="left">value</th>
+<thead><tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+value
+</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">DN</td>
-<td align="left">CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se</td>
+<tr>
+<td style="text-align:left;">
+DN
+</td>
+<td style="text-align:left;">
+CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se
+</td>
 </tr>
-<tr class="even">
-<td align="left">objectClass</td>
-<td align="left">top</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+top
+</td>
 </tr>
-<tr class="odd">
-<td align="left">objectClass</td>
-<td align="left">person</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+person
+</td>
 </tr>
-<tr class="even">
-<td align="left">objectClass</td>
-<td align="left">organizationalPerson</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+organizationalPerson
+</td>
 </tr>
-<tr class="odd">
-<td align="left">objectClass</td>
-<td align="left">user</td>
+<tr>
+<td style="text-align:left;">
+objectClass
+</td>
+<td style="text-align:left;">
+user
+</td>
 </tr>
-<tr class="even">
-<td align="left">cn</td>
-<td align="left">Agne Larsson (agnel)</td>
+<tr>
+<td style="text-align:left;">
+cn
+</td>
+<td style="text-align:left;">
+Agne Larsson (agnel)
+</td>
 </tr>
-<tr class="odd">
-<td align="left">sn</td>
-<td align="left">Larsson</td>
+<tr>
+<td style="text-align:left;">
+sn
+</td>
+<td style="text-align:left;">
+Larsson
+</td>
 </tr>
-<tr class="even">
-<td align="left">c</td>
-<td align="left">SE</td>
+<tr>
+<td style="text-align:left;">
+c
+</td>
+<td style="text-align:left;">
+SE
+</td>
 </tr>
-<tr class="odd">
-<td align="left">l</td>
-<td align="left">Stockholm</td>
+<tr>
+<td style="text-align:left;">
+l
+</td>
+<td style="text-align:left;">
+Stockholm
+</td>
 </tr>
-<tr class="even">
-<td align="left">st</td>
-<td align="left">Stockholm</td>
+<tr>
+<td style="text-align:left;">
+st
+</td>
+<td style="text-align:left;">
+Stockholm
+</td>
 </tr>
 </tbody>
 </table>
@@ -243,13 +311,21 @@
 <span class="co"># search AD using a KTH identifier, same result, so return first row only</span>
 <span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"u1z88syr"</span>, <span class="st">"kthid"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">1</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
 <table class="table">
-<thead><tr class="header">
-<th align="left">key</th>
-<th align="left">value</th>
+<thead><tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+value
+</th>
 </tr></thead>
-<tbody><tr class="odd">
-<td align="left">DN</td>
-<td align="left">CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se</td>
+<tbody><tr>
+<td style="text-align:left;">
+DN
+</td>
+<td style="text-align:left;">
+CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se
+</td>
 </tr></tbody>
 </table>
 <div class="sourceCode" id="cb6"><html><body><pre class="r">
@@ -261,26 +337,46 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html">str_starts</a></span>(<span class="no">key</span>, <span class="st">"ug.*Affiliation"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
 <table class="table">
-<thead><tr class="header">
-<th align="left">key</th>
-<th align="left">value</th>
+<thead><tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+value
+</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">ugPrimaryAffiliation</td>
-<td align="left">staff</td>
+<tr>
+<td style="text-align:left;">
+ugPrimaryAffiliation
+</td>
+<td style="text-align:left;">
+staff
+</td>
 </tr>
-<tr class="even">
-<td align="left">ugAffiliation</td>
-<td align="left">staff</td>
+<tr>
+<td style="text-align:left;">
+ugAffiliation
+</td>
+<td style="text-align:left;">
+staff
+</td>
 </tr>
-<tr class="odd">
-<td align="left">ugAffiliation</td>
-<td align="left">member</td>
+<tr>
+<td style="text-align:left;">
+ugAffiliation
+</td>
+<td style="text-align:left;">
+member
+</td>
 </tr>
-<tr class="even">
-<td align="left">ugAffiliation</td>
-<td align="left">employee</td>
+<tr>
+<td style="text-align:left;">
+ugAffiliation
+</td>
+<td style="text-align:left;">
+employee
+</td>
 </tr>
 </tbody>
 </table>
@@ -306,15 +402,21 @@ u18qe64m"</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https:
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html">str_starts</a></span>(<span class="no">memberof</span>, <span class="st">"aff"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
 <table class="table">
-<thead><tr class="header">
-<th align="left">memberof</th>
+<thead><tr>
+<th style="text-align:left;">
+memberof
+</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">aff_faculty</td>
+<tr>
+<td style="text-align:left;">
+aff_faculty
+</td>
 </tr>
-<tr class="even">
-<td align="left">aff_staff</td>
+<tr>
+<td style="text-align:left;">
+aff_staff
+</td>
 </tr>
 </tbody>
 </table>

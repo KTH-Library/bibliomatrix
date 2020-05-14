@@ -195,76 +195,160 @@
 <span class="co"># Show parts of table 1</span>
 <span class="kw pkg">knitr</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="no">kth_abm_tables</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Publication_Type_DiVA</span>, <span class="no">P_frac</span>, <span class="no">WoS_coverage</span>))</pre></body></html></div>
 <table class="table">
-<thead><tr class="header">
-<th align="left">Publication_Type_DiVA</th>
-<th align="right">P_frac</th>
-<th align="right">WoS_coverage</th>
+<thead><tr>
+<th style="text-align:left;">
+Publication_Type_DiVA
+</th>
+<th style="text-align:right;">
+P_frac
+</th>
+<th style="text-align:right;">
+WoS_coverage
+</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">Article, peer review</td>
-<td align="right">10330.64910</td>
-<td align="right">0.8814042</td>
+<tr>
+<td style="text-align:left;">
+Article, peer review
+</td>
+<td style="text-align:right;">
+10330.64910
+</td>
+<td style="text-align:right;">
+0.8814042
+</td>
 </tr>
-<tr class="even">
-<td align="left">Article, other</td>
-<td align="right">743.83892</td>
-<td align="right">0.8160024</td>
+<tr>
+<td style="text-align:left;">
+Article, other
+</td>
+<td style="text-align:right;">
+743.83892
+</td>
+<td style="text-align:right;">
+0.8160024
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Conference paper, peer review</td>
-<td align="right">5631.67421</td>
-<td align="right">0.5829022</td>
+<tr>
+<td style="text-align:left;">
+Conference paper, peer review
+</td>
+<td style="text-align:right;">
+5631.67421
+</td>
+<td style="text-align:right;">
+0.5829022
+</td>
 </tr>
-<tr class="even">
-<td align="left">Conference paper, other</td>
-<td align="right">1758.63001</td>
-<td align="right">0.0294805</td>
+<tr>
+<td style="text-align:left;">
+Conference paper, other
+</td>
+<td style="text-align:right;">
+1758.63001
+</td>
+<td style="text-align:right;">
+0.0294805
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Book</td>
-<td align="right">100.54508</td>
-<td align="right">0.0000000</td>
+<tr>
+<td style="text-align:left;">
+Book
+</td>
+<td style="text-align:right;">
+100.54508
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
 </tr>
-<tr class="even">
-<td align="left">Anthology (editor)</td>
-<td align="right">61.76667</td>
-<td align="right">0.0000000</td>
+<tr>
+<td style="text-align:left;">
+Anthology (editor)
+</td>
+<td style="text-align:right;">
+61.76667
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Chapter in book</td>
-<td align="right">927.51339</td>
-<td align="right">0.0460833</td>
+<tr>
+<td style="text-align:left;">
+Chapter in book
+</td>
+<td style="text-align:right;">
+927.51339
+</td>
+<td style="text-align:right;">
+0.0460833
+</td>
 </tr>
-<tr class="even">
-<td align="left">Article, book review</td>
-<td align="right">97.10000</td>
-<td align="right">0.5880536</td>
+<tr>
+<td style="text-align:left;">
+Article, book review
+</td>
+<td style="text-align:right;">
+97.10000
+</td>
+<td style="text-align:right;">
+0.5880536
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Proceeding (editor)</td>
-<td align="right">37.43452</td>
-<td align="right">0.0267133</td>
+<tr>
+<td style="text-align:left;">
+Proceeding (editor)
+</td>
+<td style="text-align:right;">
+37.43452
+</td>
+<td style="text-align:right;">
+0.0267133
+</td>
 </tr>
-<tr class="even">
-<td align="left">Report</td>
-<td align="right">643.56521</td>
-<td align="right">0.0000000</td>
+<tr>
+<td style="text-align:left;">
+Report
+</td>
+<td style="text-align:right;">
+643.56521
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Doctorate thesis</td>
-<td align="right">1976.00000</td>
-<td align="right">0.0000000</td>
+<tr>
+<td style="text-align:left;">
+Doctorate thesis
+</td>
+<td style="text-align:right;">
+1976.00000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
 </tr>
-<tr class="even">
-<td align="left">Licentiate thesis</td>
-<td align="right">749.00000</td>
-<td align="right">0.0000000</td>
+<tr>
+<td style="text-align:left;">
+Licentiate thesis
+</td>
+<td style="text-align:right;">
+749.00000
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
 </tr>
-<tr class="odd">
-<td align="left">Patent, approved</td>
-<td align="right">36.12143</td>
-<td align="right">0.0000000</td>
+<tr>
+<td style="text-align:left;">
+Patent, approved
+</td>
+<td style="text-align:right;">
+36.12143
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
 </tr>
 </tbody>
 </table>

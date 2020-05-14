@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
       </span>
     </div>
 
@@ -201,10 +201,10 @@ Book
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">bibmon</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   160ms   244ms</span>
+<span class="co">#&gt;   195ms   472ms</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   136ms   136ms</span>
+<span class="co">#&gt;   140ms   139ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">bibmon</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">localdb</span>)</pre></body></html></div>

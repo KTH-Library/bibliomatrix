@@ -876,7 +876,8 @@ abm_graph_cf <- function(df){
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
     theme_kth_osc() +
-    theme(panel.grid.major.x = element_blank(),
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
 
@@ -900,7 +901,8 @@ abm_graph_top10 <- function(df){
     geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     theme_kth_osc() +
-    theme(panel.grid.major.x = element_blank(),
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
 
@@ -923,7 +925,8 @@ abm_graph_jcf <- function(df){
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
     theme_kth_osc() +
-    theme(panel.grid.major.x = element_blank(),
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
 
@@ -947,7 +950,8 @@ abm_graph_top20 <- function(df){
     geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     theme_kth_osc() +
-    theme(panel.grid.major.x = element_blank(),
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
 
@@ -975,7 +979,8 @@ abm_graph_copub <- function(df){
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
     scale_color_manual(values = kth_cols) +
     theme_kth_osc() +
-    theme(legend.position="bottom",
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position="bottom",
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
@@ -1134,7 +1139,8 @@ abm_graph_oadata_stackedarea <- function(df){
     xlab("Publication year") +
     ylab("Number of publications") +
     theme_kth_osc() +
-    theme(legend.position="bottom",
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position="bottom",
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }

@@ -796,8 +796,8 @@ abm_private_data <- function(unit_code) {
 #' 
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
-#' @importFrom stats reorder ktheme
+#' @import ggplot2 dplyr ktheme
+#' @importFrom stats reorder
 #' @importFrom RColorBrewer brewer.pal
 #' @export
 abm_graph_diva <- function(df){

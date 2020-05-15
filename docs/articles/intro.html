@@ -191,6 +191,10 @@ Book
 <div class="sourceCode" id="cb3"><html><body><pre class="r">
 <span class="co"># You can build a sqlite3 databsae for local use (this will take a while the first time)</span>
 <span class="fu"><a href="../reference/db_sync.html">db_sync</a></span>()
+<span class="co">#&gt; Warning: The `add` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
+<span class="co">#&gt; Please use the `.add` argument instead.</span>
+<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
+<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span>
 <span class="no">localdb</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pool_bib.html">pool_bib</a></span>(<span class="st">"sqlite"</span>)
 <span class="no">t2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>)
 
@@ -201,10 +205,10 @@ Book
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">bibmon</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   145ms   231ms</span>
+<span class="co">#&gt;   203ms   399ms</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   126ms   125ms</span>
+<span class="co">#&gt;   234ms   236ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">bibmon</span>)
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">localdb</span>)</pre></body></html></div>

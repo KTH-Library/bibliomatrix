@@ -21,7 +21,6 @@ LazyData: true
 Depends: R (>= 2.10)
 Suggests: 
     testthat (>= 2.1.0),
-    knitr,
     bench
 RoxygenNote: 7.1.0
 Imports: 

@@ -34,7 +34,8 @@ globalz <- "
 spacenames <- c(
   "Organizational Unit",
   "OA type:",
-  "Publication count"
+  "Publication count",
+  "Co-publication:"
 )
 
 str_remove <- function(x, y) gsub(paste(y, collapse='|'), "", x = x, fixed = TRUE)

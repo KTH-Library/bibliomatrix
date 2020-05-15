@@ -797,7 +797,7 @@ abm_private_data <- function(unit_code) {
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
 #' @import ggplot2 dplyr
-#' @importFrom stats reorder
+#' @importFrom stats reorder ktheme
 #' @importFrom RColorBrewer brewer.pal
 #' @export
 abm_graph_diva <- function(df){
@@ -815,8 +815,11 @@ abm_graph_diva <- function(df){
          y = "Number of publications (fractional)",
          fill = NULL) +
     scale_fill_manual(values = colvals) +
-    kth_theme() +
-    theme(axis.title.y = element_text(vjust = 2.5))
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position = "bottom",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }
 
 #' Create graph over WoS coverage by year
@@ -825,7 +828,7 @@ abm_graph_diva <- function(df){
 #' @return a ggplot object
 #' @import ggplot2 dplyr ktheme
 #' @importFrom stats reorder
-#' @importFrom scales percent
+#' @importFrom scales percent_format
 #' @export
 abm_graph_wos_coverage <- function(df) {
   
@@ -848,16 +851,17 @@ abm_graph_wos_coverage <- function(df) {
   coord_flip() +
   scale_y_continuous(labels = percent_format(accuracy = 5L), 
     breaks = seq(0, 1, 0.2), limits = c(0, 1)) +
-  kth_theme() + 
-  #theme_kth(axis_text_size = rel(1.1)) + #, ticks = TRUE) +
-  theme(axis.text.y  = element_text(hjust = 0))
+  theme_kth_osc(axis_text_size = rel(1.1)) + #, ticks = TRUE) +
+  theme(axis.text.y  = element_text(hjust = 0),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank())
 }
 
 #' Create graph over Cf by year
 #' 
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_cf <- function(df){
   kth_cols <- palette_kth(4)
@@ -871,14 +875,16 @@ abm_graph_cf <- function(df){
     ylab("Average Cf") +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    kth_theme()
+    theme_kth_osc() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }
 
 #' Create graph over Top 10\% publications by year
 #' 
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @importFrom scales percent
 #' @export
 abm_graph_top10 <- function(df){
@@ -893,14 +899,16 @@ abm_graph_top10 <- function(df){
     ylab("Share Top 10%") +
     geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
-    kth_theme()
+    theme_kth_osc() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }
 
 #' Create graph over jcf by year
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_jcf <- function(df){
   kth_cols <- palette_kth(4)
@@ -914,14 +922,16 @@ abm_graph_jcf <- function(df){
     ylab("Average Journal Cf") +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    kth_theme()
+    theme_kth_osc() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }
 
 #' Create graph over Top 20\% journals by year
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @importFrom scales percent
 #' @export
 abm_graph_top20 <- function(df){
@@ -936,32 +946,38 @@ abm_graph_top20 <- function(df){
     ylab("Share Journal Top 20%") +
     geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
-    kth_theme()
+    theme_kth_osc() +
+    theme(panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }
 
 #' Create graph over international and Swedish non-university copublications by year
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
-#' @import ggplot2 dplyr
+#' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_copub <- function(df){
   kth_cols <- as.vector(palette_kth(4))
   df_copub_long<- df %>%
     select(interval, nonuniv_share, int_share) %>% 
-    rename("Swedish Non-university" = nonuniv_share, "International" = int_share) %>% 
-    gather("Co-publication", "value", -interval) %>% 
+    rename("Swedish Non-university" = nonuniv_share,
+           "International" = int_share) %>% 
+    gather("Co-publication:", "value", -interval) %>% 
     filter(!interval == "Total")
   
   ggplot(data = df_copub_long,
-         aes(x = interval, y = value, group = `Co-publication`)) +
-    geom_line(aes(color = `Co-publication`)) +
-    geom_point(aes(color = `Co-publication`)) +
+         aes(x = interval, y = value, group = `Co-publication:`)) +
+    geom_line(aes(color = `Co-publication:`)) +
+    geom_point(aes(color = `Co-publication:`)) +
     xlab("Publication years") +
     ylab("Share of publications") +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
     scale_color_manual(values = kth_cols) +
-    kth_theme()
+    theme_kth_osc() +
+    theme(legend.position="bottom",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }
 
 #' Create waffle chart (5 rows, 20 columns) for any single percentage
@@ -995,7 +1011,7 @@ abm_waffle_pct <- function(pct,
 #' @param roundto number of digits after the decimal point (default = 1)
 #' @param pct boolean, set to TRUE if given value is a share (default = FALSE)
 #' @return a ggplot object
-#' @import ggplot2
+#' @import ggplot2 ktheme
 #' @export
 abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
 {
@@ -1021,6 +1037,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
     geom_errorbar(aes(x = measure, y = target, ymin = target, ymax = target), 
                   color = cerise, width = 0.9, size = 1.1) +
     coord_flip() +
+    theme_kth_osc() +
     theme(
       plot.title = element_text(size = 12, hjust = 0.05),
       axis.text.x = element_text(size = 8),
@@ -1098,7 +1115,7 @@ abm_graph_oadata_pie <- function(df){
 #' 
 #' @param df a data frame at the format produced by abm_oa_data()
 #' @return a ggplot object
-#' @import ggplot2 dplyr reshape2
+#' @import ggplot2 dplyr reshape2 ktheme
 #' @export
 abm_graph_oadata_stackedarea <- function(df){
   unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
@@ -1116,5 +1133,8 @@ abm_graph_oadata_stackedarea <- function(df){
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +
-    kth_theme()
+    theme_kth_osc() +
+    theme(legend.position="bottom",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
 }

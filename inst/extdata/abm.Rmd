@@ -35,6 +35,7 @@ library(scales)
 #library(plotly)
 library(kableExtra)
 library(glue)
+library(extrafont)
 
 colors_vb <- palette_kth(4)
 
@@ -212,7 +213,7 @@ if (has_rows == TRUE) {
 
 ### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile}
 
-```{r, fig.width=3.75, fig.height = 2}
+```{r, fig.width=3.5, fig.height = 2}
 if (has_rows == TRUE){
    bullets
 } else {

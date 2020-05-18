@@ -62,7 +62,12 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
       labs(fill = "",
            x = NULL,
            y = NULL) + 
-      coord_polar("y", start = 0, direction = -1)
+      coord_polar("y", start = 0, direction = -1) +
+      theme_kth_osc() + theme(
+        axis.text.x = ggplot2::element_blank(), 
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()
+      )
   }
   
   pie

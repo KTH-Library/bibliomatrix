@@ -268,7 +268,7 @@ last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 ```
 
 ### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
-```{r, fig.width = 3.75, fig.height = 2.5}
+```{r, fig.width=2.5, fig.height = 2}
 
 if (has_rows == TRUE) {
   
@@ -290,7 +290,7 @@ if (has_rows == TRUE) {
 
 ### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile}
 
-```{r, fig.width = 3.75, fig.height = 2.5}
+```{r, fig.width=2.5, fig.height = 2}
 if (has_rows == TRUE) {
   waffles
 } else {

@@ -807,7 +807,7 @@ abm_graph_diva <- function(df){
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
   colvals <- c(brewer.pal(12, "Set3"), "#8080B0")
-  
+
   ggplot(data = df_diva_long,
          aes(x = year)) +
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
@@ -993,6 +993,8 @@ abm_graph_copub <- function(df){
 #'
 #' @return a ggplot object
 #' @import waffle
+#' @importFrom ggplot2 theme guides element_blank
+#' @import ktheme
 #' @export
 abm_waffle_pct <- function(pct, 
                            col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
@@ -1005,7 +1007,12 @@ abm_waffle_pct <- function(pct,
          colors = col,
          legend_pos = "none",
          title = label) +
-    theme(plot.title=element_text(size = 12))
+    theme_kth_osc() + 
+    theme(
+      plot.title = element_text(size = 12),
+      axis.text.x = element_blank(), 
+      axis.text.y = element_blank()) + 
+    guides(fill = "none")
 }
 
 #' Create bullet graph with reference line

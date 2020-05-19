@@ -116,7 +116,7 @@ lastyear <- max(names(df_diva[yrfields]))
 
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
-```{r, fig.width = 3, fig.height = 2}
+```{r, fig.width = 2.75, fig.height = 2}
 if (nrow(df_diva) > 0) {
   
   total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
@@ -136,7 +136,7 @@ if (nrow(df_diva) > 0) {
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
-```{r, fig.width = 3, fig.height = 2}
+```{r, fig.width = 2.75, fig.height = 2}
 if (nrow(df_woscov %>% filter(Publication_Type == "Peer reviewed")) > 0) {
   
   totcov <- df_woscov %>% 
@@ -164,7 +164,7 @@ last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
 
 ### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile}
 
-```{r, fig.width = 3.5, fig.height = 2}
+```{r, fig.width = 3.75, fig.height = 2}
 library(patchwork)
 
 if (has_rows == TRUE) {
@@ -213,7 +213,7 @@ if (has_rows == TRUE) {
 
 ### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile}
 
-```{r, fig.width=3.5, fig.height = 2}
+```{r, fig.width=3.75, fig.height = 2}
 if (has_rows == TRUE){
    bullets
 } else {
@@ -268,7 +268,7 @@ last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 ```
 
 ### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
-```{r, fig.width=2.5, fig.height = 2}
+```{r, fig.width=2.75, fig.height = 2}
 
 if (has_rows == TRUE) {
   
@@ -290,7 +290,7 @@ if (has_rows == TRUE) {
 
 ### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile}
 
-```{r, fig.width=2.5, fig.height = 2}
+```{r, fig.width=2.75, fig.height = 2}
 if (has_rows == TRUE) {
   waffles
 } else {

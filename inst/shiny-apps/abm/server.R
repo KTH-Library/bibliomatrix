@@ -24,7 +24,8 @@ ABM_URL_PRIVATE <- ifelse(Sys.getenv("ABM_URL_PRIVATE") != "", Sys.getenv("ABM_U
 
 ABM_API <- Sys.getenv("ABM_API")
 
-if (ABM_API == "") ABM_API <- "http://localhost:8080"
+if (ABM_API == "") 
+    ABM_API <- "http://localhost:8080"
 
 ABM_API_UNIT <- ifelse(ABM_IS_PUBLIC, 
    paste0(ABM_API, "/unit/%s/flexdashboard"),
@@ -49,9 +50,9 @@ server <- function(input, output, session) {
                 kthid <- parse_id(ua)
             } else {
                 # we are not using public content and not saml -> likely LDAP
-                kthid <- ad_kthid(ua)
+                kthid <- ad_kthid2(ua)
             }
-            kthid <- setNames(kthid, ad_displayname(kthid))
+            kthid <- setNames(kthid, ad_displayname2(kthid))
         } else {
             kthid <- NULL
         }

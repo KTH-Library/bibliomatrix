@@ -57,3 +57,11 @@ status_ldap <- function() {
   list(msg = "Unknown issue with LDAP service account", status = FALSE)
   
 }
+
+#' Status message related to KTH API availability
+#' @return list with two slots for status message and status 
+#' @importFrom kthapi status_kthapi
+#' @export
+status_kthapi <- function() {
+  kthapi::status_kthapi()
+}

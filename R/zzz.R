@@ -27,12 +27,15 @@ globalz <- "
     Publication_Type Unit_fraction p_frac p_full sumcov_frac sumcov_full
     C3 C3_frac Unit_fraction PID WoS_Journal P_tot bronze_count closed_count gold_count
     green_count hybrid_count is_oa oa_count oa_share oa_status variable uncited P_uncited Share_uncited
+    Year group perc_text series percent_format current_date varname displayname description_short
 "
 
 # HACK: add global fcns / vars with spaces in the name
 spacenames <- c(
   "Organizational Unit",
-  "OA type:"
+  "OA type:",
+  "Publication count",
+  "Co-publication:"
 )
 
 str_remove <- function(x, y) gsub(paste(y, collapse='|'), "", x = x, fixed = TRUE)

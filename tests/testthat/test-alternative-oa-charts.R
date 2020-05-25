@@ -21,6 +21,8 @@ test_that("alternative oa charts work", {
   abm_graph_oadata_stackedarea(df1)
   abm_graph_oadata_linegraphs(df1, "ggiraph")
   abm_graph_oadata_linegraphs(df1, "ggplot")
+  abm_graph_oadata_linegraphs(df1, "plotly")
+  
   
   expect_true(identical(df1, df2))
   

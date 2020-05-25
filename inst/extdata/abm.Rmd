@@ -32,7 +32,7 @@ library(gridExtra)
 library(bibliomatrix)
 library(tidyr)
 library(scales)
-#library(plotly)
+library(plotly)
 library(kableExtra)
 library(glue)
 library(extrafont)
@@ -171,7 +171,7 @@ if (has_rows == TRUE) {
   
   cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
   
-  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", 
+  pub_bullet1 <- abm_bullet_plotly(label = "Field normalized citations (Cf)", 
     value = cf, reference = 1.0, roundto = 2) #+ 
     # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
     # ggplot2::theme(plot.margin = margin(0, 0, 10, 0)) +
@@ -187,7 +187,7 @@ if (has_rows == TRUE) {
   
   top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
   
-  pub_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+  pub_bullet2 <- abm_bullet_plotly(label = "Share Top10% publications", 
     value = top10_share, reference = 0.10, pct = TRUE) #+ 
     # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
     # ggplot2::theme(plot.margin = margin(0, 0, 0, 0)) +
@@ -203,7 +203,7 @@ if (has_rows == TRUE) {
   
   #bullets <- grid.arrange(pub_bullet1, pub_bullet2, ncol = 1)
   
-  bullets <- pub_bullet1 / pub_bullet2
+  bullets <- plotly::subplot(pub_bullet1, pub_bullet2, nrows = 2)
   
   bullets
 } else {
@@ -234,15 +234,15 @@ if (has_rows == TRUE) {
   
   jcf <- df_jcf %>% filter(interval == last_interval) %>% pull(jcf) %>% as.numeric()
   
-  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", 
+  jour_bullet1 <- abm_bullet_plotly(label = "Field normalized journal citations (JCf)", 
     value = jcf, reference = 1.0, roundto = 2)
 
   top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
   
-  jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, 
+  jour_bullet2 <- abm_bullet_plotly(label = "Share in Top20% journals", value = top20_share, 
     reference = 0.20, pct = TRUE)
   
-  bullets <- jour_bullet1 / jour_bullet2
+  bullets <- subplot(jour_bullet1, jour_bullet2, nrows = 2)
   
   bullets
 } else {
@@ -274,14 +274,14 @@ if (has_rows == TRUE) {
   
   nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
   nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-  waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+  waffle1 <- abm_waffle_pct_plotly(nonuniv_share, label = nonuniv_lbl) 
 
   int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
   int_lbl <- sprintf("International: %d%%", round(100*int_share))
-  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+  waffle2 <- abm_waffle_pct_plotly(int_share, label = int_lbl)
 
-  waffles <- waffle1 / waffle2
-#  waffles <- subplot(waffle1, waffle2, nrows = 2)
+#  waffles <- waffle1 / waffle2
+  waffles <- subplot(waffle1, waffle2, nrows = 2)
   waffles
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -436,7 +436,7 @@ Row
 
 ```{r, fig.width=10, fig.height=10}
 if (nrow(df_diva) > 0) {
-  p <- abm_graph_diva(df_diva)
+  p <- abm_graph_diva_plotly(df_diva)
   p
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -457,7 +457,7 @@ if (nrow(df_diva) > 0) {
 
 ```{r, fig.width=7, fig.height=8}
 if (nrow(df_diva) > 0) {
-  p <- abm_graph_wos_coverage(df_diva)
+  p <- abm_graph_wos_coverage_plotly(df_diva)
   p
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
@@ -600,7 +600,7 @@ Row
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_cf(df_cf)
+  abm_graph_cf_plotly(df_cf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -611,7 +611,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 
 ```{r}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_top10(df_cf)
+  abm_graph_top10_plotly(df_cf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -692,7 +692,7 @@ Row
 
 ```{r}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_jcf(df_jcf)
+  abm_graph_jcf_plotly(df_jcf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -703,7 +703,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ```{r}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_top20(df_jcf)
+  abm_graph_top20_plotly(df_jcf)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -781,7 +781,7 @@ Row
 ### **International and Swedish non-university co&#8209;publication**
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
-  abm_graph_copub(df_copub)
+  abm_graph_copub_plotly(df_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -850,7 +850,7 @@ Row
 
 ```{r, fig.width=6, fig.height=6}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+  abm_graph_oadata_piechart(df_oa, type = "plotly")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -860,7 +860,7 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+  abm_graph_oadata_piechart(df_oa, type = "plotly")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -870,7 +870,7 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 
 ```{r, fig.width=8, fig.height=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
+  abm_graph_oadata_stackedarea_plotly(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -880,7 +880,7 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 
 ```{r, fig.width=5}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
+  abm_graph_oadata_stackedarea_plotly(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

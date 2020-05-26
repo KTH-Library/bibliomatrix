@@ -25,6 +25,7 @@ abm_bullet_plotly <- function(label, value, reference, roundto = 1, pct = FALSE)
       #      panel.background = element_blank(),
       #      panel.border = element_blank(),
       panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_blank(),
       panel.grid.minor = element_blank()
     ) +
     labs(title = "")
@@ -40,7 +41,7 @@ abm_bullet_plotly <- function(label, value, reference, roundto = 1, pct = FALSE)
     xanchor = "left",
     align = "left",
     x = 0.04,
-    y = 0.85,
+    y = 0.9,
     showarrow = FALSE
   )
   
@@ -62,12 +63,12 @@ abm_bullet_plotly <- function(label, value, reference, roundto = 1, pct = FALSE)
   # https://community.rstudio.com/t/plotly-does-not-display-in-flexdashboard-page/32696/3
   
   p1 %>%
-    ggplotly()  %>%
-    #    add_trace(x = reference, y = 1.8, color = I(tolower(accent)), 
-    #      width = 0.4, mode = "lines") %>% 
+    ggplotly(tooltip = "value")  %>%
+        add_trace(x = reference, y = 1.8, color = I(tolower(accent)), 
+          width = 0.03 * reference, mode = "lines") %>% 
     config(displayModeBar = FALSE) %>% 
     layout(autosize = TRUE, showlegend = FALSE, 
-           margin = list(l = 10, r = 10, b = 15, t = 30, pad = 4)) %>%
+           margin = list(l = 5, r = 5, b = 15, t = 15, pad = 10)) %>%
     layout(annotations = a)
 }
 
@@ -140,9 +141,14 @@ abm_waffle_pct_plotly <- function(pct, col = as.character(c(palette_kth()["blue"
   p1 <- 
     abm_waffle_pct(pct, col, label) + 
     theme(panel.spacing = unit(0, "lines")) +
+    ggplot2::theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank()
+    ) +
     labs(title = NULL)
   
-  p1 %>% ggplotly() %>% 
+  p1 %>% ggplotly(tooltip = "") %>% 
     config(displayModeBar = FALSE) %>% 
     layout(autosize = TRUE, showlegend = FALSE, 
            margin = list(l = 10, r = 10, b = 15, t = 30, pad = 4)) %>%

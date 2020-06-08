@@ -30,11 +30,11 @@ status_db <- function() {
     return (list (msg = msg, status = FALSE))
   }
   
-  res <- tryCatch(get_pubtype_order(pool_bib()),
-    error = function(e) {
-      return (list (msg = "Cannot reach db", status = FALSE))
-    }
-  )
+  res <- try(get_pubtype_order(pool_bib(source_type = "mssql")), silent = TRUE)
+
+  if (inherits(res, 'try-error')) {
+    return (list (msg = geterrmessage(), status = FALSE))
+  }
   
   if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
@@ -57,12 +57,12 @@ status_ldap <- function() {
     return (list (msg = msg, status = FALSE))
   }
 
-  res <- tryCatch(ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname"),
-    error = function(e) {
-      return (list (msg = "Cannot reach LDAP", status = FALSE))
-    }
-  )  
-      
+  res <- try(res <- ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname"), silent = TRUE)
+  
+  if (inherits(res, 'try-error')) {
+    return (list (msg = geterrmessage(), status = FALSE))
+  }  
+  
   if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
 

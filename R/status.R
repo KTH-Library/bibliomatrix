@@ -30,7 +30,13 @@ status_db <- function() {
     return (list (msg = msg, status = FALSE))
   }
   
-  if (nrow(get_pubtype_order(pool_bib())) > 0)
+  res <- tryCatch(get_pubtype_order(pool_bib()),
+    error = function(e) {
+      return (list (msg = "Cannot reach db", status = FALSE))
+    }
+  )
+  
+  if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
   
   list(msg = "Unknown issue with db", status = FALSE)
@@ -50,8 +56,14 @@ status_ldap <- function() {
                  "with all of these envvars set", paste(envvars))
     return (list (msg = msg, status = FALSE))
   }
-    
-  if (nrow(ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname")) > 0)
+
+  res <- tryCatch(ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname"),
+    error = function(e) {
+      return (list (msg = "Cannot reach LDAP", status = FALSE))
+    }
+  )  
+      
+  if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
 
   list(msg = "Unknown issue with LDAP service account", status = FALSE)

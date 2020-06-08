@@ -50,8 +50,9 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @param unit_label the label for the organizational unit
 #' @param unit_code the unit code for the organizational unit
 #' @param unit_file_label the label for the download
-#' @import htmltools openxlsx flexdashboard
+#' @import htmltools flexdashboard
 #' @importFrom mime guess_type
+#' @importFrom writexl write_xlsx
 #' @export
 abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label) {
   
@@ -84,20 +85,13 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
     filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
     excel_file <- file.path(tempdir(), filename)
     
-    # Create excel workbook and define and format sheets
-    export_excel<- createWorkbook()
-    addWorksheet(export_excel, "Data")
-    addWorksheet(export_excel, "Attribution")
-    attrib_style <- createStyle(wrapText = TRUE, fontSize = 13, textDecoration = "Bold")
-    addStyle(export_excel, "Attribution", attrib_style, cols = 1, rows = 1:5)
-    setColWidths(export_excel, "Attribution", cols = 1, widths = 100)
-    
-    # Write data to excel sheet
-    writeData(export_excel, sheet = "Data", x = publications_kth)
-    writeData(export_excel, sheet = "Attribution", x = wos_attribution(), colNames = FALSE)
-    
-    # Save excel file
-    saveWorkbook(export_excel, excel_file, overwrite=TRUE)
+    # Create excel workbook
+    writexl::write_xlsx(path = excel_file,
+       x = list(
+         Data = as.data.frame(publications_kth), 
+         Attribution = data.frame(attribution = wos_attribution())
+      )
+    )
     
     embed_file_link(excel_file,
       title = "Download Publication List in Excel format",

@@ -90,7 +90,7 @@ run_api <- function(port = 8080, host = "0.0.0.0") {
 #' @importFrom purrr map
 #' @importFrom rmarkdown render
 #' @importFrom rappdirs app_dir
-#' @import dplyr
+#' @import dplyr progress
 prerender <- function(refresh = FALSE) {
   
   abm_public_kth <- bibliomatrix::abm_public_kth
@@ -116,10 +116,11 @@ prerender <- function(refresh = FALSE) {
   }
     
   render_with_progress <- function(orgid){
-    pb$tick()$print()
+    #pb$tick()$print()
     unit_code <- uc_from_orgid(orgid)
     dash <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
     f <- function(fn, embed) {
+      pb$tick()
       rmarkdown::render(dash, output_file = fn, quiet = TRUE,
        params = list(
          unit_code = unit_code, 
@@ -134,8 +135,9 @@ prerender <- function(refresh = FALSE) {
   }
   
 
-  pb <- progress_estimated(length(orgid))
-  
+  #pb <- progress_estimated(length(orgid))
+  pb <- progress::progress_bar$new(total = length(orgid))
+  pb$tick(0)
   res <- map(orgid, render_with_progress)
   
   return (res)

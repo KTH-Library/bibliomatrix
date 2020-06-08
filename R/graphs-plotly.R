@@ -164,6 +164,61 @@ abm_waffle_pct_plotly <- function(pct, col = as.character(c(palette_kth()["blue"
   
 }
 
+#' Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants)
+#' 
+#' @param df a data frame at the format produced by abm_table1()
+#' @param type one of ggplot, plotly or ggiraph, where the first one is default
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom stats reorder
+#' @export
+abm_graph_diva2 <- function(df, type = c("ggplot", "plotly", "ggiraph")) {
+  
+  df_diva_long <- df %>%
+    select(-"P_frac", -"WoS_coverage") %>%
+    gather("year", "value", -Publication_Type_DiVA) %>%
+    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
+    mutate(magnitude = ifelse(Publication_Type_DiVA %in% reorder(Publication_Type_DiVA, pt_ordning)[1:4], "Articles and papers",
+                              ifelse(Publication_Type_DiVA %in% reorder(Publication_Type_DiVA, pt_ordning)[c(5, 7, 10:12)], "Books, theses and reports", "Other types"))) %>%
+    mutate(text = sprintf("%s: n=%s (in year %s)", Publication_Type_DiVA, floor(value), year))
+  
+  df_diva_long$magnitude <- ordered(df_diva_long$magnitude, 
+                                    levels = c("Articles and papers", "Books, theses and reports", "Other types"))
+  #  colvals <- c(brewer.pal(12, "Set3"), "#8080B0")
+  colvals <- unname(ktheme::palette_kth(13, type = "qual"))
+  
+  p1 <- 
+    ggplot(data = df_diva_long,
+           aes(x = year, y = value, text = text, group = Publication_Type_DiVA, color = reorder(Publication_Type_DiVA, pt_ordning))) +
+    geom_line(linetype = "dashed") +
+    geom_point() +
+    labs(x = "Publication year",
+         y = "Number of publications (fractional)",
+         color = NULL) +
+    scale_color_manual(values = colvals) +
+    facet_wrap(c("magnitude"), ncol = 1, scales = "free") +
+    theme_kth_osc() +
+    theme(legend.justification = "top") +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position = "right",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+  
+  if (type == "ggplot") {
+    return (p1)
+  } else if (type == "plotly") {
+    p2 <-
+      p1 %>% ggplotly(tooltip = "text") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(autosize = TRUE)
+    return (p2)
+  } else if (type == "ggiraph") {
+    ggiraph::girafe(ggobj = p1)
+  }
+  
+}
+
+
 #' Create graph over DiVA publication types by year, using plotly
 #' 
 #' @param df a data frame at the format produced by abm_table1()

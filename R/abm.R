@@ -591,7 +591,7 @@ unit_info <- function(con){
   if(missing(con)){
     abm_public_kth$meta 
   } else {
-    abm_units <- con %>% tbl("abm_org_info") %>% collect()
+    abm_units <- con %>% tbl("abm_org_info") %>% collect() %>% select(-"sort_order")
     
     abm_units %>%
       # Get full sort order
@@ -599,7 +599,7 @@ unit_info <- function(con){
       # Add indented versions of unit_long_en, one with plain white space and one for usage in html where leading white space gets sanitized
       mutate(unit_long_en_indent1 = str_pad(unit_long_en, side = "left", width = 4*org_level + stringr::str_length(unit_long_en)),
              unit_long_en_indent2 = str_pad(unit_long_en, side = "left", width = 4*org_level + stringr::str_length(unit_long_en), pad = "\U00A0")) %>%
-      arrange(sort_order)
+      arrange(-desc(sort_order))
   }
 }
 
@@ -697,8 +697,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   # retrieve sort order for DiVA publication types
   pubtype_order <-
-    get_pubtype_order(con = db) %>%
-    arrange(pt_ordning)
+    get_pubtype_order(con = db) 
+  
+  pubtype_order <- pubtype_order %>% arrange(pt_ordning)
   
   indicator_descriptions <-
     get_indic_descriptions(con = db)

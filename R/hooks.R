@@ -116,11 +116,11 @@ prerender <- function(refresh = FALSE) {
   }
     
   render_with_progress <- function(orgid){
+    pb$tick(1)
     #pb$tick()$print()
     unit_code <- uc_from_orgid(orgid)
     dash <- system.file("extdata", "abm.Rmd", package = "bibliomatrix")
     f <- function(fn, embed) {
-      pb$tick()
       rmarkdown::render(dash, output_file = fn, quiet = TRUE,
        params = list(
          unit_code = unit_code, 

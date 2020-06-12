@@ -189,7 +189,8 @@ abm_graph_diva2 <- function(df, type = c("ggplot", "plotly", "ggiraph")) {
   
   p1 <- 
     ggplot(data = df_diva_long,
-           aes(x = year, y = value, text = text, group = Publication_Type_DiVA, color = reorder(Publication_Type_DiVA, pt_ordning))) +
+           aes(x = year, y = value, text = text, group = Publication_Type_DiVA, 
+               color = reorder(Publication_Type_DiVA, pt_ordning))) +
     geom_line(linetype = "dashed") +
     geom_point() +
     labs(x = "Publication year",

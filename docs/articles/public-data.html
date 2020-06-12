@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -112,21 +112,21 @@
 <span class="co">#&gt; # A tibble: 35 x 19</span>
 <span class="co">#&gt;    Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span>
 <span class="co">#&gt;          &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span>
-<span class="co">#&gt;  1         177 KTH       KTH        KTH Royal I~ Kungliga Te~            NA</span>
-<span class="co">#&gt;  2        5850 A         ABE        School of A~ Skolan för ~           177</span>
+<span class="co">#&gt;  1         177 KTH       KTH        KTH Royal I… Kungliga Te…            NA</span>
+<span class="co">#&gt;  2        5850 A         ABE        School of A… Skolan för …           177</span>
 <span class="co">#&gt;  3        5851 5851      &lt;NA&gt;       Architecture Arkitektur            5850</span>
-<span class="co">#&gt;  4        5857 5857      &lt;NA&gt;       Civil and A~ Byggvetensk~          5850</span>
-<span class="co">#&gt;  5      875600 875600    &lt;NA&gt;       Philosophy ~ Filosofi oc~          5850</span>
-<span class="co">#&gt;  6        5869 5869      &lt;NA&gt;       Real Estate~ Fastigheter~          5850</span>
-<span class="co">#&gt;  7       13604 13604     &lt;NA&gt;       Sustainable~ Hållbar utv~          5850</span>
-<span class="co">#&gt;  8        5884 5884      &lt;NA&gt;       Urban Plann~ Samhällspla~          5850</span>
-<span class="co">#&gt;  9      879223 E         EECS       School of E~ Skolan för ~           177</span>
-<span class="co">#&gt; 10      882650 882650    &lt;NA&gt;       Computer Sc~ Datavetensk~        879223</span>
-<span class="co">#&gt; # ... with 25 more rows, and 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
-<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_desc &lt;chr&gt;, altmetric_count &lt;int&gt;, altmetric_href &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
-<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;</span>
+<span class="co">#&gt;  4        5857 5857      &lt;NA&gt;       Civil and A… Byggvetensk…          5850</span>
+<span class="co">#&gt;  5      875600 875600    &lt;NA&gt;       Philosophy … Filosofi oc…          5850</span>
+<span class="co">#&gt;  6        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span>
+<span class="co">#&gt;  7       13604 13604     &lt;NA&gt;       Sustainable… Hållbar utv…          5850</span>
+<span class="co">#&gt;  8        5884 5884      &lt;NA&gt;       Urban Plann… Samhällspla…          5850</span>
+<span class="co">#&gt;  9      879223 E         EECS       School of E… Skolan för …           177</span>
+<span class="co">#&gt; 10      882650 882650    &lt;NA&gt;       Computer Sc… Datavetensk…        879223</span>
+<span class="co">#&gt; # … with 25 more rows, and 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
+<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span>
+<span class="co">#&gt; #   sort_order &lt;int&gt;</span>
 
 <span class="co"># The unit_code is used in most functions related to ABM</span>
 <span class="co"># For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id</span>
@@ -134,38 +134,38 @@
 <span class="co">#&gt; # A tibble: 1 x 19</span>
 <span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span>
 <span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span>
-<span class="co">#&gt; 1        6023 I         ITM        School of I~ Skolan för ~           177</span>
-<span class="co">#&gt; # ... with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
-<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_desc &lt;chr&gt;, altmetric_count &lt;int&gt;, altmetric_href &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
-<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;</span>
+<span class="co">#&gt; 1        6023 I         ITM        School of I… Skolan för …           177</span>
+<span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
+<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span>
+<span class="co">#&gt; #   sort_order &lt;int&gt;</span>
 <span class="fu"><a href="../reference/unit_info.html">unit_info</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">unit_code</span> <span class="kw">==</span> <span class="st">"5869"</span>)
 <span class="co">#&gt; # A tibble: 1 x 19</span>
 <span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span>
 <span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span>
-<span class="co">#&gt; 1        5869 5869      &lt;NA&gt;       Real Estate~ Fastigheter~          5850</span>
-<span class="co">#&gt; # ... with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
-<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_desc &lt;chr&gt;, altmetric_count &lt;int&gt;, altmetric_href &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
-<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;</span>
+<span class="co">#&gt; 1        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span>
+<span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
+<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span>
+<span class="co">#&gt; #   sort_order &lt;int&gt;</span>
 
 <span class="co"># The org_level field is 0 for KTH, 1 for schools and 2 for departments. Info for all schools:</span>
 <span class="fu"><a href="../reference/unit_info.html">unit_info</a></span>() <span class="kw">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="no">org_level</span> <span class="kw">==</span> <span class="fl">1</span>)
 <span class="co">#&gt; # A tibble: 5 x 19</span>
 <span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span>
 <span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span>
-<span class="co">#&gt; 1        5850 A         ABE        School of A~ Skolan för ~           177</span>
-<span class="co">#&gt; 2      879223 E         EECS       School of E~ Skolan för ~           177</span>
-<span class="co">#&gt; 3        6091 S         SCI        School of E~ Skolan för ~           177</span>
-<span class="co">#&gt; 4      879224 C         CBH        School of E~ Skolan för ~           177</span>
-<span class="co">#&gt; 5        6023 I         ITM        School of I~ Skolan för ~           177</span>
-<span class="co">#&gt; # ... with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
-<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_desc &lt;chr&gt;, altmetric_count &lt;int&gt;, altmetric_href &lt;chr&gt;,</span>
-<span class="co">#&gt; #   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
-<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;</span>
+<span class="co">#&gt; 1        5850 A         ABE        School of A… Skolan för …           177</span>
+<span class="co">#&gt; 2      879223 E         EECS       School of E… Skolan för …           177</span>
+<span class="co">#&gt; 3        6091 S         SCI        School of E… Skolan för …           177</span>
+<span class="co">#&gt; 4      879224 C         CBH        School of E… Skolan för …           177</span>
+<span class="co">#&gt; 5        6023 I         ITM        School of I… Skolan för …           177</span>
+<span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span>
+<span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span>
+<span class="co">#&gt; #   sort_order &lt;int&gt;</span>
 
 <span class="co"># The parent_org_id field can be used to show all departments of some particular school</span>
 <span class="co"># (note that the parent id is always a Diva organization id).</span>

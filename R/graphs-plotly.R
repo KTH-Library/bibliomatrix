@@ -25,6 +25,7 @@ abm_bullet_plotly <- function(label, value, reference, roundto = 1, pct = FALSE)
       #      panel.background = element_blank(),
       #      panel.border = element_blank(),
       panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_blank(),
       panel.grid.minor = element_blank()
     ) +
     labs(title = "")
@@ -40,7 +41,7 @@ abm_bullet_plotly <- function(label, value, reference, roundto = 1, pct = FALSE)
     xanchor = "left",
     align = "left",
     x = 0.04,
-    y = 0.85,
+    y = 0.9,
     showarrow = FALSE
   )
   
@@ -62,12 +63,12 @@ abm_bullet_plotly <- function(label, value, reference, roundto = 1, pct = FALSE)
   # https://community.rstudio.com/t/plotly-does-not-display-in-flexdashboard-page/32696/3
   
   p1 %>%
-    ggplotly()  %>%
-    #    add_trace(x = reference, y = 1.8, color = I(tolower(accent)), 
-    #      width = 0.4, mode = "lines") %>% 
+    ggplotly(tooltip = "value")  %>%
+        add_trace(x = reference, y = 1.8, color = I(tolower(accent)), 
+          width = 0.03 * reference, mode = "lines") %>% 
     config(displayModeBar = FALSE) %>% 
     layout(autosize = TRUE, showlegend = FALSE, 
-           margin = list(l = 10, r = 10, b = 15, t = 30, pad = 4)) %>%
+           margin = list(l = 5, r = 5, b = 15, t = 15, pad = 10)) %>%
     layout(annotations = a)
 }
 
@@ -140,9 +141,14 @@ abm_waffle_pct_plotly <- function(pct, col = as.character(c(palette_kth()["blue"
   p1 <- 
     abm_waffle_pct(pct, col, label) + 
     theme(panel.spacing = unit(0, "lines")) +
+    ggplot2::theme(
+      panel.grid.major.y = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor = element_blank()
+    ) +
     labs(title = NULL)
   
-  p1 %>% ggplotly() %>% 
+  p1 %>% ggplotly(tooltip = "") %>% 
     config(displayModeBar = FALSE) %>% 
     layout(autosize = TRUE, showlegend = FALSE, 
            margin = list(l = 10, r = 10, b = 15, t = 30, pad = 4)) %>%
@@ -157,6 +163,62 @@ abm_waffle_pct_plotly <- function(pct, col = as.character(c(palette_kth()["blue"
                               showarrow = FALSE))
   
 }
+
+#' Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants)
+#' 
+#' @param df a data frame at the format produced by abm_table1()
+#' @param type one of ggplot, plotly or ggiraph, where the first one is default
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom stats reorder
+#' @export
+abm_graph_diva2 <- function(df, type = c("ggplot", "plotly", "ggiraph")) {
+  
+  df_diva_long <- df %>%
+    select(-"P_frac", -"WoS_coverage") %>%
+    gather("year", "value", -Publication_Type_DiVA) %>%
+    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
+    mutate(magnitude = ifelse(Publication_Type_DiVA %in% reorder(Publication_Type_DiVA, pt_ordning)[1:4], "Articles and papers",
+                              ifelse(Publication_Type_DiVA %in% reorder(Publication_Type_DiVA, pt_ordning)[c(5, 7, 10:12)], "Books, theses and reports", "Other types"))) %>%
+    mutate(text = sprintf("%s: n=%s (in year %s)", Publication_Type_DiVA, floor(value), year))
+  
+  df_diva_long$magnitude <- ordered(df_diva_long$magnitude, 
+                                    levels = c("Articles and papers", "Books, theses and reports", "Other types"))
+  #  colvals <- c(brewer.pal(12, "Set3"), "#8080B0")
+  colvals <- unname(ktheme::palette_kth(13, type = "qual"))
+  
+  p1 <- 
+    ggplot(data = df_diva_long,
+           aes(x = year, y = value, text = text, group = Publication_Type_DiVA, 
+               color = reorder(Publication_Type_DiVA, pt_ordning))) +
+    geom_line(linetype = "dashed") +
+    geom_point() +
+    labs(x = "Publication year",
+         y = "Number of publications (fractional)",
+         color = NULL) +
+    scale_color_manual(values = colvals) +
+    facet_wrap(c("magnitude"), ncol = 1, scales = "free") +
+    theme_kth_osc() +
+    theme(legend.justification = "top") +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position = "right",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+  
+  if (type == "ggplot") {
+    return (p1)
+  } else if (type == "plotly") {
+    p2 <-
+      p1 %>% ggplotly(tooltip = "text") %>%
+      config(displayModeBar = FALSE) %>%
+      layout(autosize = TRUE)
+    return (p2)
+  } else if (type == "ggiraph") {
+    ggiraph::girafe(ggobj = p1)
+  }
+  
+}
+
 
 #' Create graph over DiVA publication types by year, using plotly
 #' 
@@ -174,8 +236,11 @@ abm_graph_diva_plotly <- function(df)
 #' @importFrom plotly ggplotly
 #' @export
 abm_graph_wos_coverage_plotly <- function(df) {
-  p1 <- abm_graph_wos_coverage(df) #+ theme_kth_osc()
-  p1 %>% ggplotly(tooltip = "text")
+  p1 <- abm_graph_wos_coverage(df) %>% ggplotly(tooltip = "text")
+  
+  #p1$x$layout$yaxis$automargin <- FALSE
+  p1 %>% layout(margin = list(l = 0))
+#  p1
 }
 
 #' Create graph over DiVA publication types by year, using plotly

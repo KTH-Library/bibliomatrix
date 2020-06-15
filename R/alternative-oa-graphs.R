@@ -116,7 +116,7 @@ abm_graph_oadata_share <- function(df, type = c("ggplot", "plotly", "ggiraph")) 
 #    geom_text(aes(label = paste0("n = ", count)), color = "gray", hjust = -0.2) +
     geom_text(aes(label = paste0(perc_text, " (n = ", count, ")"), y = value),
               vjust = 1, hjust = -0.2, color = "black") +
-    theme_kth() +
+    theme_kth_osc() +
     scale_y_continuous(limits = c(0, max(t1$value) * 1.2), breaks = c(0:5 * 10), labels = function(x) paste0(x, "%"), position = "right") +
     theme(
       legend.position = "right",
@@ -198,14 +198,14 @@ abm_graph_oadata_linegraphs <- function(df, type = c("ggplot", "plotly", "ggirap
     scale_color_manual(values = c(unpaywall, "Total OA" = unname(ktheme::palette_kth()["blue"]), "Total Non OA" = unname(ktheme::palette_kth()["cerise"]), "Grand Total" = "#000000")) + 
     facet_wrap(c("is_oa"), ncol = 1, scales = "free") +
     labs(xlab = NULL, ylab = NULL, color = "Series") +
-    ktheme::theme_kth()
+    ktheme::theme_kth_osc() + 
+    theme(panel.spacing = unit(0, "lines"))
   
   if (type == "ggplot") {
     return (p1)
   } else if (type == "plotly") {
     p2 <- 
-      p1 %>% 
-      ggplotly(tooltip = "y") %>%
+      p1 %>% ggplotly(tooltip = "y") %>%
       config(displayModeBar = FALSE) %>% 
       layout(autosize = TRUE)
     return (p2)

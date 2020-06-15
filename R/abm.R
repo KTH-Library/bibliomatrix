@@ -591,7 +591,7 @@ unit_info <- function(con){
   if(missing(con)){
     abm_public_kth$meta 
   } else {
-    abm_units <- con %>% tbl("abm_org_info") %>% collect()
+    abm_units <- con %>% tbl("abm_org_info") %>% collect() %>% select(-"sort_order")
     
     abm_units %>%
       # Get full sort order
@@ -599,7 +599,7 @@ unit_info <- function(con){
       # Add indented versions of unit_long_en, one with plain white space and one for usage in html where leading white space gets sanitized
       mutate(unit_long_en_indent1 = str_pad(unit_long_en, side = "left", width = 4*org_level + stringr::str_length(unit_long_en)),
              unit_long_en_indent2 = str_pad(unit_long_en, side = "left", width = 4*org_level + stringr::str_length(unit_long_en), pad = "\U00A0")) %>%
-      arrange(sort_order)
+      arrange(-desc(sort_order))
   }
 }
 
@@ -697,8 +697,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   # retrieve sort order for DiVA publication types
   pubtype_order <-
-    get_pubtype_order(con = db) %>%
-    arrange(pt_ordning)
+    get_pubtype_order(con = db) 
+  
+  pubtype_order <- pubtype_order %>% arrange(pt_ordning)
   
   indicator_descriptions <-
     get_indic_descriptions(con = db)
@@ -798,29 +799,30 @@ abm_private_data <- function(unit_code) {
 #' @return a ggplot object
 #' @import ggplot2 dplyr ktheme
 #' @importFrom stats reorder
-#' @importFrom RColorBrewer brewer.pal
 #' @export
-abm_graph_diva <- function(df){
+abm_graph_diva <- function(df) {
+  
   df_diva_long <- df %>%
     select(-"P_frac", -"WoS_coverage") %>%
     gather("year", "value", -Publication_Type_DiVA) %>%
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
-  colvals <- c(brewer.pal(12, "Set3"), "#8080B0")
-
+  colvals <- unname(ktheme::palette_kth(13, type = "qual"))
+  
   ggplot(data = df_diva_long,
          aes(x = year)) +
-    geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, pt_ordning))) +
+    geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, desc(pt_ordning)))) +
     labs(x = "Publication year",
          y = "Number of publications (fractional)",
          fill = NULL) +
     scale_fill_manual(values = colvals) +
     theme_kth_osc() +
     theme(axis.title.y = element_text(vjust = 2.5),
-          legend.position = "bottom",
+          legend.position = "right",
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
+
 
 #' Create graph over WoS coverage by year
 #' 
@@ -870,7 +872,7 @@ abm_graph_cf <- function(df){
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
-    geom_line(color = kth_cols["blue"]) +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Average Cf") +
     ylim(0, ymax) +
@@ -895,7 +897,7 @@ abm_graph_top10 <- function(df){
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
-    geom_line(color = kth_cols["blue"]) +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Share Top 10%") +
     geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
@@ -919,7 +921,7 @@ abm_graph_jcf <- function(df){
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = jcf, group=1)) +
     geom_point() + 
-    geom_line(color = kth_cols["blue"]) +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Average Journal Cf") +
     ylim(0, ymax) +
@@ -944,7 +946,7 @@ abm_graph_top20 <- function(df){
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top20_share, group=1)) +
     geom_point() +
-    geom_line(color = kth_cols["blue"]) +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Share Journal Top 20%") +
     geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
@@ -972,7 +974,7 @@ abm_graph_copub <- function(df){
   
   ggplot(data = df_copub_long,
          aes(x = interval, y = value, group = `Co-publication:`)) +
-    geom_line(aes(color = `Co-publication:`)) +
+    geom_line(aes(color = `Co-publication:`), linetype = "dashed") +
     geom_point(aes(color = `Co-publication:`)) +
     xlab("Publication years") +
     ylab("Share of publications") +

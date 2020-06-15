@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create graph over DiVA publication types by year, using plotly — abm_graph_diva_plotly • bibliomatrix</title>
+<title>Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants) — abm_graph_diva2 • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create graph over DiVA publication types by year, using plotly — abm_graph_diva_plotly" />
-<meta property="og:description" content="Create graph over DiVA publication types by year, using plotly" />
+<meta property="og:title" content="Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants) — abm_graph_diva2" />
+<meta property="og:description" content="Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants)" />
 
 
 
@@ -126,16 +126,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create graph over DiVA publication types by year, using plotly</h1>
+    <h1>Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants)</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/graphs-plotly.R'><code>R/graphs-plotly.R</code></a></small>
-    <div class="hidden name"><code>abm_graph_diva_plotly.Rd</code></div>
+    <div class="hidden name"><code>abm_graph_diva2.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Create graph over DiVA publication types by year, using plotly</p>
+    <p>Create graph over DiVA publication types by year (ggplot, plotly and ggiraph variants)</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_graph_diva_plotly</span>(<span class='no'>df</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_graph_diva2</span>(<span class='no'>df</span>, <span class='kw'>type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"ggplot"</span>, <span class='st'>"plotly"</span>, <span class='st'>"ggiraph"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -144,11 +144,15 @@
       <th>df</th>
       <td><p>a data frame at the format produced by abm_table1()</p></td>
     </tr>
+    <tr>
+      <th>type</th>
+      <td><p>one of ggplot, plotly or ggiraph, where the first one is default</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a plotly object</p>
+    <p>a ggplot object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

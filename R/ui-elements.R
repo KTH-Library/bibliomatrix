@@ -234,8 +234,8 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
           list(extend = "csv", filename = filename, title = unit_title),
           list(extend = "excel", filename = filename, title = unit_title))
         )) %>%
-      DT::formatRound(2:9, digits = 1, mark = "") %>%
-      DT::formatPercentage(10, digits = 1) %>%
+      DT::formatRound(2:(length(df_diva)-1), digits = 1, mark = "") %>%
+      DT::formatPercentage(length(df_diva), digits = 1) %>%
       abm_format_rows() %>%
       abm_format_columns_divatable("P_frac", has_left_border = TRUE) %>%
       abm_format_columns_divatable("WoS_coverage", has_left_border = FALSE)

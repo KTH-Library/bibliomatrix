@@ -6,6 +6,7 @@ output:
     vertical_layout: scroll
     favicon: kth-logo.png
     fig_mobile: FALSE
+    logo: kth-logo.png
 params:
   unit_code: !r bibliomatrix:::abm_config()$default_unit
   is_employee: FALSE
@@ -91,11 +92,62 @@ abm_unit_title<- paste0("ABM: ",unit_label)
 ```
 
 <style>
-<!-- TODO: this does not work in responsive mobile mode -->
+<!-- TODO: this does not work in responsive mobile mode >
 .navbar-header{
   width: 0px;
   visibility: hidden;
 }
+
+.navbar-brand {
+   width: 0px;
+   visibility: hidden;
+   margin:0;
+   padding:0;
+}
+-->
+.container-fluid {
+  padding-left: 0px;
+  padding-top: 1px;
+}
+
+.navbar-header img {
+  height: 28px;
+  margin: 10px;
+}
+
+.navbar-inverse .navbar-header {
+  background-color: #F0F0F0;
+  border: 1px solid;
+  border-color: #2780E3;
+}
+
+@media (max-width: 767px) {
+ .container-fluid {
+   padding-left: 10px;
+   padding-top: 1px;
+ }
+
+ .navbar-inverse .navbar-header {
+  background-color: #F0F0F0;
+  margin-right: -14px;
+  margin-left: -9px;
+ }
+ 
+ .navbar-toggle {
+  background-color: #1954A5;
+ }
+ 
+ .navbar-toggle:hover {
+  background-color: #2780E3;
+ }
+ 
+ .navbar-header img {
+  height: 32px;
+  margin: 10px;
+}
+ 
+}
+
 
 </style>
 

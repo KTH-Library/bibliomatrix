@@ -4,7 +4,7 @@
 # Example of use currently:
 #   unit_members<- unit_staff(unit_slug="j/jh/jhs")   # note that this is calling both the kth-catalog and also retrieving 
 #                                                     # kthids for the members of the previous call. Could be more efficient.
-#   unit_publications<- abm_staff_data(kthids=unit_members$kthid) %>% collect()
+#   unit_publications<- abm_staff_data(kthids=unit_members$kthid)
 #
 # This set of publications could then be used as input for an author-based analysis of units
 #
@@ -17,6 +17,7 @@
 #' 
 #' @param unit_slug string representing KTH unit
 #' @return tibble of unit numbers, including kthid
+#' @export
 
 unit_staff <- function(unit_slug = NULL){
   org_users<- kth_catalog(slug = unit_slug)$users
@@ -30,10 +31,21 @@ unit_staff <- function(unit_slug = NULL){
   org_users
 }
 
+#' Get members of unit based on slug
+#' 
+#' @param con A database connection
+#' @param kthids a list of KTH-ids to retrieve publications for
+#' @return tibble with all staff-based ABM data for selected organizational unit
+#' @export
 abm_staff_data <- function(con = con_bib(), kthids) {
     res <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code %in% kthids)  %>% 
-    collect() %>% 
-    distinct(PID, WebofScience_ID, .keep_all = TRUE)
+      tbl("masterfile") %>%
+      filter(Unit_code %in% kthids)  %>% 
+      collect() #%>% 
+    
+    auth_count<- res %>% group_by(PID) %>% tally() 
+    
+    res<- res %>% inner_join(auth_count, by="PID") %>% distinct(PID, WebofScience_ID, .keep_all = TRUE)
+    return(res)
+    
  }

@@ -9,7 +9,7 @@
 # This set of publications could then be used as input for an author-based analysis of units
 #
 # ToDo:
-#   * pooling contributions/fractions from multiple authors (now only de-duplication is done) in the function 'abm_staff_data'.
+#   * Calculating author fractions, by author count from org divided by total number of authors(?)
 #   * placing the currently selected unit name as 'Unit_code' and 'Unit_name'. Now this is only the de-duplicated values of individual authors. What to add (kthid, Diva-code etc)?
 
 
@@ -48,4 +48,8 @@ abm_staff_data <- function(con = con_bib(), kthids) {
     res<- res %>% inner_join(auth_count, by="PID") %>% distinct(PID, WebofScience_ID, .keep_all = TRUE)
     return(res)
     
- }
+}
+
+#' Dummy to test git
+#' 
+#' Future function

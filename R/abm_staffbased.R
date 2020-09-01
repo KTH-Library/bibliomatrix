@@ -27,7 +27,7 @@ unit_staff <- function(unit_slug = NULL) {
   nr_users <- dim(org_users)[1]
   
   for (i in 1:nr_users) {
-    id <- kth_profile(username = org_users$username[i])$content$kthId
+    id <- suppressMessages(kth_profile(username = org_users$username[i])$content$kthId)
     org_users$kthid[i] <- id
   }
   

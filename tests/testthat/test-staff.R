@@ -1,5 +1,7 @@
 test_that("fetching staff ids and corresponding pubs work", {
   
+  skip_on_travis()
+  
   # fetch the staff associated with the "c/ce" unit
   staff_cce <- unit_staff("j/jh/jhs")
   ids <- staff_cce %>% pull(kthid)

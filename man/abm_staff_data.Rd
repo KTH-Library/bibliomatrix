@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm_staffbased.R
 \name{abm_staff_data}
 \alias{abm_staff_data}
-\title{Get members of unit based on slug}
+\title{Get publications from members of unit via kthids}
 \usage{
 abm_staff_data(con = con_bib(), kthids)
 }
@@ -15,5 +15,5 @@ abm_staff_data(con = con_bib(), kthids)
 tibble with all staff-based ABM data for selected organizational unit
 }
 \description{
-Get members of unit based on slug
+Get publications from members of unit via kthids
 }

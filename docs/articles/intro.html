@@ -82,7 +82,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="intro_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Introduction to usage of <code>bibliomatrix</code>
@@ -107,17 +107,19 @@
 <h2 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting started</h2>
 <p>First load some useful packages, including <code>bibliomatrix</code>:</p>
-<div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bibliomatrix</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">readr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">knitr</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">bench</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">DBI</span>)
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">pool</span>)
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/KTH-Library/bibliomatrix">bibliomatrix</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://dplyr.tidyverse.org">dplyr</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://stringr.tidyverse.org">stringr</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://readr.tidyverse.org">readr</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://yihui.org/knitr">knitr</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/r-lib/bench">bench</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="http://r-dbi.github.io/DBI">DBI</a></span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://github.com/rstudio/pool">pool</a></span>)
 
-<span class="kw">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html">Sys.info</a></span>()[<span class="st">"sysname"</span>] <span class="kw">==</span> <span class="st">"Windows"</span>)
-  <span class="fu"><a href="https://rdrr.io/r/base/readRenviron.html">readRenviron</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"R_USER"</span>), <span class="st">".Renviron"</span>))</pre></body></html></div>
+<span class="co">if</span> (<span class="fu"><a href="https://rdrr.io/r/base/Sys.info.html">Sys.info</a></span>()[<span class="st">"sysname"</span>] <span class="op">==</span> <span class="st">"Windows"</span>) 
+  <span class="fu"><a href="https://rdrr.io/r/base/readRenviron.html">readRenviron</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"R_USER"</span>), <span class="st">".Renviron"</span>))
+</pre></div>
 </div>
 <div id="data-for-annual-bibliometric-monitoring-abm" class="section level2">
 <h2 class="hasAnchor">
@@ -125,21 +127,19 @@
 <p>In order to get data from the Microsoft SQL Server database, an <code>.Renviron</code> file is currently required with values being provided for the following envvars: <code>DBUSER</code> (the MSSQL Server service account name for the BIBMON db), <code>DBPASS</code>, <code>DBHOST</code> (the hostname for the MSSQL server) and <code>DBNAME</code> (use “BIBMON”).</p>
 <p>Once this has been provided in the <code>.Renviron</code> file, data for the ABM tables can be retrieved.</p>
 <p><em>NOTE: For the public part of ABM, no database connection is needed, see <a href="public-data.html">Using bundled data in bibliomatrix</a>.</em></p>
-<div class="sourceCode" id="cb2"><html><body><pre class="r"><span class="co"># Open a connection pool to Microsoft SQL Server BIBMON database</span>
-<span class="no">bibmon</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pool_bib.html">pool_bib</a></span>(<span class="st">"mssql"</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit">
+<span class="co"># Open a connection pool to Microsoft SQL Server BIBMON database</span>
+<span class="kw">bibmon</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pool_bib.html">pool_bib</a></span>(<span class="st">"mssql"</span>)
 
 <span class="co"># get data for ABM table 1</span>
-<span class="no">t1</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">bibmon</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>)
-<span class="co">#&gt; Warning: The `add` argument of `group_by()` is deprecated as of dplyr 1.0.0.</span>
-<span class="co">#&gt; Please use the `.add` argument instead.</span>
-<span class="co">#&gt; This warning is displayed once every 8 hours.</span>
-<span class="co">#&gt; Call `lifecycle::last_warnings()` to see where this warning was generated.</span>
+<span class="kw">t1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(con = <span class="kw">bibmon</span>, unit_code = <span class="st">"KTH"</span>)
 
 <span class="co"># display first few results</span>
-<span class="no">t1</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span>:<span class="fl">5</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fl">1</span>:<span class="fl">2</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
+<span class="kw">t1</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice</a></span>(<span class="fl">1</span><span class="op">:</span><span class="fl">5</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="fl">1</span><span class="op">:</span><span class="fl">2</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()
+</pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -192,33 +192,37 @@ Book
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb3"><html><body><pre class="r">
+<div class="sourceCode" id="cb3"><pre class="downlit">
+
 <span class="co"># You can build a sqlite3 databsae for local use (this will take a while the first time)</span>
 <span class="fu"><a href="../reference/db_sync.html">db_sync</a></span>()
-<span class="no">localdb</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/pool_bib.html">pool_bib</a></span>(<span class="st">"sqlite"</span>)
-<span class="no">t2</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>)
+<span class="kw">localdb</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pool_bib.html">pool_bib</a></span>(<span class="st">"sqlite"</span>)
+<span class="kw">t2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(con = <span class="kw">localdb</span>, unit_code = <span class="st">"KTH"</span>)
 
 <span class="co"># are the results the same?</span>
-<span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="no">t1</span>, <span class="no">t2</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span>(<span class="kw">t1</span>, <span class="kw">t2</span>)
 <span class="co">#&gt; [1] FALSE</span>
 
 <span class="co"># what about performance?</span>
-<span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">bibmon</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
+<span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(con = <span class="kw">bibmon</span>, unit_code = <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   148ms   227ms</span>
-<span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(<span class="kw">con</span> <span class="kw">=</span> <span class="no">localdb</span>, <span class="kw">unit_code</span> <span class="kw">=</span> <span class="st">"KTH"</span>))
+<span class="co">#&gt;   219ms   262ms</span>
+<span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span>(<span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span>(con = <span class="kw">localdb</span>, unit_code = <span class="st">"KTH"</span>))
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   144ms   144ms</span>
+<span class="co">#&gt;   266ms   264ms</span>
 
-<span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">bibmon</span>)
-<span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="no">localdb</span>)</pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="kw">bibmon</span>)
+<span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span>(<span class="kw">localdb</span>)
+</pre></div>
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data-from-ldap-active-directory" class="anchor"></a>Data from LDAP / Active Directory</h2>
 <p>In order to get data from the Active Directory, an <code>.Renviron</code> file should be used with values being provided for the following envvars: <code>LDAP_USER</code> (service account name in LDAP for issuing queries with), <code>LDAP_PASS</code>, <code>LDAP_HOST</code> (the hostname for the LDAP server) and <code>LDAP_BASE</code> (for example “dc=ug,dc=kth,dc=se”).</p>
-<div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># search Active Directory using an account name, return first 10 rows</span>
-<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"agnel"</span>, <span class="st">"accountname"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
+<div class="sourceCode" id="cb4"><pre class="downlit">
+<span class="co"># search Active Directory using an account name, return first 10 rows</span>
+<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"agnel"</span>, <span class="st">"accountname"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">10</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()
+</pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -311,9 +315,11 @@ Stockholm
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb5"><html><body><pre class="r">
+<div class="sourceCode" id="cb5"><pre class="downlit">
+
 <span class="co"># search AD using a KTH identifier, same result, so return first row only</span>
-<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"u1z88syr"</span>, <span class="st">"kthid"</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">1</span>) <span class="kw">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
+<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"u1z88syr"</span>, <span class="st">"kthid"</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fl">1</span>) <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()
+</pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -332,14 +338,16 @@ CN=Agne Larsson (agnel),OU=EMPLOYEES,OU=USERS,OU=UG,DC=ug,DC=kth,DC=se
 </td>
 </tr></tbody>
 </table>
-<div class="sourceCode" id="cb6"><html><body><pre class="r">
+<div class="sourceCode" id="cb6"><pre class="downlit">
+
 <span class="co"># default if search_type is not specified is to use KTH id</span>
 <span class="co">#ad_search("u1z88syr")</span>
 
 <span class="co"># display memberships for an Active Directory user with a specific KTH id</span>
-<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"u1z88syr"</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html">str_starts</a></span>(<span class="no">key</span>, <span class="st">"ug.*Affiliation"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
+<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="st">"u1z88syr"</span>) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html">str_starts</a></span>(<span class="kw">key</span>, <span class="st">"ug.*Affiliation"</span>)) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>() 
+</pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -384,7 +392,8 @@ employee
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb7"><html><body><pre class="r">
+<div class="sourceCode" id="cb7"><pre class="downlit">
+
 <span class="co"># some functions have been defined to "translate" between identificators</span>
 <span class="fu"><a href="../reference/ad_accountname.html">ad_accountname</a></span>(<span class="st">"u1z88syr"</span>)
 <span class="co">#&gt; [1] "agnel"</span>
@@ -392,19 +401,20 @@ employee
 <span class="co">#&gt; [1] "u1z88syr"</span>
 
 <span class="co"># several kth identifiers can be processed, for example:</span>
-<span class="no">kthids</span> <span class="kw">&lt;-</span>
+<span class="kw">kthids</span> <span class="op">&lt;-</span>
 <span class="st">"u1kzf1xh
 u1g9umtq
 u1jr9fll 
 u1ygqmuy
 u13bp6vd
-u18qe64m"</span> <span class="kw">%&gt;%</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_lines.html">read_lines</a></span>()
+u18qe64m"</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_lines.html">read_lines</a></span>()
 
 <span class="co"># display memberof entries beginning with "aff" for a given user</span>
-<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="no">kthids</span>[<span class="fl">4</span>]) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="../reference/ad_memberof.html">ad_memberof</a></span>() <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html">str_starts</a></span>(<span class="no">memberof</span>, <span class="st">"aff"</span>)) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()</pre></body></html></div>
+<span class="fu"><a href="../reference/ad_search.html">ad_search</a></span>(<span class="kw">kthids</span>[<span class="fl">4</span>]) <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/ad_memberof.html">ad_memberof</a></span>() <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="fu"><a href="https://stringr.tidyverse.org/reference/str_starts.html">str_starts</a></span>(<span class="kw">memberof</span>, <span class="st">"aff"</span>)) <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>()
+</pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -442,7 +452,7 @@ aff_staff
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

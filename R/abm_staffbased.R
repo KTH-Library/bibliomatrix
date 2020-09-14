@@ -15,10 +15,17 @@
 
 #' Get members of unit based on slug
 #' 
-#' @param unit_slug string representing KTH unit
+#' @param unit_slug string representing KTH unit, Default: NULL
 #' @importFrom kthapi kth_catalog
 #' @return tibble of unit numbers, including kthid
-#' @export
+#' @examples 
+#' \dontrun{
+#' if (interactive()) {
+#'  unit_staff(unit_slug = "j/jh/jhs")
+#'  }
+#' }
+#' @rdname unit_staff
+#' @export 
 
 unit_staff <- function(unit_slug = NULL) {
   
@@ -67,7 +74,7 @@ abm_staff_data <- function(con = con_bib(), kthids) {
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
-abm_table1_alt <- function(con = con_bib(), data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table1_alt <- function(con = con_bib(), data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
   
   #attach(data)
   # Get publication level data for selected unit

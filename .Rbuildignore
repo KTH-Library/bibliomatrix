@@ -21,3 +21,4 @@
 ^inst/extdata/.*\.html$
 ^inst/shiny-apps/abm/www/cache/.*\.html$
 
+^\.github$

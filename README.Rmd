@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
+[![R build status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
 <!-- badges: end -->
 
 The goal of bibliomatrix is to provide a common set of functionality for the Annual Bibliometric Monitoring efforts from the Bibliometrics team at the KTH Library.
@@ -52,14 +53,14 @@ library(dplyr)
 abm_public_kth$meta %>%
   select(unit_code, unit_long_en) %>%
   head() %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 
 # KTH is level 0, schools level 1 and departments level 2.
 # Some basic information about KTH schools:
 abm_public_kth$meta %>%
   filter(org_level == 1) %>%
   select(Diva_org_id, unit_code, unit_short, unit_long_en) %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 
 # Get ABM results for KTH
 kth_abm_tables <- abm_public_kth$units$KTH
@@ -68,7 +69,7 @@ kth_abm_tables <- abm_public_kth$units$KTH
 kth_abm_tables[[1]] %>%
   select(Publication_Type_DiVA, P_frac, WoS_coverage) %>%
   filter(P_frac > 50) %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
 ## Development

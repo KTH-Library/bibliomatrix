@@ -7,6 +7,8 @@
 
 [![Travis build
 status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
+[![R build
+status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
 <!-- badges: end -->
 
 The goal of bibliomatrix is to provide a common set of functionality for
@@ -51,7 +53,7 @@ library(dplyr)
 abm_public_kth$meta %>%
   select(unit_code, unit_long_en) %>%
   head() %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
 | unit\_code | unit\_long\_en                                         |
@@ -70,7 +72,7 @@ abm_public_kth$meta %>%
 abm_public_kth$meta %>%
   filter(org_level == 1) %>%
   select(Diva_org_id, unit_code, unit_short, unit_long_en) %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
 | Diva\_org\_id | unit\_code | unit\_short | unit\_long\_en                                                              |
@@ -90,7 +92,7 @@ kth_abm_tables <- abm_public_kth$units$KTH
 kth_abm_tables[[1]] %>%
   select(Publication_Type_DiVA, P_frac, WoS_coverage) %>%
   filter(P_frac > 50) %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
 | Publication\_Type\_DiVA       |     P\_frac | WoS\_coverage |

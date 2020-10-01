@@ -22,6 +22,7 @@
 #' \dontrun{
 #' if (interactive()) {
 #'  unit_staff(unit_slug = "j/jh/jhs")
+#'  unit_staff(unit_slug = "j/jj/jjn")
 #'  }
 #' }
 #' @rdname unit_staff

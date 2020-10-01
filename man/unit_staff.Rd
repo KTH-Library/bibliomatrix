@@ -7,11 +7,19 @@
 unit_staff(unit_slug = NULL)
 }
 \arguments{
-\item{unit_slug}{string representing KTH unit}
+\item{unit_slug}{string representing KTH unit, Default: NULL}
 }
 \value{
 tibble of unit numbers, including kthid
 }
 \description{
 Get members of unit based on slug
+}
+\examples{
+\dontrun{
+if (interactive()) {
+ unit_staff(unit_slug = "j/jh/jhs")
+ unit_staff(unit_slug = "j/jj/jjn")
+ }
+}
 }

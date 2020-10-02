@@ -13,7 +13,7 @@ kthids_from_slug(slug)
 tibble with kthids, usernames, titles and a timestamp
 }
 \description{
-Given a organizational unit slug, such as "j/j/jjn", retrieves 
+Given a organizational unit slug, such as "j/jj/jjn", retrieves 
 associated KTH researcher ids
 }
 \details{

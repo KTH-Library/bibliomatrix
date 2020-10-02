@@ -1,5 +1,5 @@
 #' @title kthids_from_slug
-#' @description Given a organizational unit slug, such as "j/j/jjn", retrieves 
+#' @description Given a organizational unit slug, such as "j/jj/jjn", retrieves 
 #' associated KTH researcher ids
 #' @param slug character slug for an organizational unit
 #' @return tibble with kthids, usernames, titles and a timestamp

@@ -65,7 +65,8 @@ Imports:
     knitr (>= 1.28),
     progress (>= 1.2.2),
     ktheme,
-    kthapi
+    kthapi,
+    lubridate (>= 1.7.9)
 Remotes: KTH-Library/kthapi, KTH-Library/ktheme
 URL: https://github.com/KTH-Library/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues

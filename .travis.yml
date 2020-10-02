@@ -4,6 +4,7 @@ cache: packages
 
 apt_packages:
 - libxml2-dev
+- libsodium-dev
 
 r_build_args: "--no-build-vignettes"
 r_check_args: "--no-build-vignettes --no-vignettes"

@@ -26,7 +26,7 @@
 #' 
 kthids_from_slug <- function(slug) {
   
-  users <- kthapi::kth_catalog(slug = x1)$users
+  users <- kthapi::kth_catalog(slug = slug)$users
   
   pb <- progress::progress_bar$new(
     format = "resolving kthids [:bar] :percent eta: :eta",
@@ -95,16 +95,18 @@ abm_divisions <- function(include = abm_slugs_institutions(),
   if (!missing(exclude) && any(! exclude %in% abm_slugs_institutions()))
     stop("Please exclude only valid slugs, use abm_slugs_institutions().")
   
+  if (!quiet)
+    message("Please use this fcn sparingly and cache results, offloading the API.\n")
+  
   slugs <- setdiff(include, exclude)
 
   pb <- progress::progress_bar$new(
     total = length(slugs),
-    format = "  processing [:bar] :percent eta: :eta"
+    format = "  processing [:what] [:bar] :percent eta: :eta"
   )
 
   crawl <- function(slug) {
-    pb$tick()
-    if (!quiet) message("\nProcessing ", slug)
+    if (!quiet) pb$tick(tokens = list(what = sprintf("%10s", slug)))
     kth_catalog_crawl(slug)
   }
   

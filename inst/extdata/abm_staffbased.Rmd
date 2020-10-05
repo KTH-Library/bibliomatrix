@@ -48,7 +48,7 @@ unit_publ<- abm_staff_data(kthids=unit_members$kthid)
 #if (params$use_package_data != TRUE) {
   con <- pool_bib()
   df_diva <- abm_table1_alt(con = con, data=unit_publ) 
-#  df_cit3y <- abm_table2(con = con, unit_code= params$unit_code)
+  df_cit3y <- abm_table2_alt(con = con, data=unit_publ)
 #  df_cf <- abm_table3(con = con, unit_code= params$unit_code)
 #  df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
 #  df_copub <- abm_table5(con = con, unit_code= params$unit_code)

@@ -111,3 +111,57 @@ abm_table1_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
     arrange(pt_ordning) %>%
     select(-pt_ordning)
 }
+
+#' Retrieve Table 2 (Citations 3-year window) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
+#' @return tibble with citations statistics by year and total
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+
+abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- data %>%
+    filter(  Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop - 2 &
+             Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial")) %>%
+    mutate(uncited = ifelse(Citations_3yr > 0, 0, 1))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata %>%
+    group_by(Publication_Year) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
+              Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup() %>%
+    collect() %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+    arrange(Publication_Year_ch) %>% 
+    select(Publication_Year_ch, P_frac, C3_frac, C3, P_uncited, Share_uncited)
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
+              Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+    mutate(Publication_Year_ch = "Total") %>%
+    collect()
+  
+  bind_rows(table1, table2)
+  
+}

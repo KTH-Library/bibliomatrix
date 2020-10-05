@@ -53,13 +53,14 @@ abm_staff_data <- function(con = con_bib(), kthids) {
     res <- con %>%
       tbl("masterfile") %>%
       filter(Unit_code %in% kthids)  %>% 
+      rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
       collect() #%>% 
     
     auth_count<- res %>% group_by(PID) %>% tally() 
     colnames(auth_count)<- c("PID", "auth_count")
     
     unit_frac<- res %>% group_by(PID) %>% 
-                summarise(Unit_fraction_sum = sum(Unit_Fraction, na.rm = TRUE))
+                summarise(Unit_Fraction = sum(Unit_Fraction_raw, na.rm = TRUE), Unit_Fraction_adj = sum(Unit_Fraction_adj_raw, na.rm = TRUE))
     
     res %>% 
       inner_join(auth_count, by="PID") %>% 
@@ -188,13 +189,13 @@ abm_woscoverage_alt <- function(con, data, analysis_start = abm_config()$start_y
              Publication_Year <= analysis_stop &
              Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
     mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
-    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_F, wos_bin) %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(p_frac = sum(Unit_fraction, na.rm = TRUE),
+    summarise(p_frac = sum(Unit_Fraction, na.rm = TRUE),
               p_full = n(),
-              sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
+              sumcov_frac = sum(Unit_Fraction * wos_bin, na.rm = TRUE),
               sumcov_full = sum(wos_bin, na.rm = TRUE),
-              woscov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
+              woscov_frac = sum(Unit_Fraction * wos_bin, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
     ungroup() %>%
     collect()

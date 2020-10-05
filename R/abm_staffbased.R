@@ -189,7 +189,7 @@ abm_woscoverage_alt <- function(con, data, analysis_start = abm_config()$start_y
              Publication_Year <= analysis_stop &
              Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
     mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
-    select(Publication_Year, Publication_Type_DiVA, Unit_F, wos_bin) %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
     summarise(p_frac = sum(Unit_Fraction, na.rm = TRUE),
               p_full = n(),

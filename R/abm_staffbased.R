@@ -56,9 +56,14 @@ abm_staff_data <- function(con = con_bib(), kthids) {
       collect() #%>% 
     
     auth_count<- res %>% group_by(PID) %>% tally() 
+    colnames(auth_count)<- c("PID", "auth_count")
+    
+    unit_frac<- res %>% group_by(PID) %>% 
+                summarise(Unit_fraction_sum = sum(Unit_Fraction, na.rm = TRUE))
     
     res %>% 
       inner_join(auth_count, by="PID") %>% 
+      inner_join(unit_frac, by="PID") %>% 
       distinct(PID, WebofScience_ID, .keep_all = TRUE)
 }
 
@@ -165,3 +170,48 @@ abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   bind_rows(table1, table2)
   
 }
+
+#' Retrieve WoS coverage for peer reviewed DiVA publication types
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, if not given abm_config() is used
+#' @param analysis_stop last publication year of analysis, if not given abm_config() is used
+#' @return tibble with fractionalized and full counted WoS coverage by year and publication type
+#' @import pool dplyr
+#' @export
+abm_woscoverage_alt <- function(con, data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+  
+  # Get publication level data for selected unit (and filter on pub_year if given)
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
+    group_by(Publication_Year, Publication_Type_DiVA) %>%
+    summarise(p_frac = sum(Unit_fraction, na.rm = TRUE),
+              p_full = n(),
+              sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
+              sumcov_full = sum(wos_bin, na.rm = TRUE),
+              woscov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
+              woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
+    ungroup() %>%
+    collect()
+  
+  peerreviewed <- orgdata %>%
+    group_by(Publication_Year) %>%
+    summarise(p_frac = sum(p_frac),
+              p_full = sum(p_full),
+              sumcov_frac = sum(sumcov_frac),
+              sumcov_full = sum(sumcov_full)) %>%
+    mutate(woscov_frac = sumcov_frac / p_frac,
+           woscov_full = sumcov_full / p_full,
+           Publication_Type = "Peer reviewed")
+  
+  orgdata %>%
+    rename(Publication_Type = Publication_Type_DiVA) %>%
+    bind_rows(peerreviewed) %>%
+    arrange(Publication_Year, Publication_Type)
+}
+

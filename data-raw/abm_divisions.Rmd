@@ -1,0 +1,150 @@
+---
+title: "Divisions for ABM"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: fill
+    source: embed
+---
+
+Divisions {.tabset .tabset-fade}
+-------------------------------------
+
+### Divisions
+
+Data from KTH Directory API. Click a node for details (opens KTH website), scroll to zoom, drag to pan.
+
+```{r}
+
+library(bibliomatrix)
+library(ktheme)
+suppressPackageStartupMessages(library(dplyr))
+library(networkD3)
+library(igraph)
+library(dplyr)
+library(jsonlite)
+
+# use this crawl sparingly, avoid live API lookups...
+if (file.exists("~/divs.rds")) {
+  divs <- readRDS("~/divs.rds")
+} else {
+  divs <- abm_divisions()
+  saveRDS(divs, "~/divs.rds")
+}
+
+abm_divisions_network <- function() {
+  
+  # assemble org tree only with divisions used in ABM
+  root <- tibble(from = "ABM", to = NA_character_, name = "root")
+  
+  # consider only these schools
+  schools <- 
+    abm_slugs_institutions() %>% 
+    stringr::str_split_fixed(pattern = "/", n = 2) %>% 
+    .[,1]
+  
+  schools_name <- 
+    tibble(slug = schools) %>% left_join(unit_info()) %>%
+    select(slug, unit_short) %>% pull(unit_short)
+  
+  # "backfill" the tree with larger org units before adding divisions/subdivisions
+  l0 <- tibble(from = schools, to = "ABM", name = schools_name)
+  l1 <- tibble(from = abm_slugs_institutions(), to = schools, name = schools_name)
+  d <- divs %>% select(from = id, to = pid, name = desc)
+  tree <- bind_rows(l0, l1, d)
+  
+  #eert <- tree %>% select(to, from, name)
+  #g <- igraph::graph_from_data_frame(eert, directed = TRUE)
+  
+  #simpleNetwork(as_data_frame(g))
+  
+  
+  # make a graph colored by organizational unit level
+  
+  tree2 <- 
+    tree %>% left_join(
+      bind_rows(tibble(id = "ABM", name = "ABM"), tree %>% select(id = from, name = name)), by = c(to = "id")) %>%
+    rename(to_name = `name.y`, from_name = `name.x`)
+  
+  src <- paste(tree2$from, ": ", tree2$from_name)
+  target <- paste(tree2$to, ": ", tree2$to_name)
+  
+  networkData <- data.frame(src, target, stringsAsFactors = FALSE)
+  
+  nodes <- data.frame(name = unique(c(src, target)), stringsAsFactors = FALSE)
+  nodes$id <- 0:(nrow(nodes) - 1)
+  
+  # create a data frame of the edges that uses id 0:9 instead of their names
+  edges <- networkData %>%
+    left_join(nodes, by = c("src" = "name")) %>%
+    select(-src) %>%
+    rename(source = id) %>%
+    left_join(nodes, by = c("target" = "name")) %>%
+    select(-target) %>%
+    rename(target = id)
+  
+  edges$width <- 1
+  
+  # make a grouping variable that will match to colours
+  #nodes$group <- ifelse(nodes$name %in% src, "lions", "tigers")
+  nodes$groupid <- 
+    stringr::str_replace(nodes$name, "(.*?)\\s+:\\s+(.*?)$", "\\1")
+  
+  nodes$group <- 
+    nodes$groupid %>%
+    stringr::str_count("/") + 1
+  
+  nodes$group[which(nodes$groupid == "ABM")] <- 0
+  labels <- c("ABM", "School", "Institution", "Division", "Subdivision")
+  nodes$fgroup <- ordered(as.character(nodes$group), labels = labels)
+  groups <- as.character(sort(unique(nodes$fgroup)))
+  domain <- jsonlite::toJSON(groups)
+  range <- jsonlite::toJSON(palette_kth_digital(length(groups)))
+  
+  ColourScale <- sprintf("d3.scaleOrdinal().domain(%s).range(%s);", domain, range)
+  
+  # simple with default colours
+  fn <- forceNetwork(
+    Links = edges, Nodes = nodes, 
+    Source = "source",
+    Target = "target",
+    NodeID ="name",
+    Group = "fgroup",
+    Value = "width",
+    opacity = 0.9,
+    zoom = TRUE, legend = TRUE,
+  #  opacityNoHover = TRUE,
+    colourScale = JS(ColourScale)
+  )
+  
+  fn$x$nodes$hyperlink <- 
+    sprintf('https://www.kth.se/directory/%s', nodes$groupid)
+  fn$x$options$clickAction = 'window.open(d.hyperlink)'
+  
+  fn
+}
+
+fn <- abm_divisions_network() 
+
+fn
+
+#htmlwidgets::saveWidget(fn, "~/abm-divisions.html")
+#browseURL("~/abm-divisions.html")
+
+```
+
+### Notes
+
+- The "CBH" school is missing
+
+- Subdivisions are not curated; no "administrative" units have been filtered out
+
+
+### Table
+
+```{r}
+library(DT)
+
+datatable(data = divs)
+```
+

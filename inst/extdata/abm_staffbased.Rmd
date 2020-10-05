@@ -52,7 +52,7 @@ unit_publ<- abm_staff_data(kthids=unit_members$kthid)
 #  df_cf <- abm_table3(con = con, unit_code= params$unit_code)
 #  df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
 #  df_copub <- abm_table5(con = con, unit_code= params$unit_code)
-#  df_woscov <- abm_woscoverage(con = con, unit_code = params$unit_code)
+  df_woscov <- abm_woscoverage_alt(con = con, data=unit_publ)
 #  df_oa <- abm_table6(con = con, unit_code = params$unit_code)
 #  unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
@@ -178,6 +178,38 @@ if (nrow(df_diva) > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
+
+Citation impact
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Citations 3-year window, fractional counts** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+```{r}
+abm_ui_datatable_city3y(
+  df_cit3y, 
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Citations 3-year window, fractional counts** {.mobile}
+
+```{r}
+abm_ui_kable_cit3y(df_cit3y)
+```
+
 
 Blank
 =====================================

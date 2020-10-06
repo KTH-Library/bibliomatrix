@@ -40,7 +40,7 @@ colors_vb <- palette_kth(4)
 # Retrieve result tables to use in tabs and key indicators
 
 # Dummy org data
-unit_code<- "j/jh"  #"j/jh/jhs"
+unit_code<- "j/jh/jhs"  #"j/jh/jhs"
 unit_members<- unit_staff(unit_slug=unit_code)
 unit_publ<- abm_staff_data(kthids=unit_members$kthid)
 
@@ -50,7 +50,7 @@ unit_publ<- abm_staff_data(kthids=unit_members$kthid)
   df_diva <- abm_table1_alt(con = con, data=unit_publ) 
   df_cit3y <- abm_table2_alt(con = con, data=unit_publ)
   df_cf <- abm_table3_alt(con = con, data=unit_publ)
-#  df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
+  df_jcf <- abm_table4_alt(con = con, data=unit_publ)
 #  df_copub <- abm_table5(con = con, unit_code= params$unit_code)
   df_woscov <- abm_woscoverage_alt(con = con, data=unit_publ)
 #  df_oa <- abm_table6(con = con, unit_code = params$unit_code)
@@ -325,6 +325,98 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
+Journal impact
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+
+```{r}
+abm_ui_datatable_jcf(
+  df_jcf,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Journal impact, fractionalized (3-year moving average)** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+abm_ui_kable_jcf(df_jcf)
+```
+
+Row
+-----------------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+  intervals <- df_jcf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_jcf <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_jcf <- woscov_jcf %>% 
+    inner_join(sliding_intervals(min(woscov_jcf$Publication_Year), max(woscov_jcf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(woscov_frac = sum(sumcov_frac) / sum(p_frac),
+              sumcov_full = sum(sumcov_full))
+
+  mincov <- min(woscov_jcf$woscov_frac)
+  minpubs <- min(woscov_jcf$sumcov_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
+
+Row
+---------------------
+
+### **Field normalized journal impact (JCf)**
+
+```{r}
+if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_jcf(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+### **Share of publications in Top 20% journals**
+
+```{r}
+if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_top20(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
 
 
 Blank

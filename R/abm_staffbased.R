@@ -227,6 +227,60 @@ abm_table3_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   bind_rows(table1, table2)
 }
 
+
+#' Retrieve Table 4 (Journal impact) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
+#' @return tibble with field normalized journal citation score and number/share of publications in top20 journals
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+
+abm_table4_alt <- function(con = con_bib(), data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant WoS doctypes only
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             Publication_Type_WoS %in% c("Article", "Review"))
+  
+  # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
+  orgdata3year <-
+    orgdata %>%
+    collect() %>% 
+    inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
+               by = c("Publication_Year" = "x"))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata3year %>%
+    group_by(interval) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
+              top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
+              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup()
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              jcf = sum(jcf * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              top20_count = sum(Jtop20 * Unit_Fraction, na.rm = TRUE),
+              top20_share = sum(Jtop20 * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
+    collect() %>%
+    mutate(interval = "Total")
+  
+  bind_rows(table1, table2)
+}
+
 #' Retrieve WoS coverage for peer reviewed DiVA publication types
 #' 
 #' @param con connection to db, default is to use mssql connection

@@ -337,6 +337,105 @@ abm_table5_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   bind_rows(table1, table2)
 }
 
+#' Retrieve OA-data for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param data dataset with publications as tibble
+#' @return tibble with OA-status of all publications from selected organizational units
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_oa_data_alt <- function(con = con_bib(), data) {
+  
+  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
+  # and switch the order of the joined tables
+  
+  data %>% 
+    left_join(con %>% tbl("oa_status_new"), by = "PID", copy = TRUE) %>%
+    # copy = TRUE is used to inner_join local and remote table
+    select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
+  
+}
+
+#' Retrieve Table 6 (OA data) for ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
+#' @return tibble with OA-status of all publications from selected organizational units
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_table6_alt <- function(con = con_bib(), data) {
+  
+  oa_data <- abm_oa_data_alt(con =con, data = data)
+  
+  # Year-dependent part of table
+  table1 <-
+    oa_data %>%
+    group_by(Publication_Year) %>%
+    filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
+    collect() %>%
+    summarise(P_tot=n(),
+              oa_count=sum(as.logical(is_oa), na.rm=TRUE),
+              gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
+              hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
+              green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
+              bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
+              closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
+              oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
+    ungroup() %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+    arrange(Publication_Year_ch) %>%
+    select(Publication_Year_ch, P_tot, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
+  
+  # Insert blank years
+  years_to_add <- table1[!(as.character(as.numeric(table1$Publication_Year_ch)+1) %in% table1$Publication_Year_ch)
+                         & !is.na(lead(table1$Publication_Year_ch)),"Publication_Year_ch"] %>%
+    mapply(function (x) as.numeric(x)+1, .)
+  
+  for (year in years_to_add){
+    if (length(year) > 0){
+      plusyear = 1
+      while (!(as.character(year+plusyear) %in% table1$Publication_Year_ch)){
+        years_to_add <- append(years_to_add, year+plusyear)
+        plusyear <- plusyear + 1
+      }
+    }
+  }
+  
+  for (year in years_to_add){
+    if (length(year) > 0){
+      table1 <- table1 %>% rbind(data.frame(Publication_Year_ch = as.character(year),
+                                            P_tot = integer(1),
+                                            oa_count = integer(1),
+                                            gold_count = integer(1),
+                                            hybrid_count = integer(1),
+                                            green_count = integer(1),
+                                            bronze_count = integer(1),
+                                            closed_count = integer(1),
+                                            oa_share = 0))
+    }
+  } 
+  
+  table1 <- table1 %>% arrange(Publication_Year_ch)
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <- table1 %>%
+    summarise(Publication_Year_ch="Total",
+              P_tot=sum(P_tot),
+              oa_count=sum(oa_count),
+              gold_count=sum(gold_count),
+              hybrid_count=sum(hybrid_count),
+              green_count=sum(green_count),
+              bronze_count=sum(bronze_count),
+              closed_count=sum(closed_count),
+              oa_share=sum(oa_count)/sum(P_tot))
+  
+  bind_rows(table1, table2)
+}
+
 
 #' Retrieve WoS coverage for peer reviewed DiVA publication types
 #' 

@@ -9,7 +9,7 @@ abm_oa_data_alt(con = con_bib(), data)
 \arguments{
 \item{con}{connection to db, default is to use mssql connection}
 
-\item{data}{dataset with publications as tibble}
+\item{data}{dataset with publications as tibble, incl PID for joining}
 }
 \value{
 tibble with OA-status of all publications from selected organizational units

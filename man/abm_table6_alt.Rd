@@ -9,7 +9,7 @@ abm_table6_alt(con = con_bib(), data)
 \arguments{
 \item{con}{connection to db, default is to use mssql connection}
 
-\item{unit_code}{for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)}
+\item{data}{dataset with publications as tibble, incl PID for joining}
 }
 \value{
 tibble with OA-status of all publications from selected organizational units

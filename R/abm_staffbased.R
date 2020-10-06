@@ -340,7 +340,7 @@ abm_table5_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
 #' Retrieve OA-data for ABM
 #' 
 #' @param con connection to db, default is to use mssql connection
-#' @param data dataset with publications as tibble
+#' @param data dataset with publications as tibble, incl PID for joining
 #' @return tibble with OA-status of all publications from selected organizational units
 #' @import DBI dplyr tidyr purrr
 #' @export
@@ -359,7 +359,7 @@ abm_oa_data_alt <- function(con = con_bib(), data) {
 #' Retrieve Table 6 (OA data) for ABM
 #' 
 #' @param con connection to db, default is to use mssql connection
-#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
+#' @param data dataset with publications as tibble, incl PID for joining
 #' @return tibble with OA-status of all publications from selected organizational units
 #' @import DBI dplyr tidyr purrr
 #' @export

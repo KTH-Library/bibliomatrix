@@ -53,7 +53,7 @@ unit_publ<- abm_staff_data(kthids=unit_members$kthid)
   df_jcf <- abm_table4_alt(con = con, data=unit_publ)
   df_copub <- abm_table5_alt(con = con, data=unit_publ)
   df_woscov <- abm_woscoverage_alt(con = con, data=unit_publ)
-#  df_oa <- abm_table6(con = con, unit_code = params$unit_code)
+  df_oa <- abm_table6_alt(con = con, data=unit_publ)
 #  unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
 #} else {
@@ -496,6 +496,86 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 }
 ```
 
+
+Open Access
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Open Access publications, full counts** {.no-mobile}
+<!-- The DT table headers may have a right alignment issue due to some whitespace issue artifact from disabled sorting? -->
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+.table th {
+  text-align: right;
+}
+</style>
+
+```{r}
+abm_ui_datatable_oa(
+  df_oa,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+
+```
+
+### **Open Access publications, full counts** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+abm_ui_kable_oa(df_oa)
+```
+
+
+Row
+-------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
+
+In summary, the different OA types can be described as follows:
+
+- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
+
+- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
+
+- *Green:* The full text has been found in an institutional repository, such as DiVA.
+
+- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
+
+
+**N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
+
+
+Row
+-------
+
+### **Overview of Open Access publications - piechart** 
+
+```{r, fig.width=8}
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Stacked area chart for publications**
+
+```{r, fig.width=5}
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
 
 Blank
 =====================================

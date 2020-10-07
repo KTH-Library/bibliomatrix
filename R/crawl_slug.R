@@ -60,13 +60,10 @@ kthids_from_slug <- function(slug) {
 #' @rdname abm_slugs_institutions
 #' @export 
 abm_slugs_institutions <- function() {
-  
-  default_excludes <- 
-    c("c/cd", "c/cf", "c/ce", "c/cg", "c/ch", "c/ck", "c/cj", "c/cl")
-  
-  l2 <- unit_info() %>% filter(org_level == 2) %>% pull(slug)
-  
-  setdiff(l2, default_excludes)
+  # TODO: rename this fcn; institutions may not be the right term to use  
+  unit_info() %>% 
+    filter(org_level == 2) %>% 
+    pull(slug)
 }
 
 #' @title abm_divisions

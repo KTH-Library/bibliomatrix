@@ -1,5 +1,4 @@
-#' @title kthids_from_slug
-#' @description Given a organizational unit slug, such as "j/jj/jjn", retrieves 
+#' Given a organizational unit slug, such as "j/jj/jjn", retrieves 
 #' associated KTH researcher ids
 #' @param slug character slug for an organizational unit
 #' @return tibble with kthids, usernames, titles and a timestamp
@@ -48,26 +47,23 @@ kthids_from_slug <- function(slug) {
   
 }
 
-#' @title abm_slugs_institutions
-#' @description Slugs or identifiers for institutions at KTH used in ABM
+#' Slugs or identifiers for departments at KTH used in ABM
 #' @return character vector of slugs
 #' @examples 
 #' \dontrun{
 #' if(interactive()){
-#'  slugs <- abm_slugs_institutions()
+#'  slugs <- abm_slugs_departments()
 #'  }
 #' }
-#' @rdname abm_slugs_institutions
+#' @rdname abm_slugs_departments
 #' @export 
-abm_slugs_institutions <- function() {
-  # TODO: rename this fcn; institutions may not be the right term to use  
+abm_slugs_departments <- function() {
   unit_info() %>% 
     filter(org_level == 2) %>% 
     pull(slug)
 }
 
-#' @title abm_divisions
-#' @description Divisions used in ABM
+#' Divisions used in ABM
 #' @param include character vector of slugs to include, Default: abm_slugs_institutions()
 #' @param exclude character vector of slugs to exclude, Default: NULL
 #' @param quiet logical to indicate logging, Default: FALSE
@@ -86,11 +82,11 @@ abm_slugs_institutions <- function() {
 #' @export 
 #' @importFrom progress progress_bar
 #' @importFrom purrr possibly map_df
-abm_divisions <- function(include = abm_slugs_institutions(), 
+abm_divisions <- function(include = abm_slugs_departments(), 
   exclude = NULL, quiet = FALSE) {
   
-  if (!missing(exclude) && any(! exclude %in% abm_slugs_institutions()))
-    stop("Please exclude only valid slugs, use abm_slugs_institutions().")
+  if (!missing(exclude) && any(! exclude %in% abm_slugs_departments()))
+    stop("Please exclude only valid slugs, use abm_slugs_departments().")
   
   if (!quiet)
     message("Please use this fcn sparingly and cache results, offloading the API.\n")
@@ -113,8 +109,7 @@ abm_divisions <- function(include = abm_slugs_institutions(),
   
 }
 
-#' @title kth_catalog_crawl
-#' @description Given an organizational "slug", a depth first traversal is made
+#' Given an organizational "slug", a depth first traversal is made
 #' enumerating organizational units (descendants)
 #' @param slug a string with the slug, for example "j/jj"
 #' @return a tibble encoding descendants as a hierarchy (using parent_id, child_id tuples)

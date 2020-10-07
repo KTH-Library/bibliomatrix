@@ -2,7 +2,8 @@
 % Please edit documentation in R/crawl_slug.R
 \name{kthids_from_slug}
 \alias{kthids_from_slug}
-\title{kthids_from_slug}
+\title{Given a organizational unit slug, such as "j/jj/jjn", retrieves 
+associated KTH researcher ids}
 \usage{
 kthids_from_slug(slug)
 }

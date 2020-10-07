@@ -2,13 +2,9 @@
 % Please edit documentation in R/crawl_slug.R
 \name{abm_divisions}
 \alias{abm_divisions}
-\title{abm_divisions}
+\title{Divisions used in ABM}
 \usage{
-abm_divisions(
-  include = abm_slugs_institutions(),
-  exclude = NULL,
-  quiet = FALSE
-)
+abm_divisions(include = abm_slugs_departments(), exclude = NULL, quiet = FALSE)
 }
 \arguments{
 \item{include}{character vector of slugs to include, Default: abm_slugs_institutions()}

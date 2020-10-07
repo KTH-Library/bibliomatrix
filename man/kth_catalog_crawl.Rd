@@ -2,7 +2,8 @@
 % Please edit documentation in R/crawl_slug.R
 \name{kth_catalog_crawl}
 \alias{kth_catalog_crawl}
-\title{kth_catalog_crawl}
+\title{Given an organizational "slug", a depth first traversal is made
+enumerating organizational units (descendants)}
 \usage{
 kth_catalog_crawl(slug)
 }

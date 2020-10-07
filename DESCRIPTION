@@ -11,10 +11,10 @@ Authors@R:
     ))
 Description: Shared functionality for working with bibliometric analytics. This
     package is primarily used by the Bibliometrics team within the library at 
-    KTH - the Royal Insitute of Technology. It supports workflows related to the
+    KTH Royal Institute of Technology. It supports workflows related to the
     Annual Bibliometric Monitoring efforts. For example, it provides data access
-    to relational databases, database syncing functionality, LDAP/AD search 
-    functionality and more.
+    to some public data but also internal relational databases, 
+    database syncing functionality and more.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true

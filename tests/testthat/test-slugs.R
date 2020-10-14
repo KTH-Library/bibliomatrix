@@ -31,7 +31,7 @@ test_that("Valid institutional slugs for ABM are listed", {
 
 test_that("Live enumeration of divisions in ABM works", {
   skip_if(skip_kthapi_tests, "skipping KTH Directory API query tests in case we're in the cloud")
-  divs <- abm_divisions()
+  divs <- kth_divisions_crawl()
   is_valid <- nrow(divs) > 100
   expect_true(is_valid)
 })

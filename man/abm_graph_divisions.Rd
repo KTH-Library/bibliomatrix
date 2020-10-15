@@ -4,7 +4,10 @@
 \alias{abm_graph_divisions}
 \title{ABM divisions as force directed network}
 \usage{
-abm_graph_divisions()
+abm_graph_divisions(base_url = "dash/")
+}
+\arguments{
+\item{base_url}{pattern to prefigate links from nodes with in JS click action}
 }
 \value{
 a force directed network object from NetworkD3

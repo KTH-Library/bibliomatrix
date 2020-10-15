@@ -17,120 +17,10 @@ Data from KTH Directory API. Click a node for details (opens KTH website), scrol
 ```{r}
 
 library(bibliomatrix)
-library(ktheme)
-suppressPackageStartupMessages(library(dplyr))
-library(networkD3)
-library(igraph)
 library(dplyr)
-library(jsonlite)
+library(DT)
 
-# use this crawl sparingly, avoid live API lookups...
-if (file.exists("~/divs.rds")) {
-  divs <- readRDS("~/divs.rds")
-} else {
-  divs <- abm_divisions()
-  saveRDS(divs, "~/divs.rds")
-}
-
-deps <- readRDS("~/deps.rds") 
-
-abm_divisions_network <- function() {
-  
-  # assemble org tree only with divisions used in ABM
-  root <- tibble(from = "KTH", to = NA_character_, name = "root")
-  
-  # consider only these schools
-  schools <- 
-    abm_slugs_institutions() %>% 
-    stringr::str_split_fixed(pattern = "/", n = 2) %>% 
-    .[,1]
-  
-  schools_name <- 
-    tibble(slug = schools) %>% left_join(unit_info()) %>%
-    select(slug, unit_short) %>% pull(unit_short)
-  
-  # "backfill" the tree with larger org units before adding divisions/subdivisions
-  l0 <- tibble(from = schools, to = "KTH", name = schools_name)
-  l1 <- tibble(from = abm_slugs_institutions(), to = schools, name = schools_name)
-  d <- divs %>% select(from = id, to = pid, name = desc)
-  tree <- bind_rows(l0, l1, d)
-  
-  #eert <- tree %>% select(to, from, name)
-  #g <- igraph::graph_from_data_frame(eert, directed = TRUE)
-  
-  #simpleNetwork(as_data_frame(g))
-  
-  
-  # make a graph colored by organizational unit level
-  
-  tree2 <- 
-    tree %>% left_join(
-      bind_rows(tibble(id = "KTH", name = "KTH"), tree %>% select(id = from, name = name)), by = c(to = "id")) %>%
-    rename(to_name = `name.y`, from_name = `name.x`)
-  
-  src <- paste(tree2$from, ": ", tree2$from_name)
-  target <- paste(tree2$to, ": ", tree2$to_name)
-  
-  networkData <- data.frame(src, target, stringsAsFactors = FALSE)
-  
-  nodes <- data.frame(name = unique(c(src, target)), stringsAsFactors = FALSE)
-  nodes$id <- 0:(nrow(nodes) - 1)
-  
-  # create a data frame of the edges that uses id 0:9 instead of their names
-  edges <- networkData %>%
-    left_join(nodes, by = c("src" = "name")) %>%
-    select(-src) %>%
-    rename(source = id) %>%
-    left_join(nodes, by = c("target" = "name")) %>%
-    select(-target) %>%
-    rename(target = id)
-  
-  edges$width <- 1
-  
-  # make a grouping variable that will match to colours
-  #nodes$group <- ifelse(nodes$name %in% src, "lions", "tigers")
-  nodes$groupid <- 
-    stringr::str_replace(nodes$name, "(.*?)\\s+:\\s+(.*?)$", "\\1")
-  
-  nodes$group <- 
-    nodes$groupid %>%
-    stringr::str_count("/") + 1
-  
-  nodes$group[which(nodes$groupid == "KTH")] <- 0
-  labels <- c("KTH", "School", "Department", "Division", "Research group")
-  nodes$fgroup <- ordered(as.character(nodes$group), labels = labels)
-  groups <- as.character(sort(unique(nodes$fgroup)))
-  domain <- jsonlite::toJSON(groups)
-  range <- jsonlite::toJSON(palette_kth_digital(length(groups)))
-  
-  ColourScale <- sprintf("d3.scaleOrdinal().domain(%s).range(%s);", domain, range)
-  
-  nodes$size <- 
-    nodes %>% left_join(deps, by = c(groupid = "id")) %>% 
-    pull(n_pubs) %>% recode(.missing = NA_integer_)
-  
-  fn <- forceNetwork(
-    Links = edges, Nodes = nodes, 
-    Source = "source",
-    Target = "target",
-    NodeID ="name",
-    Group = "fgroup",
-    Value = "width",
-    opacity = 0.9,
-    Nodesize = "size",
-    zoom = TRUE, legend = TRUE,
-  #  opacityNoHover = TRUE,
-    colourScale = JS(ColourScale)
-  )
-  
-  fn$x$nodes$hyperlink <- 
-    sprintf('https://www.kth.se/directory/%s', nodes$groupid)
-  fn$x$options$clickAction = 'window.open(d.hyperlink)'
-  
-  fn
-}
-
-fn <- abm_divisions_network() 
+fn <- abm_graph_divisions() 
 
 fn
 
@@ -142,15 +32,14 @@ fn
 ### Department stats
 
 ```{r}
-library(DT)
-
-datatable(data = deps %>% arrange(nd_researchers, n_pubs) %>% select(starts_with("n"), everything()))
+ds <- con_bib("sqlite") %>% tbl("division_stats") %>% collect()
+datatable(data = ds %>% arrange(nd_researchers, n_pubs) %>% select(starts_with("n"), everything()))
 ```
 
 ### Table
 
 ```{r}
 
-datatable(data = divs)
+datatable(data = abm_divisions())
 ```
 

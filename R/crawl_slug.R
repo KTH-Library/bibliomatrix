@@ -167,6 +167,7 @@ kth_catalog_crawl <- function(slug) {
 #' After crawling organizational data, this is used for displaying an 
 #' interactive graph with a force directed network of the units.
 #' 
+#' @param base_url pattern to prefigate links from nodes with in JS click action
 #' @return a force directed network object from NetworkD3
 #' @examples 
 #' \dontrun{
@@ -181,7 +182,7 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom stringr str_split_fixed str_replace str_count
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
-abm_graph_divisions <- function() {
+abm_graph_divisions <- function(base_url = "dash/") {
   
   # assemble org tree only with divisions used in ABM
   
@@ -262,10 +263,17 @@ abm_graph_divisions <- function() {
     colourScale = networkD3::JS(ColourScale)
   )
   
-  fn$x$nodes$hyperlink <- 
-    sprintf('https://www.kth.se/directory/%s', nodes$groupid)
+  # fn$x$nodes$hyperlink <- 
+  #   sprintf('https://www.kth.se/directory/%s', nodes$groupid)
+  # fn$x$options$clickAction = 'window.open(d.hyperlink)'
+
+  links <- purrr::map_chr(nodes$groupid, function(x) URLencode(x, reserved = TRUE))
+
+  fn$x$nodes$hyperlink <- sprintf('%s%s', base_url, links)
+
   fn$x$options$clickAction = 'window.open(d.hyperlink)'
   
+    
   fn
   
 }
@@ -440,7 +448,8 @@ abm_pubs_summary <- function(unit_slug) {
   pubs <- abm_unit_pubs(unit_slug)
   
   nd_researchers <- 
-    pubs %>% select(Unit_code) %>% distinct(Unit_code) %>% 
+    con_bib() %>% tbl("masterfile_researchers") %>% filter(Unit_code %in% ids) %>%
+    select(Unit_code) %>% distinct(Unit_code) %>% 
     collect() %>% nrow()
   
   n_pubs <- nrow(pubs)
@@ -471,14 +480,14 @@ abm_division_stats <- function(slugs = abm_divisions()$id) {
     stats %>% arrange(n_pubs, nd_researchers, desc(n_staff)) %>% rename(id = slug))
 }
 
-#statz <- abm_division_stats()
-#db_upsert_table("division_stats", statz)
-#pa_slugs <- c("j/jj/jjn", "j/jh/jhs")
-# con_bib() %>% tbl("division_stats") %>% 
+# statz <- abm_division_stats()
+# db_upsert_table("division_stats", statz)
+# pa_slugs <- c("j/jj/jjn", "j/jh/jhs")
+# con_bib() %>% tbl("division_stats") %>%
 #   mutate(cov = as.double(n_pubs_wos) / as.double(n_pubs)) %>%
 #   mutate(ppr = as.double(n_pubs / as.double(nd_researchers))) %>%
 #   mutate(pps = as.double(n_pubs / as.double(n_staff))) %>%
-#   arrange(desc(pps), desc(ppr), cov, n_staff, n_pubs, nd_researchers) %>% 
+#   arrange(desc(pps), desc(ppr), cov, n_staff, n_pubs, nd_researchers) %>%
 #   filter(cov > 0) %>%
 #   collect()
 # # filter(n_pubs == 0 | nd_researchers == 0) %>%

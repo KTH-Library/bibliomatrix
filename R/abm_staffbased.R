@@ -51,7 +51,7 @@ unit_staff <- function(unit_slug = NULL) {
 abm_staff_data <- function(con = con_bib(), kthids) {
   
     res <- con %>%
-      tbl("masterfile") %>%
+      tbl("masterfile_researchers") %>%
       filter(Unit_code %in% kthids)  %>% 
       rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
       collect() #%>% 

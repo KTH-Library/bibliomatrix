@@ -372,7 +372,9 @@ abm_researchers <- function(unit_slug, con) {
   t1 <- "researchers"
   
   if (t1 %in% (con %>% dbListTables())) {
-    con %>% tbl(t1) %>% 
+    con %>% tbl(t1) %>%
+      # TODO: shall we allow this (for "upper" levels, "inner nodes"):
+      #collect %>% filter(stringr::str_starts(slug, unit_slug)) %>% pull(kthid)
       filter(slug == unit_slug) %>% pull(kthid)
   } else {
     message("Please run db_sync() or use db_upload_crawl()")

@@ -168,6 +168,8 @@ kth_catalog_crawl <- function(slug) {
 #' interactive graph with a force directed network of the units.
 #' 
 #' @param base_url pattern to prefigate links from nodes with in JS click action
+#' @param use_size boolean to indicate whether to size bubbles by publication
+#' volume, default is FALSE
 #' @return a force directed network object from NetworkD3
 #' @examples 
 #' \dontrun{
@@ -182,11 +184,11 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom stringr str_split_fixed str_replace str_count
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
-abm_graph_divisions <- function(base_url = "dash/") {
+abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE) {
   
   # assemble org tree only with divisions used in ABM
   
-  root <- tibble(from = "ABM", to = NA_character_, name = "root")
+  root <- tibble(from = "KTH", to = NA_character_, name = "root")
   
   # consider only these schools
   schools <- 
@@ -198,9 +200,13 @@ abm_graph_divisions <- function(base_url = "dash/") {
     tibble(slug = schools) %>% left_join(unit_info(), by = c("slug")) %>%
     select(slug, unit_short) %>% pull(unit_short)
   
+  departments_name <- 
+    tibble(slug = abm_slugs_departments()) %>% left_join(unit_info(), by = c("slug")) %>%
+    select(slug, unit_long_en) %>% pull(unit_long_en)
+  
   # "backfill" the tree with larger org units before adding divisions/subdivisions
-  l0 <- tibble(from = schools, to = "ABM", name = schools_name)
-  l1 <- tibble(from = abm_slugs_departments(), to = schools, name = schools_name)
+  l0 <- tibble(from = schools, to = "KTH", name = schools_name)
+  l1 <- tibble(from = abm_slugs_departments(), to = schools, name = departments_name)
   d <- abm_divisions() %>% select(from = id, to = pid, name = desc)
   tree <- bind_rows(l0, l1, d)
   #eert <- tree %>% select(to, from, name)
@@ -209,7 +215,7 @@ abm_graph_divisions <- function(base_url = "dash/") {
   
   tree2 <- 
     tree %>% left_join(bind_rows(
-      tibble(id = "ABM", name = "ABM"), 
+      tibble(id = "KTH", name = "KTH"), 
       tree %>% select(id = from, name = name)), by = c(to = "id")) %>%
     rename(to_name = `name.y`, from_name = `name.x`)
   
@@ -241,14 +247,20 @@ abm_graph_divisions <- function(base_url = "dash/") {
     nodes$groupid %>%
     stringr::str_count("/") + 1
   
-  nodes$group[which(nodes$groupid == "ABM")] <- 0
-  labels <- c("ABM", "School", "Institution", "Division", "Subdivision")
+  nodes$group[which(nodes$groupid == "KTH")] <- 0
+  labels <- c("KTH", "School", "Department", "Division", "Research Group")
   nodes$fgroup <- ordered(as.character(nodes$group), labels = labels)
   groups <- as.character(sort(unique(nodes$fgroup)))
   
   domain <- jsonlite::toJSON(groups)
   range <- jsonlite::toJSON(palette_kth_digital(length(groups)))
   ColourScale <- sprintf("d3.scaleOrdinal().domain(%s).range(%s);", domain, range)
+  
+  nodes$size <- 1
+  if (use_size == TRUE) 
+    nodes$size <- 
+      nodes %>% left_join(abm_division_stats(), by = c(groupid = "id")) %>% 
+      pull(n_pubs) %>% recode(.missing = NA_integer_)
   
   fn <- networkD3::forceNetwork(
     Links = edges, Nodes = nodes, 
@@ -257,6 +269,7 @@ abm_graph_divisions <- function(base_url = "dash/") {
     NodeID ="name",
     Group = "fgroup",
     Value = "width",
+    Nodesize = "size",
     opacity = 0.9,
     zoom = TRUE, legend = TRUE,
     #  opacityNoHover = TRUE,
@@ -374,8 +387,8 @@ abm_researchers <- function(unit_slug, con) {
   if (t1 %in% (con %>% dbListTables())) {
     con %>% tbl(t1) %>%
       # TODO: shall we allow this (for "upper" levels, "inner nodes"):
-      #collect %>% filter(stringr::str_starts(slug, unit_slug)) %>% pull(kthid)
-      filter(slug == unit_slug) %>% pull(kthid)
+      collect %>% filter(stringr::str_starts(slug, unit_slug)) %>% pull(kthid)
+      #filter(slug == unit_slug) %>% pull(kthid)
   } else {
     message("Please run db_sync() or use db_upload_crawl()")
   }
@@ -495,3 +508,5 @@ abm_division_stats <- function(slugs = abm_divisions()$id) {
 # # filter(n_pubs == 0 | nd_researchers == 0) %>%
 # #  pull(slug)
 #   filter(id %in% pa_slugs)
+
+

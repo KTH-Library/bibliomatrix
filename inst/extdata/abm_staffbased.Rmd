@@ -7,13 +7,12 @@ output:
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: "j/jh/jhs"
+  unit_code: "j/jj"
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE
 ---
-  
-  
+
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(DT)
@@ -81,10 +80,14 @@ unit_level<- 2
 #}
 
 #unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
-unit_label <- abm_divisions() %>% filter(id == unit_code) %>% pull(desc)
+if (unit_code %in% unit_info()$slug) {
+  unit_label <- bibliomatrix::unit_info() %>% filter(slug == params$unit_code) %>% pull(unit_long_en)
+} else {
+  unit_label <- abm_divisions() %>% filter(id == unit_code) %>% pull(desc)
+}
+
 unit_file_label<- "Test"
 abm_unit_title<- "Test"
-
 
 
 current_date <- format(Sys.Date(), "%Y%m%d")
@@ -96,6 +99,15 @@ STATIC <- "https://kth-library.github.io/abm"
 
 ```
 
+```{r, results='asis'}
+cat(sprintf("<style>                     
+.navbar {
+  background-color:%s;
+}
+</style>", unname(bibliomatrix::palette_kth()["cerise"])
+))                  
+
+```  
 
 Overview
 ===========================

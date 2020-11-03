@@ -4,10 +4,13 @@
 \alias{abm_graph_divisions}
 \title{ABM divisions as force directed network}
 \usage{
-abm_graph_divisions(base_url = "dash/")
+abm_graph_divisions(base_url = "dash/", use_size = FALSE)
 }
 \arguments{
 \item{base_url}{pattern to prefigate links from nodes with in JS click action}
+
+\item{use_size}{boolean to indicate whether to size bubbles by publication
+volume, default is FALSE}
 }
 \value{
 a force directed network object from NetworkD3

@@ -382,6 +382,9 @@ abm_researchers <- function(unit_slug, con) {
     on.exit(DBI::dbDisconnect(con))
   }
   
+  if (missing(unit_slug))
+    unit_slug <- "*"
+  
   t1 <- "researchers"
   
   if (t1 %in% (con %>% dbListTables())) {

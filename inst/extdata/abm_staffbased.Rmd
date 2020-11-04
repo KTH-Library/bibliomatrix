@@ -4,10 +4,11 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
+    logo: beta.png
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: "j/jj"
+  unit_code: "j/jh"
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE
@@ -35,7 +36,7 @@ colors_vb <- palette_kth(4)
 
 # Dummy org data
 unit_code <- params$unit_code
-unit_members <- abm_researchers(unit_code, con = con_bib())#unit_staff(unit_slug=unit_code)
+unit_members <- abm_researchers(params$unit_code)#unit_staff(unit_slug=unit_code)
 unit_publ<- abm_staff_data(kthids=unit_members)
 
 
@@ -346,7 +347,7 @@ Row
 
 ### **Background**
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
+The bibliometric indicators referred are based on publications registered in DiVA. Only publications from currently employed researchers at KTH are included. The rolling nature of this report means that it provides more of a current overview and less of a historic stable trend, since it excludes publications written by researchers that are no longer affiliated to KTH, but have been at some point in time. 
 
 Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
 

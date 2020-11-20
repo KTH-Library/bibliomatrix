@@ -280,8 +280,9 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE) {
   #   sprintf('https://www.kth.se/directory/%s', nodes$groupid)
   # fn$x$options$clickAction = 'window.open(d.hyperlink)'
 
-  links <- purrr::map_chr(nodes$groupid, function(x) URLencode(x, reserved = TRUE))
-
+  #links <- purrr::map_chr(nodes$groupid, function(x) URLencode(x, reserved = TRUE))
+  links <- nodes$groupid
+  
   fn$x$nodes$hyperlink <- sprintf('%s%s', base_url, links)
 
   fn$x$options$clickAction = 'window.open(d.hyperlink)'

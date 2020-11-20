@@ -65,7 +65,9 @@ abm_staff_data <- function(con = con_bib(), kthids) {
     res %>% 
       inner_join(auth_count, by="PID") %>% 
       inner_join(unit_frac, by="PID") %>% 
-      distinct(PID, WebofScience_ID, .keep_all = TRUE)
+      arrange(PID, Diva_org_id) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
+      distinct(PID, WebofScience_ID, .keep_all = TRUE) %>%
+      select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
 }
 
 

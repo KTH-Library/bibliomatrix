@@ -7,10 +7,10 @@ output:
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: !r bibliomatrix:::abm_config()$default_unit
-  is_employee: FALSE
-  use_package_data: TRUE
-  embed_data: FALSE
+  unit_code: "u1f6xaea"
+  is_employee: TRUE
+  use_package_data: FALSE
+  embed_data: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -354,7 +354,6 @@ Row
 ### **Publication data**
 
 ```{r, echo=FALSE}
-
 # download button for publication list
 unit_file_label <- params$unit_code
 if (isTRUE(unit_level == 1))
@@ -457,7 +456,7 @@ if (nrow(df_diva) > 0) {
 ### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 
 ```{r, fig.width=3, fig.height=5}
-if (nrow(df_diva) > 0) {
+if (nrow(df_diva %>% filter(WoS_coverage != 0)) > 0) {
   p <- abm_graph_wos_coverage(df_diva)
   p
 } else {

@@ -8,7 +8,7 @@ output:
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: "j/jh"
+  unit_code: "s/sk"
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE

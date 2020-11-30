@@ -64,9 +64,9 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
       paste0("data:", mime::guess_type(path), ";base64,", 
              base64enc::base64encode(path))
     
-    embed_file_link <- function(path, href = embed_data(path), 
-      name = basename(path),text = paste("Download", name), ...) {
-      withTags(p(a(text, href = href, download = name, ...)))
+    embed_file_link <- function(path, .href = embed_data(path), 
+      .name = basename(path), .text = paste("Download", .name), ...) {
+      withTags(p(a(.text, href = .href, download = .name, ...)))
     }
     
     icon_download <- htmltools::tagList(htmltools::tag("i", list(class = "fa fa-download")), 

@@ -1,6 +1,6 @@
 Package: bibliomatrix
 Title: Provide Functionality for Bibliometric Analytics
-Version: 1.1
+Version: 1.2
 Authors@R: 
     as.person(c(
         "Gaël Serge Dubus <dubus@kth.se> [aut]", 
@@ -54,7 +54,7 @@ Imports:
     patchwork,
     plotrix,
     reshape2,
-    kableExtra,
+    kableExtra (== 1.1.0),
     ggiraph (>= 0.7.0),
     plotly (>= 4.9.2),
     htmltools (>= 0.4.0),
@@ -68,7 +68,10 @@ Imports:
     kthapi,
     lubridate (>= 1.7.9),
     networkD3 (>= 0.4)
-Remotes: KTH-Library/kthapi, KTH-Library/ktheme
+Remotes: 
+    KTH-Library/kthapi,
+    KTH-Library/ktheme,
+    url::https://cran.r-project.org/src/contrib/Archive/kableExtra/kableExtra_1.1.0.tar.gz
 URL: https://github.com/KTH-Library/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues
 VignetteBuilder: knitr

@@ -1,6 +1,9 @@
+# by default set skip tests to TRUE when running on Travis cloud
+skip_kthapi_tests <- TRUE
+
 test_that("fetching staff ids and corresponding pubs work", {
   
-  skip_on_travis()
+  skip_if(skip_kthapi_tests, "skipping in case we're in the cloud")
   
   # fetch the staff associated with the "c/ce" unit
   staff_cce <- unit_staff("j/jh/jhs")

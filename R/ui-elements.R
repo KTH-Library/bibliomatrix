@@ -54,7 +54,8 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @importFrom mime guess_type
 #' @importFrom writexl write_xlsx
 #' @export
-abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label) {
+abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label,
+                                  is_authorbased = FALSE) {
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
@@ -78,12 +79,23 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
     # export to xlsx format, into tempdir so we can embed a file link
     
     # data that we want to export
-    con <- pool_bib()
-    publications_kth <- abm_publications(con = con, unit_code = unit_code)
-    pool::poolClose(con)
-    
-    filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
-    excel_file <- file.path(tempdir(), filename)
+    if (!isTRUE(is_authorbased)) {
+      con <- pool_bib()
+      publications_kth <- abm_publications(con = con, unit_code = unit_code)
+      pool::poolClose(con)
+      
+      filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
+      excel_file <- file.path(tempdir(), filename)
+    } else {
+      # we have publications for a "slug"
+      con <- pool_bib()
+      # resolve the unit_code to a vector of kthids
+      publications_kth <- 
+        abm_publications_staffbased(con = con, unit_code = kthids_from_slug(unit_code)$kthid)
+      pool::poolClose(con)
+      filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
+      excel_file <- file.path(tempdir(), filename)
+    }
     
     # Create excel workbook
     writexl::write_xlsx(path = excel_file,

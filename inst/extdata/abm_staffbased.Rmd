@@ -381,7 +381,15 @@ researchers <-
 DT::datatable(researchers)
 ```
 
-
+```{r}
+abm_ui_button_publist(
+  is_loggedin = TRUE, 
+  unit_label = unit_label, 
+  unit_code = unit_code, 
+  unit_file_label,
+  is_authorbased = TRUE
+)
+```
 
 Publications in DiVA
 =====================================

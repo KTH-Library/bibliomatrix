@@ -70,6 +70,33 @@ abm_staff_data <- function(con = con_bib(), kthids) {
       select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
 }
 
+#' Retrieve publication list for staffbased ABM
+#' 
+#' @param con connection to db, default is to use mssql connection
+#' @param unit_code the kthids belonging to the analyzed unit
+#' @param analysis_start first publication year of analysis, default 2012
+#' @param analysis_stop last publication year of analysis, default 2018
+#' @return tibble with publication list data for selected unit
+#' @import DBI dplyr tidyr purrr
+#' @export
+abm_publications_staffbased <- function(con, unit_code, 
+  analysis_start = abm_config()$start_year, 
+  analysis_stop = abm_config()$stop_year) {
+  
+  # Get publication level data for selected unit
+  orgdata <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code %in% unit_code &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
+    left_join(abm_oa_data(con, unit_code), 
+              by = c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
+    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
+    mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
+    collect()
+  
+  orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
+}
 
 # Alt versions of abm_table functions
 #---------------------------------------

@@ -40,6 +40,6 @@ build_vignettes()
 
 # git revert the .gitignore to remove the "doc" line in there
 # Remember to update news.md before build_site()
-build_site()
+pkgdown::build_site()
 file.copy("doc", "inst", recursive = TRUE)
 

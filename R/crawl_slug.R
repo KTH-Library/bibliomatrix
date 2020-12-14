@@ -42,7 +42,8 @@ kthids_from_slug <- function(slug) {
   
   users %>% 
     mutate(slug = slug, kthid = ids) %>%
-    select(slug, kthid, username, title.en) %>%
+    select(slug, kthid, username, firstName, lastName, title.en) %>%
+    #select(slug, kthid, username, title.en) %>%
     mutate(crawl_ts = lubridate::now())
   
 }
@@ -359,7 +360,7 @@ db_upload_crawl <- function(con = con_bib(), crawl = FALSE) {
 #' @importFrom DBI dbExistsTable dbRemoveTable dbWriteTable
 db_upsert_table <- function(tbl, df, con = con_bib()) {
   if (DBI::dbExistsTable(con, tbl)) DBI::dbRemoveTable(con, tbl)
-  con %>% DBI::dbWriteTable(tbl, df)
+  con %>% DBI::dbWriteTable(tbl, df) #, append = TRUE)
 }
 
 #' Researchers used in ABM

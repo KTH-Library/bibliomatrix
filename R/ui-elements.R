@@ -50,6 +50,8 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @param unit_label the label for the organizational unit
 #' @param unit_code the unit code for the organizational unit
 #' @param unit_file_label the label for the download
+#' @param is_authorbased indicates if the button is used for author based
+#'   data, default: FALSE
 #' @import htmltools flexdashboard
 #' @importFrom mime guess_type
 #' @importFrom writexl write_xlsx

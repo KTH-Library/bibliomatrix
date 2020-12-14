@@ -20,6 +20,9 @@ abm_ui_button_publist(
 \item{unit_code}{the unit code for the organizational unit}
 
 \item{unit_file_label}{the label for the download}
+
+\item{is_authorbased}{indicates if the button is used for author based
+data, default: FALSE}
 }
 \description{
 Link to Publication List download for KTH

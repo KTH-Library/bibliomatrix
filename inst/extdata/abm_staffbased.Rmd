@@ -376,7 +376,8 @@ Row
 
 researchers <- 
   con_bib() %>% tbl("researchers") %>% 
-  filter(slug == unit_code) %>% select(Username = username, Title = `title.en`) %>% collect()
+  filter(kthid %in% unit_members) %>% distinct() %>%
+  select(Username = username, Title = `title.en`) %>% collect()
 
 DT::datatable(researchers)
 ```

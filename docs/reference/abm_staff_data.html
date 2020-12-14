@@ -135,7 +135,12 @@
     <p>Get publications from members of unit via kthids</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_staff_data</span><span class='op'>(</span>con <span class='op'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>kthids</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_staff_data</span><span class='op'>(</span>
+  con <span class='op'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='va'>kthids</span>,
+  analysis_start <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>start_year</span>,
+  analysis_stop <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>stop_year</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,6 +152,14 @@
     <tr>
       <th>kthids</th>
       <td><p>a list of KTH-ids to retrieve publications for</p></td>
+    </tr>
+    <tr>
+      <th>analysis_start</th>
+      <td><p>first publication year of analysis</p></td>
+    </tr>
+    <tr>
+      <th>analysis_stop</th>
+      <td><p>last publication year of analysis</p></td>
     </tr>
     </table>
 

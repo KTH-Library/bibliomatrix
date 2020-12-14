@@ -4,12 +4,21 @@
 \alias{abm_staff_data}
 \title{Get publications from members of unit via kthids}
 \usage{
-abm_staff_data(con = con_bib(), kthids)
+abm_staff_data(
+  con = con_bib(),
+  kthids,
+  analysis_start = abm_config()$start_year,
+  analysis_stop = abm_config()$stop_year
+)
 }
 \arguments{
 \item{con}{A database connection}
 
 \item{kthids}{a list of KTH-ids to retrieve publications for}
+
+\item{analysis_start}{first publication year of analysis}
+
+\item{analysis_stop}{last publication year of analysis}
 }
 \value{
 tibble with all staff-based ABM data for selected organizational unit

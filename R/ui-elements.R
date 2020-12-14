@@ -91,9 +91,13 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
     } else {
       # we have publications for a "slug"
       con <- pool_bib()
-      # resolve the unit_code to a vector of kthids
+      
       publications_kth <- 
-        abm_publications_staffbased(con = con, unit_code = kthids_from_slug(unit_code)$kthid)
+        abm_publications_staffbased(con = con, unit_code = unit_code) %>%
+        mutate(Unit_code = unit_code) %>%
+        mutate(Unit_Name = unit_label) %>%
+        select(Unit_Name, Unit_code, everything())
+      
       pool::poolClose(con)
       filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
       excel_file <- file.path(tempdir(), filename)

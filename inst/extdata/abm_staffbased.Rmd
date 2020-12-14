@@ -11,7 +11,7 @@ params:
   unit_code: "s/sk"
   is_employee: FALSE
   use_package_data: TRUE
-  embed_data: FALSE
+  embed_data: TRUE
 ---
 
 ```{r setup, include=FALSE}
@@ -87,13 +87,9 @@ if (unit_code %in% unit_info()$slug) {
   unit_label <- abm_divisions() %>% filter(id == unit_code) %>% pull(desc)
 }
 
-unit_file_label<- "Test"
-abm_unit_title<- "Test"
-
-
+unit_file_label<- gsub("/", "_", params$unit_code)
 current_date <- format(Sys.Date(), "%Y%m%d")
-
-#abm_unit_title<- paste0("ABM: ",unit_label)
+abm_unit_title<- paste0("ABM: ",unit_label)
 
 # TODO: change to suitable location for static PDF assets (or other non-HTML resources)
 STATIC <- "https://kth-library.github.io/abm"
@@ -370,26 +366,40 @@ wos_attribution()
 Row
 --------------------------------
 
-### **Researchers at the division**
+### **Researchers at the unit**
+
+```{r}
+abm_ui_button_publist(
+  is_loggedin = params$embed_data, 
+  unit_label = unit_label, 
+  unit_code = unit_code, 
+  unit_file_label = unit_file_label,
+  is_authorbased = TRUE
+)
+```
 
 ```{r}
 
 researchers <- 
   con_bib() %>% tbl("researchers") %>% 
-  filter(kthid %in% unit_members) %>% distinct() %>%
+  collect() %>%
+  filter(stringr::str_starts(slug, params$unit_code)) %>%
+  distinct() %>%
   select(Username = username, Title = `title.en`) %>% collect()
 
-DT::datatable(researchers)
-```
+DT::datatable(researchers,
+  rownames = FALSE,
+  extensions = "Buttons",
+  options = list(
+    ordering = FALSE,
+    bPaginate = TRUE,
+    dom = 'tBp',
+    buttons = list(
+      list(extend = "copy", title = abm_unit_title),
+      list(extend = "csv", filename = unit_file_label, title = abm_unit_title),
+      list(extend = "excel", filename = unit_file_label, title = abm_unit_title))
+    ))
 
-```{r}
-abm_ui_button_publist(
-  is_loggedin = TRUE, 
-  unit_label = unit_label, 
-  unit_code = unit_code, 
-  unit_file_label,
-  is_authorbased = TRUE
-)
 ```
 
 Publications in DiVA

@@ -46,9 +46,13 @@ unit_staff <- function(unit_slug = NULL) {
 #' 
 #' @param con A database connection
 #' @param kthids a list of KTH-ids to retrieve publications for
+#' @param analysis_start first publication year of analysis
+#' @param analysis_stop last publication year of analysis
 #' @return tibble with all staff-based ABM data for selected organizational unit
 #' @export
-abm_staff_data <- function(con = con_bib(), kthids) {
+abm_staff_data <- function(con = con_bib(), kthids,
+  analysis_start = abm_config()$start_year, 
+  analysis_stop = abm_config()$stop_year) {
   
     res <- con %>%
       tbl("masterfile_researchers") %>%
@@ -83,19 +87,14 @@ abm_publications_staffbased <- function(con, unit_code,
   analysis_start = abm_config()$start_year, 
   analysis_stop = abm_config()$stop_year) {
   
-  # Get publication level data for selected unit
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code %in% unit_code &
-             Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop) %>%
-    left_join(abm_oa_data(con, unit_code), 
-              by = c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
-    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
-    mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
-    collect()
+  abm_staff_data(kthids = abm_researchers(unit_code), 
+    analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
+    filter(Diva_org_id == 177) %>%
+    # copy = TRUE is used to inner_join local and remote table
+    left_join(con %>% tbl("oa_status_new") %>% select(PID, oa_status, DOI), 
+              by = "PID", copy = TRUE) %>%
+    arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
   
-  orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
 
 # Alt versions of abm_table functions

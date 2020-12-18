@@ -2,7 +2,7 @@
 title: "Introduction to usage of `bibliomatrix`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{intro}
+  %\VignetteIndexEntry{Introduction to usage of `bibliomatrix`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

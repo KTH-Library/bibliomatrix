@@ -4,7 +4,13 @@
 \alias{abm_ui_button_publist}
 \title{Link to Publication List download for KTH}
 \usage{
-abm_ui_button_publist(is_loggedin, unit_label, unit_code, unit_file_label)
+abm_ui_button_publist(
+  is_loggedin,
+  unit_label,
+  unit_code,
+  unit_file_label,
+  is_authorbased = FALSE
+)
 }
 \arguments{
 \item{is_loggedin}{boolean parameter indicating logged in status}
@@ -14,6 +20,9 @@ abm_ui_button_publist(is_loggedin, unit_label, unit_code, unit_file_label)
 \item{unit_code}{the unit code for the organizational unit}
 
 \item{unit_file_label}{the label for the download}
+
+\item{is_authorbased}{indicates if the button is used for author based
+data, default: FALSE}
 }
 \description{
 Link to Publication List download for KTH

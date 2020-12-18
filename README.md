@@ -7,6 +7,8 @@
 
 [![Travis build
 status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
+[![R build
+status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
 <!-- badges: end -->
 
 The goal of bibliomatrix is to provide a common set of functionality for
@@ -51,7 +53,7 @@ library(dplyr)
 abm_public_kth$meta %>%
   select(unit_code, unit_long_en) %>%
   head() %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
 | unit\_code | unit\_long\_en                                         |
@@ -70,7 +72,7 @@ abm_public_kth$meta %>%
 abm_public_kth$meta %>%
   filter(org_level == 1) %>%
   select(Diva_org_id, unit_code, unit_short, unit_long_en) %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
 | Diva\_org\_id | unit\_code | unit\_short | unit\_long\_en                                                              |
@@ -90,22 +92,22 @@ kth_abm_tables <- abm_public_kth$units$KTH
 kth_abm_tables[[1]] %>%
   select(Publication_Type_DiVA, P_frac, WoS_coverage) %>%
   filter(P_frac > 50) %>%
-  knitr::kable()
+  knitr::kable(format = "pipe")
 ```
 
-| Publication\_Type\_DiVA       |    P\_frac | WoS\_coverage |
-| :---------------------------- | ---------: | ------------: |
-| Article, peer review          | 10309.3983 |     0.8610068 |
-| Article, other                |   724.5560 |     0.8005819 |
-| Conference paper, peer review |  5624.8291 |     0.4847714 |
-| Conference paper, other       |  1752.4534 |     0.0218999 |
-| Book                          |   101.6951 |     0.0211416 |
-| Anthology (editor)            |    61.1000 |     0.0000000 |
-| Chapter in book               |   905.2467 |     0.0404047 |
-| Article, book review          |    95.1000 |     0.5899054 |
-| Report                        |   623.1819 |     0.0000000 |
-| Doctorate thesis              |  1976.0000 |     0.0000000 |
-| Licentiate thesis             |   749.0000 |     0.0000000 |
+| Publication\_Type\_DiVA       |     P\_frac | WoS\_coverage |
+| :---------------------------- | ----------: | ------------: |
+| Article, peer review          | 10330.64910 |     0.8814042 |
+| Article, other                |   743.83892 |     0.8160024 |
+| Conference paper, peer review |  5631.67421 |     0.5829022 |
+| Conference paper, other       |  1758.63001 |     0.0294805 |
+| Book                          |   100.54508 |     0.0000000 |
+| Anthology (editor)            |    61.76667 |     0.0000000 |
+| Chapter in book               |   927.51339 |     0.0460833 |
+| Article, book review          |    97.10000 |     0.5880536 |
+| Report                        |   643.56521 |     0.0000000 |
+| Doctorate thesis              |  1976.00000 |     0.0000000 |
+| Licentiate thesis             |   749.00000 |     0.0000000 |
 
 ## Development
 

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Retrieve publication list for ABM — abm_publications • bibliomatrix</title>
+<title>abm_slugs_institutions — abm_slugs_institutions • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -35,8 +35,8 @@
 
 
 
-<meta property="og:title" content="Retrieve publication list for ABM — abm_publications" />
-<meta property="og:description" content="Retrieve publication list for ABM" />
+<meta property="og:title" content="abm_slugs_institutions — abm_slugs_institutions" />
+<meta property="og:description" content="Slugs or identifiers for institutions at KTH used in ABM" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -69,7 +69,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -94,7 +94,13 @@
     <li>
       <a href="../articles/intro.html">Introduction to usage of `bibliomatrix`</a>
     </li>
+    <li>
+      <a href="../articles/public-data.html">Using bundled data in `bibliomatrix`</a>
+    </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -117,50 +123,34 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Retrieve publication list for ABM</h1>
-    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/abm.R'><code>R/abm.R</code></a></small>
-    <div class="hidden name"><code>abm_publications.Rd</code></div>
+    <h1>abm_slugs_institutions</h1>
+    <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/crawl_slug.R'><code>R/crawl_slug.R</code></a></small>
+    <div class="hidden name"><code>abm_slugs_institutions.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieve publication list for ABM</p>
+    <p>Slugs or identifiers for institutions at KTH used in ABM</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_publications</span>(<span class='kw'>con</span> <span class='kw'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span>(), <span class='no'>unit_code</span>, <span class='no'>pub_year</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_slugs_institutions</span>()</pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>con</th>
-      <td><p>connection to db, default is to use mssql connection</p></td>
-    </tr>
-    <tr>
-      <th>unit_code</th>
-      <td><p>the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)</p></td>
-    </tr>
-    <tr>
-      <th>pub_year</th>
-      <td><p>publication year(s) to analyze (optional, assuming master table holds only relevant years)</p></td>
-    </tr>
-    </table>
 
-<<<<<<< HEAD
-=======
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with publication list data for selected unit</p>
->>>>>>> 553bca023e19dad8a7e2b6f880f60393f5dba249
+    <p>character vector of slugs</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>if</span>(<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()){
+ <span class='no'>slugs</span> <span class='kw'>&lt;-</span> <span class='fu'>abm_slugs_institutions</span>()
+ }
+}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-<<<<<<< HEAD
-=======
       <li><a href="#value">Value</a></li>
->>>>>>> 553bca023e19dad8a7e2b6f880f60393f5dba249
+      <li><a href="#examples">Examples</a></li>
     </ul>
 
   </div>
@@ -169,7 +159,7 @@
 
       <footer>
       <div class="copyright">
-  <p>Developed by Gaël Serge Dubus, Tobias Jeppson, Agne Larsson, David Minguillo, Markus Skyttner.</p>
+  <p>Developed by Gaël Serge Dubus, Tobias Jeppsson, Agne Larsson, David Minguillo, Markus Skyttner.</p>
 </div>
 
 <div class="pkgdown">

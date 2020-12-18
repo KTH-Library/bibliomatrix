@@ -135,15 +135,15 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
     orgdata %>%
     group_by(Publication_Year) %>%
     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
-              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
-              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     ungroup() %>%
     collect() %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     arrange(Publication_Year_ch) %>% 
-    select(Publication_Year_ch, P_frac, C3_frac, C3, P_uncited, Share_uncited)
+    select(Publication_Year_ch, P_frac, C3, C3_frac, P_uncited, Share_uncited)
   
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -153,8 +153,8 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   table2 <-
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
-              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
-              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     mutate(Publication_Year_ch = "Total") %>%

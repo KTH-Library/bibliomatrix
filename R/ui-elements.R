@@ -50,11 +50,14 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @param unit_label the label for the organizational unit
 #' @param unit_code the unit code for the organizational unit
 #' @param unit_file_label the label for the download
+#' @param is_authorbased indicates if the button is used for author based
+#'   data, default: FALSE
 #' @import htmltools flexdashboard
 #' @importFrom mime guess_type
 #' @importFrom writexl write_xlsx
 #' @export
-abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label) {
+abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label,
+                                  is_authorbased = FALSE) {
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
@@ -64,9 +67,9 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
       paste0("data:", mime::guess_type(path), ";base64,", 
              base64enc::base64encode(path))
     
-    embed_file_link <- function(path, href = embed_data(path), 
-      name = basename(path),text = paste("Download", name), ...) {
-      withTags(p(a(text, href = href, download = name, ...)))
+    embed_file_link <- function(path, .href = embed_data(path), 
+      .name = basename(path), .text = paste("Download", .name), ...) {
+      withTags(p(a(.text, href = .href, download = .name, ...)))
     }
     
     icon_download <- htmltools::tagList(htmltools::tag("i", list(class = "fa fa-download")), 
@@ -78,12 +81,27 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
     # export to xlsx format, into tempdir so we can embed a file link
     
     # data that we want to export
-    con <- pool_bib()
-    publications_kth <- abm_publications(con = con, unit_code = unit_code)
-    pool::poolClose(con)
-    
-    filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
-    excel_file <- file.path(tempdir(), filename)
+    if (!isTRUE(is_authorbased)) {
+      con <- pool_bib()
+      publications_kth <- abm_publications(con = con, unit_code = unit_code)
+      pool::poolClose(con)
+      
+      filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
+      excel_file <- file.path(tempdir(), filename)
+    } else {
+      # we have publications for a "slug"
+      con <- pool_bib()
+      
+      publications_kth <- 
+        abm_publications_staffbased(con = con, unit_code = unit_code) %>%
+        mutate(Unit_code = unit_code) %>%
+        mutate(Unit_Name = unit_label) %>%
+        select(Unit_Name, Unit_code, everything())
+      
+      pool::poolClose(con)
+      filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
+      excel_file <- file.path(tempdir(), filename)
+    }
     
     # Create excel workbook
     writexl::write_xlsx(path = excel_file,
@@ -234,8 +252,8 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
           list(extend = "csv", filename = filename, title = unit_title),
           list(extend = "excel", filename = filename, title = unit_title))
         )) %>%
-      DT::formatRound(2:9, digits = 1, mark = "") %>%
-      DT::formatPercentage(10, digits = 1) %>%
+      DT::formatRound(2:(length(df_diva)-1), digits = 1, mark = "") %>%
+      DT::formatPercentage(length(df_diva), digits = 1) %>%
       abm_format_rows() %>%
       abm_format_columns_divatable("P_frac", has_left_border = TRUE) %>%
       abm_format_columns_divatable("WoS_coverage", has_left_border = FALSE)

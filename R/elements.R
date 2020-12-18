@@ -26,7 +26,7 @@ wos_attribution <- function(year){
 #' @export
 wos_disclaimer <- function(derived_product = "ABM",
                            derived_product_long = "KTH Annual Bibliometric Monitoring",
-                           bibliometric_partner = "KTH Royal School of Technology",
+                           bibliometric_partner = "KTH Royal Institute of Technology",
                            firstyear = abm_config()$start_year,
                            lastyear = abm_config()$stop_year){
   if (firstyear == lastyear){
@@ -82,8 +82,10 @@ wos_disclaimer <- function(derived_product = "ABM",
 #' @return a string with coverage level based on given coverage
 #' @export
 coveragetext <- function(woscoverage){
+  # TODO: should we return strings even for division by zero etc?
   if(woscoverage < 0 | woscoverage > 1)
-    stop("Invalid woscoverage, please give a number in the interval [0,1]")
+    ret <- "NA"
+    #ret <- "Invalid woscoverage, please give a number in the interval [0,1]"
   if(woscoverage >= 0.75)
     ret <- "good"
   if(woscoverage < 0.75 & woscoverage >= 0.6)

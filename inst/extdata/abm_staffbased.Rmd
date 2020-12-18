@@ -1,0 +1,879 @@
+---
+title: "Rolling ABM"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    logo: beta.png
+    favicon: kth-logo.png
+    fig_mobile: FALSE
+params:
+  unit_code: "s/sk"
+  is_employee: FALSE
+  use_package_data: TRUE
+  embed_data: TRUE
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(DT)
+library(readr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(bibliomatrix)
+library(tidyr)
+library(scales)
+#library(plotly)
+library(kableExtra)
+library(glue)
+library(extrafont)
+
+colors_vb <- palette_kth(4)
+
+# Retrieve result tables to use in tabs and key indicators
+
+# Dummy org data
+unit_code <- params$unit_code
+unit_members <- abm_researchers(params$unit_code)#unit_staff(unit_slug=unit_code)
+unit_publ<- abm_staff_data(kthids=unit_members)
+
+
+#if (params$use_package_data != TRUE) {
+  con <- pool_bib()
+  df_diva <- abm_table1_alt(con = con, data=unit_publ) 
+  df_cit3y <- abm_table2_alt(con = con, data=unit_publ)
+  df_cf <- abm_table3_alt(con = con, data=unit_publ)
+  df_jcf <- abm_table4_alt(con = con, data=unit_publ)
+  df_copub <- abm_table5_alt(con = con, data=unit_publ)
+  df_woscov <- abm_woscoverage_alt(con = con, data=unit_publ)
+  df_oa <- abm_table6_alt(con = con, data=unit_publ)
+#  unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
+  pool::poolClose(con)
+#} else {
+#  df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
+#  df_cit3y <- pluck(abm_public_kth$units, params$unit_code, 2)
+#  df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
+#  df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
+#  df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
+#  df_oa <- pluck(abm_public_kth$units, params$unit_code, "oa")
+#  df_woscov <- pluck(abm_public_kth$units, params$unit_code, "coverage")
+#  unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
+#}
+
+unit_level<- 2
+#unit_level <- abm_public_kth$meta %>% 
+#  filter(unit_code == params$unit_code) %>%
+#  pull(org_level)
+
+#if(isTRUE(unit_level >= 0)){
+#  
+#  unit_label <- 
+#    abm_public_kth$meta %>% 
+#    filter(unit_code == params$unit_code) %>%
+#    pull(unit_long_en)
+#  
+#} else {
+  
+#  unit_label <- 
+#    ad_displayname2(kthid = params$unit_code)
+#}
+
+#unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
+if (unit_code %in% unit_info()$slug) {
+  unit_label <- bibliomatrix::unit_info() %>% filter(slug == params$unit_code) %>% pull(unit_long_en)
+} else {
+  unit_label <- abm_divisions() %>% filter(id == unit_code) %>% pull(desc)
+}
+
+unit_file_label<- gsub("/", "_", params$unit_code)
+current_date <- format(Sys.Date(), "%Y%m%d")
+abm_unit_title<- paste0("ABM: ",unit_label)
+
+# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
+STATIC <- "https://kth-library.github.io/abm"
+
+```
+
+```{r, results='asis'}
+cat(sprintf("<style>                     
+.navbar {
+  background-color:%s;
+}
+</style>", unname(bibliomatrix::palette_kth()["cerise"])
+))                  
+
+```  
+
+Overview
+===========================
+
+#### `r unit_label`
+
+Row  {data-height=240}
+---------------------
+
+```{r}
+yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva))
+firstyear <- min(names(df_diva[yrfields]))
+lastyear <- max(names(df_diva[yrfields]))
+```
+
+### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
+
+```{r, fig.width = 2.75, fig.height = 2}
+if (nrow(df_diva) > 0) {
+  
+  total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
+  
+  vb1 <- valueBox(
+    value = round(total_pubs, 1),
+    color = colors_vb["cerise"],
+    icon = "fa-chart-bar",
+    href = "#publications-in-diva")
+  
+  vb1
+} else {
+  shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+}
+
+```
+
+### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
+
+```{r, fig.width = 2.75, fig.height = 2}
+if (nrow(df_woscov %>% filter(Publication_Type == "Peer reviewed")) > 0) {
+  
+  totcov <- df_woscov %>% 
+    filter(Publication_Type == "Peer reviewed") %>% 
+    summarise(woscov = sum(sumcov_frac) / sum(p_frac)) %>% 
+    pull(woscov)
+  
+  vb2 <- valueBox(
+    value = paste(100*round(totcov, 3), "%"),
+    color = colors_vb["cerise"],
+    icon = "fa-percent",
+    href = "#publications-in-diva")
+  
+  vb2
+} else {
+  shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+}
+
+```
+```{r}
+has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
+last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
+
+```
+
+### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile}
+
+```{r, fig.width = 3.75, fig.height = 2}
+library(patchwork)
+
+if (has_rows == TRUE) {
+  
+  cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
+  
+  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", 
+    value = cf, reference = 1.0, roundto = 2) #+ 
+    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
+    # ggplot2::theme(plot.margin = margin(0, 0, 10, 0)) +
+    # ggplot2::theme(
+    #   axis.title.x = element_blank(),
+    #   axis.line.y = element_blank(),
+    #   axis.text.y = element_blank(),
+    #   axis.ticks.y = element_blank(),
+    #   axis.title.y = element_blank(),
+    #   panel.grid.major.y = element_blank(),
+    #   panel.grid.minor = element_blank()
+    # )
+  
+  top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
+  
+  pub_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+    value = top10_share, reference = 0.10, pct = TRUE) #+ 
+    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
+    # ggplot2::theme(plot.margin = margin(0, 0, 0, 0)) +
+    # ggplot2::theme(
+    #   axis.title.x = element_blank(),
+    #   axis.line.y = element_blank(),
+    #   axis.text.y = element_blank(),
+    #   axis.ticks.y = element_blank(),
+    #   axis.title.y = element_blank(),
+    #   panel.grid.major.y = element_blank(),
+    #   panel.grid.minor = element_blank()
+    # )
+  
+  bullets <- pub_bullet1 / pub_bullet2
+  
+  #bullets <- plotly::subplot(pub_bullet1, pub_bullet2, nrows = 2)
+  
+  bullets
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile}
+
+```{r, fig.width=3.75, fig.height = 2}
+if (has_rows == TRUE){
+   bullets
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+```{r}
+
+has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
+last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
+
+```
+### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .no-mobile}
+
+```{r, fig.width=3.75, fig.height = 2} 
+if (has_rows == TRUE) {
+  
+  jcf <- df_jcf %>% filter(interval == last_interval) %>% pull(jcf) %>% as.numeric()
+  
+  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", 
+    value = jcf, reference = 1.0, roundto = 2)
+
+  top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
+  
+  jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, 
+    reference = 0.20, pct = TRUE)
+  
+  bullets <- jour_bullet1 / jour_bullet2
+  #bullets <- subplot(jour_bullet1, jour_bullet2, nrows = 2)
+  
+  bullets
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+
+```
+
+### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .mobile}
+
+```{r, fig.width=3.75, fig.height = 2}
+if (has_rows == TRUE){
+  bullets
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+```{r}
+has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
+last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
+```
+
+### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
+```{r, fig.width=2.75, fig.height = 2}
+
+if (has_rows == TRUE) {
+  
+  nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
+  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
+  waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+
+  int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
+  int_lbl <- sprintf("International: %d%%", round(100*int_share))
+  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+
+  waffles <- waffle1 / waffle2
+#  waffles <- subplot(waffle1, waffle2, nrows = 2)
+  waffles
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile}
+
+```{r, fig.width=2.75, fig.height = 2}
+if (has_rows == TRUE) {
+  waffles
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+Row
+--------------------------------
+
+
+
+```{r}
+# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
+STATIC <- "https://kth-library.github.io/abm"
+```
+
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
+
+if(isTRUE(unit_level >= 0)){
+
+  #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
+  glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
+       "{coveragetext(totcov)}, {100*round(totcov, 3)}%.</span></p>")
+
+} else {
+
+  cat("<p><b>Bibliometric results for individual researchers should always be interpreted with caution. </b></br/>
+      Bibliometric indicators work best at an aggregated level, and at the individual level 
+      the publication profile of researchers, their collaboration networks and their subject specialization may 
+      interact with e.g. the field-normalization of citation indicators. The relatively low publication volume of 
+      individuals also makes indicator averages very unreliable. </p>")
+
+}
+```
+
+Row
+--------------------------------
+
+### **Background**
+
+The bibliometric indicators referred are based on publications registered in DiVA. Only publications from currently employed researchers at KTH are included. The rolling nature of this report means that it provides more of a current overview and less of a historic stable trend, since it excludes publications written by researchers that are no longer affiliated to KTH, but have been at some point in time. 
+
+Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
+
+### **Further information**
+
+- [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
+- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
+- [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
+- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
+- [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
+
+For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
+
+### **Attributions**
+
+```{r, echo=FALSE, results="asis"}
+wos_attribution()
+```
+
+Row
+--------------------------------
+
+### **Researchers at the unit**
+
+```{r}
+abm_ui_button_publist(
+  is_loggedin = params$embed_data, 
+  unit_label = unit_label, 
+  unit_code = unit_code, 
+  unit_file_label = unit_file_label,
+  is_authorbased = TRUE
+)
+```
+
+```{r}
+
+researchers <- 
+  con_bib() %>% tbl("researchers") %>% 
+  collect() %>%
+  filter(stringr::str_starts(slug, params$unit_code)) %>%
+  distinct() %>%
+  select(Username = username, Title = `title.en`) %>% collect()
+
+DT::datatable(researchers,
+  rownames = FALSE,
+  extensions = "Buttons",
+  options = list(
+    ordering = FALSE,
+    bPaginate = TRUE,
+    dom = 'tBp',
+    buttons = list(
+      list(extend = "copy", title = abm_unit_title),
+      list(extend = "csv", filename = unit_file_label, title = abm_unit_title),
+      list(extend = "excel", filename = unit_file_label, title = abm_unit_title))
+    ))
+
+```
+
+Publications in DiVA
+=====================================
+  
+#### `r unit_label`
+  
+Row
+---------------------
+  
+### **Publication volume, fractionalized** {.no-padding .no-mobile}
+  
+<!-- <div style='width:720px;margin:auto'> -->
+  
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+  
+```{r, fig.width=3.75}
+
+abm_ui_datatable_diva(
+  df_diva, 
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+
+```
+<!-- </div> -->
+  
+### **Publication volume, fractionalized** {.no-padding .mobile}
+  
+```{r, fig.width=3.75}
+abm_ui_kable_diva(df_diva)
+```
+
+
+Row
+---------------------
+  
+### **Publication volume** {.no-padding .no-mobile}
+  
+```{r, fig.width=8, fig.height=5}
+if (nrow(df_diva) > 0) {
+  p <- abm_graph_diva(df_diva)
+  p
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Publication volume** {.no-padding .mobile}
+
+```{r, fig.width=8, fig.height = 5}
+if (nrow(df_diva) > 0) {
+  p
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+``` 
+
+### **Web of Science coverage by publication type** {.no-padding .no-mobile}
+
+```{r, fig.width=3, fig.height=5}
+if (nrow(df_diva) > 0) {
+  p <- abm_graph_wos_coverage(df_diva)
+  p
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Web of Science coverage by publication type** {.no-padding .mobile}
+
+```{r, fig.width=3, fig.height=5}
+if (nrow(df_diva) > 0) {
+  p
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+Citation impact
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Citations 3-year window, fractional counts** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+```{r}
+abm_ui_datatable_city3y(
+  df_cit3y, 
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Citations 3-year window, fractional counts** {.mobile}
+
+```{r}
+abm_ui_kable_cit3y(df_cit3y)
+```
+
+### **Field normalized citations, fractionalized (3-year moving average)** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+
+```{r}
+abm_ui_datatable_cf(
+  df_cf,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Field normalized citations, fractionalized (3-year moving average)** {.no-padding .mobile}
+
+```{r}
+abm_ui_kable_cf(df_cf)
+```
+
+
+Row
+--------------------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  years <- df_cit3y %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  mincov <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(woscov_frac) %>% min()
+  minpubs <- df_woscov %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumcov_full) %>% min()
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+
+
+```
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  intervals <- df_cf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_cf <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_cf <- woscov_cf %>%
+    inner_join(sliding_intervals(min(woscov_cf$Publication_Year), max(woscov_cf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>%
+    summarise(woscov_frac = sum(sumcov_frac) / sum(p_frac),
+              sumcov_full = sum(sumcov_full))
+
+  mincov <- min(woscov_cf$woscov_frac)
+  minpubs <- min(woscov_cf$sumcov_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
+
+Row
+---------------------
+
+### **Average field normalized citations (Cf)**
+
+```{r}
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  abm_graph_cf(df_cf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+### **Share of publications among Top 10% cited**
+
+```{r}
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  abm_graph_top10(df_cf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+Journal impact
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+
+```{r}
+abm_ui_datatable_jcf(
+  df_jcf,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Journal impact, fractionalized (3-year moving average)** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+abm_ui_kable_jcf(df_jcf)
+```
+
+Row
+-----------------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+  intervals <- df_jcf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_jcf <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_jcf <- woscov_jcf %>%
+    inner_join(sliding_intervals(min(woscov_jcf$Publication_Year), max(woscov_jcf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>%
+    summarise(woscov_frac = sum(sumcov_frac) / sum(p_frac),
+              sumcov_full = sum(sumcov_full))
+
+  mincov <- min(woscov_jcf$woscov_frac)
+  minpubs <- min(woscov_jcf$sumcov_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
+
+Row
+---------------------
+
+### **Field normalized journal impact (JCf)**
+
+```{r}
+if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_jcf(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+### **Share of publications in Top 20% journals**
+
+```{r}
+if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_top20(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+
+Co&#8209;publishing
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+
+```{r}
+abm_ui_datatable_copub(
+  df_copub,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+abm_ui_kable_copub(df_copub)
+```
+
+Row
+-----------------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Web of Science publication types Article and Review.<br>")
+
+if(isTRUE(unit_level >= 0)){
+  intervals <- df_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  woscov_copub <- df_woscov %>%
+    filter(Publication_Type == "Article, peer review")
+  woscov_copub <- woscov_copub %>%
+    inner_join(sliding_intervals(min(woscov_copub$Publication_Year), max(woscov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>%
+    summarise(woscov_full = sum(sumcov_full) / sum(p_full))
+
+  mincov <- min(woscov_copub$woscov_full)
+  minpubs <- min(df_copub$P_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication type Article, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
+```
+
+Row
+-------
+### **International and Swedish non-university co&#8209;publication**
+```{r, fig.width=6, fig.height=4}
+if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+  abm_graph_copub(df_copub)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+Open Access
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Open Access publications, full counts** {.no-mobile}
+<!-- The DT table headers may have a right alignment issue due to some whitespace issue artifact from disabled sorting? -->
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+.table th {
+  text-align: right;
+}
+</style>
+
+```{r}
+abm_ui_datatable_oa(
+  df_oa,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+
+```
+
+### **Open Access publications, full counts** {.no-padding .mobile}
+
+```{r, fig.width=3.75}
+abm_ui_kable_oa(df_oa)
+```
+
+
+Row
+-------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
+
+In summary, the different OA types can be described as follows:
+
+- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
+
+- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
+
+- *Green:* The full text has been found in an institutional repository, such as DiVA.
+
+- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
+
+
+**N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
+
+
+Row
+-------
+
+### **Overview of Open Access publications - piechart** 
+
+```{r, fig.width=8}
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Stacked area chart for publications**
+
+```{r, fig.width=5}
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```

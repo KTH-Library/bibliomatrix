@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
       </span>
     </div>
 
@@ -135,7 +135,13 @@
     <p>Link to Publication List download for KTH</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_ui_button_publist</span>(<span class='no'>is_loggedin</span>, <span class='no'>unit_label</span>, <span class='no'>unit_code</span>, <span class='no'>unit_file_label</span>)</pre>
+    <pre class="usage"><span class='fu'>abm_ui_button_publist</span><span class='op'>(</span>
+  <span class='va'>is_loggedin</span>,
+  <span class='va'>unit_label</span>,
+  <span class='va'>unit_code</span>,
+  <span class='va'>unit_file_label</span>,
+  is_authorbased <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,6 +162,11 @@
       <th>unit_file_label</th>
       <td><p>the label for the download</p></td>
     </tr>
+    <tr>
+      <th>is_authorbased</th>
+      <td><p>indicates if the button is used for author based
+data, default: FALSE</p></td>
+    </tr>
     </table>
 
 
@@ -174,7 +185,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

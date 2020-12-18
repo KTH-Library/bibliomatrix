@@ -19,6 +19,7 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
     df %>% 
     filter(Publication_Year_ch == "Total") %>%
     select(-"oa_count" & ends_with("count")) %>% 
+    select_if(colSums(.) != 0) %>%
     pivot_longer(cols = ends_with("_count"), names_to = "group", names_pattern = "(.*?)_count", values_to = "count") %>%
     mutate(value = 100 * count / sum(count, na.rm = TRUE)) %>%
     mutate(group = tools::toTitleCase(group))  %>%
@@ -47,7 +48,7 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
     pie <- 
       ggplot(t1, aes (x="", y = value, fill = factor(group), group = factor(group))) + 
       scale_fill_manual(values = unpaywall) +
-      geom_col(position = 'stack', width = 1, color = "white") +
+      geom_col(position = 'stack', color = "white") +
       geom_text(aes(label = perc_text, x = 1), color = "white",
                 position = position_stack(vjust = 0.5)) +
       theme_void() +

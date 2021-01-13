@@ -91,7 +91,7 @@ abm_publications_staffbased <- function(con, unit_code,
     analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
     filter(Diva_org_id == 177) %>%
     # copy = TRUE is used to inner_join local and remote table
-    left_join(con %>% tbl("oa_status_new") %>% select(PID, oa_status, DOI), 
+    left_join(con %>% tbl("oa_status") %>% select(PID, oa_status, DOI), 
               by = "PID", copy = TRUE) %>%
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
   
@@ -378,7 +378,7 @@ abm_oa_data_alt <- function(con = con_bib(), data) {
   # and switch the order of the joined tables
   
   data %>% 
-    left_join(con %>% tbl("oa_status_new"), by = "PID", copy = TRUE) %>%
+    left_join(con %>% tbl("oa_status"), by = "PID", copy = TRUE) %>%
     # copy = TRUE is used to inner_join local and remote table
     select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
   

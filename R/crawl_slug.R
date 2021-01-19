@@ -171,6 +171,9 @@ kth_catalog_crawl <- function(slug) {
 #' @param base_url pattern to prefigate links from nodes with in JS click action
 #' @param use_size boolean to indicate whether to size bubbles by publication
 #' volume, default is FALSE
+#' @param link_encoder function to use for encoding outgoing link identifiers,
+#' default is NULL but can be set to for example 
+#' \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links
 #' @return a force directed network object from NetworkD3
 #' @examples 
 #' \dontrun{
@@ -185,7 +188,7 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom stringr str_split_fixed str_replace str_count
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
-abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE) {
+abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encoder = NULL) {
   
   # assemble org tree only with divisions used in ABM
   
@@ -281,8 +284,9 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE) {
   #   sprintf('https://www.kth.se/directory/%s', nodes$groupid)
   # fn$x$options$clickAction = 'window.open(d.hyperlink)'
 
-  #links <- purrr::map_chr(nodes$groupid, function(x) URLencode(x, reserved = TRUE))
   links <- nodes$groupid
+  if (!is.null(link_encoder) && is.function(link_encoder))
+    links <- purrr::map_chr(nodes$groupid, link_encoder)
   
   fn$x$nodes$hyperlink <- sprintf('%s%s', base_url, links)
 

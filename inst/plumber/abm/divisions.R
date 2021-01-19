@@ -6,6 +6,7 @@ library(htmlwidgets)
 library(readr)
 
 cxn <- con_bib("sqlite")
+#on.exit(RSQLite::dbDisconnect(cxn))
 
 #* @apiTitle Bibliometrics for KTH Divisions
 #* @apiDescription Get division level data for organizational units at KTH.
@@ -19,48 +20,7 @@ function() {
   abm_divisions()
 }
 
-#* Dashboard for a specific division
-#* @get /visual/dash/<slug>
-#* @response 400 Invalid input.
-#* @serializer contentType list(type = "text/html")
-#* @tag ABM visual
-function(slug = "j/jj/jjn") {
-  
-  
-  #on.exit(RSQLite::dbDisconnect(con))
-  RSQLite::dbExecute(cxn, "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB)")
-
-  cached <- cxn %>% tbl("reports") %>% filter(name == slug) %>% collect()
-  
-  if (nrow(cached) >= 1) {
-    d <- cached %>% head(1) %>% pull(data)
-    return(as.raw(unlist(d)))
-  }
-
-  temp <- tempfile()
-  on.exit(unlink(temp))
-  
-  rmarkdown::render(here::here("inst/extdata/abm_staffbased.Rmd"), output_file = I(temp), 
-    params = list(unit_code = slug, is_employee = FALSE, embed_data = FALSE, use_package_data = TRUE))  
-
-  b <- blob::as_blob(I(list(read_file_raw(temp))))
-  df <- data.frame(name = slug, data = b)
-  
-  RSQLite::dbWriteTable(cxn, "reports", df, append = TRUE)
-  
-  as.raw(unlist(b))
-}
-
-
-#* Table with organizational units at division level for KTH
-#* @get /visual
-#* @tag ABM visual
-#* @serializer htmlwidget
-function() {
-  abm_graph_divisions()
-}
-
-#* Table with organizational units at division level for KTH
+#* Flexdashboard embedding network graph with organizational units at division level for KTH
 #* @get /visual/dash
 #* @serializer contentType list(type = "text/html")
 #* @tag ABM visual
@@ -71,6 +31,47 @@ function() {
   
   rmarkdown::render(here::here("data-raw/abm_divisions.Rmd"), output_file = I(temp))
   read_file_raw(temp)
+}
+
+#* HTML snippet with interactive graph for organizational units at division level for KTH
+#* @get /visual
+#* @tag ABM visual
+#* @serializer htmlwidget
+function() {
+  le <- function(x) URLencode(x, reserved = TRUE)
+  abm_graph_divisions(base_url = "/visual/dash/", link_encoder = le)
+}
+
+#* Flexdashboard with author-based ABM report for a specific division
+#* @get /visual/dash/<slug>
+#* @response 400 Invalid input.
+#* @serializer contentType list(type = "text/html")
+#* @tag ABM visual
+function(slug = "j/jj/jjn") {
+  
+  id <- URLdecode(slug)
+
+  RSQLite::dbExecute(cxn, "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB)")
+
+  cached <- cxn %>% tbl("reports") %>% filter(name == id) %>% collect()
+  
+  if (nrow(cached) >= 1) {
+    d <- cached %>% head(1) %>% pull(data)
+    return(as.raw(unlist(d)))
+  }
+
+  temp <- tempfile()
+  on.exit(unlink(temp))
+  
+  rmarkdown::render(here::here("inst/extdata/abm_staffbased.Rmd"), output_file = I(temp), 
+    params = list(unit_code = id, is_employee = FALSE, embed_data = FALSE, use_package_data = TRUE))  
+
+  b <- blob::as_blob(I(list(read_file_raw(temp))))
+  df <- data.frame(name = id, data = b)
+  
+  RSQLite::dbWriteTable(cxn, "reports", df, append = TRUE)
+  
+  as.raw(unlist(b))
 }
 
 

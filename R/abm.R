@@ -360,7 +360,7 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
   # and switch the order of the joined tables
   
   abm_data(con = con, unit_code = unit_code) %>%
-  left_join(con %>% tbl("oa_status"), by = "PID") %>% 
+  left_join(con %>% tbl("OA_status"), by = "PID") %>% 
   select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
   
 }

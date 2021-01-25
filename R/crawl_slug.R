@@ -261,10 +261,16 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   ColourScale <- sprintf("d3.scaleOrdinal().domain(%s).range(%s);", domain, range)
   
   nodes$size <- 1
+  
+  divlevel <- abm_divisions() %>% 
+    mutate(level = stringr::str_count(id, "/")) %>% 
+    mutate(level = max(level) - level) %>%
+    select(groupid = id, level) 
+  
   if (use_size == TRUE) 
-    nodes$size <- 
-      nodes %>% left_join(abm_division_stats(), by = c(groupid = "id")) %>% 
-      pull(n_pubs) %>% recode(.missing = NA_integer_)
+    nodes$size <- (1 + (max(nodes$group) - nodes$group)) ^ 4
+    #nodes %>% left_join(abm_division_stats(), by = c(groupid = "id")) %>% 
+    #pull(n_pubs) %>% recode(.missing = NA_integer_)
   
   fn <- networkD3::forceNetwork(
     Links = edges, Nodes = nodes, 
@@ -275,6 +281,7 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
     Value = "width",
     Nodesize = "size",
     opacity = 0.9,
+    charge = -30,
     zoom = TRUE, legend = TRUE,
     #  opacityNoHover = TRUE,
     colourScale = networkD3::JS(ColourScale)

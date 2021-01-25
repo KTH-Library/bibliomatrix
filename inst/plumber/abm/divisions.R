@@ -21,7 +21,7 @@ function() {
 }
 
 #* Flexdashboard embedding network graph with organizational units at division level for KTH
-#* @get /visual/dash
+#* @get /ui/divisions
 #* @serializer contentType list(type = "text/html")
 #* @tag ABM visual
 function() {
@@ -34,20 +34,20 @@ function() {
 }
 
 #* HTML snippet with interactive graph for organizational units at division level for KTH
-#* @get /visual
+#* @get /ui/html/divisions
 #* @tag ABM visual
 #* @serializer htmlwidget
 function() {
   le <- function(x) URLencode(x, reserved = TRUE)
-  abm_graph_divisions(base_url = "/visual/dash/", link_encoder = le)
+  abm_graph_divisions(base_url = "/ui/division/", link_encoder = le)
 }
 
 #* Flexdashboard with author-based ABM report for a specific division
-#* @get /visual/dash/<slug>
+#* @get /ui/division/<slug>
 #* @response 400 Invalid input.
 #* @serializer contentType list(type = "text/html")
 #* @tag ABM visual
-function(slug = "j/jj/jjn") {
+render_division <- function(slug = "j/jj/jjn") {
   
   id <- URLdecode(slug)
 

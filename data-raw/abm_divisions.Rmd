@@ -5,7 +5,6 @@ output:
     logo: beta.png
     orientation: rows
     vertical_layout: fill
-    source: embed
 ---
 
 ```{r, results='asis'}
@@ -25,7 +24,9 @@ Divisions {.tabset .tabset-fade}
 ### Divisions
 --->
 
-# Divisions
+# Overview
+
+Divisions with links lead to a more detailed report and appear if the unit has more more than 4 distinct researchers with DiVA publications referenced in Web Of Science. Tooltips provide explanation for the table headings (on hover).
 
 ```{r}
 library(bibliomatrix)
@@ -34,8 +35,8 @@ library(DT)
 
 library(formattable)
 
-linkify <- function(text, link)
-  sprintf("<a href='%s'>%s</a>", paste0("/visual/dash/", URLencode(link, reserved = TRUE)), text)
+linkify <- function(x, y)
+  sprintf("<a href='%s' target='_blank'>%s</a>", paste0("/ui/division/", sapply(y, function(z) URLencode(z, reserved = TRUE))), x)
 
 ds <- 
   con_bib("sqlite") %>% tbl("division_stats") %>% 
@@ -43,57 +44,169 @@ ds <-
   arrange(nd_researchers, n_pubs) %>% 
   select(starts_with("n"), everything()) %>%
   select(-c("pid", "desc_parent")) %>%
-  select(id, desc, everything()) %>%
-  filter(n_pubs > 0, nd_researchers > 4) %>%
+  select(id = id, desc, everything()) %>%
+  mutate(has_link = (n_pubs > 0 & (nd_researchers > 4))) %>%
   mutate(q1 = round(100 * nd_researchers / n_staff, 1)) %>%
   mutate(q2 = round(100 * n_pubs_wos / n_pubs, 1)) %>%
+  mutate(desc = ifelse(has_link, linkify(desc, id), desc)) %>%
   arrange(desc(q2)) %>%
-  select(id, desc, n_staff, nd_researchers, q1, n_pubs, n_pubs_wos, q2) %>%
-  mutate(desc = linkify(desc, id))
+  select(Slug = id, `Divison`=desc, n_staff, nd_researchers, q1, n_pubs, n_pubs_wos, q2)
 
+  color_tile_divergent <- function(x) ifelse(x <= 0, 
+    color_tile("lightpink", "transparent")(x * c(x <= 0)),
+    color_tile("transparent", "lightblue")(x * c(x > 0)))
 
-color_tile_divergent <- function(x) ifelse(x <= 0, 
-  color_tile("lightpink", "transparent")(x * c(x <= 0)),
-  color_tile("transparent", "lightblue")(x * c(x > 0)))
+  headers <- c(colnames(ds))
+
+  lookup <- readr::read_csv("field,tooltip
+  Slug,Organizational slug or short code
+  Division,Organizational name from KTH Catalogue
+  n_staff,Number of staff at the organizational unit
+  nd_researchers,Number of staff with publications in DiVA during the period
+  q1,Ratio between staff with publications and total staff at the unit
+  n_pubs,Number of publications in DiVA during the period
+  n_pubs_wos,Number of publications covered in Web Of Science
+  q2,Ratio between publications in Web Of Science and those in DiVA")
+
+  tooltip <- function(x) {
+    lookup %>% left_join(tibble(tooltip = x)) %>% pull(tooltip)
+  }
+   
+  library(htmltools)
+
+  header_style <- function(x) paste(collapse = ",", sprintf(paste0(
+    "th('%s', class = 'display dt-left', style = ", 
+    "'padding-left: 10px; padding-right: 10px;', title = '%s')"), 
+      x, tooltip(x)))
+
+  tt <- header_style(headers)
+  my_container <- eval(parse(text = paste0(
+    "withTags(table(class = 'display dt-right', thead(tr(list(", tt , ")))))")))
 
 fdt <- function(data)
-  as.datatable(rownames = FALSE, class = "stripe", options = list(
-    initComplete = htmlwidgets::JS("
-                        function(settings, json) {
-                          $(this.api().table().container()).css({
-                          'font-size': '10px',
-                          });
-                        }
-                    "),
-    columnDefs = list(list(className = 'dt-left', targets = "_all")),
-    pageLength = 300L, bPaginate = FALSE, scrollY = 380,
-    dom = 'ftB'), x = formattable(data, list(
-    n_staff = color_bar("lightgray"),
-    nd_researchers = color_bar("lightgray"),
-    n_pubs = color_bar("lightblue"),
-    n_pubs_wos = color_bar("lightblue"),
-    q1 = color_tile("transparent", unname(palette_kth()["cerise"])),
-    q2 = color_tile("transparent", unname(palette_kth()["cerise"]))
-    ))) %>% 
-  DT::formatStyle(columns = colnames(.$x$data), `font-size` = "10px")
+  as.datatable(rownames = FALSE, class = "stripe", 
+    container = my_container, 
+    options = list(
+      initComplete = htmlwidgets::JS("
+          function(settings, json) {
+            $(this.api().table().container()).css({
+            'font-size': '12px',
+            });
+          }
+      "),
+      columnDefs = list(list(className = 'dt-left', targets = "_all")),
+      pageLength = 300L, bPaginate = FALSE, scrollY = 380,
+      dom = 'ftB'), x = formattable(data, 
+        align = c("l", "l", rep("r", length(headers) - 2)),
+        list(
+          n_staff = color_bar("lightgray"),
+          nd_researchers = color_bar("lightgray"),
+          n_pubs = color_bar("lightblue"),
+          n_pubs_wos = color_bar("lightblue"),
+          q1 = color_tile("transparent", unname(palette_kth()["olive"])),
+          q2 = color_tile("transparent", unname(palette_kth()["olive"]))
+        )
+    )) %>% 
+  DT::formatStyle(columns = colnames(.$x$data), 
+      `font-size` = "12px", 
+      `class` = "display dt-right",
+      `style` = "padding-left: 10px"
+      )
 
 fdt(ds)
 ```
 
-# Graph view
+# Explore graph
 
 Data from KTH Directory API. Click a node for details (opens KTH website), scroll to zoom, drag to pan. Nodes can be dragged around.
 
 ```{r, out.width="100%"}
 
-fn <- abm_graph_divisions(base_url = "/visual/dash/", link_encoder = function(x) URLencode(x, reserved = TRUE)) 
+fn <- abm_graph_divisions(
+  base_url = "/visual/dash/", 
+  link_encoder = function(x) URLencode(x, reserved = TRUE),
+  use_size = TRUE
+) 
 
 fn$width <- "80%"
 fn$height <- "80%"
 
-fn
+#fn
 #htmlwidgets::saveWidget(fn, "~/abm-divisions.html")
 #browseURL("~/abm-divisions.html")
+
+fn <- htmlwidgets::onRender(
+  fn,
+  '
+function(el,x){
+debugger;
+  var optArray = [];
+  for (var i = 0; i < x.nodes.name.length - 1; i++) {
+    optArray.push(x.nodes.name[i]);
+  }
+
+  optArray = optArray.sort();
+
+  $(function () {
+    $("#search").autocomplete({
+      source: optArray
+    });
+  });
+
+  d3.select(".ui-widget button").node().onclick=searchNode;
+
+  function searchNode() {
+    debugger;
+    //find the node
+
+    var selectedVal = document.getElementById("search").value;
+    var svg = d3.select(el).select("svg");
+    var node = d3.select(el).selectAll(".node");
+
+    if (selectedVal == "none") {
+      node.style("stroke", "white").style("stroke-width", "10");
+    } else {
+      var selected = node.filter(function (d, i) {
+        return d.name != selectedVal;
+      });
+      selected.style("opacity", "0");
+      var link = svg.selectAll(".link")
+      link.style("opacity", "0");
+      d3.selectAll(".node, .link").transition()
+        .duration(5000)
+        .style("opacity", 1);
+    }
+  }
+}  
+  '
+)
+library(htmltools)
+
+browsable(
+  attachDependencies(
+    tagList(
+      tags$head(
+        tags$link(
+          href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css",
+          rel="stylesheet"
+        )
+      ),
+      HTML(
+        '
+  <div class="ui-widget" style="display: flex; justify-content: flex-end">
+      <input id="search">
+      <button type="button">Search</button>
+  </div>
+  '     
+      ),
+      fn
+    ),
+    list(
+      rmarkdown::html_dependency_jquery(),
+      rmarkdown::html_dependency_jqueryui()
+    )
+  )
+)
 
 ```
 
@@ -126,3 +239,28 @@ for (i in seq_along(d$id)) {
 
 `r paste(knitr::knit_child(text = out), collapse = "")`
 -->
+
+# Information {data-orientation=rows data-icon="fa-info-circle"}
+
+### Author-based Annual Bibliometric Monitoring report
+
+Data sources:
+
+- Publications listed in DiVA in the period `r abm_config()$start_year`-`r abm_config()$stop_year` for `r abm_config()$default_unit` are included.
+
+- Staff data comes from the KTH Catalogue API, which lists employees current organizational belonging in KTH.
+
+Data scope:
+
+Some units are large, while other divisions can be quite small. Units where more than *4 currently employed* researchers that have made contributions during the period are listed with a link to a more detailed report for that specific division. 
+
+Smaller units with few publications do not provide such a link. This is done in order to avoid exposing individual researcher data, and to display results for that are big enough to allow meaningful calculations of bibliometric indicators.
+
+### Difference from "regular" ABM report
+
+- An overview is provided for Divisions, with some aggregate data at unit level
+- Only publications from currently employed staff are included
+- Results can be strongly influenced by staff turnover
+- ...
+
+Please email your questions or ideas for improvements to [biblioteket@kth.se](mailto:biblioteket@kth.se)

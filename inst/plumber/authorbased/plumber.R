@@ -4,6 +4,81 @@ library(purrr)
 library(bibliomatrix)
 library(htmlwidgets)
 library(readr)
+library(rmarkdown)
+library(blob)
+
+render_report <- function(slug) {
+  
+  id <- URLdecode(slug)
+  temp <- tempfile()
+  on.exit(unlink(temp))
+  
+  rmarkdown::render(
+    #here::here("inst/extdata/abm_staffbased.Rmd"), 
+    input = system.file(package = "bibliomatrix", "extdata", "abm_staffbased.Rmd"),
+    output_file = I(temp), 
+    params = list(
+      unit_code = id, 
+      is_employee = FALSE, 
+      embed_data = FALSE, 
+      use_package_data = TRUE
+    ),
+    quiet = TRUE
+  )  
+  
+  b <- blob::as_blob(I(list(read_file_raw(temp))))
+  
+  data.frame(name = id, data = b)
+}
+
+cache_reports <- function() {
+  
+  slugs <- abm_divisions()$id
+  
+  pb <- progress::progress_bar$new(total = length(slugs))
+  
+  render_report_pb <- function(x) {
+    pb$tick()
+    render_report(x)
+    Sys.sleep(0.01)
+  }
+  
+  reports <- map_df(slugs, render_report_pb)
+  
+  message("Updating cache...")
+  con <- con_bib("sqlite")
+  on.exit(RSQLite::dbDisconnect(con))
+  
+  cache_clear()
+  RSQLite::dbWriteTable(con, "reports", reports)
+  message("Done")
+  
+}
+
+cache_report <- function(con = con_bib("sqlite"), slug) {
+  
+  id <- utils::URLdecode(slug)
+  
+  RSQLite::dbExecute(con, "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB)")
+  
+  cached <- con %>% tbl("reports") %>% filter(name == id) %>% collect()
+  
+  if (nrow(cached) >= 1) {
+    d <- cached %>% head(1) %>% pull(data)
+    return(as.raw(unlist(d)))
+  }
+  
+  df <- render_report(id)
+  
+  RSQLite::dbWriteTable(con, "reports", df, append = TRUE)
+  
+  as.raw(unlist(df$data))  
+}
+
+cache_clear <- function(con = con_bib("sqlite")) {
+  RSQLite::dbRemoveTable(con, "reports")  
+}
+
 
 cxn <- con_bib("sqlite")
 #on.exit(RSQLite::dbDisconnect(cxn))

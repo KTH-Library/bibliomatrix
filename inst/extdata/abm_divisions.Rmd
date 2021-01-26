@@ -2,7 +2,7 @@
 title: "KTH Divisions in ABM"
 output: 
   flexdashboard::flex_dashboard:
-    logo: beta.png
+    logo: beta-logo.png
     orientation: rows
     vertical_layout: fill
 ---

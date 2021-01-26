@@ -6,7 +6,6 @@ library(htmlwidgets)
 library(readr)
 library(rmarkdown)
 library(blob)
-library(here)
 
 render_report <- function(slug) {
   
@@ -106,7 +105,7 @@ function() {
   on.exit(unlink(temp))
   
   rmarkdown::render(
-    system.file(package = "bibliomatrix", "data-raw", "abm_divisions.Rmd"),
+    system.file(package = "bibliomatrix", "extdata", "abm_divisions.Rmd"),
     output_file = I(temp)
   )
   

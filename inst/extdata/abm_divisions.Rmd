@@ -212,33 +212,32 @@ browsable(
 
 
 
-<!--
-```{r subpages, include=FALSE}
+ ```{r subpages, include=FALSE}
 
 #d <- ds %>% slice(1:5)
 
-d <- data.frame(id = c("c", "s"), desc = c("chem", "phys"))
-
-out <- NULL
+# d <- data.frame(id = c("c", "s"), desc = c("chem", "phys"))
+# 
+# out <- NULL
 
 # allow duplicate labels (needed for subpages)
-options(knitr.duplicate.label = "allow")
+# options(knitr.duplicate.label = "allow")
+# 
+# subpage_env <- new.env()
 
-subpage_env <- new.env()
 
+# for (i in seq_along(d$id)) {
+# 
+#   assign("subpage_data", d[i,]$id, subpage_env)
+#   assign("division", d[i,]$desc, subpage_env)
+#   
+#   out <- c(out, knitr::knit_child("subpage.Rmd", envir = subpage_env))
+# 
+# }
 
-for (i in seq_along(d$id)) {
-
-  assign("subpage_data", d[i,]$id, subpage_env)
-  assign("division", d[i,]$desc, subpage_env)
-  
-  out <- c(out, knitr::knit_child("subpage.Rmd", envir = subpage_env))
-
-}
 ```
 
-`r paste(knitr::knit_child(text = out), collapse = "")`
--->
+<!-- `r #paste(knitr::knit_child(text = out), collapse = "")` -->
 
 # Information {data-orientation=rows data-icon="fa-info-circle"}
 

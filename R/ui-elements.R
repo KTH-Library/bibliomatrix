@@ -234,10 +234,10 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
   if (nrow(df_diva) > 0) {
     
     filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
+    diva_table <- df_diva %>% mutate(Scopus_coverage = WoS_coverage)
+    header <- eval(parse(text = getheader(names(diva_table)) %>% abm_format_header_divatable()))
     
-    header <- eval(parse(text = getheader(names(df_diva)) %>% abm_format_header_divatable()))
-    
-    DT::datatable(df_diva,
+    DT::datatable(diva_table,
       container = header,
       rownames = FALSE,
       extensions = c("Buttons"),
@@ -252,12 +252,12 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
           list(extend = "csv", filename = filename, title = unit_title),
           list(extend = "excel", filename = filename, title = unit_title))
         )) %>%
-      DT::formatRound(2:(length(df_diva)-1), digits = 1, mark = "") %>%
-      DT::formatPercentage(length(df_diva), digits = 1) %>%
+      DT::formatRound(2:(length(diva_table)-2), digits = 1, mark = "") %>%
+      DT::formatPercentage((length(diva_table)-1):length(diva_table), digits = 1) %>%
       abm_format_rows() %>%
       abm_format_columns_divatable("P_frac", has_left_border = TRUE) %>%
-      abm_format_columns_divatable("WoS_coverage", has_left_border = FALSE)
-    
+      abm_format_columns_divatable("WoS_coverage", has_left_border = FALSE) %>% 
+      abm_format_columns_divatable("Scopus_coverage", has_left_border = FALSE)
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }

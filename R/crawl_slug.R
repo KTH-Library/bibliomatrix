@@ -174,6 +174,8 @@ kth_catalog_crawl <- function(slug) {
 #' @param link_encoder function to use for encoding outgoing link identifiers,
 #' default is NULL but can be set to for example 
 #' \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links
+#' @param prune_graph boolean to indicate if certain non-research nodes should
+#' be removed, default: FALSE
 #' @return a force directed network object from NetworkD3
 #' @examples 
 #' \dontrun{
@@ -188,7 +190,8 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom stringr str_split_fixed str_replace str_count
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
-abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encoder = NULL) {
+abm_graph_divisions <- function(base_url = "dash/", 
+  use_size = FALSE, link_encoder = NULL, prune_graph = FALSE) {
   
   # assemble org tree only with divisions used in ABM
   
@@ -212,6 +215,10 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   l0 <- tibble(from = schools, to = "KTH", name = schools_name)
   l1 <- tibble(from = abm_slugs_departments(), to = schools, name = departments_name)
   d <- abm_divisions() %>% select(from = id, to = pid, name = desc)
+  
+  if (prune_graph)
+    d <- d %>% filter(str_count(from, "/") <= 2)
+  
   tree <- bind_rows(l0, l1, d)
   #eert <- tree %>% select(to, from, name)
   
@@ -253,6 +260,9 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   
   nodes$group[which(nodes$groupid == "KTH")] <- 0
   labels <- c("KTH", "School", "Department", "Division", "Research Group")
+  if (prune_graph)
+    labels <- labels[1:4]
+  
   nodes$fgroup <- ordered(as.character(nodes$group), labels = labels)
   groups <- as.character(sort(unique(nodes$fgroup)))
   

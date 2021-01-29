@@ -3,8 +3,12 @@ title: "KTH Divisions in ABM"
 output: 
   flexdashboard::flex_dashboard:
     logo: beta-logo.png
+    favicon: kth-logo.png
     orientation: rows
     vertical_layout: fill
+params:
+  snakify: TRUE
+  baseurl: "/ui/divisions/"
 ---
 
 ```{r, results='asis'}
@@ -26,17 +30,24 @@ Divisions {.tabset .tabset-fade}
 
 # Overview
 
+### Divisions overview
+
 Divisions with links lead to a more detailed report and appear if the unit has more more than 4 distinct researchers with DiVA publications referenced in Web Of Science. Tooltips provide explanation for the table headings (on hover).
 
 ```{r}
 library(bibliomatrix)
 library(dplyr)
 library(DT)
-
 library(formattable)
 
 linkify <- function(x, y)
-  sprintf("<a href='%s' target='_blank'>%s</a>", paste0("/ui/division/", sapply(y, function(z) URLencode(z, reserved = TRUE))), x)
+  sprintf("<a href='%s' target='_blank'>%s</a>", paste0(params$baseurl, sapply(y, function(z) URLencode(z, reserved = TRUE))), x)
+
+snakify <- function(x) gsub("/", "_", x, fixed = TRUE)
+
+if (params$snakify == TRUE)
+  linkify <- function(x, y)
+      sprintf("<a href='%s' target='_blank'>%s</a>", paste0(params$baseurl, sapply(y, function(z) snakify(z))), x)
 
 ds <- 
   con_bib("sqlite") %>% tbl("division_stats") %>% 
@@ -118,14 +129,21 @@ fdt(ds)
 
 # Explore graph
 
+### Explore divisions graph
+
 Data from KTH Directory API. Click a node for details (opens KTH website), scroll to zoom, drag to pan. Nodes can be dragged around.
 
 ```{r, out.width="100%"}
+le <- function(x) URLencode(x, reserved = TRUE)
+
+if (params$snakify == TRUE)
+  le <- snakify
 
 fn <- abm_graph_divisions(
-  base_url = "/visual/dash/", 
-  link_encoder = function(x) URLencode(x, reserved = TRUE),
-  use_size = TRUE
+  base_url = params$baseurl, 
+  link_encoder = le,
+  use_size = TRUE,
+  prune_graph = TRUE
 ) 
 
 fn$width <- "80%"
@@ -187,7 +205,7 @@ browsable(
     tagList(
       tags$head(
         tags$link(
-          href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css",
+          href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css",
           rel="stylesheet"
         )
       ),
@@ -243,23 +261,22 @@ browsable(
 
 ### Author-based Annual Bibliometric Monitoring report
 
-Data sources:
+**Data sources:**
 
 - Publications listed in DiVA in the period `r abm_config()$start_year`-`r abm_config()$stop_year` for `r abm_config()$default_unit` are included.
 
 - Staff data comes from the KTH Catalogue API, which lists employees current organizational belonging in KTH.
 
-Data scope:
+**Data scope:**
 
 Some units are large, while other divisions can be quite small. Units where more than *4 currently employed* researchers that have made contributions during the period are listed with a link to a more detailed report for that specific division. 
-
 Smaller units with few publications do not provide such a link. This is done in order to avoid exposing individual researcher data, and to display results for that are big enough to allow meaningful calculations of bibliometric indicators.
 
 ### Difference from "regular" ABM report
 
 - An overview is provided for Divisions, with some aggregate data at unit level
-- Only publications from currently employed staff are included
+- Only publications from **currently employed staff** are included
 - Results can be strongly influenced by staff turnover
-- ...
 
 Please email your questions or ideas for improvements to [biblioteket@kth.se](mailto:biblioteket@kth.se)
+

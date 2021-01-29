@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    logo: beta.png
+    logo: beta-logo.png
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:

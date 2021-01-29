@@ -4,7 +4,12 @@
 \alias{abm_graph_divisions}
 \title{ABM divisions as force directed network}
 \usage{
-abm_graph_divisions(base_url = "dash/", use_size = FALSE, link_encoder = NULL)
+abm_graph_divisions(
+  base_url = "dash/",
+  use_size = FALSE,
+  link_encoder = NULL,
+  prune_graph = FALSE
+)
 }
 \arguments{
 \item{base_url}{pattern to prefigate links from nodes with in JS click action}
@@ -15,6 +20,9 @@ volume, default is FALSE}
 \item{link_encoder}{function to use for encoding outgoing link identifiers,
 default is NULL but can be set to for example 
 \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links}
+
+\item{prune_graph}{boolean to indicate if certain non-research nodes should
+be removed, default: FALSE}
 }
 \value{
 a force directed network object from NetworkD3

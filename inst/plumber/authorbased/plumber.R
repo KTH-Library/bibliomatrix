@@ -7,9 +7,11 @@ library(readr)
 library(rmarkdown)
 library(blob)
 
+desnakify <- function(x) gsub("_", "/", x, fixed = TRUE)
+
 render_report <- function(slug) {
   
-  id <- URLdecode(slug)
+  id <- desnakify(slug)
   temp <- tempfile()
   on.exit(unlink(temp))
   
@@ -33,7 +35,9 @@ render_report <- function(slug) {
 
 cache_reports <- function() {
   
-  slugs <- abm_divisions()$id
+  unit_schools <- unique(abm_divisions()$pid)
+  unit_institutions <- unique(sapply(strsplit(unit_schools, "/", fixed = TRUE), "[[", 1))
+  slugs <- unique(c(unit_institutions, unit_schools, abm_divisions()$id))
   
   pb <- progress::progress_bar$new(total = length(slugs))
   
@@ -57,7 +61,7 @@ cache_reports <- function() {
 
 cache_report <- function(con = con_bib("sqlite"), slug) {
   
-  id <- utils::URLdecode(slug)
+  id <- desnakify(utils::URLdecode(slug))
   
   RSQLite::dbExecute(con, "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB)")
   
@@ -105,8 +109,12 @@ function() {
   on.exit(unlink(temp))
   
   rmarkdown::render(
-    system.file(package = "bibliomatrix", "extdata", "abm_divisions.Rmd"),
-    output_file = I(temp)
+    input = system.file(package = "bibliomatrix", "extdata", "abm_divisions.Rmd"),
+    output_file = I(temp),
+    params = list(
+      snakify = TRUE,
+      baseurl = "division/"
+    )
   )
   
   read_file_raw(temp)
@@ -117,8 +125,9 @@ function() {
 #* @tag ABM visual
 #* @serializer htmlwidget
 function() {
-  le <- function(x) URLencode(x, reserved = TRUE)
-  abm_graph_divisions(base_url = "/ui/division/", link_encoder = le)
+  #le <- function(x) URLencode(x, reserved = TRUE)
+  le <- function(x) gsub("/", "_", x, fixed = TRUE)
+  abm_graph_divisions(base_url = "", link_encoder = le)
 }
 
 #* Flexdashboard with author-based ABM report for a specific division
@@ -126,39 +135,10 @@ function() {
 #* @response 400 Invalid input.
 #* @serializer contentType list(type = "text/html")
 #* @tag ABM visual
-render_division <- function(slug = "j/jj/jjn") {
+render_division <- function(slug = "j_jj_jjn") {
   
   cache_report(slug = slug)
-  #id <- URLdecode(slug)
 
-  # RSQLite::dbExecute(cxn, "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB)")
-  # 
-  # cached <- cxn %>% tbl("reports") %>% filter(name == id) %>% collect()
-  # 
-  # if (nrow(cached) >= 1) {
-  #   d <- cached %>% head(1) %>% pull(data)
-  #   return(as.raw(unlist(d)))
-  # }
-  # 
-  # temp <- tempfile()
-  # on.exit(unlink(temp))
-  # 
-  # rmarkdown::render(
-  #   input = system.file(package = "bibliomatrix", "extdata", "abm_staffbased.Rmd"), 
-  #   output_file = I(temp), 
-  #   params = list(
-  #     unit_code = id, 
-  #     is_employee = FALSE, 
-  #     embed_data = FALSE, 
-  #     use_package_data = TRUE)
-  #   )  
-  # 
-  # b <- blob::as_blob(I(list(read_file_raw(temp))))
-  # df <- data.frame(name = id, data = b)
-  # 
-  # RSQLite::dbWriteTable(cxn, "reports", df, append = TRUE)
-  # 
-  # as.raw(unlist(b))
 }
 
 

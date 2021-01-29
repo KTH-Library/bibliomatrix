@@ -181,7 +181,7 @@ if (nrow(df_woscov %>% filter(Publication_Type == "Peer reviewed")) > 0) {
   
   vb2 <- valueBox(
     value = paste(100*round(totcov, 3), "%"),
-    color = colors_vb[1],
+    color = unname(palette_kth()["gray"]),
     icon = "fa-percent",
     href = "#publications-in-diva")
   

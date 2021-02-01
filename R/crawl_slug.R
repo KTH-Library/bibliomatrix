@@ -174,6 +174,7 @@ kth_catalog_crawl <- function(slug) {
 #' @param link_encoder function to use for encoding outgoing link identifiers,
 #' default is NULL but can be set to for example 
 #' \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links
+#' @param links_excluded a set of node ids for which links will be excluded, default NULL
 #' @param prune_graph boolean to indicate if certain non-research nodes should
 #' be removed, default: FALSE
 #' @return a force directed network object from NetworkD3
@@ -191,7 +192,7 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
 abm_graph_divisions <- function(base_url = "dash/", 
-  use_size = FALSE, link_encoder = NULL, prune_graph = FALSE) {
+  use_size = FALSE, link_encoder = NULL, links_excluded = NULL, prune_graph = FALSE) {
   
   # assemble org tree only with divisions used in ABM
   
@@ -302,9 +303,14 @@ abm_graph_divisions <- function(base_url = "dash/",
   # fn$x$options$clickAction = 'window.open(d.hyperlink)'
 
   links <- nodes$groupid
+
   if (!is.null(link_encoder) && is.function(link_encoder))
     links <- purrr::map_chr(nodes$groupid, link_encoder)
-  
+
+  if (!is.null(links_excluded)) {
+    links[which(nodes$groupid %in% links_excluded)] <- ""
+  }
+
   fn$x$nodes$hyperlink <- sprintf('%s%s', base_url, links)
 
   fn$x$options$clickAction = 'window.open(d.hyperlink)'

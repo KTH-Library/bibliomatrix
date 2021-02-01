@@ -8,6 +8,7 @@ abm_graph_divisions(
   base_url = "dash/",
   use_size = FALSE,
   link_encoder = NULL,
+  links_excluded = NULL,
   prune_graph = FALSE
 )
 }
@@ -20,6 +21,8 @@ volume, default is FALSE}
 \item{link_encoder}{function to use for encoding outgoing link identifiers,
 default is NULL but can be set to for example 
 \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links}
+
+\item{links_excluded}{a set of node ids for which links will be excluded, default NULL}
 
 \item{prune_graph}{boolean to indicate if certain non-research nodes should
 be removed, default: FALSE}

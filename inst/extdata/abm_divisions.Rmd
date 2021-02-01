@@ -136,12 +136,19 @@ Data from KTH Directory API. Click a node for details (opens KTH website), scrol
 ```{r, out.width="100%"}
 le <- function(x) URLencode(x, reserved = TRUE)
 
+exclude <- 
+  ds %>% mutate(has_link = (n_pubs > 0 & (nd_researchers > 4))) %>% 
+  filter(has_link == FALSE) %>% pull(Slug)
+
+exclude <- c(exclude, "KTH")
+
 if (params$snakify == TRUE)
   le <- snakify
 
 fn <- abm_graph_divisions(
   base_url = params$baseurl, 
   link_encoder = le,
+  links_exclude = exclude,
   use_size = TRUE,
   prune_graph = TRUE
 ) 

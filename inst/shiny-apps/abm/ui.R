@@ -7,7 +7,7 @@ library(shinythemes)
 # TODO: workound various issue with getting the sizing to work properly
 
 dashboardPage(skin = "black",
-  dashboardHeader(title = "ABM KTH 2019",
+  dashboardHeader(title = paste("ABM KTH", abm_config()$stop_year + 1),
     # tags$li(class = "dropdown",
     #   #img(src = "kth-logo.png", height = 30, width = 30),
     #   #style = "padding-top:10px; padding-bottom:10px;",

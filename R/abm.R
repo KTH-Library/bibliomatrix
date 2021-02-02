@@ -2,12 +2,23 @@
 #'
 #'@return list of default values used in the current abm presentation
 #'@export
-
-abm_config<- function(){
-  # This can later be expanded with more relevant defaults
-  list(start_year = 2012, 
-       stop_year = 2018,
-       default_unit = "KTH")
+abm_config <- function() {
+  
+  # this can later be expanded with more relevant defaults
+  y_start <- 2013
+  y_stop <- 2019
+  
+  if (Sys.getenv("ABM_START_YEAR") != "")
+    y_start <- Sys.getenv("ABM_START_YEAR")
+  
+  if (Sys.getenv("ABM_STOP_YEAR") != "")
+    y_stop <- Sys.getenv("ABM_STOP_YEAR")
+  
+  list(
+    start_year = y_start, 
+    stop_year = y_stop,
+    default_unit = "KTH"
+  )
 }
 
 #' Retrieve data for ABM tables and graphs from master table

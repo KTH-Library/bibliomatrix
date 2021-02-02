@@ -175,6 +175,7 @@ kth_catalog_crawl <- function(slug) {
 #' default is NULL but can be set to for example 
 #' \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links
 #' @param links_excluded a set of node ids for which links will be excluded, default NULL
+#' @param link_404 relative url to use for excluded links
 #' @param prune_graph boolean to indicate if certain non-research nodes should
 #' be removed, default: FALSE
 #' @return a force directed network object from NetworkD3
@@ -192,7 +193,8 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
 abm_graph_divisions <- function(base_url = "dash/", 
-  use_size = FALSE, link_encoder = NULL, links_excluded = NULL, prune_graph = FALSE) {
+  use_size = FALSE, link_encoder = NULL, links_excluded = NULL, link_404 = "",
+  prune_graph = FALSE) {
   
   # assemble org tree only with divisions used in ABM
   
@@ -308,7 +310,7 @@ abm_graph_divisions <- function(base_url = "dash/",
     links <- purrr::map_chr(nodes$groupid, link_encoder)
 
   if (!is.null(links_excluded)) {
-    links[which(nodes$groupid %in% links_excluded)] <- ""
+    links[which(nodes$groupid %in% links_excluded)] <- link_404
   }
 
   fn$x$nodes$hyperlink <- sprintf('%s%s', base_url, links)
@@ -527,7 +529,48 @@ abm_division_stats <- function(slugs = abm_divisions()$id) {
     stats %>% arrange(n_pubs, nd_researchers, desc(n_staff)) %>% rename(id = slug))
 }
 
-# statz <- abm_division_stats()
+#' Publication summary stats for ABM divisions and institutions and schools
+#' @return tibble with summary data
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  stats <- abm_unit_stats() 
+#'  # upload results to database
+#'  db_upsert_table("unit_stats", stats)
+#'  }
+#' }
+#' @rdname abm_unit_stats
+#' @importFrom purrr map_df
+#' @import dplyr
+#' @export 
+abm_unit_stats <- function() {
+  
+  inners <- 
+    unit_info() %>% collect() %>% 
+    filter(org_level < 3, org_level > 0) %>% 
+    pull(slug)
+  
+  stats <- 
+    purrr::map_df(inners, abm_pubs_summary) %>% 
+    arrange(n_pubs, nd_researchers, desc(n_staff)) %>% 
+    rename(id = slug)
+  
+  parents <- 
+    unit_info() %>% inner_join(
+    unit_info() %>% 
+     select(pidx = parent_org_id, pid = slug, desc = description_en), 
+      by = c("Diva_org_id" = "pidx")) %>% 
+    select(pid = slug, id = pid, desc_parent = description_en, desc)
+  
+  stats_inners <- stats %>% inner_join(parents, by = "id")
+  
+  stats_inners %>% bind_rows(abm_division_stats()) %>%
+    arrange(desc(n_pubs), desc(nd_researchers), desc(n_staff))
+}
+
+# statz <- abm_unit_stats()
+# db_upsert_table("unit_stats", statz)
+
 # db_upsert_table("division_stats", statz)
 # pa_slugs <- c("j/jj/jjn", "j/jh/jhs")
 # con_bib() %>% tbl("division_stats") %>%

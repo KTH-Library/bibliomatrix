@@ -83,6 +83,35 @@ cache_clear <- function(con = con_bib("sqlite")) {
   RSQLite::dbRemoveTable(con, "reports")  
 }
 
+cache_clear_report <- function(slug) {
+  
+  con <- con_bib("sqlite")
+  on.exit(RSQLite::dbDisconnect(con))
+  
+  id <- desnakify(utils::URLdecode(slug))
+  
+  cached <- con %>% tbl("reports") %>% filter(name == id) %>% collect()
+  
+  res <- 0
+  
+  if (nrow(cached) >= 1) {
+    sql <- sprintf("delete from reports where name = '%s'", id)
+    res <- DBI::dbExecute(con, sql)
+  }
+  
+  return(list(rows_affected = res))
+  
+}
+
+cache_view <- function() {
+  
+  con <- con_bib("sqlite")
+  on.exit(RSQLite::dbDisconnect(con))
+  
+  con %>% tbl("reports")
+  
+}
+
 
 cxn <- con_bib("sqlite")
 #on.exit(RSQLite::dbDisconnect(cxn))
@@ -130,6 +159,25 @@ function() {
   abm_graph_divisions(base_url = "", link_encoder = le)
 }
 
+#* Flexdashboard for units with no data available
+#* @get /ui/division/na
+#* @response 400 Invalid input.
+#* @serializer contentType list(type = "text/html")
+#* @tag ABM visual
+render_na <- function() {
+  
+  temp <- tempfile()
+  on.exit(unlink(temp))
+  
+  rmarkdown::render(
+    input = system.file(package = "bibliomatrix", "extdata", "abm_staffbased_na.Rmd"),
+    output_file = I(temp), 
+    quiet = TRUE
+  )  
+  
+  read_file_raw(temp)  
+}
+
 #* Flexdashboard with author-based ABM report for a specific division
 #* @get /ui/division/<slug>
 #* @response 400 Invalid input.
@@ -141,6 +189,32 @@ render_division <- function(slug = "j_jj_jjn") {
 
 }
 
+#* Clear the cache (everything)
+#* @get /cache/clear/all
+#* @response 400 Invalid input.
+#* @tag Cache management
+function() {
+  cache_clear()
+  return(TRUE)
+}
+
+#* Clear the cache (for a specific detailed report for unit with specified slug)
+#* @get /cache/clear/slug
+#* @param slug
+#* @response 400 Invalid input.
+#* @tag Cache management
+function(slug) {
+  cache_clear_report(slug)
+}
+
+#* Regenerate the full cache
+#* @get /cache/rebuild
+#* @param slug
+#* @response 400 Invalid input.
+#* @tag Cache management
+function(slug) {
+  cache_reports()
+}
 
 #* An endpoint to be used by monitoring services in the KTH IT Operations infrastructure
 #* @get /_monitor

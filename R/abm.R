@@ -400,7 +400,7 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
   # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
   # and switch the order of the joined tables
   
-  # IS THIS FUNCTION USED AT ALL?
+  # IS THIS FUNCTION USED (previously used in abm_table6) ?
   
   abm_data(con = con, unit_code = unit_code) %>%
   left_join(con %>% tbl("OA_status"), by = "PID") %>% 
@@ -415,15 +415,15 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 #' @return tibble with OA-status of all publications from incoming data
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_table6 <- function(data) {
-  
-  oa_data <- data
-  
+abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+
   # Year-dependent part of table
   table1 <-
-    oa_data %>%
+    data %>%
+    filter((is_oa=="TRUE" | is_oa=="FALSE") &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
     group_by(Publication_Year) %>%
-    filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
     summarise(P_tot=n(),
               oa_count=sum(as.logical(is_oa), na.rm=TRUE),
               gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),

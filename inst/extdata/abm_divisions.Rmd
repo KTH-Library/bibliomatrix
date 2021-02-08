@@ -278,7 +278,7 @@ The aim of this overview, in addition to the "regular" ABM, is to assist monitor
 **Differences from regular ABM report:**
 
 - Divisions at KTH are also included with an overview, including some aggregate data
-- Underlying set of publications for each unit is based publications by currently employed staff. In the regular ABM, this set of publications is based on organizational tags specified in DiVA.
+- Underlying set of publications for each unit is based on publications by currently employed staff. In the regular ABM, this set of publications is based on organizational tags specified in DiVA.
 
 **Note/caveats:**
 
@@ -289,7 +289,7 @@ Please email your questions or ideas for improvements to [biblioteket@kth.se](ma
 
 ### Scope and limitations
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not currently affiliated to KTH, will not be included in the statistics. 
+The bibliometric indicators referred are based on publications registered in DiVA and published in the period `r abm_config()$start_year`-`r abm_config()$stop_year`. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not currently affiliated to KTH, will not be included in the statistics. 
 
 **Data sources:**
 

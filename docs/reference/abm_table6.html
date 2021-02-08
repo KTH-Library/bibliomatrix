@@ -80,7 +80,7 @@
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -109,7 +109,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/KTH-Library/bibliomatrix/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -135,24 +135,20 @@
     <p>Retrieve Table 6 (OA data) for ABM</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_table6</span><span class='op'>(</span>con <span class='op'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>unit_code</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_table6</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>con</th>
-      <td><p>connection to db, default is to use mssql connection</p></td>
-    </tr>
-    <tr>
-      <th>unit_code</th>
-      <td><p>for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)</p></td>
+      <th>data</th>
+      <td><p>dataset with publications as tibble</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>tibble with OA-status of all publications from selected organizational units</p>
+    <p>tibble with OA-status of all publications from incoming data</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

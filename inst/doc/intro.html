@@ -14,19 +14,6 @@
 
 <title>Introduction to usage of bibliomatrix</title>
 
-<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
-// be compatible with the behavior of Pandoc < 2.8).
-document.addEventListener('DOMContentLoaded', function(e) {
-  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
-  var i, h, a;
-  for (i = 0; i < hs.length; i++) {
-    h = hs[i];
-    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
-    a = h.attributes;
-    while (a.length > 0) h.removeAttribute(a[0].name);
-  }
-});
-</script>
 <script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
 // v0.0.1
 // Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
@@ -43,45 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-<style type="text/css">
-a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
-a.anchor-section::before {content: '#';}
-.hasAnchor:hover a.anchor-section {visibility: visible;}
-</style>
-<script>// Anchor sections v1.0 written by Atsushi Yasumoto on Oct 3rd, 2020.
-document.addEventListener('DOMContentLoaded', function() {
-  // Do nothing if AnchorJS is used
-  if (typeof window.anchors === 'object' && anchors.hasOwnProperty('hasAnchorJSLink')) {
-    return;
-  }
-
-  const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-  // Do nothing if sections are already anchored
-  if (Array.from(h).some(x => x.classList.contains('hasAnchor'))) {
-    return null;
-  }
-
-  // Use section id when pandoc runs with --section-divs
-  const section_id = function(x) {
-    return ((x.classList.contains('section') || (x.tagName === 'SECTION'))
-            ? x.id : '');
-  };
-
-  // Add anchors
-  h.forEach(function(x) {
-    const id = x.id || section_id(x.parentElement);
-    if (id === '') {
-      return null;
-    }
-    let anchor = document.createElement('a');
-    anchor.href = '#' + id;
-    anchor.classList = ['anchor-section'];
-    x.classList.add('hasAnchor');
-    x.appendChild(anchor);
-  });
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -95,18 +43,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -126,7 +75,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -180,6 +129,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -393,13 +343,18 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(dplyr)</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(stringr)</span>
 <span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(readr)</span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">library</span>(knitr)</span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(bench)</span>
-<span id="cb1-7"><a href="#cb1-7"></a><span class="kw">library</span>(DBI)</span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">library</span>(pool)</span>
-<span id="cb1-9"><a href="#cb1-9"></a></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="cf">if</span> (<span class="kw">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="op">==</span><span class="st"> &quot;Windows&quot;</span>) </span>
-<span id="cb1-11"><a href="#cb1-11"></a>  <span class="kw">readRenviron</span>(<span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</span></code></pre></div>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#&gt; Warning: package &#39;readr&#39; was built under R version 4.0.3</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="kw">library</span>(knitr)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; Warning: package &#39;knitr&#39; was built under R version 4.0.3</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="kw">library</span>(bench)</span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="kw">library</span>(DBI)</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">library</span>(pool)</span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; Warning: package &#39;pool&#39; was built under R version 4.0.3</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="kw">library</span>(dbplyr)</span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt; Warning: package &#39;dbplyr&#39; was built under R version 4.0.3</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="cf">if</span> (<span class="kw">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="op">==</span><span class="st"> &quot;Windows&quot;</span>) </span>
+<span id="cb1-16"><a href="#cb1-16"></a>  <span class="kw">readRenviron</span>(<span class="kw">file.path</span>(<span class="kw">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</span></code></pre></div>
 </div>
 <div id="data-for-annual-bibliometric-monitoring-abm" class="section level2">
 <h2>Data for Annual Bibliometric Monitoring (ABM)</h2>
@@ -410,13 +365,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-2"><a href="#cb2-2"></a>bibmon &lt;-<span class="st"> </span><span class="kw">pool_bib</span>(<span class="st">&quot;mssql&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="co"># get data for ABM table 1</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>t1 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</span>
-<span id="cb2-6"><a href="#cb2-6"></a></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># display first few results</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>t1 <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="st">  </span><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
+<span id="cb2-5"><a href="#cb2-5"></a>kth_data &lt;-<span class="st"> </span><span class="kw">abm_data</span>(bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a>t1 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(kth_data)</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a><span class="co"># display first few results</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>t1 <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="st">  </span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="st">  </span><span class="kw">select</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="st">  </span><span class="kw">kable</span>()</span></code></pre></div>
 <table>
 <thead>
 <tr>
@@ -434,7 +390,7 @@ Publication_Type_DiVA
 Article, peer review
 </td>
 <td style="text-align:right;">
-1337.624938
+1329.90724
 </td>
 </tr>
 <tr>
@@ -442,7 +398,7 @@ Article, peer review
 Article, other
 </td>
 <td style="text-align:right;">
-122.640138
+119.49728
 </td>
 </tr>
 <tr>
@@ -450,7 +406,7 @@ Article, other
 Conference paper, peer review
 </td>
 <td style="text-align:right;">
-921.162783
+923.80134
 </td>
 </tr>
 <tr>
@@ -458,7 +414,7 @@ Conference paper, peer review
 Conference paper, other
 </td>
 <td style="text-align:right;">
-386.991782
+388.15845
 </td>
 </tr>
 <tr>
@@ -466,7 +422,7 @@ Conference paper, other
 Book
 </td>
 <td style="text-align:right;">
-9.319048
+10.31905
 </td>
 </tr>
 </tbody>
@@ -475,22 +431,23 @@ Book
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co"># You can build a sqlite3 databsae for local use (this will take a while the first time)</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="kw">db_sync</span>()</span>
 <span id="cb3-4"><a href="#cb3-4"></a>localdb &lt;-<span class="st"> </span><span class="kw">pool_bib</span>(<span class="st">&quot;sqlite&quot;</span>)</span>
-<span id="cb3-5"><a href="#cb3-5"></a>t2 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># are the results the same?</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="kw">identical</span>(t1, t2)</span>
-<span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; [1] FALSE</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co"># what about performance?</span></span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt;   174ms   280ms</span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>))</span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt;   139ms   138ms</span></span>
-<span id="cb3-18"><a href="#cb3-18"></a></span>
-<span id="cb3-19"><a href="#cb3-19"></a><span class="kw">poolClose</span>(bibmon)</span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="kw">poolClose</span>(localdb)</span></code></pre></div>
+<span id="cb3-5"><a href="#cb3-5"></a>kth_data_local &lt;-<span class="st"> </span><span class="kw">abm_data</span>(localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>t2 &lt;-<span class="st"> </span><span class="kw">abm_table1</span>(kth_data_local)</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co"># are the results the same?</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="kw">identical</span>(t1, t2)</span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; [1] TRUE</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># what about performance?</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="kw">abm_data</span>(<span class="dt">con =</span> bibmon, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; process    real </span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt;    1.5s   3.48s</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="kw">bench_time</span>(<span class="kw">abm_table1</span>(<span class="kw">abm_data</span>(<span class="dt">con =</span> localdb, <span class="dt">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; process    real </span></span>
+<span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt;   625ms   620ms</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="kw">poolClose</span>(bibmon)</span>
+<span id="cb3-21"><a href="#cb3-21"></a><span class="kw">poolClose</span>(localdb)</span></code></pre></div>
 </div>
 <div id="data-from-ldap-active-directory" class="section level2">
 <h2>Data from LDAP / Active Directory</h2>

@@ -7,7 +7,7 @@
 abm_oa_data(con = con_bib(), unit_code)
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
+\item{con}{connection to db, default is sqlite connection}
 
 \item{unit_code}{for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)}
 }

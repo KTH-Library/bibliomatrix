@@ -35,6 +35,7 @@ library(knitr)
 library(bench)
 library(DBI)
 library(pool)
+library(dbplyr)
 
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
@@ -53,7 +54,8 @@ Once this has been provided in the `.Renviron` file, data for the ABM tables can
 bibmon <- pool_bib("mssql")
 
 # get data for ABM table 1
-t1 <- abm_table1(con = bibmon, unit_code = "KTH")
+kth_data <- abm_data(bibmon, unit_code = "KTH")
+t1 <- abm_table1(kth_data)
 
 # display first few results
 t1 %>% 
@@ -64,14 +66,15 @@ t1 %>%
 # You can build a sqlite3 databsae for local use (this will take a while the first time)
 db_sync()
 localdb <- pool_bib("sqlite")
-t2 <- abm_table1(con = localdb, unit_code = "KTH")
+kth_data_local <- abm_data(localdb, unit_code = "KTH")
+t2 <- abm_table1(kth_data_local)
 
 # are the results the same?
 identical(t1, t2)
 
 # what about performance?
-bench_time(abm_table1(con = bibmon, unit_code = "KTH"))
-bench_time(abm_table1(con = localdb, unit_code = "KTH"))
+bench_time(abm_table1(abm_data(con = bibmon, unit_code = "KTH")))
+bench_time(abm_table1(abm_data(con = localdb, unit_code = "KTH")))
 
 poolClose(bibmon)
 poolClose(localdb)

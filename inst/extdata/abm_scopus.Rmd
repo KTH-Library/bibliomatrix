@@ -41,39 +41,34 @@ colors_vb <- palette_kth(4)
 
 # Retrieve result tables to use in tabs and key indicators
 
+### ADD SCOPUS STUFF
 if (params$use_package_data != TRUE) {
   con <- pool_bib()
-  df_diva <- abm_table1(con = con, unit_code = params$unit_code) 
-  df_cit3y <- abm_table2(con = con, unit_code= params$unit_code)
-  df_cf <- abm_table3(con = con, unit_code= params$unit_code)
-  df_jcf <- abm_table4(con = con, unit_code= params$unit_code)
-  df_copub <- abm_table5(con = con, unit_code= params$unit_code)
-  df_woscov <- abm_woscoverage(con = con, unit_code = params$unit_code)
-  df_oa <- abm_table6(con = con, unit_code = params$unit_code)
+  data <- abm_data(con = con,
+                   unit_code = params$unit_code,
+                   pub_year = abm_config()$start_year:abm_config()$stop_year,
+                   analysis_id = abm_config()$analysis_id)
+  df_diva <- abm_table1(data)
+  df_diva_full <- abm_table1_full(data)
+  df_cit3y <- abm_table2(data)
+  df_cf <- abm_table3(data)
+  df_jcf <- abm_table4(data)
+  df_copub <- abm_table5(data)
+  df_woscov <- abm_woscoverage(data)
+  df_oa <- abm_table6(data)
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   pool::poolClose(con)
 } else {
-  df_diva <- pluck(abm_public_kth$units, params$unit_code, 1)
-  df_cit3y <- pluck(abm_public_kth$units, params$unit_code, 2)
-  df_cf <- pluck(abm_public_kth$units, params$unit_code, 3)
-  df_jcf <- pluck(abm_public_kth$units, params$unit_code, 4)
-  df_copub <- pluck(abm_public_kth$units, params$unit_code, 5)
+  df_diva <- pluck(abm_public_kth$units, params$unit_code, "diva")
+  df_diva_full <- pluck(abm_public_kth$units, params$unit_code, "diva_full")
+  df_cit3y <- pluck(abm_public_kth$units, params$unit_code, "wos_cit3y")
+  df_cf <- pluck(abm_public_kth$units, params$unit_code, "wos_cf")
+  df_jcf <- pluck(abm_public_kth$units, params$unit_code, "wos_jcf")
+  df_copub <- pluck(abm_public_kth$units, params$unit_code, "wos_copub")
   df_oa <- pluck(abm_public_kth$units, params$unit_code, "oa")
-  df_woscov <- pluck(abm_public_kth$units, params$unit_code, "coverage")
+  df_woscov <- pluck(abm_public_kth$units, params$unit_code, "wos_coverage")
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
-
-# 
-# # Retrieve fake scopus data
-# db <- con_bib("sqlite")
-# scopusdata <- db %>%
-#   tbl("masterfile_fejk") %>%
-#   collect() %>% 
-#   filter(Unit_code == uc &
-#            Publication_Year >= abm_config()$start_year &
-#            Publication_Year <= abm_config()$stop_year) %>% 
-#   select(PID, Publication_Year, Publication_Type_DiVA, Unit_Fraction, Unit_Fraction_adj, scopus_id, scop_jcf, scop_jtop20, scop_ptop10, scop_cf, scop_nuniv, scop_int)
-# DBI::dbDisconnect(db)
 
 unit_level <- abm_public_kth$meta %>% 
      filter(unit_code == params$unit_code) %>%

@@ -4,15 +4,13 @@
 \alias{abm_table6}
 \title{Retrieve Table 6 (OA data) for ABM}
 \usage{
-abm_table6(con = con_bib(), unit_code)
+abm_table6(data)
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
-
-\item{unit_code}{for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)}
+\item{data}{dataset with publications as tibble}
 }
 \value{
-tibble with OA-status of all publications from selected organizational units
+tibble with OA-status of all publications from incoming data
 }
 \description{
 Retrieve Table 6 (OA data) for ABM

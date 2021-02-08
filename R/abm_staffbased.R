@@ -101,7 +101,7 @@ abm_publications_staffbased <- function(con, unit_code,
 #---------------------------------------
 #' Retrieve Table 1 (Publications in DiVA) for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
+#' @param con connection to db, default is to use sqlite connection
 #' @param data dataset with publications as tibble
 #' @param analysis_start first publication year of analysis, default 2012
 #' @param analysis_stop last publication year of analysis, default 2018
@@ -116,7 +116,7 @@ abm_table1_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   orgdata <- data %>%
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0))
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0), scop_bin = ifelse(!is.na(ScopusID)))
   
   # Year dependent part of table
   table1 <-

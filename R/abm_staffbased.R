@@ -69,7 +69,7 @@ abm_staff_data <- function(con = con_bib(), kthids,
     res %>% 
       inner_join(auth_count, by="PID") %>% 
       inner_join(unit_frac, by="PID") %>% 
-      arrange(PID, Diva_org_id) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
+      arrange(PID) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
       distinct(PID, WebofScience_ID, .keep_all = TRUE) %>%
       select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
 }
@@ -89,10 +89,6 @@ abm_publications_staffbased <- function(con, unit_code,
   
   abm_staff_data(kthids = abm_researchers(unit_code), 
     analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
-    #filter(Diva_org_id == 177) %>%
-    # copy = TRUE is used to inner_join local and remote table
-    #left_join(con %>% tbl("OA_status") %>% select(PID, oa_status, DOI), 
-    #          by = "PID", copy = TRUE) %>%
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
   
 }
@@ -374,13 +370,9 @@ abm_table5_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
 #' @export
 abm_oa_data_alt <- function(con = con_bib(), data) {
   
-  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
-  # and switch the order of the joined tables
-  
   data %>% 
-    # left_join(con %>% tbl("OA_status"), by = "PID", copy = TRUE) %>%
-    # copy = TRUE is used to inner_join local and remote table
-    select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
+    select("PID", "oa_status", "is_oa", 
+      "Publication_Type_DiVA", "Publication_Year")
   
 }
 

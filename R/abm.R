@@ -367,11 +367,9 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @export
 abm_oa_data <- function(con = con_bib(), unit_code) {
   
-  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
-  # and switch the order of the joined tables
-  
   abm_data(con = con, unit_code = unit_code) %>%
-  select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
+    select("PID", "oa_status", "is_oa", 
+           "Publication_Type_DiVA", "Publication_Year")
   
 }
 

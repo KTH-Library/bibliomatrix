@@ -233,7 +233,8 @@ db_sync_table <- function(
 #' @export
 db_sync <- function(
   tables_included, 
-  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
+  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", 
+                      "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE) 
 {
   c1 <- con_bib_mssql()

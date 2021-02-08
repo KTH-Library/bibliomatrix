@@ -91,8 +91,8 @@ abm_publications_staffbased <- function(con, unit_code,
     analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
     #filter(Diva_org_id == 177) %>%
     # copy = TRUE is used to inner_join local and remote table
-    left_join(con %>% tbl("OA_status") %>% select(PID, oa_status, DOI), 
-              by = "PID", copy = TRUE) %>%
+    #left_join(con %>% tbl("OA_status") %>% select(PID, oa_status, DOI), 
+    #          by = "PID", copy = TRUE) %>%
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
   
 }

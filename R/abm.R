@@ -5,7 +5,7 @@
 
 abm_config<- function(){
   # This can later be expanded with more relevant defaults
-  list(start_year = 2012, 
+  list(start_year = 2013, 
        stop_year = 2019,
        default_unit = "KTH",
        analysis_id = 1)

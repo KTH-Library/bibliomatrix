@@ -184,8 +184,8 @@ abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_
   orgdata <- data %>% 
     filter(Publication_Year >= analysis_start &
            Publication_Year <= analysis_stop - 2 &
-           Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial")) %>%
-    mutate(uncited = ifelse(Citations_3yr > 0, 0, 1))
+           Publication_Type_WoS %in% c("Article", "Proceedings Paper", "Review", "Letter", "Editorial")) %>%
+    mutate(uncited = ifelse(Citations_3yr == 0, 1, 0))
   
   # Year dependent part of table
   table1 <-

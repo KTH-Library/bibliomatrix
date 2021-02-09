@@ -412,6 +412,8 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 #' Retrieve Table 6 (OA data) for ABM
 #' 
 #' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return tibble with OA-status of all publications from incoming data
 #' @import DBI dplyr tidyr purrr
 #' @export

@@ -135,7 +135,11 @@
     <p>Retrieve Table 6 (OA data) for ABM</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_table6</span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_table6</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  analysis_start <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>start_year</span>,
+  analysis_stop <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>stop_year</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -143,6 +147,14 @@
     <tr>
       <th>data</th>
       <td><p>dataset with publications as tibble</p></td>
+    </tr>
+    <tr>
+      <th>analysis_start</th>
+      <td><p>first publication year of analysis, default from abm_config()</p></td>
+    </tr>
+    <tr>
+      <th>analysis_stop</th>
+      <td><p>last publication year of analysis, default from abm_config()</p></td>
     </tr>
     </table>
 

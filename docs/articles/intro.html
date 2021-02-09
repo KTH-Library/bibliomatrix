@@ -150,7 +150,7 @@
 Publication_Type_DiVA
 </th>
 <th style="text-align:right;">
-2012
+2013
 </th>
 </tr></thead>
 <tbody>
@@ -159,7 +159,7 @@ Publication_Type_DiVA
 Article, peer review
 </td>
 <td style="text-align:right;">
-1329.90724
+1464.81903
 </td>
 </tr>
 <tr>
@@ -167,7 +167,7 @@ Article, peer review
 Article, other
 </td>
 <td style="text-align:right;">
-119.49728
+83.02708
 </td>
 </tr>
 <tr>
@@ -175,7 +175,7 @@ Article, other
 Conference paper, peer review
 </td>
 <td style="text-align:right;">
-923.80134
+935.70799
 </td>
 </tr>
 <tr>
@@ -183,7 +183,7 @@ Conference paper, peer review
 Conference paper, other
 </td>
 <td style="text-align:right;">
-388.15845
+377.58044
 </td>
 </tr>
 <tr>
@@ -191,7 +191,7 @@ Conference paper, other
 Book
 </td>
 <td style="text-align:right;">
-10.31905
+17.31492
 </td>
 </tr>
 </tbody>
@@ -211,10 +211,10 @@ Book
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">bibmon</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   1.22s   3.44s</span>
+<span class="co">#&gt;   1.56s   3.03s</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">localdb</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   500ms   504ms</span>
+<span class="co">#&gt;   562ms   557ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/Pool-class.html">poolClose</a></span><span class="op">(</span><span class="va">bibmon</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/Pool-class.html">poolClose</a></span><span class="op">(</span><span class="va">localdb</span><span class="op">)</span></code></pre></div>

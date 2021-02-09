@@ -4,10 +4,18 @@
 \alias{abm_table6}
 \title{Retrieve Table 6 (OA data) for ABM}
 \usage{
-abm_table6(data)
+abm_table6(
+  data,
+  analysis_start = abm_config()$start_year,
+  analysis_stop = abm_config()$stop_year
+)
 }
 \arguments{
 \item{data}{dataset with publications as tibble}
+
+\item{analysis_start}{first publication year of analysis, default from abm_config()}
+
+\item{analysis_stop}{last publication year of analysis, default from abm_config()}
 }
 \value{
 tibble with OA-status of all publications from incoming data

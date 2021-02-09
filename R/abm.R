@@ -147,16 +147,16 @@ abm_table1_full <- function(data, con, analysis_start = abm_config()$start_year,
   table1 <-
     orgdata %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(P = n()) %>%
+    summarise(P_full = n()) %>%
     arrange(Publication_Year) %>%
-    pivot_wider(names_from = Publication_Year, values_from = P) %>%
+    pivot_wider(names_from = Publication_Year, values_from = P_full) %>%
     ungroup()
   
   # Summary part of table
   table2 <-
     orgdata %>%
     group_by(Publication_Type_DiVA) %>%
-    summarise(P = n(),
+    summarise(P_full = n(),
               WoS_coverage = mean(wos_bin, na.rm = TRUE),
               Scopus_coverage = mean(scop_bin, na.rm = TRUE)) %>%
     ungroup()

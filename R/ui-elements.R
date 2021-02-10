@@ -46,6 +46,7 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 
 #' Link to Publication List download for KTH
 #' 
+#' @param data dataset to make publication list from
 #' @param is_loggedin boolean parameter indicating logged in status
 #' @param unit_label the label for the organizational unit
 #' @param unit_code the unit code for the organizational unit
@@ -56,9 +57,12 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @importFrom mime guess_type
 #' @importFrom writexl write_xlsx
 #' @export
-abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_label,
+abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit_file_label,
                                   is_authorbased = FALSE) {
   
+  if(missing(data))
+    data = NULL
+
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (is_loggedin == TRUE) {
@@ -83,7 +87,7 @@ abm_ui_button_publist <- function(is_loggedin, unit_label, unit_code, unit_file_
     # data that we want to export
     if (!isTRUE(is_authorbased)) {
       con <- pool_bib()
-      publications_kth <- abm_publications(con = con, unit_code = unit_code)
+      publications_kth <- abm_publications(data)
       pool::poolClose(con)
       
       filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
@@ -234,7 +238,7 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
   if (nrow(df_diva) > 0) {
     
     filename <- paste0("ABM_table1_", unit_file_label, "_", current_date)
-    diva_table <- df_diva %>% mutate(Scopus_coverage = WoS_coverage)
+    diva_table <- df_diva
     header <- eval(parse(text = getheader(names(diva_table)) %>% abm_format_header_divatable()))
     
     DT::datatable(diva_table,
@@ -278,10 +282,78 @@ abm_ui_kable_diva <- function(df_diva) {
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
-      column_spec(column = ncol(df_diva) - 1, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
-      column_spec(column = ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
+      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
+      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
-      scroll_box(width = "720px")
+      scroll_box(width = "768px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for DiVA publications, full counts
+#' 
+#' @param df_diva_full data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_diva_full <- function(df_diva_full, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_diva_full) > 0) {
+    
+    filename <- paste0("ABM_table1_full_", unit_file_label, "_", current_date)
+    diva_table <- df_diva_full
+    header <- eval(parse(text = getheader(names(diva_table)) %>% abm_format_header_divatable()))
+    
+    DT::datatable(diva_table,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = c("Buttons"),
+                  style = "bootstrap", class = "compact", width = "720",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    pageLength = 100,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      DT::formatRound(2:(length(diva_table)-2), digits = 0, mark = "") %>%
+      DT::formatPercentage((length(diva_table)-1):length(diva_table), digits = 1) %>%
+      abm_format_rows() %>%
+      abm_format_columns_divatable("P_full", has_left_border = TRUE) %>%
+      abm_format_columns_divatable("WoS_coverage", has_left_border = FALSE) %>% 
+      abm_format_columns_divatable("Scopus_coverage", has_left_border = FALSE)
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' HTML table for DiVA publications, full counts
+#' 
+#' @param df_diva_full data frame with DiVA publication data in a specific format
+#' @import htmltools
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box column_spec
+#' @export
+abm_ui_kable_diva_full <- function(df_diva_full) {
+  
+  if (nrow(df_diva_full) > 0) {
+    df_diva %>%
+      mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage"), round, digits = 0) %>%
+      mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_diva)),
+            align = c("l", rep("r", ncol(df_diva) - 1))) %>%
+      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
+      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "768px")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }

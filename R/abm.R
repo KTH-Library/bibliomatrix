@@ -1061,7 +1061,7 @@ abm_private_data <- function(unit_code) {
 abm_graph_diva <- function(df) {
   
   df_diva_long <- df %>%
-    select(-"P_frac", -"WoS_coverage") %>%
+    select(-"P_frac", -"WoS_coverage", -"Scopus_coverage") %>%
     gather("year", "value", -Publication_Type_DiVA) %>%
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   

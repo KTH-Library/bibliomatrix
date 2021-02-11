@@ -541,7 +541,7 @@ abm_ui_kable_jcf <- function(df_jcf) {
   }
 }
 
-#' Datatable for co-publication
+#' Datatable for co-publication (WoS)
 #' 
 #' @param df_copub data frame with DiVA publication data in a specific format
 #' @param unit_file_label the filename presented when users make use of the download button
@@ -578,7 +578,7 @@ abm_ui_datatable_copub <- function(df_copub, unit_file_label, unit_title) {
   }  
 }
 
-#' HTML table for co-publication
+#' HTML table for co-publication (WoS)
 #' 
 #' @param df_copub data frame with DiVA publication data in a specific format
 #' @import htmltools 
@@ -657,3 +657,245 @@ abm_ui_kable_oa <- function(df_oa) {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }
 }
+
+#' Datatable for Scopus citations
+#' 
+#' @param df_scop_cit data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_scop_cit) > 0) {
+    filename <- paste0("ABM_scopus_citations_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_scop_cit))))
+    
+    DT::datatable(df_scop_cit,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      DT::formatRound(2:5, digits = 1, mark = "") %>%
+      DT::formatPercentage(6, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+
+#' HTML table for Scopus citations
+#' 
+#' @param df_scop_cit data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_scop_cit <- function(df_scop_cit) {
+  if (nrow(df_scop_cit) > 0) {
+    df_scop_cit %>% 
+      mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_scop_cit)),
+            align = c("l", rep("r", ncol(df_scop_cit) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' Datatable for 3 year citations (cf)
+#' 
+#' @param df_cf data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_cf) > 0) {
+    filename <- paste0("ABM_table_scop_normcit_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_scop_normcit))))
+    
+    DT::datatable(df_scop_normcit,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )
+    ) %>% 
+      formatRound(c(2, 4), digits = 1, mark = "") %>% 
+      formatRound(3, digits = 2, mark = "") %>%
+      formatPercentage(5, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for 3 year citations (cf)
+#' 
+#' @param df_cf data frame with DiVA publication data in a specific format
+#' @import htmltools
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_scop_normcit <- function(df_scop_normcit) {
+  if (nrow(df_scop_normcit) > 0) {
+    df_scop_normcit %>% 
+      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+      mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_scop_normcit)),
+            align = c("l", rep("r", ncol(df_scop_normcit) - 1))) %>% 
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for Scopus journal impact (SNIP)
+#' 
+#' @param df_scop_snip data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_scop_snip) > 0) {
+    filename <- paste0("ABM_table_scop_snip_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_scop_snip))))
+    
+    DT::datatable(df_scop_snip,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>% 
+      formatRound(c(2, 4), digits = 1, mark = "") %>% 
+      formatRound(3, digits = 2, mark = "") %>% 
+      formatPercentage(5, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' HTML table for Scopus journal impact (SNIP)
+#' 
+#' @param df_scop_snip data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_scop_snip <- function(df_scop_snip) {
+  if (nrow(df_scop_snip) > 0) {
+    df_scop_snip %>% 
+      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(3), function(x) sprintf("%.2f", x)) %>%
+      mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_scop_snip)),
+            align = c("l", rep("r", ncol(df_scop_snip) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for co-publication (Scopus)
+#' 
+#' @param df_scop_copub data frame with DiVA publication data in a specific format
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_scop_copub <- function(df_scop_copub, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_scop_copub) > 0) {
+    filename <- paste0("ABM_table_scop_copub_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_scop_copub))))
+    
+    DT::datatable(df_scop_copub,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      formatPercentage(c(4,6), digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for co-publication (Scopus)
+#' 
+#' @param df_scop_copub data frame with DiVA publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_scop_copub <- function(df_scop_copub) {
+  if (nrow(df_scop_copub) > 0) {
+    df_scop_copub %>% 
+      mutate_at(vars(4, 6), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df_scop_copub)),
+            align = c("l", rep("r", ncol(df_scop_copub) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+

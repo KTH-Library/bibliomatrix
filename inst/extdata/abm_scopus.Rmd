@@ -130,7 +130,7 @@ lastyear <- max(names(df_diva[yrfields]))
 
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
-```{r, fig.width = 2.5, fig.height = 2}
+```{r, fig.width = 1.75, fig.height = 2}
 if (nrow(df_diva) > 0) {
   
   total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
@@ -150,7 +150,7 @@ if (nrow(df_diva) > 0) {
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
-```{r, fig.width = 2.5, fig.height = 2}
+```{r, fig.width = 1.75, fig.height = 2}
 if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
   
   woscov <- df_coverage %>% 
@@ -173,7 +173,7 @@ if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
 
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
-```{r, fig.width = 2.5, fig.height = 2}
+```{r, fig.width = 1.75, fig.height = 2}
 if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
   
   scopcov <- df_coverage %>% 
@@ -202,14 +202,14 @@ last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
 
 ### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile}
 
-```{r, fig.width = 3.75, fig.height = 2}
+```{r, fig.width = 3.7, fig.height = 2}
 library(patchwork)
 
 if (has_rows == TRUE) {
   
   cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
   
-  pub_bullet1 <- abm_bullet(label = "Field normalized citations (Cf)", 
+  pub_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
     value = cf, reference = 1.0, roundto = 2) #+ 
     # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
     # ggplot2::theme(plot.margin = margin(0, 0, 10, 0)) +
@@ -267,12 +267,12 @@ last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
 ```
 ### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .no-mobile}
 
-```{r, fig.width=3.75, fig.height = 2} 
+```{r, fig.width=3.8, fig.height = 2} 
 if (has_rows == TRUE) {
   
   jcf <- df_jcf %>% filter(interval == last_interval) %>% pull(jcf) %>% as.numeric()
   
-  jour_bullet1 <- abm_bullet(label = "Field normalized journal citations (JCf)", 
+  jour_bullet1 <- abm_bullet(label = "JCf, Field normalized journal citations", 
     value = jcf, reference = 1.0, roundto = 2)
 
   top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
@@ -307,7 +307,7 @@ last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 ```
 
 ### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
-```{r, fig.width=2.75, fig.height = 2}
+```{r, fig.width=3.75, fig.height = 2}
 
 if (has_rows == TRUE) {
   
@@ -947,9 +947,9 @@ Row {.tabset}
 -----------------------------------------------------------------------
 
 ### Citation Impact
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
- <div>
- #### **Average field normalized citations (Cf)**
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:left;'>
+<div>
+#### **Citations, open window**
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -957,28 +957,29 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=12}
-abm_ui_datatable_cf(
-  df_cf,
+```{r, fig.height=6, fig.width = 6}
+abm_ui_datatable_scop_cit(
+  df_scop_cit,
+  unit_file_label = unit_file_label,
+  unit_title = abm_unit_title
+)
+abm_ui_scop_cit_notes(df_coverage, unit_level)
+abm_graph_scop_normcit(df_scop_normcit)
+```
+</div>
+
+<div>
+#### **Field weighted citation impact (FWCI)**
+```{r, fig.height = 12, fig.width = 6}
+abm_ui_datatable_scop_normcit(
+  df_scop_normcit,
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 )
 ```
 </div>
-
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
-
-<div>
-#### **Average field normalized citations (Cf)**
-```{r}
-if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_cf(df_cf)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
 </div>
-</div>
+
 ### Journal Impact
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
 <div>

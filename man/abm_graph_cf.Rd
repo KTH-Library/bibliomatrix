@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm.R
 \name{abm_graph_cf}
 \alias{abm_graph_cf}
-\title{Create graph over Cf by year}
+\title{Create graph over Cf by year, WoS}
 \usage{
 abm_graph_cf(df)
 }
@@ -13,5 +13,5 @@ abm_graph_cf(df)
 a ggplot object
 }
 \description{
-Create graph over Cf by year
+Create graph over Cf by year, WoS
 }

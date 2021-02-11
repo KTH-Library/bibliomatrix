@@ -211,10 +211,10 @@ Book
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">bibmon</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   1.56s   3.03s</span>
+<span class="co">#&gt;   1.64s   1.87s</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">localdb</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   562ms   557ms</span>
+<span class="co">#&gt;   656ms   660ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/Pool-class.html">poolClose</a></span><span class="op">(</span><span class="va">bibmon</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/Pool-class.html">poolClose</a></span><span class="op">(</span><span class="va">localdb</span><span class="op">)</span></code></pre></div>
@@ -424,12 +424,12 @@ memberof
 <tbody>
 <tr>
 <td style="text-align:left;">
-aff_faculty
+aff_staff
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-aff_staff
+aff_faculty
 </td>
 </tr>
 </tbody>

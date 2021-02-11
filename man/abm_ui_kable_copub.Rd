@@ -2,7 +2,7 @@
 % Please edit documentation in R/ui-elements.R
 \name{abm_ui_kable_copub}
 \alias{abm_ui_kable_copub}
-\title{HTML table for co-publication}
+\title{HTML table for co-publication (WoS)}
 \usage{
 abm_ui_kable_copub(df_copub)
 }
@@ -10,5 +10,5 @@ abm_ui_kable_copub(df_copub)
 \item{df_copub}{data frame with DiVA publication data in a specific format}
 }
 \description{
-HTML table for co-publication
+HTML table for co-publication (WoS)
 }

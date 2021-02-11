@@ -1117,7 +1117,7 @@ abm_graph_wos_coverage <- function(df) {
         panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over Cf by year
+#' Create graph over Cf by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
@@ -1141,7 +1141,7 @@ abm_graph_cf <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over Top 10\% publications by year
+#' Create graph over Top 10\% publications by year, Wos
 #' 
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
@@ -1166,7 +1166,7 @@ abm_graph_top10 <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over jcf by year
+#' Create graph over jcf by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
@@ -1190,7 +1190,7 @@ abm_graph_jcf <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over Top 20\% journals by year
+#' Create graph over Top 20\% journals by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
@@ -1215,7 +1215,7 @@ abm_graph_top20 <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over international and Swedish non-university copublications by year
+#' Create graph over international and Swedish non-university copublications by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
@@ -1405,6 +1405,134 @@ abm_graph_oadata_stackedarea <- function(df){
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position="bottom",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over Scopus FWCI by years
+#' 
+#' @param df a data frame at the format produced by abm_table_scop_normcit()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @export
+abm_graph_scop_normcit <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$cf)))
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = fwci_x, group=1)) +
+    geom_point() + 
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Average FWCI") +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over Top 10\% publications by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table_scop_normcit()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom scales percent
+#' @export
+abm_graph_scop_top10 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.2, ceiling(max(df$top10_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top10_share, group=1)) +
+    geom_point() +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Share Top 10%") +
+    geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over SNIP by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @export
+abm_graph_scop_snip <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$snip)))
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = snip, group=1)) +
+    geom_point() + 
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Average Journal Cf") +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over Top 20\% journals by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom scales percent
+#' @export
+abm_graph_scop_top20 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.4, ceiling(max(df$top20_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top20_share, group=1)) +
+    geom_point() +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Share Journal Top 20%") +
+    geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over international and corporate copublications by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @export
+abm_graph_scop_copub <- function(df){
+  kth_cols <- as.vector(palette_kth(4))
+  df_copub_long<- df %>%
+    select(interval, corp_share, int_share) %>% 
+    rename("Corporate" = corp_share,
+           "International" = int_share) %>% 
+    gather("Co-publication:", "value", -interval) %>% 
+    filter(!interval == "Total")
+  
+  ggplot(data = df_copub_long,
+         aes(x = interval, y = value, group = `Co-publication:`)) +
+    geom_line(aes(color = `Co-publication:`), linetype = "dashed") +
+    geom_point(aes(color = `Co-publication:`)) +
+    xlab("Publication years") +
+    ylab("Share of publications") +
+    scale_y_continuous(labels = percent, limits = c(0, 1)) +
+    scale_color_manual(values = kth_cols) +
     theme_kth_osc() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position="bottom",

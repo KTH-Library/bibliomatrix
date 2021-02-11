@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Link to Publication List download for KTH — abm_ui_button_publist • bibliomatrix</title>
+<title>Datatable for Scopus citations — abm_ui_datatable_scop_cit • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Link to Publication List download for KTH — abm_ui_button_publist" />
-<meta property="og:description" content="Link to Publication List download for KTH" />
+<meta property="og:title" content="Datatable for Scopus citations — abm_ui_datatable_scop_cit" />
+<meta property="og:description" content="Datatable for Scopus citations" />
 
 
 
@@ -126,51 +126,31 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Link to Publication List download for KTH</h1>
+    <h1>Datatable for Scopus citations</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/ui-elements.R'><code>R/ui-elements.R</code></a></small>
-    <div class="hidden name"><code>abm_ui_button_publist.Rd</code></div>
+    <div class="hidden name"><code>abm_ui_datatable_scop_cit.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Link to Publication List download for KTH</p>
+    <p>Datatable for Scopus citations</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_ui_button_publist</span><span class='op'>(</span>
-  <span class='va'>data</span>,
-  <span class='va'>is_loggedin</span>,
-  <span class='va'>unit_label</span>,
-  <span class='va'>unit_code</span>,
-  <span class='va'>unit_file_label</span>,
-  is_authorbased <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_ui_datatable_scop_cit</span><span class='op'>(</span><span class='va'>df_scop_cit</span>, <span class='va'>unit_file_label</span>, <span class='va'>unit_title</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>data</th>
-      <td><p>dataset to make publication list from</p></td>
-    </tr>
-    <tr>
-      <th>is_loggedin</th>
-      <td><p>boolean parameter indicating logged in status</p></td>
-    </tr>
-    <tr>
-      <th>unit_label</th>
-      <td><p>the label for the organizational unit</p></td>
-    </tr>
-    <tr>
-      <th>unit_code</th>
-      <td><p>the unit code for the organizational unit</p></td>
+      <th>df_scop_cit</th>
+      <td><p>data frame with DiVA publication data in a specific format</p></td>
     </tr>
     <tr>
       <th>unit_file_label</th>
-      <td><p>the label for the download</p></td>
+      <td><p>the filename presented when users make use of the download button</p></td>
     </tr>
     <tr>
-      <th>is_authorbased</th>
-      <td><p>indicates if the button is used for author based
-data, default: FALSE</p></td>
+      <th>unit_title</th>
+      <td><p>the label presented when users make use of the download button</p></td>
     </tr>
     </table>
 

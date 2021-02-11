@@ -957,32 +957,57 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=6, fig.width = 6}
+```{r, fig.height=6, fig.width = 6, out.width = "40%"}
 abm_ui_datatable_scop_cit(
   df_scop_cit,
   unit_file_label = unit_file_label,
   unit_title = abm_unit_title
 )
-abm_ui_scop_cit_notes(df_coverage, unit_level)
-abm_graph_scop_normcit(df_scop_normcit)
+```
+
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:top;"}
+
+```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis", out.width = "40%"}
+cat("insert some notes here (maybe we should make functions for these)")
+```
+
+```{r, fig.height = 4, fig.width = 6, out.width = "40%"}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_normcit(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
 ```
 </div>
 
 <div>
 #### **Field weighted citation impact (FWCI)**
-```{r, fig.height = 12, fig.width = 6}
+```{r, fig.height = 6, fig.width = 6, out.width = "40%"}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 )
 ```
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+```{r, echo=FALSE, results="asis", out.width = "40%"}
+cat("insert some notes here (maybe we should make functions for these)")
+```
+
+```{r, fig.height = 4, fig.width = 6, out.width = "40%"}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_top10(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
 </div>
 </div>
 
 ### Journal Impact
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
-<div>
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:left;'>
+<div style='height:200px'>
 #### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
@@ -990,28 +1015,32 @@ div.dt-buttons {
   float:right;
 }
 </style>
-```{r, fig.height=12}
-abm_ui_datatable_jcf(
-  df_jcf,
+```{r, fig.height=4}
+abm_ui_datatable_scop_snip(
+  df_scop_snip,
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 )
 ```
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 </div>
 <div>
-#### **Journal impact, fractionalized (3-year moving average)** {.no-padding .mobile}
+#### **Field normalized journal impact (SNIP)**
 
-```{r, fig.width=3.75}
-abm_ui_kable_jcf(df_jcf)
-```
+```{r}
+if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_snip(df_scop_snip)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```  
 </div>
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 <div>
 #### **Share of publications in Top 20% journals**
 
 ```{r}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_top20(df_jcf)
+if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_top20(df_scop_snip)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -1020,41 +1049,34 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 </div>
 
 ### Co&#8209;publishing
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
 <div>
-#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+#### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
   float:right;
 }
 </style>
-```{r}
-abm_ui_datatable_copub(
-  df_copub,
+```{r, fig.height = 4}
+abm_ui_datatable_scop_copub(
+  df_scop_copub,
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 )
 ```
 </div>
-
-<div>
-#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
-```{r, fig.width=3.75}
-abm_ui_kable_copub(df_copub)
-```
-</div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 <div>
-#### **International and Swedish non-university co&#8209;publication**
-```{r, fig.width=6, fig.height=4}
-if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
-  abm_graph_copub(df_copub)
+#### **International and corporate co&#8209;publication**
+```{r, fig.height=4}
+if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+  abm_graph_scop_copub(df_scop_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
-</div>
+</div>    
 </div>
 </div>

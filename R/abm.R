@@ -1469,14 +1469,14 @@ abm_graph_scop_top10 <- function(df){
 #' @export
 abm_graph_scop_snip <- function(df){
   kth_cols <- palette_kth(4)
-  ymax <- max(2, ceiling(max(df$snip)))
+  ymax <- max(2, ceiling(max(df$avg_snip)))
   
   ggplot(data = df %>% filter(!interval == "Total"),
-         aes(x = interval, y = snip, group=1)) +
+         aes(x = interval, y = avg_snip, group=1)) +
     geom_point() + 
     geom_line(color = kth_cols["blue"], linetype = "dashed") +
     xlab("Publication years") +
-    ylab("Average Journal Cf") +
+    ylab("Average SNIP") +
     ylim(0, ymax) +
     geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
     theme_kth_osc() +

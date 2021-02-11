@@ -2,17 +2,17 @@
 % Please edit documentation in R/ui-elements.R
 \name{abm_ui_datatable_scop_normcit}
 \alias{abm_ui_datatable_scop_normcit}
-\title{Datatable for 3 year citations (cf)}
+\title{Datatable for Scopus FWCI}
 \usage{
 abm_ui_datatable_scop_normcit(df_scop_normcit, unit_file_label, unit_title)
 }
 \arguments{
+\item{df_scop_normcit}{data frame with DiVA publication data in a specific format}
+
 \item{unit_file_label}{the filename presented when users make use of the download button}
 
 \item{unit_title}{the label presented when users make use of the download button}
-
-\item{df_cf}{data frame with DiVA publication data in a specific format}
 }
 \description{
-Datatable for 3 year citations (cf)
+Datatable for Scopus FWCI
 }

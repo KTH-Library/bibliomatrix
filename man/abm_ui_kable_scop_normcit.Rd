@@ -2,13 +2,13 @@
 % Please edit documentation in R/ui-elements.R
 \name{abm_ui_kable_scop_normcit}
 \alias{abm_ui_kable_scop_normcit}
-\title{HTML table for 3 year citations (cf)}
+\title{HTML table for Scopus FWCI}
 \usage{
 abm_ui_kable_scop_normcit(df_scop_normcit)
 }
 \arguments{
-\item{df_cf}{data frame with DiVA publication data in a specific format}
+\item{df_scop_normcit}{data frame with DiVA publication data in a specific format}
 }
 \description{
-HTML table for 3 year citations (cf)
+HTML table for Scopus FWCI
 }

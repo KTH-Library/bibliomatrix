@@ -718,9 +718,9 @@ abm_ui_kable_scop_cit <- function(df_scop_cit) {
   }  
 }
 
-#' Datatable for 3 year citations (cf)
+#' Datatable for Scopus FWCI
 #' 
-#' @param df_cf data frame with DiVA publication data in a specific format
+#' @param df_scop_normcit data frame with DiVA publication data in a specific format
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
@@ -730,7 +730,7 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  if (nrow(df_cf) > 0) {
+  if (nrow(df_scop_normcit) > 0) {
     filename <- paste0("ABM_table_scop_normcit_", unit_file_label, "_", current_date)
     
     header <- eval(parse(text = getheader(names(df_scop_normcit))))
@@ -758,9 +758,9 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
   }  
 }
 
-#' HTML table for 3 year citations (cf)
+#' HTML table for Scopus FWCI
 #' 
-#' @param df_cf data frame with DiVA publication data in a specific format
+#' @param df_scop_normcit data frame with DiVA publication data in a specific format
 #' @import htmltools
 #' @importFrom knitr kable
 #' @importFrom kableExtra kable_styling scroll_box
@@ -897,5 +897,4 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }
 }
-
 

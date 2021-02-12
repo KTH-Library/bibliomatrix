@@ -947,7 +947,10 @@ Row {.tabset}
 -----------------------------------------------------------------------
 
 ### Citation Impact
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:left;'>
+<div style='display:flex; flex-direction:row; justify-content:space-between; align-items:left;'>
+
+<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:left;'>
+
 <div>
 #### **Citations, open window**
 <style type="text/css">
@@ -957,21 +960,22 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=6, fig.width = 6, out.width = "40%"}
+```{r, fig.height = 14, fig.width = 6}
 abm_ui_datatable_scop_cit(
   df_scop_cit,
   unit_file_label = unit_file_label,
   unit_title = abm_unit_title
 )
 ```
-
+</div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:top;"}
-
-```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis", out.width = "40%"}
+<div>
+```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
 cat("insert some notes here (maybe we should make functions for these)")
 ```
-
-```{r, fig.height = 4, fig.width = 6, out.width = "40%"}
+</div>
+<div>
+```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_normcit(df_scop_normcit)
 } else {
@@ -979,23 +983,26 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 </div>
-
+</div>
+<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:left;'>
 <div>
 #### **Field weighted citation impact (FWCI)**
-```{r, fig.height = 6, fig.width = 6, out.width = "40%"}
+```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 )
 ```
+</div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
-
-```{r, echo=FALSE, results="asis", out.width = "40%"}
+<div>
+```{r, echo=FALSE, results="asis"}
 cat("insert some notes here (maybe we should make functions for these)")
 ```
-
-```{r, fig.height = 4, fig.width = 6, out.width = "40%"}
+</div>
+<div>
+```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_top10(df_scop_normcit)
 } else {
@@ -1004,10 +1011,11 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 </div>
 </div>
+</div>
 
 ### Journal Impact
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:left;'>
-<div style='height:200px'>
+<div>
 #### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
@@ -1022,8 +1030,12 @@ abm_ui_datatable_scop_snip(
   unit_title = abm_unit_title
 )
 ```
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 </div>
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
+cat("insert some notes here (maybe we should make functions for these)")
+```
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:left;'>
 <div>
 #### **Field normalized journal impact (SNIP)**
 
@@ -1047,9 +1059,10 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```  
 </div>
 </div>
+</div>
 
 ### Co&#8209;publishing
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
 <div>
 #### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
 <style type="text/css">
@@ -1067,16 +1080,18 @@ abm_ui_datatable_scop_copub(
 ```
 </div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
+cat("insert some notes here (maybe we should make functions for these)")
+```
 
 <div>
 #### **International and corporate co&#8209;publication**
-```{r, fig.height=4}
+```{r, fig.height=4, fig.width = 6}
 if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_scop_copub(df_scop_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
-</div>    
 </div>
 </div>

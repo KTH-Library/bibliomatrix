@@ -100,14 +100,18 @@ kth_divisions_crawl <- function(include = abm_slugs_departments(),
     total = length(slugs),
     format = "  processing [:what] [:bar] :percent eta: :eta"
   )
-
+  
+  address_from_slug <- function(x) 
+    x %>% purrr::map_chr(function(y) as.character(kth_catalog(slug = y)$info$location))
+  
   crawl <- function(slug) {
     if (!quiet) pb$tick(tokens = list(what = sprintf("%10s", slug)))
-    kth_catalog_crawl(slug)
+    kcc <- kth_catalog_crawl(slug)
+    kcc %>% mutate(address = address_from_slug(id))
   }
   
   crawly <- purrr::possibly(crawl, otherwise = NULL, quiet = FALSE)
-  
+
   purrr::map_df(slugs, crawly)
   
 }
@@ -148,6 +152,7 @@ kth_catalog_crawl <- function(slug) {
         pid = y,
         id = children$slug, 
         desc_parent = lookup$info$`description.en`,
+        location_parent = as.character(lookup$info$location),
         desc = children$`description.en`
         )
     res

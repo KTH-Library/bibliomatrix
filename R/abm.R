@@ -3,12 +3,24 @@
 #'@return list of default values used in the current abm presentation
 #'@export
 
-abm_config<- function(){
-  # This can later be expanded with more relevant defaults
-  list(start_year = 2013, 
-       stop_year = 2019,
-       default_unit = "KTH",
-       analysis_id = 1)
+abm_config <- function() {
+  
+  # this can later be expanded with more relevant defaults
+  y_start <- 2013
+  y_stop <- 2019
+  
+  if (Sys.getenv("ABM_START_YEAR") != "")
+    y_start <- Sys.getenv("ABM_START_YEAR")
+  
+  if (Sys.getenv("ABM_STOP_YEAR") != "")
+    y_stop <- Sys.getenv("ABM_STOP_YEAR")
+  
+  list(
+    start_year = y_start, 
+    stop_year = y_stop,
+    default_unit = "KTH",
+    analysis_id = 1
+  )
 }
 
 #' Retrieve data for ABM tables and graphs from master table
@@ -403,8 +415,8 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
   # IS THIS FUNCTION USED (previously used in abm_table6) ?
   
   abm_data(con = con, unit_code = unit_code) %>%
-  left_join(con %>% tbl("OA_status"), by = "PID") %>% 
-  select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
+    select("PID", "oa_status", "is_oa", 
+           "Publication_Type_DiVA", "Publication_Year")
   
 }
 
@@ -1331,7 +1343,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
 
 #' Create pie chart for Open Access data
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @return a pie chart object
 #' @import ggplot2 dplyr plotrix
 #' @importFrom graphics pie
@@ -1385,7 +1397,7 @@ abm_graph_oadata_pie <- function(df){
 
 #' Create stacked area graph for Open Access data
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @return a ggplot object
 #' @import ggplot2 dplyr reshape2 ktheme
 #' @export

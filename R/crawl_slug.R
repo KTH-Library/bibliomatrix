@@ -174,6 +174,10 @@ kth_catalog_crawl <- function(slug) {
 #' @param link_encoder function to use for encoding outgoing link identifiers,
 #' default is NULL but can be set to for example 
 #' \code{function(x) URLencode(x, reserved = TRUE)} to transform outgoing links
+#' @param links_excluded a set of node ids for which links will be excluded, default NULL
+#' @param link_404 relative url to use for excluded links
+#' @param prune_graph boolean to indicate if certain non-research nodes should
+#' be removed, default: FALSE
 #' @return a force directed network object from NetworkD3
 #' @examples 
 #' \dontrun{
@@ -188,7 +192,9 @@ kth_catalog_crawl <- function(slug) {
 #' @importFrom stringr str_split_fixed str_replace str_count
 #' @importFrom jsonlite toJSON
 #' @importFrom networkD3 forceNetwork JS
-abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encoder = NULL) {
+abm_graph_divisions <- function(base_url = "dash/", 
+  use_size = FALSE, link_encoder = NULL, links_excluded = NULL, link_404 = "",
+  prune_graph = FALSE) {
   
   # assemble org tree only with divisions used in ABM
   
@@ -212,6 +218,10 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   l0 <- tibble(from = schools, to = "KTH", name = schools_name)
   l1 <- tibble(from = abm_slugs_departments(), to = schools, name = departments_name)
   d <- abm_divisions() %>% select(from = id, to = pid, name = desc)
+  
+  if (prune_graph)
+    d <- d %>% filter(str_count(from, "/") <= 2)
+  
   tree <- bind_rows(l0, l1, d)
   #eert <- tree %>% select(to, from, name)
   
@@ -253,6 +263,9 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   
   nodes$group[which(nodes$groupid == "KTH")] <- 0
   labels <- c("KTH", "School", "Department", "Division", "Research Group")
+  if (prune_graph)
+    labels <- labels[1:4]
+  
   nodes$fgroup <- ordered(as.character(nodes$group), labels = labels)
   groups <- as.character(sort(unique(nodes$fgroup)))
   
@@ -261,10 +274,16 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   ColourScale <- sprintf("d3.scaleOrdinal().domain(%s).range(%s);", domain, range)
   
   nodes$size <- 1
+  
+  divlevel <- abm_divisions() %>% 
+    mutate(level = stringr::str_count(id, "/")) %>% 
+    mutate(level = max(level) - level) %>%
+    select(groupid = id, level) 
+  
   if (use_size == TRUE) 
-    nodes$size <- 
-      nodes %>% left_join(abm_division_stats(), by = c(groupid = "id")) %>% 
-      pull(n_pubs) %>% recode(.missing = NA_integer_)
+    nodes$size <- (1 + (max(nodes$group) - nodes$group)) ^ 4
+    #nodes %>% left_join(abm_division_stats(), by = c(groupid = "id")) %>% 
+    #pull(n_pubs) %>% recode(.missing = NA_integer_)
   
   fn <- networkD3::forceNetwork(
     Links = edges, Nodes = nodes, 
@@ -275,6 +294,7 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
     Value = "width",
     Nodesize = "size",
     opacity = 0.9,
+    charge = -30,
     zoom = TRUE, legend = TRUE,
     #  opacityNoHover = TRUE,
     colourScale = networkD3::JS(ColourScale)
@@ -285,9 +305,14 @@ abm_graph_divisions <- function(base_url = "dash/", use_size = FALSE, link_encod
   # fn$x$options$clickAction = 'window.open(d.hyperlink)'
 
   links <- nodes$groupid
+
   if (!is.null(link_encoder) && is.function(link_encoder))
     links <- purrr::map_chr(nodes$groupid, link_encoder)
-  
+
+  if (!is.null(links_excluded)) {
+    links[which(nodes$groupid %in% links_excluded)] <- link_404
+  }
+
   fn$x$nodes$hyperlink <- sprintf('%s%s', base_url, links)
 
   fn$x$options$clickAction = 'window.open(d.hyperlink)'
@@ -504,7 +529,48 @@ abm_division_stats <- function(slugs = abm_divisions()$id) {
     stats %>% arrange(n_pubs, nd_researchers, desc(n_staff)) %>% rename(id = slug))
 }
 
-# statz <- abm_division_stats()
+#' Publication summary stats for ABM divisions and institutions and schools
+#' @return tibble with summary data
+#' @examples 
+#' \dontrun{
+#' if(interactive()){
+#'  stats <- abm_unit_stats() 
+#'  # upload results to database
+#'  db_upsert_table("unit_stats", stats)
+#'  }
+#' }
+#' @rdname abm_unit_stats
+#' @importFrom purrr map_df
+#' @import dplyr
+#' @export 
+abm_unit_stats <- function() {
+  
+  inners <- 
+    unit_info() %>% collect() %>% 
+    filter(org_level < 3, org_level > 0) %>% 
+    pull(slug)
+  
+  stats <- 
+    purrr::map_df(inners, abm_pubs_summary) %>% 
+    arrange(n_pubs, nd_researchers, desc(n_staff)) %>% 
+    rename(id = slug)
+  
+  parents <- 
+    unit_info() %>% inner_join(
+    unit_info() %>% 
+     select(pidx = parent_org_id, pid = slug, desc = description_en), 
+      by = c("Diva_org_id" = "pidx")) %>% 
+    select(pid = slug, id = pid, desc_parent = description_en, desc)
+  
+  stats_inners <- stats %>% inner_join(parents, by = "id")
+  
+  stats_inners %>% bind_rows(abm_division_stats()) %>%
+    arrange(desc(n_pubs), desc(nd_researchers), desc(n_staff))
+}
+
+# statz <- abm_unit_stats()
+# db_upsert_table("unit_stats", statz)
+
 # db_upsert_table("division_stats", statz)
 # pa_slugs <- c("j/jj/jjn", "j/jh/jhs")
 # con_bib() %>% tbl("division_stats") %>%

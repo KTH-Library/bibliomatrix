@@ -4,11 +4,11 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    logo: beta.png
+    logo: beta-logo.png
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: "s/sk"
+  unit_code: "a/ai/aia"
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: TRUE
@@ -321,7 +321,7 @@ STATIC <- "https://kth-library.github.io/abm"
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
 
-if(isTRUE(unit_level >= 0)){
+if (isTRUE(unit_level >= 0 & nrow(df_woscov) > 0)) {
 
   #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
   glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
@@ -466,7 +466,7 @@ if (nrow(df_diva) > 0) {
 ### **Web of Science coverage by publication type** {.no-padding .no-mobile}
 
 ```{r, fig.width=3, fig.height=5}
-if (nrow(df_diva) > 0) {
+if (nrow(df_diva) > 0 && any(df_diva$WoS_coverage > 0)) {
   p <- abm_graph_wos_coverage(df_diva)
   p
 } else {
@@ -574,7 +574,7 @@ if(isTRUE(unit_level >= 0)){
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-if(isTRUE(unit_level >= 0)){
+if (isTRUE(unit_level >= 0) & nrow(df_woscov)) {
 
   intervals <- df_cf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   woscov_cf <- df_woscov %>%
@@ -666,7 +666,7 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-if(isTRUE(unit_level >= 0)){
+if (isTRUE(unit_level >= 0) & nrow(df_woscov) > 0) {
   intervals <- df_jcf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   woscov_jcf <- df_woscov %>%
     filter(Publication_Type == "Article, peer review")
@@ -759,7 +759,7 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-if(isTRUE(unit_level >= 0)){
+if (isTRUE(unit_level >= 0) & nrow(df_woscov) > 0) {
   intervals <- df_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   woscov_copub <- df_woscov %>%
     filter(Publication_Type == "Article, peer review")

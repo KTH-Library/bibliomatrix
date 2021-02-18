@@ -43,45 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-<style type="text/css">
-a.anchor-section {margin-left: 10px; visibility: hidden; color: inherit;}
-a.anchor-section::before {content: '#';}
-.hasAnchor:hover a.anchor-section {visibility: visible;}
-</style>
-<script>// Anchor sections v1.0 written by Atsushi Yasumoto on Oct 3rd, 2020.
-document.addEventListener('DOMContentLoaded', function() {
-  // Do nothing if AnchorJS is used
-  if (typeof window.anchors === 'object' && anchors.hasOwnProperty('hasAnchorJSLink')) {
-    return;
-  }
-
-  const h = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-
-  // Do nothing if sections are already anchored
-  if (Array.from(h).some(x => x.classList.contains('hasAnchor'))) {
-    return null;
-  }
-
-  // Use section id when pandoc runs with --section-divs
-  const section_id = function(x) {
-    return ((x.classList.contains('section') || (x.tagName === 'SECTION'))
-            ? x.id : '');
-  };
-
-  // Add anchors
-  h.forEach(function(x) {
-    const id = x.id || section_id(x.parentElement);
-    if (id === '') {
-      return null;
-    }
-    let anchor = document.createElement('a');
-    anchor.href = '#' + id;
-    anchor.classList = ['anchor-section'];
-    x.classList.add('hasAnchor');
-    x.appendChild(anchor);
-  });
-});
-</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -180,6 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 })();
 </script>
+
 
 
 
@@ -394,17 +356,17 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt; # A tibble: 35 x 19</span></span>
 <span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt;    Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
 <span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt;          &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt;  1         177 KTH       KTH        KTH Royal I… Kungliga Te…            NA</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt;  2        5850 A         ABE        School of A… Skolan för …           177</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt;  1         177 KTH       KTH        KTH Royal I~ Kungliga Te~            NA</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#&gt;  2        5850 A         ABE        School of A~ Skolan för ~           177</span></span>
 <span id="cb1-15"><a href="#cb1-15"></a><span class="co">#&gt;  3        5851 5851      &lt;NA&gt;       Architecture Arkitektur            5850</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt;  4        5857 5857      &lt;NA&gt;       Civil and A… Byggvetensk…          5850</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt;  5      875600 875600    &lt;NA&gt;       Philosophy … Filosofi oc…          5850</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt;  6        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt;  7       13604 13604     &lt;NA&gt;       Sustainable… Hållbar utv…          5850</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt;  8        5884 5884      &lt;NA&gt;       Urban Plann… Samhällspla…          5850</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt;  9      879223 E         EECS       School of E… Skolan för …           177</span></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt; 10      882650 882650    &lt;NA&gt;       Computer Sc… Datavetensk…        879223</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#&gt; # … with 25 more rows, and 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#&gt;  4        5857 5857      &lt;NA&gt;       Civil and A~ Byggvetensk~          5850</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#&gt;  5      875600 875600    &lt;NA&gt;       Philosophy ~ Filosofi oc~          5850</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co">#&gt;  6        5869 5869      &lt;NA&gt;       Real Estate~ Fastigheter~          5850</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co">#&gt;  7       13604 13604     &lt;NA&gt;       Sustainable~ Hållbar utv~          5850</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co">#&gt;  8        5884 5884      &lt;NA&gt;       Urban Plann~ Samhällspla~          5850</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co">#&gt;  9      879223 E         EECS       School of E~ Skolan för ~           177</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="co">#&gt; 10      882650 882650    &lt;NA&gt;       Computer Sc~ Datavetensk~        879223</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">#&gt; # ... with 25 more rows, and 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
 <span id="cb1-24"><a href="#cb1-24"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
 <span id="cb1-25"><a href="#cb1-25"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-26"><a href="#cb1-26"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
@@ -416,8 +378,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-32"><a href="#cb1-32"></a><span class="co">#&gt; # A tibble: 1 x 19</span></span>
 <span id="cb1-33"><a href="#cb1-33"></a><span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
 <span id="cb1-34"><a href="#cb1-34"></a><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a><span class="co">#&gt; 1        6023 I         ITM        School of I… Skolan för …           177</span></span>
-<span id="cb1-36"><a href="#cb1-36"></a><span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co">#&gt; 1        6023 I         ITM        School of I~ Skolan för ~           177</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="co">#&gt; # ... with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
 <span id="cb1-37"><a href="#cb1-37"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
 <span id="cb1-38"><a href="#cb1-38"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-39"><a href="#cb1-39"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
@@ -426,8 +388,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-42"><a href="#cb1-42"></a><span class="co">#&gt; # A tibble: 1 x 19</span></span>
 <span id="cb1-43"><a href="#cb1-43"></a><span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
 <span id="cb1-44"><a href="#cb1-44"></a><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
-<span id="cb1-45"><a href="#cb1-45"></a><span class="co">#&gt; 1        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span></span>
-<span id="cb1-46"><a href="#cb1-46"></a><span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a><span class="co">#&gt; 1        5869 5869      &lt;NA&gt;       Real Estate~ Fastigheter~          5850</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a><span class="co">#&gt; # ... with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
 <span id="cb1-47"><a href="#cb1-47"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
 <span id="cb1-48"><a href="#cb1-48"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-49"><a href="#cb1-49"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
@@ -438,12 +400,12 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-54"><a href="#cb1-54"></a><span class="co">#&gt; # A tibble: 5 x 19</span></span>
 <span id="cb1-55"><a href="#cb1-55"></a><span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
 <span id="cb1-56"><a href="#cb1-56"></a><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
-<span id="cb1-57"><a href="#cb1-57"></a><span class="co">#&gt; 1        5850 A         ABE        School of A… Skolan för …           177</span></span>
-<span id="cb1-58"><a href="#cb1-58"></a><span class="co">#&gt; 2      879223 E         EECS       School of E… Skolan för …           177</span></span>
-<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#&gt; 3        6091 S         SCI        School of E… Skolan för …           177</span></span>
-<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#&gt; 4      879224 C         CBH        School of E… Skolan för …           177</span></span>
-<span id="cb1-61"><a href="#cb1-61"></a><span class="co">#&gt; 5        6023 I         ITM        School of I… Skolan för …           177</span></span>
-<span id="cb1-62"><a href="#cb1-62"></a><span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-57"><a href="#cb1-57"></a><span class="co">#&gt; 1        5850 A         ABE        School of A~ Skolan för ~           177</span></span>
+<span id="cb1-58"><a href="#cb1-58"></a><span class="co">#&gt; 2      879223 E         EECS       School of E~ Skolan för ~           177</span></span>
+<span id="cb1-59"><a href="#cb1-59"></a><span class="co">#&gt; 3        6091 S         SCI        School of E~ Skolan för ~           177</span></span>
+<span id="cb1-60"><a href="#cb1-60"></a><span class="co">#&gt; 4      879224 C         CBH        School of E~ Skolan för ~           177</span></span>
+<span id="cb1-61"><a href="#cb1-61"></a><span class="co">#&gt; 5        6023 I         ITM        School of I~ Skolan för ~           177</span></span>
+<span id="cb1-62"><a href="#cb1-62"></a><span class="co">#&gt; # ... with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
 <span id="cb1-63"><a href="#cb1-63"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
 <span id="cb1-64"><a href="#cb1-64"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-65"><a href="#cb1-65"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
@@ -495,10 +457,10 @@ WoS_coverage
 Article, peer review
 </td>
 <td style="text-align:right;">
-10330.64910
+10393.32988
 </td>
 <td style="text-align:right;">
-0.8814042
+0.8835230
 </td>
 </tr>
 <tr>
@@ -506,10 +468,10 @@ Article, peer review
 Article, other
 </td>
 <td style="text-align:right;">
-743.83892
+721.43333
 </td>
 <td style="text-align:right;">
-0.8160024
+0.8281790
 </td>
 </tr>
 <tr>
@@ -517,10 +479,10 @@ Article, other
 Conference paper, peer review
 </td>
 <td style="text-align:right;">
-5631.67421
+5442.42000
 </td>
 <td style="text-align:right;">
-0.5829022
+0.5841180
 </td>
 </tr>
 <tr>
@@ -528,10 +490,10 @@ Conference paper, peer review
 Conference paper, other
 </td>
 <td style="text-align:right;">
-1758.63001
+1515.36912
 </td>
 <td style="text-align:right;">
-0.0294805
+0.0284521
 </td>
 </tr>
 <tr>
@@ -539,10 +501,10 @@ Conference paper, other
 Book
 </td>
 <td style="text-align:right;">
-100.54508
+106.09270
 </td>
 <td style="text-align:right;">
-0.0000000
+0.0047129
 </td>
 </tr>
 <tr>
@@ -550,10 +512,10 @@ Book
 Anthology (editor)
 </td>
 <td style="text-align:right;">
-61.76667
+50.15000
 </td>
 <td style="text-align:right;">
-0.0000000
+0.0066467
 </td>
 </tr>
 <tr>
@@ -561,10 +523,10 @@ Anthology (editor)
 Chapter in book
 </td>
 <td style="text-align:right;">
-927.51339
+913.05607
 </td>
 <td style="text-align:right;">
-0.0460833
+0.0355217
 </td>
 </tr>
 <tr>
@@ -572,10 +534,10 @@ Chapter in book
 Article, book review
 </td>
 <td style="text-align:right;">
-97.10000
+89.60000
 </td>
 <td style="text-align:right;">
-0.5880536
+0.5535714
 </td>
 </tr>
 <tr>
@@ -583,10 +545,10 @@ Article, book review
 Proceeding (editor)
 </td>
 <td style="text-align:right;">
-37.43452
+34.81786
 </td>
 <td style="text-align:right;">
-0.0267133
+0.0287209
 </td>
 </tr>
 <tr>
@@ -594,7 +556,7 @@ Proceeding (editor)
 Report
 </td>
 <td style="text-align:right;">
-643.56521
+563.12609
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -605,7 +567,7 @@ Report
 Doctorate thesis
 </td>
 <td style="text-align:right;">
-1976.00000
+1970.00000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -616,7 +578,7 @@ Doctorate thesis
 Licentiate thesis
 </td>
 <td style="text-align:right;">
-749.00000
+667.00000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -624,10 +586,10 @@ Licentiate thesis
 </tr>
 <tr>
 <td style="text-align:left;">
-Patent, approved
+Patent
 </td>
 <td style="text-align:right;">
-36.12143
+15.00000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -639,48 +601,48 @@ Patent, approved
 <span id="cb3-2"><a href="#cb3-2"></a><span class="co"># Get summary data for KTH</span></span>
 <span id="cb3-3"><a href="#cb3-3"></a>kth_abm_tables<span class="op">$</span>summaries</span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="co">#&gt; $tot_pubs_frac</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; [1] 2952.296</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="co">#&gt; [1] 2891.883</span></span>
 <span id="cb3-6"><a href="#cb3-6"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7"></a><span class="co">#&gt; $cf</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; [1] 1.12799</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co">#&gt; [1] 1.116958</span></span>
 <span id="cb3-9"><a href="#cb3-9"></a><span class="co">#&gt; </span></span>
 <span id="cb3-10"><a href="#cb3-10"></a><span class="co">#&gt; $top10_share</span></span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; [1] 0.1075612</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="co">#&gt; [1] 0.1091126</span></span>
 <span id="cb3-12"><a href="#cb3-12"></a><span class="co">#&gt; </span></span>
 <span id="cb3-13"><a href="#cb3-13"></a><span class="co">#&gt; $jcf</span></span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; [1] 1.257341</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="co">#&gt; [1] 1.258551</span></span>
 <span id="cb3-15"><a href="#cb3-15"></a><span class="co">#&gt; </span></span>
 <span id="cb3-16"><a href="#cb3-16"></a><span class="co">#&gt; $top20_share</span></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; [1] 0.3087527</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="co">#&gt; [1] 0.307572</span></span>
 <span id="cb3-18"><a href="#cb3-18"></a><span class="co">#&gt; </span></span>
 <span id="cb3-19"><a href="#cb3-19"></a><span class="co">#&gt; $copub_nonuniv</span></span>
-<span id="cb3-20"><a href="#cb3-20"></a><span class="co">#&gt; [1] 0.2005211</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a><span class="co">#&gt; [1] 0.1578518</span></span>
 <span id="cb3-21"><a href="#cb3-21"></a><span class="co">#&gt; </span></span>
 <span id="cb3-22"><a href="#cb3-22"></a><span class="co">#&gt; $copub_internat</span></span>
-<span id="cb3-23"><a href="#cb3-23"></a><span class="co">#&gt; [1] 0.7137273</span></span>
+<span id="cb3-23"><a href="#cb3-23"></a><span class="co">#&gt; [1] 0.7198276</span></span>
 <span id="cb3-24"><a href="#cb3-24"></a></span>
 <span id="cb3-25"><a href="#cb3-25"></a><span class="co"># Note that numeric unit codes need to be enclosed with ` </span></span>
 <span id="cb3-26"><a href="#cb3-26"></a>abm_public_kth<span class="op">$</span>units<span class="op">$</span><span class="st">`</span><span class="dt">5851</span><span class="st">`</span><span class="op">$</span>summaries</span>
 <span id="cb3-27"><a href="#cb3-27"></a><span class="co">#&gt; $tot_pubs_frac</span></span>
-<span id="cb3-28"><a href="#cb3-28"></a><span class="co">#&gt; [1] 34</span></span>
+<span id="cb3-28"><a href="#cb3-28"></a><span class="co">#&gt; [1] 29.00758</span></span>
 <span id="cb3-29"><a href="#cb3-29"></a><span class="co">#&gt; </span></span>
 <span id="cb3-30"><a href="#cb3-30"></a><span class="co">#&gt; $cf</span></span>
-<span id="cb3-31"><a href="#cb3-31"></a><span class="co">#&gt; [1] 0.5537552</span></span>
+<span id="cb3-31"><a href="#cb3-31"></a><span class="co">#&gt; [1] 0.8033333</span></span>
 <span id="cb3-32"><a href="#cb3-32"></a><span class="co">#&gt; </span></span>
 <span id="cb3-33"><a href="#cb3-33"></a><span class="co">#&gt; $top10_share</span></span>
-<span id="cb3-34"><a href="#cb3-34"></a><span class="co">#&gt; [1] 0.07184425</span></span>
+<span id="cb3-34"><a href="#cb3-34"></a><span class="co">#&gt; [1] 0.1293333</span></span>
 <span id="cb3-35"><a href="#cb3-35"></a><span class="co">#&gt; </span></span>
 <span id="cb3-36"><a href="#cb3-36"></a><span class="co">#&gt; $jcf</span></span>
-<span id="cb3-37"><a href="#cb3-37"></a><span class="co">#&gt; [1] 0.6641623</span></span>
+<span id="cb3-37"><a href="#cb3-37"></a><span class="co">#&gt; [1] 0.7433974</span></span>
 <span id="cb3-38"><a href="#cb3-38"></a><span class="co">#&gt; </span></span>
 <span id="cb3-39"><a href="#cb3-39"></a><span class="co">#&gt; $top20_share</span></span>
-<span id="cb3-40"><a href="#cb3-40"></a><span class="co">#&gt; [1] 0.08070175</span></span>
+<span id="cb3-40"><a href="#cb3-40"></a><span class="co">#&gt; [1] 0.1645299</span></span>
 <span id="cb3-41"><a href="#cb3-41"></a><span class="co">#&gt; </span></span>
 <span id="cb3-42"><a href="#cb3-42"></a><span class="co">#&gt; $copub_nonuniv</span></span>
-<span id="cb3-43"><a href="#cb3-43"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb3-43"><a href="#cb3-43"></a><span class="co">#&gt; [1] 0.07692308</span></span>
 <span id="cb3-44"><a href="#cb3-44"></a><span class="co">#&gt; </span></span>
 <span id="cb3-45"><a href="#cb3-45"></a><span class="co">#&gt; $copub_internat</span></span>
-<span id="cb3-46"><a href="#cb3-46"></a><span class="co">#&gt; [1] 0.3636364</span></span></code></pre></div>
+<span id="cb3-46"><a href="#cb3-46"></a><span class="co">#&gt; [1] 0.4615385</span></span></code></pre></div>
 </div>
 <div id="order-of-publication-types-pubtype_order" class="section level3">
 <h3>Order of publication types (<code>pubtype_order</code>)</h3>
@@ -704,7 +666,7 @@ Patent, approved
 <span id="cb4-18"><a href="#cb4-18"></a><span class="co">#&gt; 10         10 Report                       </span></span>
 <span id="cb4-19"><a href="#cb4-19"></a><span class="co">#&gt; 11         11 Doctorate thesis             </span></span>
 <span id="cb4-20"><a href="#cb4-20"></a><span class="co">#&gt; 12         12 Licentiate thesis            </span></span>
-<span id="cb4-21"><a href="#cb4-21"></a><span class="co">#&gt; 13         13 Patent, approved             </span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="co">#&gt; 13         13 Patent                       </span></span>
 <span id="cb4-22"><a href="#cb4-22"></a><span class="co">#&gt; 14         14 Popular science etc.         </span></span>
 <span id="cb4-23"><a href="#cb4-23"></a><span class="co">#&gt; 15         15 Other                        </span></span>
 <span id="cb4-24"><a href="#cb4-24"></a><span class="co">#&gt; 16         16 Not published material</span></span></code></pre></div>

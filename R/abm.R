@@ -620,7 +620,8 @@ unit_info <- function(con){
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_publications <- function(con, unit_code, 
+  analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit
   orgdata <- con %>%
@@ -628,8 +629,8 @@ abm_publications <- function(con, unit_code, analysis_start = abm_config()$start
     filter(Unit_code == unit_code &
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    left_join(abm_oa_data(con, unit_code), by=c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
-    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
+    #left_join(abm_oa_data(con, unit_code), by = c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
+    select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
     mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
     collect()
   

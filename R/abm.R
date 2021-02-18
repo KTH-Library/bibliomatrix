@@ -1042,7 +1042,7 @@ abm_private_data <- function(unit_code) {
       wos_jcf = abm_table4(data),
       wos_copub = abm_table5(data),
       diva_full = abm_table1_full(data),
-      wos_coverage = abm_woscoverage(data),
+      coverage = abm_coverage(data),
       summaries = abm_dash_indices(data),
       oa = abm_table6(data),
       scop_cit = abm_table_scop_cit(data),

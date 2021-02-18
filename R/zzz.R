@@ -33,7 +33,7 @@ globalz <- "
     C_avg C_sum P P_uncited_scop Share_uncited_scop abm_woscoverage
     scop_Jtop20 scop_Ptop10 scop_bin scop_corp scop_cscxo scop_doctype
     scop_fwci_x scop_int scop_snip sumscop_frac sumscop_full sumwos_frac
-    sumwos_full P_full
+    sumwos_full P_full avg_snip corp_share description_en df_diva fwci_x is_kth
 "
 
 # HACK: add global fcns / vars with spaces in the name

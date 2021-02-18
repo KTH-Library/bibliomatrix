@@ -187,7 +187,9 @@ abm_format_header_divatable <- function(header) {
     sub("th\\('Publications', class = 'display dt-left', style = '",
         "th('Total', class = 'display dt-left', style = 'background-color:#EEEEEE; border-left: 1px solid #CCCCCC; ", .) %>%
     sub("th\\('WoS coverage', class = 'display dt-left', style = '",
-        "th('WoS coverage', class = 'display dt-left', style = 'background-color:#EEEEEE; ", .)
+        "th('WoS coverage', class = 'display dt-left', style = 'background-color:#EEEEEE; ", .) %>%
+    sub("th\\('Scopus coverage', class = 'display dt-left', style = '",
+        "th('Scopus coverage', class = 'display dt-left', style = 'background-color:#EEEEEE; ", .)
 }
 
 getheader <- function(indics) {

@@ -8,7 +8,7 @@ output:
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: "a/ai/aia"
+  unit_code: "j/jj/jjn"
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: TRUE
@@ -385,7 +385,8 @@ researchers <-
   collect() %>%
   filter(stringr::str_starts(slug, params$unit_code)) %>%
   distinct() %>%
-  select(Username = username, Title = `title.en`) %>% collect()
+  mutate(Name = paste(firstName, lastName)) %>%
+  select(Name, Title = `title.en`) %>% collect()
 
 DT::datatable(researchers,
   rownames = FALSE,

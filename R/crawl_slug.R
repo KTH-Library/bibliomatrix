@@ -359,12 +359,15 @@ db_upload_crawl <- function(con = con_bib(), crawl = FALSE) {
   researchers <- 
     divisions$id %>% map_df(kthids_from_slug)
   
+  unit_stats <- 
+    abm_unit_stats()
+  
   on.exit(dbDisconnect(con))
   
   data <- list(
     researchers = researchers,
-    divisions = divisions
-    #unit_stats = unit_stats
+    divisions = divisions,
+    unit_stats = unit_stats
   )
   
   purrr::walk2(names(data), data, function(x, y) db_upsert_table(x, y, con))
@@ -502,7 +505,7 @@ abm_pubs_summary <- function(unit_slug) {
   pubs <- abm_unit_pubs(unit_slug)
   
   nd_researchers <- 
-    con_bib() %>% tbl("masterfile_researchers") %>% filter(Unit_code %in% ids) %>%
+    con_bib() %>% tbl("masterfile") %>% filter(Unit_code %in% ids) %>%
     select(Unit_code) %>% distinct(Unit_code) %>% 
     collect() %>% nrow()
   

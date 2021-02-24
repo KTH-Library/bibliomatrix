@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -204,10 +204,10 @@ Book
 <span class="co"># what about performance?</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">bibmon</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt; 302.8ms   1.36s</span>
+<span class="co">#&gt;   286ms   634ms</span>
 <span class="fu"><a href="https://rdrr.io/pkg/bench/man/bench_time.html">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">localdb</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; process    real </span>
-<span class="co">#&gt;   169ms   169ms</span>
+<span class="co">#&gt;   195ms   197ms</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span><span class="op">(</span><span class="va">bibmon</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/pool/man/pool.html">poolClose</a></span><span class="op">(</span><span class="va">localdb</span><span class="op">)</span></code></pre></div>
@@ -417,12 +417,12 @@ memberof
 <tbody>
 <tr>
 <td style="text-align:left;">
-aff_staff
+aff_faculty
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-aff_faculty
+aff_staff
 </td>
 </tr>
 </tbody>

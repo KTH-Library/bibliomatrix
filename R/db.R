@@ -145,7 +145,7 @@ db_tables <- function(con) {
   enum_tables_mssql <- function() {
     con <- con_bib_mssql()
     tables <- odbc::dbListTables(
-      con, catalog_name = "BIBMON", schema_name = "dbo")
+      con, catalog_name = "BIBMON", schema_name = "dbo", table_type = "table")
     if (!length(tables)) return(NULL)
     res <- db_counts(con, tables)    
     dbDisconnect(con)

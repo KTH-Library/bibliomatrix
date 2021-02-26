@@ -51,27 +51,27 @@ unit_staff <- function(unit_slug = NULL) {
 #' @return tibble with all staff-based ABM data for selected organizational unit
 #' @export
 abm_staff_data <- function(con = con_bib(), kthids,
-  analysis_start = abm_config()$start_year, 
-  analysis_stop = abm_config()$stop_year) {
+                           analysis_start = abm_config()$start_year, 
+                           analysis_stop = abm_config()$stop_year) {
   
-    res <- con %>%
-      tbl("masterfile") %>%
-      filter(Unit_code %in% kthids, level == 3, is_kth == 1) %>%
-      rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
-      collect() #%>% 
-    
-    auth_count<- res %>% group_by(PID) %>% tally() 
-    colnames(auth_count)<- c("PID", "auth_count")
-    
-    unit_frac<- res %>% group_by(PID) %>% 
-                summarise(Unit_Fraction = sum(Unit_Fraction_raw, na.rm = TRUE), Unit_Fraction_adj = sum(Unit_Fraction_adj_raw, na.rm = TRUE))
-    
-    res %>% 
-      inner_join(auth_count, by="PID") %>% 
-      inner_join(unit_frac, by="PID") %>% 
-      arrange(PID) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
-      distinct(PID, WebofScience_ID, .keep_all = TRUE) %>%
-      select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
+  res <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code %in% kthids, level == 3, is_kth == 1) %>%
+    rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
+    collect() #%>% 
+  
+  auth_count<- res %>% group_by(PID) %>% tally() 
+  colnames(auth_count)<- c("PID", "auth_count")
+  
+  unit_frac<- res %>% group_by(PID) %>% 
+    summarise(Unit_Fraction = sum(Unit_Fraction_raw, na.rm = TRUE), Unit_Fraction_adj = sum(Unit_Fraction_adj_raw, na.rm = TRUE))
+  
+  res %>% 
+    inner_join(auth_count, by="PID") %>% 
+    inner_join(unit_frac, by="PID") %>% 
+    arrange(PID) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
+    distinct(PID, WebofScience_ID, .keep_all = TRUE) %>%
+    select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
 }
 
 #' Retrieve publication list for staffbased ABM
@@ -84,11 +84,11 @@ abm_staff_data <- function(con = con_bib(), kthids,
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_publications_staffbased <- function(con, unit_code, 
-  analysis_start = abm_config()$start_year, 
-  analysis_stop = abm_config()$stop_year) {
+                                        analysis_start = abm_config()$start_year, 
+                                        analysis_stop = abm_config()$stop_year) {
   
   abm_staff_data(kthids = abm_researchers(unit_code), 
-    analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
+                 analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
   
 }
@@ -112,7 +112,7 @@ abm_table1_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   orgdata <- data %>%
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0), scop_bin = ifelse(!is.na(ScopusID)))
+    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0), scop_bin = ifelse(!is.na(ScopusID),1,0))
   
   # Year dependent part of table
   table1 <-
@@ -158,8 +158,8 @@ abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- data %>%
     filter(  Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop - 2 &
-             Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial")) %>%
+               Publication_Year <= analysis_stop - 2 &
+               Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial")) %>%
     mutate(uncited = ifelse(Citations_3yr > 0, 0, 1))
   
   # Year dependent part of table
@@ -320,7 +320,7 @@ abm_table5_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- data %>%
-      filter(Publication_Year >= analysis_start &
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              Publication_Type_WoS %in% c("Article", "Review") &
              !is.na(int))
@@ -372,7 +372,7 @@ abm_oa_data_alt <- function(con = con_bib(), data) {
   
   data %>% 
     select("PID", "oa_status", "is_oa", 
-      "Publication_Type_DiVA", "Publication_Year")
+           "Publication_Type_DiVA", "Publication_Year")
   
 }
 

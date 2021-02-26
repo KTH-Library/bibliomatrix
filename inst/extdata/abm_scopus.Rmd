@@ -15,12 +15,12 @@ params:
 
 ```{r setup, include=FALSE}
 # unit_codes for testing:
-
+# 
 # u1g9umtq
 # u1jr9fll 
 # u1ygqmuy
 # u13bp6vd
-# u18qe64m   <- NB: this one triggers an exception in sliding_intervals() fcn
+# u18qe64m
 
 library(flexdashboard)
 library(DT)
@@ -200,7 +200,7 @@ last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
 
 ```
 
-### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .no-mobile}
+### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .no-mobile}
 
 ```{r, fig.width = 3.7, fig.height = 2}
 library(patchwork)
@@ -249,7 +249,7 @@ if (has_rows == TRUE) {
 }
 ```
 
-### **[Citation impact `r last_interval`](#citation-impact)** {.no-padding .mobile}
+### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75, fig.height = 2}
 if (has_rows == TRUE){
@@ -265,7 +265,7 @@ has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
 last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
 
 ```
-### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .no-mobile}
+### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .no-mobile}
 
 ```{r, fig.width=3.8, fig.height = 2} 
 if (has_rows == TRUE) {
@@ -290,7 +290,7 @@ if (has_rows == TRUE) {
 
 ```
 
-### **[Journal impact `r last_interval`](#journal-impact)**  {.no-padding .mobile}
+### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .mobile}
 
 ```{r, fig.width=3.75, fig.height = 2}
 if (has_rows == TRUE){
@@ -306,7 +306,7 @@ has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
 last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 ```
 
-### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .no-mobile}
+### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .no-mobile}
 ```{r, fig.width=3.75, fig.height = 2}
 
 if (has_rows == TRUE) {
@@ -327,7 +327,7 @@ if (has_rows == TRUE) {
 }
 ```
 
-### **[Co&#8209;publishing `r last_interval`](#co&#8209;publishing)** {.no-padding .mobile}
+### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .mobile}
 
 ```{r, fig.width=2.75, fig.height = 2}
 if (has_rows == TRUE) {
@@ -349,7 +349,7 @@ STATIC <- "https://kth-library.github.io/abm"
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
-cat("<p>Impact and co&#8209;publication indicators are based on Web of Science publications only.</p>")
+cat("<p>Indicators in the Citation impact, Journal impact and Co&#8209;publishing tabs are based on Web of Science publications only. Corresponding Scopus indicators can be found under the Scopus tab.</p>")
 
 if(isTRUE(unit_level >= 0)){
 
@@ -374,7 +374,7 @@ Row
 
 The bibliometric indicators referred are based on publications registered in DiVA and published 2012 to 2018. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
-Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
+Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science (Citation impact, Journal impact and Co&#8209;publishing tabs) or Scopus (Scopus tab).
 
 ### **Further information**
 
@@ -949,10 +949,10 @@ Row {.tabset}
 ### Citation Impact
 <div style='display:flex; flex-direction:row; justify-content:space-between; align-items:left;'>
 
-<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:left;'>
+<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:stretch;'>
 
 <div>
-#### **Citations, open window**
+#### **Citations, open window** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -968,7 +968,13 @@ abm_ui_datatable_scop_cit(
 )
 ```
 </div>
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:top;"}
+<div>
+#### **Citations, open window** {.mobile}
+```{r}
+abm_ui_kable_scop_cit(df_scop_cit)
+```
+</div>
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
 <div>
 ```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
 cat("insert some notes here (maybe we should make functions for these)")
@@ -984,15 +990,22 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 </div>
 </div>
-<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:left;'>
+
+<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:stretch;'>
 <div>
-#### **Field weighted citation impact (FWCI)**
+#### **Field weighted citation impact (FWCI)** {.no-mobile}
 ```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 )
+```
+</div>
+<div>
+#### **Field weighted citation impact (FWCI)** {.mobile}
+```{r}
+abm_ui_kable_scop_normcit(df_scop_normcit)
 ```
 </div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
@@ -1012,9 +1025,8 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 </div>
 </div>
 </div>
-
 ### Journal Impact
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:left;'>
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
 <div>
 #### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
 <style type="text/css">
@@ -1035,7 +1047,7 @@ abm_ui_datatable_scop_snip(
 ```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
 cat("insert some notes here (maybe we should make functions for these)")
 ```
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:left;'>
+<div style='display:flex; flex-direction:row; justify-content:space-around; align-items:center;'>
 <div>
 #### **Field normalized journal impact (SNIP)**
 
@@ -1093,5 +1105,6 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+</div>
 </div>
 </div>

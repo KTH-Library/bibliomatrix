@@ -117,10 +117,12 @@ db_counts <- function(con, tables) {
     n_cols = tbl(con, x) %>% ncol(),
     table = x
   )
+  nr <- purrr::possibly(df_rowcount, otherwise = NULL, quiet = TRUE)
+  nc <- purrr::possibly(df_colcount, otherwise = NULL, quiet = TRUE)
   
   # for all enumerated tables, count rows and cols
-  n_rows <- map_df(tables, df_rowcount)
-  n_cols <- map_df(tables, df_colcount)
+  n_rows <- map_df(tables, nr)
+  n_cols <- map_df(tables, nc)
   
   # compile summary results  
   n_rows %>% 
@@ -233,7 +235,8 @@ db_sync_table <- function(
 #' @export
 db_sync <- function(
   tables_included, 
-  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
+  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", "LastFailedJobs",
+                      "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE) 
 {
   c1 <- con_bib_mssql()

@@ -55,8 +55,8 @@ abm_staff_data <- function(con = con_bib(), kthids,
   analysis_stop = abm_config()$stop_year) {
   
     res <- con %>%
-      tbl("masterfile_researchers") %>%
-      filter(Unit_code %in% kthids)  %>% 
+      tbl("masterfile") %>%
+      filter(Unit_code %in% kthids, level == 3, is_kth == 1) %>%
       rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
       collect() #%>% 
     
@@ -69,7 +69,7 @@ abm_staff_data <- function(con = con_bib(), kthids,
     res %>% 
       inner_join(auth_count, by="PID") %>% 
       inner_join(unit_frac, by="PID") %>% 
-      arrange(PID, Diva_org_id) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
+      arrange(PID) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
       distinct(PID, WebofScience_ID, .keep_all = TRUE) %>%
       select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
 }
@@ -89,10 +89,6 @@ abm_publications_staffbased <- function(con, unit_code,
   
   abm_staff_data(kthids = abm_researchers(unit_code), 
     analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
-    filter(Diva_org_id == 177) %>%
-    # copy = TRUE is used to inner_join local and remote table
-    left_join(con %>% tbl("oa_status_new") %>% select(PID, oa_status, DOI), 
-              by = "PID", copy = TRUE) %>%
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
   
 }
@@ -179,7 +175,7 @@ abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
     collect() %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     arrange(Publication_Year_ch) %>% 
-    select(Publication_Year_ch, P_frac, C3_frac, C3, P_uncited, Share_uncited)
+    select(Publication_Year_ch, P_frac, C3, C3_frac, P_uncited, Share_uncited)
   
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -189,8 +185,8 @@ abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   table2 <-
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
-              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
-              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),              
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     mutate(Publication_Year_ch = "Total") %>%
@@ -374,13 +370,9 @@ abm_table5_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
 #' @export
 abm_oa_data_alt <- function(con = con_bib(), data) {
   
-  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
-  # and switch the order of the joined tables
-  
   data %>% 
-    left_join(con %>% tbl("oa_status_new"), by = "PID", copy = TRUE) %>%
-    # copy = TRUE is used to inner_join local and remote table
-    select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
+    select("PID", "oa_status", "is_oa", 
+      "Publication_Type_DiVA", "Publication_Year")
   
 }
 

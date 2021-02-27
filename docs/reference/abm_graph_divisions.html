@@ -73,7 +73,7 @@ interactive graph with a force directed network of the units." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
       </span>
     </div>
 
@@ -81,7 +81,7 @@ interactive graph with a force directed network of the units." />
       <ul class="nav navbar-nav">
         <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -110,7 +110,7 @@ interactive graph with a force directed network of the units." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/KTH-Library/bibliomatrix/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -137,7 +137,14 @@ interactive graph with a force directed network of the units." />
 interactive graph with a force directed network of the units.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_graph_divisions</span><span class='op'>(</span>base_url <span class='op'>=</span> <span class='st'>"dash/"</span>, use_size <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_graph_divisions</span><span class='op'>(</span>
+  base_url <span class='op'>=</span> <span class='st'>"dash/"</span>,
+  use_size <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  link_encoder <span class='op'>=</span> <span class='cn'>NULL</span>,
+  links_excluded <span class='op'>=</span> <span class='cn'>NULL</span>,
+  link_404 <span class='op'>=</span> <span class='st'>""</span>,
+  prune_graph <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -150,6 +157,25 @@ interactive graph with a force directed network of the units.</p>
       <th>use_size</th>
       <td><p>boolean to indicate whether to size bubbles by publication
 volume, default is FALSE</p></td>
+    </tr>
+    <tr>
+      <th>link_encoder</th>
+      <td><p>function to use for encoding outgoing link identifiers,
+default is NULL but can be set to for example 
+<code>function(x) URLencode(x, reserved = TRUE)</code> to transform outgoing links</p></td>
+    </tr>
+    <tr>
+      <th>links_excluded</th>
+      <td><p>a set of node ids for which links will be excluded, default NULL</p></td>
+    </tr>
+    <tr>
+      <th>link_404</th>
+      <td><p>relative url to use for excluded links</p></td>
+    </tr>
+    <tr>
+      <th>prune_graph</th>
+      <td><p>boolean to indicate if certain non-research nodes should
+be removed, default: FALSE</p></td>
     </tr>
     </table>
 

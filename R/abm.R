@@ -2,12 +2,23 @@
 #'
 #'@return list of default values used in the current abm presentation
 #'@export
-
-abm_config<- function(){
-  # This can later be expanded with more relevant defaults
-  list(start_year = 2012, 
-       stop_year = 2018,
-       default_unit = "KTH")
+abm_config <- function() {
+  
+  # this can later be expanded with more relevant defaults
+  y_start <- 2013
+  y_stop <- 2019
+  
+  if (Sys.getenv("ABM_START_YEAR") != "")
+    y_start <- Sys.getenv("ABM_START_YEAR")
+  
+  if (Sys.getenv("ABM_STOP_YEAR") != "")
+    y_stop <- Sys.getenv("ABM_STOP_YEAR")
+  
+  list(
+    start_year = y_start, 
+    stop_year = y_stop,
+    default_unit = "KTH"
+  )
 }
 
 #' Retrieve data for ABM tables and graphs from master table
@@ -356,12 +367,9 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 #' @export
 abm_oa_data <- function(con = con_bib(), unit_code) {
   
-  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
-  # and switch the order of the joined tables
-  
   abm_data(con = con, unit_code = unit_code) %>%
-  left_join(con %>% tbl("oa_status_new"), by = "PID") %>% 
-  select("PID", "oa_status", "is_oa", "Publication_Type_DiVA", "Publication_Year", "DOI")
+    select("PID", "oa_status", "is_oa", 
+           "Publication_Type_DiVA", "Publication_Year")
   
 }
 
@@ -612,7 +620,8 @@ unit_info <- function(con){
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_publications <- function(con, unit_code, 
+  analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit
   orgdata <- con %>%
@@ -620,8 +629,8 @@ abm_publications <- function(con, unit_code, analysis_start = abm_config()$start
     filter(Unit_code == unit_code &
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    left_join(abm_oa_data(con, unit_code), by=c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
-    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa")) %>%
+    #left_join(abm_oa_data(con, unit_code), by = c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
+    select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
     mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
     collect()
   

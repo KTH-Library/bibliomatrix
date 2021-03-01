@@ -373,7 +373,6 @@ abm_ui_button_publist(
 # DiVA Dream Portal button
 if (params$is_employee == TRUE) {
   abm_ui_button_diva()
-  htmltools::withTags(br())
 }
 
 # Altmetric Explorer button  

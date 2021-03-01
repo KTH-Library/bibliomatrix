@@ -22,10 +22,11 @@ abm_ui_button_diva <- function() {
       span(title = "Please register publications in DiVA as soon as possible for these to be included in the Annual Bibliometric Monitoring",
         a(href = "https://kth.diva-portal.org/dream", class = "btn btn-sm btn-primary", target = "_blank", 
           img(src = base64data),
-          "Edit your publication data in DiVA")
+          "Edit your publication data in DiVA"),
+        br()
       )
     )
-  )  
+  )
 }
 
 #' Link to Altmetric Explorer for an organizational unit at KTH

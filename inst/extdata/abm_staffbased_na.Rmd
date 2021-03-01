@@ -1,0 +1,33 @@
+---
+title: "Rolling ABM"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+    logo: beta-logo.png
+    favicon: kth-logo.png
+    fig_mobile: FALSE
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(bibliomatrix)
+library(extrafont)
+
+colors_vb <- palette_kth(4)
+
+```
+
+```{r, results='asis'}
+cat(sprintf("<style>                     
+.navbar {
+  background-color:%s;
+}
+</style>", unname(bibliomatrix::palette_kth()["cerise"])
+))                  
+
+```  
+
+#### Not available
+
+No data is available for this unit

@@ -361,7 +361,8 @@ researchers <-
   collect() %>%
   filter(stringr::str_starts(slug, params$unit_code)) %>%
   distinct() %>%
-  select(Username = username, Title = `title.en`) %>% collect()
+  mutate(Name = paste(firstName, lastName)) %>%
+  select(Name, Title = `title.en`) %>% collect()
 
 DT::datatable(researchers,
   rownames = FALSE,

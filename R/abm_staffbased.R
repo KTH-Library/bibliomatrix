@@ -158,8 +158,8 @@ abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
   # Get publication level data for selected unit, relevant WoS doctypes only
   orgdata <- data %>%
     filter(  Publication_Year >= analysis_start &
-               Publication_Year <= analysis_stop - 2 &
-               Publication_Type_WoS %in% c("Article", "Proceedings paper", "Review", "Letter", "Editorial")) %>%
+             Publication_Year <= analysis_stop - 2 &
+             Publication_Type_WoS %in% c("Article", "Proceedings Paper", "Review", "Letter", "Editorial")) %>%
     mutate(uncited = ifelse(Citations_3yr > 0, 0, 1))
   
   # Year dependent part of table
@@ -186,7 +186,7 @@ abm_table2_alt <- function(con = con_bib(), data, analysis_start = abm_config()$
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
               C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
-              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),              
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     mutate(Publication_Year_ch = "Total") %>%

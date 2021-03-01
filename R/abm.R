@@ -876,7 +876,7 @@ unit_info <- function(con){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_publications <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-  
+
   # Get publication level data for selected unit
   data %>%
     filter(Publication_Year >= analysis_start &

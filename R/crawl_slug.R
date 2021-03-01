@@ -100,14 +100,18 @@ kth_divisions_crawl <- function(include = abm_slugs_departments(),
     total = length(slugs),
     format = "  processing [:what] [:bar] :percent eta: :eta"
   )
-
+  
+  address_from_slug <- function(x) 
+    x %>% purrr::map_chr(function(y) as.character(kth_catalog(slug = y)$info$location))
+  
   crawl <- function(slug) {
     if (!quiet) pb$tick(tokens = list(what = sprintf("%10s", slug)))
-    kth_catalog_crawl(slug)
+    kcc <- kth_catalog_crawl(slug)
+    kcc %>% mutate(address = address_from_slug(id))
   }
   
   crawly <- purrr::possibly(crawl, otherwise = NULL, quiet = FALSE)
-  
+
   purrr::map_df(slugs, crawly)
   
 }
@@ -148,6 +152,7 @@ kth_catalog_crawl <- function(slug) {
         pid = y,
         id = children$slug, 
         desc_parent = lookup$info$`description.en`,
+        location_parent = as.character(lookup$info$location),
         desc = children$`description.en`
         )
     res
@@ -354,12 +359,15 @@ db_upload_crawl <- function(con = con_bib(), crawl = FALSE) {
   researchers <- 
     divisions$id %>% map_df(kthids_from_slug)
   
+  unit_stats <- 
+    abm_unit_stats()
+  
   on.exit(dbDisconnect(con))
   
   data <- list(
     researchers = researchers,
-    divisions = divisions
-    #unit_stats = unit_stats
+    divisions = divisions,
+    unit_stats = unit_stats
   )
   
   purrr::walk2(names(data), data, function(x, y) db_upsert_table(x, y, con))
@@ -497,7 +505,7 @@ abm_pubs_summary <- function(unit_slug) {
   pubs <- abm_unit_pubs(unit_slug)
   
   nd_researchers <- 
-    con_bib() %>% tbl("masterfile_researchers") %>% filter(Unit_code %in% ids) %>%
+    con_bib() %>% tbl("masterfile") %>% filter(Unit_code %in% ids) %>%
     select(Unit_code) %>% distinct(Unit_code) %>% 
     collect() %>% nrow()
   

@@ -513,7 +513,7 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
 
 abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
-  # Get publication level data for selected unit, relevant WoS doctypes only
+  # Get publication level data for selected unit, relevant Scopus doctypes only
   orgdata <- data %>% 
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
@@ -565,7 +565,7 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
 
 abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
-  # Get publication level data for selected unit, relevant WoS doctypes only
+  # Get publication level data for selected unit, relevant Scopus doctypes only
   orgdata <- data %>%
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop - 1 &
@@ -616,7 +616,7 @@ abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_yea
 
 abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
-  # Get publication level data for selected unit, relevant WoS doctypes only
+  # Get publication level data for selected unit, relevant Scopus doctypes only
   orgdata <- data %>%
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
@@ -666,7 +666,7 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
 
 abm_table_scop_copub <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
-  # Get publication level data for selected unit, relevant WoS doctypes only
+  # Get publication level data for selected unit, relevant Scopus doctypes only
   orgdata <- data %>%
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &

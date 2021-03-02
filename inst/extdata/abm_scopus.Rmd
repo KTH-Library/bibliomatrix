@@ -395,12 +395,13 @@ Row
 
 # download button for publication list
 unit_file_label <- params$unit_code
-if (isTRUE(unit_level == 1))
+if (isTRUE(unit_level == 1)){
   unit_file_label <- 
     unit_info() %>% 
     filter(unit_code == params$unit_code) %>% 
     pull(unit_short)
-    
+}
+
 abm_ui_button_publist(
   data = data,
   is_loggedin = params$embed_data,
@@ -623,8 +624,6 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-
-
 ```
 
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
@@ -975,8 +974,27 @@ abm_ui_kable_scop_cit(df_scop_cit)
 </div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
 <div>
-```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
-cat("insert some notes here (maybe we should make functions for these)")
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
+  minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
 ```
 </div>
 <div>
@@ -1010,7 +1028,37 @@ abm_ui_kable_scop_normcit(df_scop_normcit)
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 <div>
 ```{r, echo=FALSE, results="asis"}
-cat("insert some notes here (maybe we should make functions for these)")
+cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  intervals <- df_scop_normcit %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  scopcov_normcit <- df_coverage %>%
+    filter(Publication_Type == "Peer reviewed")
+  scopcov_normcit <- scopcov_normcit %>% 
+    inner_join(sliding_intervals(min(scopcov_normcit$Publication_Year),
+                                 max(scopcov_normcit$Publication_Year), 3),
+               by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
+              sumscop_full = sum(sumscop_full))
+
+  mincov <- min(scopcov_normcit$scopcov_frac)
+  minpubs <- min(scopcov_normcit$sumscop_full)
+  
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
 ```
 </div>
 <div>
@@ -1043,8 +1091,38 @@ abm_ui_datatable_scop_snip(
 ```
 </div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
-```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
-cat("insert some notes here (maybe we should make functions for these)")
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
+
+if(isTRUE(unit_level >= 0)){
+
+  intervals <- df_scop_snip %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  scopcov_snip <- df_coverage %>%
+    filter(Publication_Type == "Peer reviewed")
+  scopcov_snip <- scopcov_snip %>% 
+    inner_join(sliding_intervals(min(scopcov_snip$Publication_Year),
+                                 max(scopcov_snip$Publication_Year), 3),
+               by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
+              sumscop_full = sum(sumscop_full))
+
+  mincov <- min(scopcov_snip$scopcov_frac)
+  minpubs <- min(scopcov_snip$sumscop_full)
+  
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
 ```
 <div style='display:flex; flex-direction:row; justify-content:space-around; align-items:center;'>
 <div>
@@ -1091,8 +1169,34 @@ abm_ui_datatable_scop_copub(
 ```
 </div>
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
-```{r, fig.height = 4, fig.width = 6, echo=FALSE, results="asis"}
-cat("insert some notes here (maybe we should make functions for these)")
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
+
+if(isTRUE(unit_level >= 0)){
+  intervals <- df_scop_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
+  scopcov_copub <- df_coverage %>%
+    filter(Publication_Type == "Peer reviewed")
+  scopcov_copub <- scopcov_copub %>% 
+    inner_join(sliding_intervals(min(scopcov_copub$Publication_Year), max(scopcov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
+    filter(interval %in% intervals) %>%
+    group_by(interval) %>% 
+    summarise(scopcov_full = sum(sumscop_full) / sum(p_full))
+
+  mincov <- min(scopcov_copub$scopcov_full)
+  minpubs <- min(df_scop_copub$P_full)
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
+}
 ```
 
 <div>

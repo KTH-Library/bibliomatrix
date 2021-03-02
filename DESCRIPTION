@@ -67,7 +67,10 @@ Imports:
     ktheme,
     kthapi,
     lubridate (>= 1.7.9),
-    networkD3 (>= 0.4)
+    networkD3 (>= 0.4),
+    shinythemes,
+    here,
+    formattable
 Remotes: 
     KTH-Library/kthapi,
     KTH-Library/ktheme,

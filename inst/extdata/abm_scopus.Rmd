@@ -945,12 +945,9 @@ Row {.tabset}
 -----------------------------------------------------------------------
 
 ### Citation Impact
-<div style='display:flex; flex-direction:row; justify-content:space-between; align-items:left;'>
-
-<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:stretch;'>
-
-<div>
-#### **Citations, open window** {.no-mobile}
+<div style='display:flex; flex-direction:row; justify-content:space-around; align-items:stretch;'>
+<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:left;'>
+##### **Citations, open window** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -965,16 +962,15 @@ abm_ui_datatable_scop_cit(
   unit_title = abm_unit_title
 )
 ```
-</div>
-<div>
-#### **Citations, open window** {.mobile}
+##### **Citations, open window** {.mobile}
 ```{r}
 abm_ui_kable_scop_cit(df_scop_cit)
 ```
-</div>
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
-<div>
+
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
+cat("<hr>")
 cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -995,9 +991,10 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
+cat("<hr>")
 ```
-</div>
-<div>
+
+##### **Average field weighted citation impact (FWCI)**
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_normcit(df_scop_normcit)
@@ -1006,11 +1003,9 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 </div>
-</div>
 
-<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:stretch;'>
-<div>
-#### **Field weighted citation impact (FWCI)** {.no-mobile}
+<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:left;'>
+##### **Field weighted citation impact (FWCI)** {.no-mobile}
 ```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
@@ -1018,16 +1013,15 @@ abm_ui_datatable_scop_normcit(
   unit_title = abm_unit_title
 )
 ```
-</div>
-<div>
-#### **Field weighted citation impact (FWCI)** {.mobile}
+##### **Field weighted citation impact (FWCI)** {.mobile}
 ```{r}
 abm_ui_kable_scop_normcit(df_scop_normcit)
 ```
-</div>
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
-<div>
+
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
+cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1059,9 +1053,10 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
+cat("<hr>")
 ```
-</div>
-<div>
+
+##### **Share of publications among Top 10% cited**
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_top10(df_scop_normcit)
@@ -1071,11 +1066,11 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 </div>
 </div>
-</div>
+
 ### Journal Impact
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
-<div>
-#### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
+
+##### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -1089,9 +1084,15 @@ abm_ui_datatable_scop_snip(
   unit_title = abm_unit_title
 )
 ```
-</div>
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+##### **Journal impact, fractionalized (3-year moving average)** {.mobile}
+```{r}
+abm_ui_kable_scop_snip(df_scop_snip)
+```
+
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 ```{r, echo=FALSE, results="asis"}
+cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1123,10 +1124,11 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
+cat("<hr>")
 ```
-<div style='display:flex; flex-direction:row; justify-content:space-around; align-items:center;'>
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:float;'>
 <div>
-#### **Field normalized journal impact (SNIP)**
+##### **Field normalized journal impact (SNIP)**
 
 ```{r}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -1137,7 +1139,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```  
 </div>
 <div>
-#### **Share of publications in Top 20% journals**
+##### **Share of publications in Top 20% journals**
 
 ```{r}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -1152,8 +1154,8 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ### Co&#8209;publishing
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
-<div>
-#### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
+
+##### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -1167,9 +1169,15 @@ abm_ui_datatable_scop_copub(
   unit_title = abm_unit_title
 )
 ```
-</div>
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
+##### **International and corporate co&#8209;publications (full counts)** {.mobile}
+```{r}
+abm_ui_kable_scop_copub(df_scop_copub)
+```
+
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 ```{r, echo=FALSE, results="asis"}
+cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1197,10 +1205,10 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
+cat("<hr>")
 ```
 
-<div>
-#### **International and corporate co&#8209;publication**
+##### **International and corporate co&#8209;publication**
 ```{r, fig.height=4, fig.width = 6}
 if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_scop_copub(df_scop_copub)
@@ -1208,6 +1216,4 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
-</div>
-</div>
 </div>

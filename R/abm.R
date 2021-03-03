@@ -1432,7 +1432,7 @@ abm_graph_oadata_stackedarea <- function(df){
 #' @export
 abm_graph_scop_normcit <- function(df){
   kth_cols <- palette_kth(4)
-  ymax <- max(2, ceiling(max(df$cf)))
+  ymax <- max(2, ceiling(max(df$fwci_x)))
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = fwci_x, group=1)) +

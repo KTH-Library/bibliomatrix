@@ -102,6 +102,7 @@ current_date <- format(Sys.Date(), "%Y%m%d")
 
 abm_unit_title<- paste0("ABM: ",unit_label)
 
+STATIC <- "https://kth-library.github.io/abm"
 ```
 
 <style>
@@ -339,12 +340,6 @@ if (has_rows == TRUE) {
 
 Row
 --------------------------------
-
-```{r}
-# TODO: change to suitable location for static PDF assets (or other non-HTML resources)
-STATIC <- "https://kth-library.github.io/abm"
-```
-
 
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 

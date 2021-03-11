@@ -58,7 +58,7 @@ df_coverage <- abm_coverage(unit_publ)
 unit_level<- 2
 
 if (unit_code %in% unit_info()$slug) {
-  unit_label <- bibliomatrix::unit_info() %>% filter(slug == params$unit_code) %>% pull(unit_long_en)
+  unit_label <- unit_info() %>% filter(slug == params$unit_code) %>% pull(unit_long_en)
 } else {
   unit_label <- abm_divisions() %>% filter(id == unit_code) %>% pull(desc)
 }
@@ -307,11 +307,6 @@ if (has_rows == TRUE) {
 
 Row
 --------------------------------
-
-```{r}
-STATIC <- "https://kth-library.github.io/abm"
-```
-
 
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 

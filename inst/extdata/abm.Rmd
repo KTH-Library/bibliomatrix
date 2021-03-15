@@ -334,7 +334,7 @@ Row
 --------------------------------
 ### **Background**
 
-The bibliometric indicators referred are based on publications registered in DiVA and published 2013 to 2019. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
+The bibliometric indicators referred are based on publications registered in DiVA and published `r abm_config()$start_year` to `r abm_config()$stop_year`. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
 Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science.
 
@@ -345,6 +345,7 @@ Statistics regarding citations and co&#8209;publishing are based on the subset o
 - [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
 - [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
 - [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
+- [Report on Open Access publishing at KTH](`r STATIC`/OARapport.pdf){target="_blank"}
 
 For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
 

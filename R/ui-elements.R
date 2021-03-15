@@ -225,6 +225,37 @@ getcolnames <- function(indics) {
   sapply(indics, getname)
 }
 
+#' Datatable for researchers
+#' 
+#' @param data data frame with researchers in a specific format (needs name, title)
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @importFrom DT datatable
+#' @export
+abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
+  
+  filename <- paste0("ABM_researchers_", unit_file_label, "_", 
+    format(Sys.Date(), "%Y%m%d"))
+  
+  header <- eval(parse(text = getheader(names(data))))
+  
+  DT::datatable(data,
+    container = header,
+    rownames = FALSE,
+    extensions = "Buttons",
+    style = "bootstrap", class = "compact", width = "720",
+    options = list(
+      ordering = FALSE,
+      bPaginate = TRUE,
+      pageLength = 10,
+      dom = 'tBp',
+      buttons = list(
+        list(extend = "copy", title = unit_title),
+        list(extend = "csv", filename = filename, title = unit_title),
+        list(extend = "excel", filename = filename, title = unit_title))
+    ))
+  
+}
 
 #' Datatable for DiVA publications
 #' 

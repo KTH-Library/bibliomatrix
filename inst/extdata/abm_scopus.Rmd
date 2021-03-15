@@ -41,12 +41,18 @@ colors_vb <- palette_kth(4)
 
 # Retrieve result tables to use in tabs and key indicators
 
-if (params$use_package_data != TRUE) {
+if (params$embed_data || !params$use_package_data) {
   con <- pool_bib()
-  data <- abm_data(con = con,
-                   unit_code = params$unit_code,
-                   pub_year = abm_config()$start_year:abm_config()$stop_year,
-                   analysis_id = abm_config()$analysis_id)
+  data <- abm_data(
+    con = con,
+    unit_code = params$unit_code,
+    pub_year = abm_config()$start_year:abm_config()$stop_year,
+    analysis_id = abm_config()$analysis_id
+    )
+  pool::poolClose(con)
+}
+
+if (params$use_package_data != TRUE) {
   df_diva <- abm_table1(data)
   df_diva_full <- abm_table1_full(data)
   df_cit3y <- abm_table2(data)
@@ -60,7 +66,6 @@ if (params$use_package_data != TRUE) {
   df_scop_copub <- abm_table_scop_copub(data)
   df_coverage <- abm_coverage(data)
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
-  pool::poolClose(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, "diva")
   df_diva_full <- pluck(abm_public_kth$units, params$unit_code, "diva_full")
@@ -402,7 +407,8 @@ abm_ui_button_publist(
   is_loggedin = params$embed_data,
   unit_label = unit_label, 
   unit_code = params$unit_code, 
-  unit_file_label
+  unit_file_label = unit_file_label,
+  is_authorbased = FALSE
 )
 
 # DiVA Dream Portal button

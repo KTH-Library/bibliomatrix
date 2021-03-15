@@ -117,8 +117,8 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
     )
     
     embed_file_link(excel_file,
-      title = "Download Publication List in Excel format",
-      text = icon_download, 
+      .text = "Download Publication List in Excel format", 
+      title = filename, #"Download Publication List in Excel format", # hover
       class = "btn btn-sm btn-primary")
   } else {
     HTML("Publication data is available only after login.")

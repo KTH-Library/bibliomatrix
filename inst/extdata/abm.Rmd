@@ -65,7 +65,9 @@ if (params$use_package_data != TRUE) {
   df_scop_snip <- abm_table_scop_snip(data)
   df_scop_copub <- abm_table_scop_copub(data)
   df_coverage <- abm_coverage(data)
+  con <- pool_bib()
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
+  pool::poolClose(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, "diva")
   df_diva_full <- pluck(abm_public_kth$units, params$unit_code, "diva_full")

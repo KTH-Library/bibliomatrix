@@ -896,7 +896,7 @@ Scopus
 
 #### `r unit_label`
 
-Row {.tabset data-height=2000}
+Row {.tabset data-height=1200}
 -----------------------------------------------------------------------
 
 ### Citation Impact
@@ -909,11 +909,17 @@ div.dt-buttons {
 </style>
 
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:center'>
+
 <div>
+
+Column
+------
+
+<div style='padding:10px;'>
 
 ##### **Citations, open window** {.no-mobile}
 
-```{r, fig.height = 12, fig.width = 6}
+```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_cit(
   df_scop_cit,
   unit_file_label = unit_file_label,
@@ -954,11 +960,23 @@ if(isTRUE(unit_level >= 0)){
 cat("<hr>")
 ```
 
+##### **Average field weighted citation impact (FWCI)**
+
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_normcit(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+</div>
 </div>
 
 <div>
+<div style='padding:10px;'>
 
 ##### **Field weighted citation impact (FWCI)** {.no-mobile}
+
 ```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
@@ -1011,16 +1029,6 @@ if(isTRUE(unit_level >= 0)){
 cat("<hr>")
 ```
 
-##### **Average field weighted citation impact (FWCI)**
-
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_normcit(df_scop_normcit)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
 ##### **Share of publications among Top 10% cited**
 
 ```{r, fig.height = 4, fig.width = 6}
@@ -1031,6 +1039,7 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 
+</div>
 </div>
 </div>
 

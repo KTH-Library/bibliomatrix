@@ -942,13 +942,11 @@ Scopus
 
 #### `r unit_label`
 
-Row {.tabset}
+Row {.tabset data-height=1200}
 -----------------------------------------------------------------------
 
 ### Citation Impact
-<div style='display:flex; flex-direction:row; justify-content:space-between; align-items:stretch'>
-<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:stretch'>
-##### **Citations, open window** {.no-mobile}
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -956,14 +954,27 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height = 12, fig.width = 6}
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:center'>
+
+<div>
+
+Column
+------
+
+<div style='padding:10px;'>
+
+##### **Citations, open window** {.no-mobile}
+
+```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_cit(
   df_scop_cit,
   unit_file_label = unit_file_label,
   unit_title = abm_unit_title
 )
 ```
+
 ##### **Citations, open window** {.mobile}
+
 ```{r}
 abm_ui_kable_scop_cit(df_scop_cit)
 ```
@@ -996,6 +1007,7 @@ cat("<hr>")
 ```
 
 ##### **Average field weighted citation impact (FWCI)**
+
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_normcit(df_scop_normcit)
@@ -1004,9 +1016,13 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 </div>
+</div>
 
-<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:stretch'>
+<div>
+<div style='padding:10px;'>
+
 ##### **Field weighted citation impact (FWCI)** {.no-mobile}
+
 ```{r, fig.height = 6, fig.width = 6}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
@@ -1014,7 +1030,9 @@ abm_ui_datatable_scop_normcit(
   unit_title = abm_unit_title
 )
 ```
+
 ##### **Field weighted citation impact (FWCI)** {.mobile}
+
 ```{r}
 abm_ui_kable_scop_normcit(df_scop_normcit)
 ```
@@ -1058,6 +1076,7 @@ cat("<hr>")
 ```
 
 ##### **Share of publications among Top 10% cited**
+
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_top10(df_scop_normcit)
@@ -1065,19 +1084,24 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
+</div>
 </div>
 </div>
 
 ### Journal Impact
+
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
 
 ##### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
   float:right;
 }
 </style>
+
 ```{r, fig.height=4}
 abm_ui_datatable_scop_snip(
   df_scop_snip,
@@ -1087,11 +1111,13 @@ abm_ui_datatable_scop_snip(
 ```
 
 ##### **Journal impact, fractionalized (3-year moving average)** {.mobile}
+
 ```{r}
 abm_ui_kable_scop_snip(df_scop_snip)
 ```
 
 ##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
@@ -1129,6 +1155,7 @@ cat("<hr>")
 ```
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
+
 ##### **Field normalized journal impact (SNIP)**
 
 ```{r}
@@ -1140,6 +1167,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```  
 </div>
 <div>
+
 ##### **Share of publications in Top 20% journals**
 
 ```{r}
@@ -1156,12 +1184,14 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ### Co&#8209;publishing
 
 ##### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
   float:right;
 }
 </style>
+
 ```{r, fig.height = 4}
 abm_ui_datatable_scop_copub(
   df_scop_copub,
@@ -1171,11 +1201,13 @@ abm_ui_datatable_scop_copub(
 ```
 
 ##### **International and corporate co&#8209;publications (full counts)** {.mobile}
+
 ```{r}
 abm_ui_kable_scop_copub(df_scop_copub)
 ```
 
 ##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
@@ -1207,8 +1239,11 @@ if(isTRUE(unit_level >= 0)){
 }
 cat("<hr>")
 ```
+
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+
 ##### **International and corporate co&#8209;publication**
+
 ```{r, fig.height=4, fig.width = 8}
 if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_scop_copub(df_scop_copub)

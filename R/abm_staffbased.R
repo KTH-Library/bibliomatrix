@@ -71,7 +71,7 @@ abm_staff_data <- function(con = con_bib(), kthids,
     inner_join(unit_frac, by="PID") %>% 
     arrange(PID) %>% # to make sure that Diva_org = 177 is preferred over blanks in deduplication below
     distinct(PID, WebofScience_ID, .keep_all = TRUE) %>%
-    select(-Unit_code, -Unit_Name)  # removing redundant fields, that can be misleading after deduplication
+    select(-Unit_code, -Unit_Name, -analysis_id)  # removing redundant fields, that can be misleading after deduplication
 }
 
 #' Retrieve publication list for staffbased ABM
@@ -86,7 +86,7 @@ abm_staff_data <- function(con = con_bib(), kthids,
 abm_publications_staffbased <- function(con, unit_code, 
                                         analysis_start = abm_config()$start_year, 
                                         analysis_stop = abm_config()$stop_year) {
-  
+  ### Probably obsolete ###
   abm_staff_data(kthids = abm_researchers(unit_code), 
                  analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)

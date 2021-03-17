@@ -87,28 +87,20 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
     
     # data that we want to export
     if (!isTRUE(is_authorbased)) {
-      con <- pool_bib()
       publications_kth <- abm_publications(data)
-      pool::poolClose(con)
-      
-      filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
-      excel_file <- file.path(tempdir(), filename)
     } else {
       # we have publications for a "slug"
-      con <- pool_bib()
-      
-      publications_kth <- 
-        abm_publications_staffbased(con = con, unit_code = unit_code) %>%
+      publications_kth <- # abm_publications_staffbased(con = con, unit_code = unit_code) %>%
+        data %>%
+        arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID) %>%
         mutate(Unit_code = unit_code) %>%
         mutate(Unit_Name = unit_label) %>%
         select(Unit_Name, Unit_code, everything())
-      
-      pool::poolClose(con)
-      filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
-      excel_file <- file.path(tempdir(), filename)
     }
     
     # Create excel workbook
+    filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
+    excel_file <- file.path(tempdir(), filename)
     writexl::write_xlsx(path = excel_file,
        x = list(
          Data = as.data.frame(publications_kth), 

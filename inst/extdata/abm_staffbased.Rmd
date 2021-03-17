@@ -362,6 +362,7 @@ Row
 
 ```{r}
 abm_ui_button_publist(
+  data = unit_publ,
   is_loggedin = params$embed_data, 
   unit_label = unit_label, 
   unit_code = unit_code, 

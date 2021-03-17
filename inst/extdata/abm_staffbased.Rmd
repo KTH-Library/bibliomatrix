@@ -372,13 +372,16 @@ abm_ui_button_publist(
 ```
 
 ```{r}
+con <- con_bib()
 researchers <- 
-  con_bib() %>% tbl("researchers") %>% 
+  con %>%
+  tbl("researchers") %>% 
   collect() %>%
   filter(stringr::str_starts(slug, params$unit_code)) %>%
   distinct() %>%
   mutate(Name = paste(firstName, lastName)) %>%
   select(Name, Title = `title.en`) %>% collect()
+DBI::dbDisconnect(con)
 
 abm_ui_datatable_researchers(
   data = researchers, 

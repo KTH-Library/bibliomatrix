@@ -37,13 +37,22 @@ cache_reports <- function() {
   
   unit_schools <- unique(abm_divisions()$pid)
   unit_institutions <- unique(sapply(strsplit(unit_schools, "/", fixed = TRUE), "[[", 1))
-  slugs <- unique(c(unit_institutions, unit_schools, abm_divisions()$id))
   
-  pb <- progress::progress_bar$new(total = length(slugs))
+  slugs <- unique(c(unit_institutions, unit_schools, abm_divisions()$id))
+  slugs <- unique(c("m/mob", slugs))
+  
+  pb <- progress::progress_bar$new(total = length(slugs), 
+    format = " rendering :what [:bar] :percent eta: :eta")
   
   render_report_pb <- function(x) {
-    pb$tick()
-    render_report(x)
+    pb$tick(tokens = list(what = x))
+    rr <- purrr::possibly(render_report, otherwise = FALSE, quiet = TRUE)
+    res <- rr(x)
+    if (isFALSE(res)) {
+      message("Failed rendering for ", x)
+      res <- tibble()
+    }
+    
     Sys.sleep(0.01)
   }
   
@@ -80,7 +89,8 @@ cache_report <- function(con = con_bib("sqlite"), slug) {
 }
 
 cache_clear <- function(con = con_bib("sqlite")) {
-  RSQLite::dbRemoveTable(con, "reports")  
+  if (RSQLite::dbExistsTable(con, "report"))
+    RSQLite::dbRemoveTable(con, "reports")  
 }
 
 cache_clear_report <- function(slug) {
@@ -209,10 +219,9 @@ function(slug) {
 
 #* Regenerate the full cache
 #* @get /cache/rebuild
-#* @param slug
 #* @response 400 Invalid input.
 #* @tag Cache management
-function(slug) {
+function() {
   cache_reports()
 }
 

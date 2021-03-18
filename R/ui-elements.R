@@ -370,7 +370,9 @@ abm_ui_datatable_diva_full <- function(df_diva_full, unit_file_label, unit_title
 #' @export
 abm_ui_kable_diva_full <- function(df_diva_full) {
   
-  if (nrow(df_diva_full) > 0) {
+  df_diva <- df_diva_full
+  
+  if (nrow(df_diva) > 0) {
     df_diva %>%
       mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage"), round, digits = 0) %>%
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
@@ -924,3 +926,98 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
   }
 }
 
+#' A note to keep in mind when interpreting results
+#' 
+#' @param data data frame with DiVA publication data in a specific format
+#' @param df_coverage data frame with coverage data
+#' @param unit_level an integer indicating organizational aggregation level
+#' @param is_fractional logical indicating if fractional values, by default FALSE
+#' @param is_wos logical indicating if using WoS data, by default TRUE
+#' @export
+abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is_wos = TRUE) {
+  
+  if (isTRUE(unit_level >= 0)) {
+    
+    intervals <- 
+      data %>% 
+      filter(substr(interval, 1, 1) == "2") %>% 
+      pull(interval)
+    
+    cov <- 
+      df_coverage %>%
+      filter(Publication_Type == "Article, peer review")
+    
+    is_ok <- function(x) is.finite(na.omit(x))
+    
+    if (nrow(cov) > 0 && (is_ok(min(cov$Publication_Year)) && 
+        is_ok(max(cov$Publication_Year)))) {
+      
+      si <- sliding_intervals(
+        min(cov$Publication_Year),
+        max(cov$Publication_Year), 3)
+      
+      cov <- 
+        cov %>% 
+        inner_join(si, by = c("Publication_Year" = "x")) %>%
+        filter(interval %in% intervals)
+      
+      
+      if (is_fractional) {
+        if (is_wos) {
+          cov <- 
+            cov %>%
+            group_by(interval) %>% 
+            summarise(
+              woscov_frac = sum(sumwos_frac) / sum(p_frac),
+              sumwos_full = sum(sumwos_full)
+            )
+          mincov <- min(cov$woscov_frac)
+          minpubs <- min(cov$sumwos_full)
+        } else {
+          cov <- 
+            cov %>%
+            group_by(interval) %>% 
+            summarise(
+              scopcov_frac = sum(sumscop_frac) / sum(p_frac),
+              sumscop_full = sum(sumscop_full)
+            )
+          mincov <- min(cov$scopcov_frac)
+          minpubs <- min(cov$sumscop_full)
+        }
+      } else {
+        if (is_wos) {
+          cov <- 
+            cov %>%
+            group_by(interval) %>% 
+            summarise(woscov_full = sum(sumwos_full) / sum(p_full))
+          mincov <- min(cov$woscov_full)
+          minpubs <- min(data$P_full)
+        } else {
+          cov <- 
+            cov %>%
+            group_by(interval) %>% 
+            summarise(scopcov_full = sum(sumscop_full) / sum(p_full))
+          mincov <- min(cov$scopcov_full)
+          minpubs <- min(cov$P_full)
+        }
+      }
+      
+      cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+               "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+               "(DiVA publication type Article, peer review)<br></span>"))
+      
+      if (minpubs < 50)
+        cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+      
+    } else {
+        cat("<b>Bibliometric indicators based on a low number of publications are considered unreliable.</b>")
+      
+    }
+    
+  } else {
+    
+    cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+    
+  }  
+  
+}

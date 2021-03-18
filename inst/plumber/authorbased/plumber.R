@@ -89,7 +89,7 @@ cache_report <- function(con = con_bib("sqlite"), slug) {
 }
 
 cache_clear <- function(con = con_bib("sqlite")) {
-  if (RSQLite::dbExistsTable(con, "report"))
+  if (RSQLite::dbExistsTable(con, "reports"))
     RSQLite::dbRemoveTable(con, "reports")  
 }
 

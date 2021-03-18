@@ -8,7 +8,7 @@ output:
     favicon: kth-logo.png
     fig_mobile: FALSE
 params:
-  unit_code: "m/mf/mfc"
+  unit_code: "a"
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: TRUE
@@ -313,7 +313,7 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("<p>Indicators in the Citation impact, Journal impact and Co&#8209;publishing tabs are based on Web of Science publications only. Corresponding Scopus indicators can be found under the Scopus tab.</p>")
 
-if(isTRUE(unit_level >= 0)){
+if(isTRUE(unit_level >= 0) && nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
 
   #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
   glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
@@ -400,6 +400,7 @@ Row {.tabset}
 ---------------------
 
 ### Fractional count
+
 #### **Publication volume, fractionalized** {.no-padding .no-mobile}
 
 <!-- <div style='width:720px;margin:auto'> -->
@@ -427,7 +428,9 @@ abm_ui_datatable_diva(
 ```{r, fig.width=3.75}
 abm_ui_kable_diva(df_diva)
 ```
+
 ### Full count
+
 #### **Publication volume, full count** {.no-padding .no-mobile}
 
 <!-- <div style='width:720px;margin:auto'> -->
@@ -590,35 +593,8 @@ if(isTRUE(unit_level >= 0)){
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-if(isTRUE(unit_level >= 0)){
+abm_ui_note(df_cf, df_coverage, unit_level, is_fractional = TRUE)
 
-  intervals <- df_cf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
-  woscov_cf <- df_coverage %>%
-    filter(Publication_Type == "Article, peer review")
-  woscov_cf <- woscov_cf %>% 
-    inner_join(sliding_intervals(min(woscov_cf$Publication_Year),
-                                 max(woscov_cf$Publication_Year), 3),
-               by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(woscov_frac = sum(sumwos_frac) / sum(p_frac),
-              sumwos_full = sum(sumwos_full))
-
-  mincov <- min(woscov_cf$woscov_frac)
-  minpubs <- min(woscov_cf$sumwos_full)
-
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication type Article, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
 ```
 
 Row
@@ -685,32 +661,9 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-if(isTRUE(unit_level >= 0)){
-  intervals <- df_jcf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
-  woscov_jcf <- df_coverage %>%
-    filter(Publication_Type == "Article, peer review")
-  woscov_jcf <- woscov_jcf %>% 
-    inner_join(sliding_intervals(min(woscov_jcf$Publication_Year), max(woscov_jcf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(woscov_frac = sum(sumwos_frac) / sum(p_frac),
-              sumcov_full = sum(sumwos_full))
+abm_ui_note(df_jcf, df_coverage, unit_level, is_fractional = TRUE)
 
-  mincov <- min(woscov_jcf$woscov_frac)
-  minpubs <- min(woscov_jcf$sumcov_full)
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication type Article, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
 ```
 
 Row
@@ -777,31 +730,8 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-if(isTRUE(unit_level >= 0)){
-  intervals <- df_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
-  woscov_copub <- df_coverage %>%
-    filter(Publication_Type == "Article, peer review")
-  woscov_copub <- woscov_copub %>% 
-    inner_join(sliding_intervals(min(woscov_copub$Publication_Year), max(woscov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(woscov_full = sum(sumwos_full) / sum(p_full))
+abm_ui_note(df_copub, df_coverage, unit_level)
 
-  mincov <- min(woscov_copub$woscov_full)
-  minpubs <- min(df_copub$P_full)
-
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication type Article, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
 ```
 
 Row
@@ -1001,36 +931,8 @@ abm_ui_kable_scop_normcit(df_scop_normcit)
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
-if(isTRUE(unit_level >= 0)){
+abm_ui_note(df_scop_normcit, df_coverage, unit_level, is_fractional = TRUE, is_wos = FALSE)
 
-  intervals <- df_scop_normcit %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
-  scopcov_normcit <- df_coverage %>%
-    filter(Publication_Type == "Peer reviewed")
-  scopcov_normcit <- scopcov_normcit %>% 
-    inner_join(sliding_intervals(min(scopcov_normcit$Publication_Year),
-                                 max(scopcov_normcit$Publication_Year), 3),
-               by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
-              sumscop_full = sum(sumscop_full))
-
-  mincov <- min(scopcov_normcit$scopcov_frac)
-  minpubs <- min(scopcov_normcit$sumscop_full)
-  
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
-cat("<hr>")
 ```
 
 ##### **Share of publications among Top 10% cited**
@@ -1080,36 +982,8 @@ abm_ui_kable_scop_snip(df_scop_snip)
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
-if(isTRUE(unit_level >= 0)){
+abm_ui_note(df_scop_snip, df_coverage, unit_level, is_fractional = TRUE, is_wos = FALSE)
 
-  intervals <- df_scop_snip %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
-  scopcov_snip <- df_coverage %>%
-    filter(Publication_Type == "Peer reviewed")
-  scopcov_snip <- scopcov_snip %>% 
-    inner_join(sliding_intervals(min(scopcov_snip$Publication_Year),
-                                 max(scopcov_snip$Publication_Year), 3),
-               by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
-              sumscop_full = sum(sumscop_full))
-
-  mincov <- min(scopcov_snip$scopcov_frac)
-  minpubs <- min(scopcov_snip$sumscop_full)
-  
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
-cat("<hr>")
 ```
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
@@ -1170,32 +1044,8 @@ abm_ui_kable_scop_copub(df_scop_copub)
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
-if(isTRUE(unit_level >= 0)){
-  intervals <- df_scop_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
-  scopcov_copub <- df_coverage %>%
-    filter(Publication_Type == "Peer reviewed")
-  scopcov_copub <- scopcov_copub %>% 
-    inner_join(sliding_intervals(min(scopcov_copub$Publication_Year), max(scopcov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(scopcov_full = sum(sumscop_full) / sum(p_full))
+abm_ui_note(df_scop_copub, df_coverage, unit_level, is_fractional = FALSE, is_wos = FALSE)
 
-  mincov <- min(scopcov_copub$scopcov_full)
-  minpubs <- min(df_scop_copub$P_full)
-
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
-cat("<hr>")
 ```
 
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>

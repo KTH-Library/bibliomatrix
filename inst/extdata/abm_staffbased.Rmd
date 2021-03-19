@@ -730,7 +730,7 @@ Row
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
-abm_ui_note(df_copub, df_coverage, unit_level)
+abm_ui_note(df_copub, df_coverage, unit_level, is_fractional = FALSE, is_wos = TRUE)
 
 ```
 

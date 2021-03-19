@@ -943,9 +943,15 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
       filter(substr(interval, 1, 1) == "2") %>% 
       pull(interval)
     
-    cov <- 
-      df_coverage %>%
-      filter(Publication_Type == "Article, peer review")
+    if (is_wos) {
+      cov <- 
+        df_coverage %>%
+        filter(Publication_Type == "Article, peer review")
+    } else {
+      cov <- 
+        df_coverage %>%
+        filter(Publication_Type == "Peer reviewed")
+    }
     
     is_ok <- function(x) is.finite(na.omit(x))
     
@@ -998,7 +1004,7 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
             group_by(interval) %>% 
             summarise(scopcov_full = sum(sumscop_full) / sum(p_full))
           mincov <- min(cov$scopcov_full)
-          minpubs <- min(cov$P_full)
+          minpubs <- min(data$P_full)
         }
       }
       
@@ -1015,7 +1021,7 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
     }
     
   } else {
-    
+    # this is for individuals (unit_level is null, unlike organizational units)
     cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
     
   }  

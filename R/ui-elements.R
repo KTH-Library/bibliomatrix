@@ -933,6 +933,7 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
 #' @param unit_level an integer indicating organizational aggregation level
 #' @param is_fractional logical indicating if fractional values, by default FALSE
 #' @param is_wos logical indicating if using WoS data, by default TRUE
+#' @importFrom stats na.omit
 #' @export
 abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is_wos = TRUE) {
   

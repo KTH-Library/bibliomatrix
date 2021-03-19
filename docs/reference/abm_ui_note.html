@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HTML table for co-publication (WoS) — abm_ui_kable_copub • bibliomatrix</title>
+<title>A note to keep in mind when interpreting results — abm_ui_note • bibliomatrix</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="HTML table for co-publication (WoS) — abm_ui_kable_copub" />
-<meta property="og:description" content="HTML table for co-publication (WoS)" />
+<meta property="og:title" content="A note to keep in mind when interpreting results — abm_ui_note" />
+<meta property="og:description" content="A note to keep in mind when interpreting results" />
 
 
 
@@ -126,23 +126,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>HTML table for co-publication (WoS)</h1>
+    <h1>A note to keep in mind when interpreting results</h1>
     <small class="dont-index">Source: <a href='https://github.com/KTH-Library/bibliomatrix/blob/master/R/ui-elements.R'><code>R/ui-elements.R</code></a></small>
-    <div class="hidden name"><code>abm_ui_kable_copub.Rd</code></div>
+    <div class="hidden name"><code>abm_ui_note.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>HTML table for co-publication (WoS)</p>
+    <p>A note to keep in mind when interpreting results</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_ui_kable_copub</span><span class='op'>(</span><span class='va'>df_copub</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_ui_note</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  <span class='va'>df_coverage</span>,
+  <span class='va'>unit_level</span>,
+  is_fractional <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  is_wos <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>df_copub</th>
+      <th>data</th>
       <td><p>data frame with DiVA publication data in a specific format</p></td>
+    </tr>
+    <tr>
+      <th>df_coverage</th>
+      <td><p>data frame with coverage data</p></td>
+    </tr>
+    <tr>
+      <th>unit_level</th>
+      <td><p>an integer indicating organizational aggregation level</p></td>
+    </tr>
+    <tr>
+      <th>is_fractional</th>
+      <td><p>logical indicating if fractional values, by default FALSE</p></td>
+    </tr>
+    <tr>
+      <th>is_wos</th>
+      <td><p>logical indicating if using WoS data, by default TRUE</p></td>
     </tr>
     </table>
 

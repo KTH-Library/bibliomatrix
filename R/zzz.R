@@ -29,7 +29,12 @@ globalz <- "
     green_count hybrid_count is_oa oa_count oa_share oa_status variable uncited P_uncited Share_uncited
     Year group perc_text series percent_format current_date varname displayname description_short text
     kthid slug title.en username Unit_Fraction_adj_raw Unit_Fraction_raw Unit_Name n_pubs n_staff name
-    name.x name.y nd_researchers pid unit_short firstName lastName is_kth description_en
+    name.x name.y nd_researchers pid unit_short DOI firstName lastName ScopusID
+    C_avg C_sum P P_uncited_scop Share_uncited_scop abm_woscoverage
+    scop_Jtop20 scop_Ptop10 scop_bin scop_corp scop_cscxo scop_doctype
+    scop_fwci_x scop_int scop_snip sumscop_frac sumscop_full sumwos_frac
+    sumwos_full P_full avg_snip corp_share description_en df_diva fwci_x is_kth
+    description_en analysis_id
 "
 
 # HACK: add global fcns / vars with spaces in the name

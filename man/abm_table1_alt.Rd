@@ -12,7 +12,7 @@ abm_table1_alt(
 )
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
+\item{con}{connection to db, default is to use sqlite connection}
 
 \item{data}{dataset with publications as tibble}
 

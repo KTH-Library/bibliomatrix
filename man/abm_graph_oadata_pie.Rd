@@ -7,7 +7,7 @@
 abm_graph_oadata_pie(df)
 }
 \arguments{
-\item{df}{a data frame at the format produced by abm_oa_data()}
+\item{df}{a data frame at the format produced by abm_table6()}
 }
 \value{
 a pie chart object

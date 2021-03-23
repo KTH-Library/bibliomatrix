@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -135,14 +135,14 @@
     <p>Retrieve data for ABM tables and graphs from master table</p>
     </div>
 
-    <pre class="usage"><span class='fu'>abm_data</span><span class='op'>(</span>con <span class='op'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>unit_code</span>, <span class='va'>pub_year</span>, <span class='va'>unit_level</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>abm_data</span><span class='op'>(</span>con <span class='op'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>unit_code</span>, <span class='va'>pub_year</span>, <span class='va'>unit_level</span>, <span class='va'>analysis_id</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>con</th>
-      <td><p>connection to db, default is to use mssql connection</p></td>
+      <td><p>connection to db, default is sqlite connection</p></td>
     </tr>
     <tr>
       <th>unit_code</th>
@@ -155,6 +155,10 @@
     <tr>
       <th>unit_level</th>
       <td><p>for filtering on organizational level, 0 = KTH, 1 = school, 2 = deparment, 3 = researcher.</p></td>
+    </tr>
+    <tr>
+      <th>analysis_id</th>
+      <td><p>for filtering on specific analysis, for example 1 = KTH ABM 2020</p></td>
     </tr>
     </table>
 

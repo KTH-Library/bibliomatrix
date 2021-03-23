@@ -7,7 +7,7 @@
 abm_graph_oadata_stackedarea(df)
 }
 \arguments{
-\item{df}{a data frame at the format produced by abm_oa_data()}
+\item{df}{a data frame at the format produced by abm_table6()}
 }
 \value{
 a ggplot object

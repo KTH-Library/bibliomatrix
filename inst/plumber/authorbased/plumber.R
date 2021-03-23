@@ -33,18 +33,29 @@ render_report <- function(slug) {
   data.frame(name = id, data = b)
 }
 
-cache_reports <- function() {
+cache_reports <- function(slugs) {
   
-  unit_schools <- unique(abm_divisions()$pid)
-  unit_institutions <- unique(sapply(strsplit(unit_schools, "/", fixed = TRUE), "[[", 1))
-  slugs <- unique(c(unit_institutions, unit_schools, abm_divisions()$id))
+  if (missing(slugs)) {
+    unit_schools <- unique(abm_divisions()$pid)
+    unit_institutions <- unique(sapply(strsplit(unit_schools, "/", fixed = TRUE), "[[", 1))
+    unit_divisions <- abm_divisions()$id
+    slugs <- unique(c(unit_institutions, unit_schools, unit_divisions))
+  }
   
-  pb <- progress::progress_bar$new(total = length(slugs))
+  pb <- progress::progress_bar$new(total = length(slugs), 
+    format = " rendering :what [:bar] :percent eta: :eta")
   
   render_report_pb <- function(x) {
-    pb$tick()
-    render_report(x)
+    pb$tick(tokens = list(what = x))
+    rr <- purrr::possibly(render_report, otherwise = FALSE, quiet = FALSE)
+    res <- rr(x)
+    if (isFALSE(res)) {
+      message("Failed rendering for ", x)
+      res <- NULL
+    }
+    
     Sys.sleep(0.01)
+    return(res)
   }
   
   reports <- map_df(slugs, render_report_pb)
@@ -74,13 +85,18 @@ cache_report <- function(con = con_bib("sqlite"), slug) {
   
   df <- render_report(id)
   
-  RSQLite::dbWriteTable(con, "reports", df, append = TRUE)
+  if (!RSQLite::dbExistsTable("reports")) {
+    RSQLite::dbWriteTable(con, "reports", df)
+  } else {
+    RSQLite::dbWriteTable(con, "reports", df, append = TRUE)
+  }
   
   as.raw(unlist(df$data))  
 }
 
 cache_clear <- function(con = con_bib("sqlite")) {
-  RSQLite::dbRemoveTable(con, "reports")  
+  if (RSQLite::dbExistsTable(con, "reports"))
+    RSQLite::dbRemoveTable(con, "reports")  
 }
 
 cache_clear_report <- function(slug) {
@@ -108,7 +124,7 @@ cache_view <- function() {
   con <- con_bib("sqlite")
   on.exit(RSQLite::dbDisconnect(con))
   
-  con %>% tbl("reports")
+  con %>% tbl("reports") %>% collect()
   
 }
 
@@ -209,10 +225,9 @@ function(slug) {
 
 #* Regenerate the full cache
 #* @get /cache/rebuild
-#* @param slug
 #* @response 400 Invalid input.
 #* @tag Cache management
-function(slug) {
+function() {
   cache_reports()
 }
 

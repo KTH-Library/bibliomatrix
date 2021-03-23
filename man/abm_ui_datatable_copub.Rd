@@ -2,7 +2,7 @@
 % Please edit documentation in R/ui-elements.R
 \name{abm_ui_datatable_copub}
 \alias{abm_ui_datatable_copub}
-\title{Datatable for co-publication}
+\title{Datatable for co-publication (WoS)}
 \usage{
 abm_ui_datatable_copub(df_copub, unit_file_label, unit_title)
 }
@@ -14,5 +14,5 @@ abm_ui_datatable_copub(df_copub, unit_file_label, unit_title)
 \item{unit_title}{the label presented when users make use of the download button}
 }
 \description{
-Datatable for co-publication
+Datatable for co-publication (WoS)
 }

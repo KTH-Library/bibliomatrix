@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
       </span>
     </div>
 
@@ -175,6 +175,12 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="abm_coverage.html">abm_coverage()</a></code> </p>
+        </td>
+        <td><p>Retrieve WoS and Scopus coverage for peer reviewed DiVA publication types</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="abm_dash_indices.html">abm_dash_indices()</a></code> </p>
         </td>
         <td><p>Retrieve dashboard indicators for ABM</p></td>
@@ -201,7 +207,7 @@
         <td>
           <p><code><a href="abm_graph_cf.html">abm_graph_cf()</a></code> </p>
         </td>
-        <td><p>Create graph over Cf by year</p></td>
+        <td><p>Create graph over Cf by year, WoS</p></td>
       </tr><tr>
         
         <td>
@@ -213,7 +219,7 @@
         <td>
           <p><code><a href="abm_graph_copub.html">abm_graph_copub()</a></code> </p>
         </td>
-        <td><p>Create graph over international and Swedish non-university copublications by year</p></td>
+        <td><p>Create graph over international and Swedish non-university copublications by year, WoS</p></td>
       </tr><tr>
         
         <td>
@@ -249,7 +255,7 @@
         <td>
           <p><code><a href="abm_graph_jcf.html">abm_graph_jcf()</a></code> </p>
         </td>
-        <td><p>Create graph over jcf by year</p></td>
+        <td><p>Create graph over jcf by year, WoS</p></td>
       </tr><tr>
         
         <td>
@@ -295,9 +301,39 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="abm_graph_scop_copub.html">abm_graph_scop_copub()</a></code> </p>
+        </td>
+        <td><p>Create graph over international and corporate copublications by year, Scopus</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_graph_scop_normcit.html">abm_graph_scop_normcit()</a></code> </p>
+        </td>
+        <td><p>Create graph over Scopus FWCI by years</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_graph_scop_snip.html">abm_graph_scop_snip()</a></code> </p>
+        </td>
+        <td><p>Create graph over SNIP by year, Scopus</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_graph_scop_top10.html">abm_graph_scop_top10()</a></code> </p>
+        </td>
+        <td><p>Create graph over Top 10% publications by year, Scopus</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_graph_scop_top20.html">abm_graph_scop_top20()</a></code> </p>
+        </td>
+        <td><p>Create graph over Top 20% journals by year, Scopus</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="abm_graph_top10.html">abm_graph_top10()</a></code> </p>
         </td>
-        <td><p>Create graph over Top 10% publications by year</p></td>
+        <td><p>Create graph over Top 10% publications by year, Wos</p></td>
       </tr><tr>
         
         <td>
@@ -309,7 +345,7 @@
         <td>
           <p><code><a href="abm_graph_top20.html">abm_graph_top20()</a></code> </p>
         </td>
-        <td><p>Create graph over Top 20% journals by year</p></td>
+        <td><p>Create graph over Top 20% journals by year, WoS</p></td>
       </tr><tr>
         
         <td>
@@ -399,13 +435,19 @@
         <td>
           <p><code><a href="abm_table1.html">abm_table1()</a></code> </p>
         </td>
-        <td><p>Retrieve Table 1 (Publications in DiVA) for ABM</p></td>
+        <td><p>Retrieve Table 1 (Publications in DiVA) for ABM, fractional counts</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="abm_table1_alt.html">abm_table1_alt()</a></code> </p>
         </td>
         <td><p>Retrieve Table 1 (Publications in DiVA) for ABM</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_table1_full.html">abm_table1_full()</a></code> </p>
+        </td>
+        <td><p>Retrieve Table 1 (Publications in DiVA) for ABM, full counts</p></td>
       </tr><tr>
         
         <td>
@@ -469,6 +511,30 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="abm_table_scop_cit.html">abm_table_scop_cit()</a></code> </p>
+        </td>
+        <td><p>Retrieve citations table (Scopus) for ABM</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_table_scop_copub.html">abm_table_scop_copub()</a></code> </p>
+        </td>
+        <td><p>Retrieve Co-publishing table (Scopus) for ABM</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_table_scop_normcit.html">abm_table_scop_normcit()</a></code> </p>
+        </td>
+        <td><p>Retrieve field normalized citations table (Scopus) for ABM</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_table_scop_snip.html">abm_table_scop_snip()</a></code> </p>
+        </td>
+        <td><p>Retrieve Journal impact table (Scopus) for ABM</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="abm_ui_button_altmetric.html">abm_ui_button_altmetric()</a></code> </p>
         </td>
         <td><p>Link to Altmetric Explorer for an organizational unit at KTH</p></td>
@@ -501,13 +567,19 @@
         <td>
           <p><code><a href="abm_ui_datatable_copub.html">abm_ui_datatable_copub()</a></code> </p>
         </td>
-        <td><p>Datatable for co-publication</p></td>
+        <td><p>Datatable for co-publication (WoS)</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="abm_ui_datatable_diva.html">abm_ui_datatable_diva()</a></code> </p>
         </td>
         <td><p>Datatable for DiVA publications</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_datatable_diva_full.html">abm_ui_datatable_diva_full()</a></code> </p>
+        </td>
+        <td><p>Datatable for DiVA publications, full counts</p></td>
       </tr><tr>
         
         <td>
@@ -520,6 +592,36 @@
           <p><code><a href="abm_ui_datatable_oa.html">abm_ui_datatable_oa()</a></code> </p>
         </td>
         <td><p>Datatable for open access publications</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_datatable_researchers.html">abm_ui_datatable_researchers()</a></code> </p>
+        </td>
+        <td><p>Datatable for researchers</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_datatable_scop_cit.html">abm_ui_datatable_scop_cit()</a></code> </p>
+        </td>
+        <td><p>Datatable for Scopus citations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_datatable_scop_copub.html">abm_ui_datatable_scop_copub()</a></code> </p>
+        </td>
+        <td><p>Datatable for co-publication (Scopus)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_datatable_scop_normcit.html">abm_ui_datatable_scop_normcit()</a></code> </p>
+        </td>
+        <td><p>Datatable for Scopus FWCI</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_datatable_scop_snip.html">abm_ui_datatable_scop_snip()</a></code> </p>
+        </td>
+        <td><p>Datatable for Scopus journal impact (SNIP)</p></td>
       </tr><tr>
         
         <td>
@@ -537,13 +639,19 @@
         <td>
           <p><code><a href="abm_ui_kable_copub.html">abm_ui_kable_copub()</a></code> </p>
         </td>
-        <td><p>HTML table for co-publication</p></td>
+        <td><p>HTML table for co-publication (WoS)</p></td>
       </tr><tr>
         
         <td>
           <p><code><a href="abm_ui_kable_diva.html">abm_ui_kable_diva()</a></code> </p>
         </td>
         <td><p>HTML table for DiVA publications</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_kable_diva_full.html">abm_ui_kable_diva_full()</a></code> </p>
+        </td>
+        <td><p>HTML table for DiVA publications, full counts</p></td>
       </tr><tr>
         
         <td>
@@ -556,6 +664,36 @@
           <p><code><a href="abm_ui_kable_oa.html">abm_ui_kable_oa()</a></code> </p>
         </td>
         <td><p>HTML table for open access publications</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_kable_scop_cit.html">abm_ui_kable_scop_cit()</a></code> </p>
+        </td>
+        <td><p>HTML table for Scopus citations</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_kable_scop_copub.html">abm_ui_kable_scop_copub()</a></code> </p>
+        </td>
+        <td><p>HTML table for co-publication (Scopus)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_kable_scop_normcit.html">abm_ui_kable_scop_normcit()</a></code> </p>
+        </td>
+        <td><p>HTML table for Scopus FWCI</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_kable_scop_snip.html">abm_ui_kable_scop_snip()</a></code> </p>
+        </td>
+        <td><p>HTML table for Scopus journal impact (SNIP)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="abm_ui_note.html">abm_ui_note()</a></code> </p>
+        </td>
+        <td><p>A note to keep in mind when interpreting results</p></td>
       </tr><tr>
         
         <td>
@@ -586,12 +724,6 @@
           <p><code><a href="abm_waffle_pct_plotly.html">abm_waffle_pct_plotly()</a></code> </p>
         </td>
         <td><p>Create alternate waffle chart (with plotly)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="abm_woscoverage.html">abm_woscoverage()</a></code> </p>
-        </td>
-        <td><p>Retrieve WoS coverage for peer reviewed DiVA publication types</p></td>
       </tr><tr>
         
         <td>

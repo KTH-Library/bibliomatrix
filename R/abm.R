@@ -2,6 +2,7 @@
 #'
 #'@return list of default values used in the current abm presentation
 #'@export
+
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
@@ -17,22 +18,26 @@ abm_config <- function() {
   list(
     start_year = y_start, 
     stop_year = y_stop,
-    default_unit = "KTH"
+    default_unit = "KTH",
+    analysis_id = 1
   )
 }
 
 #' Retrieve data for ABM tables and graphs from master table
 #' 
-#' @param con connection to db, default is to use mssql connection
+#' @param con connection to db, default is sqlite connection
 #' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
 #' @param pub_year for filtering on publication years, for example 2012, 2012:2018 or c(2012, 2014, 2016) (optional)
 #' @param unit_level for filtering on organizational level, 0 = KTH, 1 = school, 2 = deparment, 3 = researcher.
+#' @param analysis_id for filtering on specific analysis, for example 1 = KTH ABM 2020
 #' @return tibble with all ABM data for selected organizational units
 #' @import DBI dplyr tidyr purrr
 #' @export
 
-abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
+abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level, analysis_id) {
   res <- con %>% tbl("masterfile")
+  if (!missing(analysis_id))
+    res <- res %>% filter(analysis_id == analysis_id)
   if (!missing(unit_code))
     res <- res %>% filter(Unit_code %in% unit_code)
   if (!missing(pub_year))
@@ -40,7 +45,7 @@ abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level) {
   if (!missing(unit_level))
     res <- res %>% filter(level %in% unit_level)
   
-  res
+  res %>% collect()
 }
 
 #' Get order of publication type for ABM table 1
@@ -71,26 +76,31 @@ get_indic_descriptions <- function(con){
   }
 }
 
-#' Retrieve Table 1 (Publications in DiVA) for ABM
+#' Retrieve Table 1 (Publications in DiVA) for ABM, fractional counts
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
+#' @param data dataset with publications as tibble
+#' @param con connection to db
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return data frame with publications by type and year
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
-abm_table1 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table1 <- function(data, con, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+  
+  if(!missing(con)){
+    pubtype_order <- get_pubtype_order(con)
+  } else {
+    pubtype_order <- get_pubtype_order()
+  }
   
   # Get publication level data for selected unit
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0))
-  
+    mutate(wos_bin = ifelse(!is.na(Doc_id), 1, 0),
+           scop_bin = ifelse(!is.na(ScopusID), 1, 0))
+
   # Year dependent part of table
   table1 <-
     orgdata %>%
@@ -106,11 +116,62 @@ abm_table1 <- function(con, unit_code, analysis_start = abm_config()$start_year,
     orgdata %>%
     group_by(Publication_Type_DiVA) %>%
     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
-              WoS_coverage = sum(wos_bin * Unit_Fraction, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE)) %>%
+              WoS_coverage = sum(wos_bin * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              Scopus_coverage = sum(scop_bin * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     ungroup() %>% 
     collect()
   
-  pubtype_order <- get_pubtype_order(con)
+  
+  
+  table1 %>%
+    inner_join(table2, by = "Publication_Type_DiVA") %>%
+    inner_join(pubtype_order, by = c("Publication_Type_DiVA" = "diva_publication_type")) %>%
+    arrange(pt_ordning) %>%
+    select(-pt_ordning)
+}
+
+#' Retrieve Table 1 (Publications in DiVA) for ABM, full counts
+#' 
+#' @param data dataset with publications as tibble
+#' @param con connection to db
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return data frame with publications by type and year
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+abm_table1_full <- function(data, con, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+
+  if(!missing(con)){
+    pubtype_order <- get_pubtype_order(con)
+  } else {
+    pubtype_order <- get_pubtype_order()
+  }
+  
+  # Get publication level data for selected unit
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id), 1, 0),
+           scop_bin = ifelse(!is.na(ScopusID), 1, 0))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata %>%
+    group_by(Publication_Year, Publication_Type_DiVA) %>%
+    summarise(P_full = n()) %>%
+    arrange(Publication_Year) %>%
+    pivot_wider(names_from = Publication_Year, values_from = P_full) %>%
+    ungroup()
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    group_by(Publication_Type_DiVA) %>%
+    summarise(P_full = n(),
+              WoS_coverage = mean(wos_bin, na.rm = TRUE),
+              Scopus_coverage = mean(scop_bin, na.rm = TRUE)) %>%
+    ungroup()
   
   table1 %>%
     inner_join(table2, by = "Publication_Type_DiVA") %>%
@@ -121,25 +182,22 @@ abm_table1 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 
 #' Retrieve Table 2 (Citations 3-year window) for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return tibble with citations statistics by year and total
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit, relevant WoS doctypes only
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop - 2 &
-             Publication_Type_WoS %in% c("Article", "Proceedings Paper", "Review", "Letter", "Editorial")) %>%
-    mutate(uncited = ifelse(Citations_3yr > 0, 0, 1))
+  orgdata <- data %>% 
+    filter(Publication_Year >= analysis_start &
+           Publication_Year <= analysis_stop - 2 &
+           Publication_Type_WoS %in% c("Article", "Proceedings Paper", "Review", "Letter", "Editorial")) %>%
+    mutate(uncited = ifelse(Citations_3yr == 0, 1, 0))
   
   # Year dependent part of table
   table1 <-
@@ -151,7 +209,6 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
     ungroup() %>%
-    collect() %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     arrange(Publication_Year_ch) %>% 
     select(Publication_Year_ch, P_frac, C3, C3_frac, P_uncited, Share_uncited)
@@ -168,8 +225,7 @@ abm_table2 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
-    mutate(Publication_Year_ch = "Total") %>%
-    collect()
+    mutate(Publication_Year_ch = "Total")
   
   bind_rows(table1, table2)
 }
@@ -191,22 +247,19 @@ sliding_intervals <- function(first, last, width){
 
 #' Retrieve Table 3 (Field normalized citations) for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return tibble with field normalized citations and number/share of top10 publications by 3 year interval
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit, relevant WoS doctypes only
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop - 1 &
              Publication_Type_WoS %in% c("Article", "Review") & 
              !is.na(cf))
@@ -214,7 +267,6 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>%
-    collect() %>%
     inner_join(sliding_intervals(analysis_start, analysis_stop - 1, 3),
                by = c("Publication_Year" = "x"))
   
@@ -239,7 +291,6 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               cf = sum(cf * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE),
               top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) %>%
-    collect() %>% 
     mutate(interval = "Total")
   
   bind_rows(table1, table2)
@@ -247,29 +298,26 @@ abm_table3 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 
 #' Retrieve Table 4 (Journal impact) for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return tibble with field normalized journal citation score and number/share of publications in top20 journals
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
 
-abm_table4 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table4 <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit, relevant WoS doctypes only
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
-             Publication_Type_WoS %in% c("Article", "Review"))
+             Publication_Type_WoS %in% c("Article", "Review") &
+             !is.na(jcf))
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>%
-    collect() %>% 
     inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
                by = c("Publication_Year" = "x"))
   
@@ -291,32 +339,28 @@ abm_table4 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   table2 <-
     orgdata %>%
     summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
-              jcf = sum(jcf * Unit_Fraction, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
-              top20_count = sum(Jtop20 * Unit_Fraction, na.rm = TRUE),
-              top20_share = sum(Jtop20 * Unit_Fraction, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) %>%
-    collect() %>%
+              jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
+              top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
+              top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) %>%
     mutate(interval = "Total")
   
   bind_rows(table1, table2)
 }
 
 #' Retrieve Table 5 (Co-publishing) for ABM
-#' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
+#'
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return tibble with number/share of international copublications and copublications with Swedish non-university organizations
 #' @import DBI dplyr tidyr purrr
 #' @export
 
-abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+abm_table5 <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit, relevant WoS doctypes only
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              Publication_Type_WoS %in% c("Article", "Review") &
              !is.na(int))
@@ -324,7 +368,6 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
     orgdata %>%
-    collect() %>% 
     inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
                by = c("Publication_Year" = "x"))
   
@@ -351,7 +394,6 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
               nonuniv_share = mean(swe_nuniv, na.rm = TRUE),
               int_count = sum(int, na.rm = TRUE),
               int_share = mean(int, na.rm = TRUE)) %>%
-    collect() %>%
     mutate(interval = "Total")
   
   bind_rows(table1, table2)
@@ -360,12 +402,17 @@ abm_table5 <- function(con, unit_code, analysis_start = abm_config()$start_year,
 
 #' Retrieve OA-data for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
+#' @param con connection to db, default is sqlite connection
 #' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
 #' @return tibble with OA-status of all publications from selected organizational units
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_oa_data <- function(con = con_bib(), unit_code) {
+  
+  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
+  # and switch the order of the joined tables
+  
+  # IS THIS FUNCTION USED (previously used in abm_table6) ?
   
   abm_data(con = con, unit_code = unit_code) %>%
     select("PID", "oa_status", "is_oa", 
@@ -376,21 +423,21 @@ abm_oa_data <- function(con = con_bib(), unit_code) {
 
 #' Retrieve Table 6 (OA data) for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
-#' @return tibble with OA-status of all publications from selected organizational units
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return tibble with OA-status of all publications from incoming data
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_table6 <- function(con = con_bib(), unit_code) {
-  
-  oa_data <- abm_oa_data(con =con, unit_code = unit_code)
-  
+abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+
   # Year-dependent part of table
   table1 <-
-    oa_data %>%
+    data %>%
+    filter((is_oa=="TRUE" | is_oa=="FALSE") &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
     group_by(Publication_Year) %>%
-    filter(is_oa=="TRUE" | is_oa=="FALSE") %>%
-    collect() %>%
     summarise(P_tot=n(),
               oa_count=sum(as.logical(is_oa), na.rm=TRUE),
               gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
@@ -454,33 +501,235 @@ abm_table6 <- function(con = con_bib(), unit_code) {
   bind_rows(table1, table2)
 }
 
+#' Retrieve citations table (Scopus) for ABM
+#' 
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return tibble with citations statistics by year and total
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+
+abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant Scopus doctypes only
+  orgdata <- data %>% 
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Conference Paper", "Review", "Letter", "Editorial") &
+             !is.na(scop_cscxo)) %>%
+    mutate(uncited = ifelse(scop_cscxo > 0, 0, 1))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata %>%
+    group_by(Publication_Year) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              C_sum = sum(Unit_Fraction * scop_cscxo, na.rm = TRUE),
+              C_avg = weighted.mean(scop_cscxo, Unit_Fraction, na.rm = TRUE),
+              P_uncited_scop = sum(Unit_Fraction * uncited, na.rm = TRUE),
+              Share_uncited_scop = weighted.mean(uncited, Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup() %>%
+    mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
+    arrange(Publication_Year_ch) %>% 
+    select(Publication_Year_ch, P_frac, C_sum, C_avg, P_uncited_scop, Share_uncited_scop)
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              C_sum = sum(Unit_Fraction * scop_cscxo, na.rm = TRUE),
+              C_avg = weighted.mean(scop_cscxo, Unit_Fraction, na.rm = TRUE),
+              P_uncited_scop = sum(Unit_Fraction * uncited, na.rm = TRUE),
+              Share_uncited_scop = weighted.mean(uncited, Unit_Fraction, na.rm = TRUE)) %>%
+    mutate(Publication_Year_ch = "Total") %>% 
+    select(Publication_Year_ch, P_frac, C_sum, C_avg, P_uncited_scop, Share_uncited_scop)
+  
+  bind_rows(table1, table2)
+}
+
+#' Retrieve field normalized citations table (Scopus) for ABM
+#' 
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return tibble with field normalized citations and number/share of top10 publications by 3 year interval
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+
+abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant Scopus doctypes only
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop - 1 &
+             scop_doctype %in% c("Article", "Review", "Conference Paper") & 
+             !is.na(scop_fwci_x))
+  
+  # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
+  orgdata3year <-
+    orgdata %>%
+    inner_join(sliding_intervals(analysis_start, analysis_stop - 1, 3),
+               by = c("Publication_Year" = "x"))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata3year %>%
+    group_by(interval) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
+              top10_count = sum(scop_Ptop10 * Unit_Fraction, na.rm = TRUE),
+              top10_share = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup()
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
+              top10_count = sum(scop_Ptop10 * Unit_Fraction, na.rm = TRUE),
+              top10_share = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) %>%
+    mutate(interval = "Total")
+  
+  bind_rows(table1, table2)
+}
+
+#' Retrieve Journal impact table (Scopus) for ABM
+#' 
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return tibble with field normalized journal citation score and number/share of publications in top20 journals
+#' @import DBI dplyr tidyr purrr
+#' @importFrom stats weighted.mean
+#' @export
+
+abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant Scopus doctypes only
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Review", "Conference Paper") &
+             !is.na(scop_snip))
+  
+  # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
+  orgdata3year <-
+    orgdata %>%
+    inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
+               by = c("Publication_Year" = "x"))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata3year %>%
+    group_by(interval) %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              avg_snip = weighted.mean(scop_snip, Unit_Fraction, na.rm = TRUE),
+              top20_count = sum(scop_Jtop20*Unit_Fraction, na.rm = TRUE),
+              top20_share = weighted.mean(scop_Jtop20, Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup()
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              avg_snip = weighted.mean(scop_snip, Unit_Fraction, na.rm = TRUE),
+              top20_count = sum(scop_Jtop20*Unit_Fraction, na.rm = TRUE),
+              top20_share = weighted.mean(scop_Jtop20, Unit_Fraction, na.rm = TRUE)) %>% 
+    mutate(interval = "Total")
+    
+  bind_rows(table1, table2)
+}
+
+#' Retrieve Co-publishing table (Scopus) for ABM
+#'
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return tibble with number/share of international copublications and copublications with Swedish non-university organizations
+#' @import DBI dplyr tidyr purrr
+#' @export
+
+abm_table_scop_copub <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+  
+  # Get publication level data for selected unit, relevant Scopus doctypes only
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Review", "Conference Paper") &
+             !is.na(scop_int))
+  
+  # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
+  orgdata3year <-
+    orgdata %>%
+    inner_join(sliding_intervals(analysis_start, analysis_stop, 3),
+               by = c("Publication_Year" = "x"))
+  
+  # Year dependent part of table
+  table1 <-
+    orgdata3year %>%
+    group_by(interval) %>%
+    summarise(P_full = n(),
+              corp_count = sum(scop_corp, na.rm = TRUE),
+              corp_share = mean(scop_corp, na.rm = TRUE),
+              int_count = sum(scop_int, na.rm = TRUE),
+              int_share = mean(scop_int, na.rm = TRUE)) %>%
+    ungroup()
+  
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+  
+  # Summary part of table
+  table2 <-
+    orgdata %>%
+    summarise(P_full = n(),
+              corp_count = sum(scop_corp, na.rm = TRUE),
+              corp_share = mean(scop_corp, na.rm = TRUE),
+              int_count = sum(scop_int, na.rm = TRUE),
+              int_share = mean(scop_int, na.rm = TRUE)) %>%
+    mutate(interval = "Total")
+  
+  bind_rows(table1, table2)
+}
 
 #' Retrieve dashboard indicators for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param data dataset with publications as tibble
 #' @return list with indicator values for dashboard startpage
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_dash_indices <- function(con = con_bib(), unit_code){
+abm_dash_indices <- function(data){
   
   # Fetch table 1 for total number of publications and lastyear
-  t1 <- abm_table1(con = con, unit_code = unit_code)
+  t1 <- abm_table1(data)
   lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
   
   # Fetch table 3 for cf and top10
-  t3 <- abm_table3(con = con, unit_code = unit_code) %>%
+  t3 <- abm_table3(data) %>%
     filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
   
   # Fetch table 4 for jcf and top20
-  t4 <- abm_table4(con = con, unit_code = unit_code) %>%
+  t4 <- abm_table4(data) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
   # Fetch table 5 for non-univ and international copublications
-  t5 <- abm_table5(con = con, unit_code = unit_code) %>%
+  t5 <- abm_table5(data) %>%
     filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
-  
-  if (!"Pool" %in% class(con)) dbDisconnect(con)
   
   list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
        cf = t3$cf,
@@ -491,32 +740,35 @@ abm_dash_indices <- function(con = con_bib(), unit_code){
        copub_internat = t5$int_share)
 }
 
-#' Retrieve WoS coverage for peer reviewed DiVA publication types
+#' Retrieve WoS and Scopus coverage for peer reviewed DiVA publication types
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
+#' @param data dataset with publications as tibble
 #' @param analysis_start first publication year of analysis, if not given abm_config() is used
 #' @param analysis_stop last publication year of analysis, if not given abm_config() is used
 #' @return tibble with fractionalized and full counted WoS coverage by year and publication type
-#' @import pool dplyr
+#' @import dplyr
 #' @export
-abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
+abm_coverage <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
   
   # Get publication level data for selected unit (and filter on pub_year if given)
-  orgdata <- abm_data(con = con) %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
+  orgdata <- data %>%
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
-    mutate(wos_bin = ifelse(!is.na(Doc_id),1,0)) %>%
-    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin) %>%
+    mutate(wos_bin = ifelse(!is.na(Doc_id), 1, 0),
+           scop_bin = ifelse(!is.na(ScopusID), 1, 0)) %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin, scop_bin) %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
-    summarise(p_frac = sum(Unit_fraction, na.rm = TRUE),
+    summarise(p_frac = sum(Unit_Fraction, na.rm = TRUE),
               p_full = n(),
-              sumcov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE),
-              sumcov_full = sum(wos_bin, na.rm = TRUE),
-              woscov_frac = sum(Unit_fraction * wos_bin, na.rm = TRUE) / sum(Unit_fraction, na.rm = TRUE),
-              woscov_full = sum(wos_bin, na.rm = TRUE) / n()) %>%
+              sumwos_frac = sum(Unit_Fraction * wos_bin, na.rm = TRUE),
+              sumwos_full = sum(wos_bin, na.rm = TRUE),
+              woscov_frac = sum(Unit_Fraction * wos_bin, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              woscov_full = sum(wos_bin, na.rm = TRUE) / n(),
+              sumscop_frac = sum(Unit_Fraction * scop_bin, na.rm = TRUE),
+              sumscop_full = sum(scop_bin, na.rm = TRUE),
+              scopcov_frac = sum(Unit_Fraction * scop_bin, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              scopcov_full = sum(scop_bin, na.rm = TRUE) / n()) %>%
     ungroup() %>%
     collect()
   
@@ -524,10 +776,14 @@ abm_woscoverage <- function(con, unit_code, analysis_start = abm_config()$start_
     group_by(Publication_Year) %>%
     summarise(p_frac = sum(p_frac),
               p_full = sum(p_full),
-              sumcov_frac = sum(sumcov_frac),
-              sumcov_full = sum(sumcov_full)) %>%
-    mutate(woscov_frac = sumcov_frac / p_frac,
-           woscov_full = sumcov_full / p_full,
+              sumwos_frac = sum(sumwos_frac),
+              sumwos_full = sum(sumwos_full),
+              sumscop_frac = sum(sumscop_frac),
+              sumscop_full = sum(sumscop_full)) %>%
+    mutate(woscov_frac = sumwos_frac / p_frac,
+           woscov_full = sumwos_full / p_full,
+           scopcov_frac = sumscop_frac / p_frac,
+           scopcov_full = sumscop_full / p_frac,
            Publication_Type = "Peer reviewed")
   
   orgdata %>%
@@ -613,28 +869,21 @@ unit_info <- function(con){
 
 #' Retrieve publication list for ABM
 #' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
+#' @param data dataset with publications as tibble
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return tibble with publication list data for selected unit
 #' @import DBI dplyr tidyr purrr
 #' @export
-abm_publications <- function(con, unit_code, 
-  analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
-  
+abm_publications <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
+
   # Get publication level data for selected unit
-  orgdata <- con %>%
-    tbl("masterfile") %>%
-    filter(Unit_code == unit_code &
-             Publication_Year >= analysis_start &
+  data %>%
+    filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>%
-    #left_join(abm_oa_data(con, unit_code), by = c("PID", "Publication_Year", "Publication_Type_DiVA")) %>%
-    select(-c("w_subj", "Unit_Fraction_adj", "level")) %>%
-    mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>%
-    collect()
-  
-  orgdata %>% arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
+    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa", "analysis_id")) %>%
+    mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) %>% 
+    arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
 
 #' Public data from the Annual Bibliometric Monitoring project
@@ -663,13 +912,13 @@ abm_publications <- function(con, unit_code,
 #' public <- abm_public_data()
 #' 
 #' # get public data specifically for KTH and table 1
-#' unit_kth <- public \%>\% pluck("units", "KTH", 1)
+#' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
 #' 
 #' # get summary data for KTH
 #' public \%>\% pluck("units", "KTH", "summaries")
 #'  
 #' # get public data specifically for KTH and table 1
-#' unit_kth <- public \%>\% pluck("units", "KTH", 1)
+#' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
 #' 
 #' # get public data for the school "I" and all five tables
 #' unit_i <- public \%>\% pluck("units", "I")
@@ -706,24 +955,29 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   # retrieve sort order for DiVA publication types
   pubtype_order <-
-    get_pubtype_order(con = db) 
-  
-  pubtype_order <- pubtype_order %>% arrange(pt_ordning)
-  
+    get_pubtype_order(con = db) %>%
+    arrange(pt_ordning)
+
   indicator_descriptions <-
     get_indic_descriptions(con = db)
   
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
+    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year, analysis_id = abm_config()$analysis_id)
     tabs <- list(
-      abm_table1(con = db, unit_code = x),
-      abm_table2(con = db, unit_code = x),
-      abm_table3(con = db, unit_code = x),
-      abm_table4(con = db, unit_code = x),
-      abm_table5(con = db, unit_code = x),
-      coverage = abm_woscoverage(con = db, unit_code = x),
-      summaries = abm_dash_indices(con = db, unit_code = x),
-      oa = abm_table6(con = db, unit_code = x)
+      diva = abm_table1(data),
+      wos_cit3y = abm_table2(data),
+      wos_cf = abm_table3(data),
+      wos_jcf = abm_table4(data),
+      wos_copub = abm_table5(data),
+      diva_full = abm_table1_full(data),
+      coverage = abm_coverage(data),
+      summaries = abm_dash_indices(data),
+      oa = abm_table6(data),
+      scop_cit = abm_table_scop_cit(data),
+      scop_normcit = abm_table_scop_normcit(data),
+      scop_snip = abm_table_scop_snip(data),
+      scop_copub = abm_table_scop_copub(data)
     )
   }
   
@@ -780,15 +1034,22 @@ abm_private_data <- function(unit_code) {
   
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
+    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year)
     tabs <- list(
-      abm_table1(con = db, unit_code = x),
-      abm_table2(con = db, unit_code = x),
-      abm_table3(con = db, unit_code = x),
-      abm_table4(con = db, unit_code = x),
-      abm_table5(con = db, unit_code = x),
-      coverage = abm_woscoverage(con = db, unit_code = x),
-      publications = abm_publications(con = db, unit_code = x),
-      oa = abm_table6(con = db, unit_code = x)
+      diva = abm_table1(data),
+      wos_cit3y = abm_table2(data),
+      wos_cf = abm_table3(data),
+      wos_jcf = abm_table4(data),
+      wos_copub = abm_table5(data),
+      diva_full = abm_table1_full(data),
+      coverage = abm_coverage(data),
+      summaries = abm_dash_indices(data),
+      oa = abm_table6(data),
+      scop_cit = abm_table_scop_cit(data),
+      scop_normcit = abm_table_scop_normcit(data),
+      scop_snip = abm_table_scop_snip(data),
+      scop_copub = abm_table_scop_copub(data),
+      publications = abm_publications(data)
     )
   }
   
@@ -812,7 +1073,7 @@ abm_private_data <- function(unit_code) {
 abm_graph_diva <- function(df) {
   
   df_diva_long <- df %>%
-    select(-"P_frac", -"WoS_coverage") %>%
+    select(-"P_frac", -"WoS_coverage", -"Scopus_coverage") %>%
     gather("year", "value", -Publication_Type_DiVA) %>%
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
@@ -868,7 +1129,7 @@ abm_graph_wos_coverage <- function(df) {
         panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over Cf by year
+#' Create graph over Cf by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
@@ -892,7 +1153,7 @@ abm_graph_cf <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over Top 10\% publications by year
+#' Create graph over Top 10\% publications by year, Wos
 #' 
 #' @param df a data frame at the format produced by abm_table3()
 #' @return a ggplot object
@@ -917,7 +1178,7 @@ abm_graph_top10 <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over jcf by year
+#' Create graph over jcf by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
@@ -941,7 +1202,7 @@ abm_graph_jcf <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over Top 20\% journals by year
+#' Create graph over Top 20\% journals by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
@@ -966,7 +1227,7 @@ abm_graph_top20 <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
-#' Create graph over international and Swedish non-university copublications by year
+#' Create graph over international and Swedish non-university copublications by year, WoS
 #' 
 #' @param df a data frame at the format produced by abm_table4()
 #' @return a ggplot object
@@ -1082,7 +1343,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
 
 #' Create pie chart for Open Access data
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @return a pie chart object
 #' @import ggplot2 dplyr plotrix
 #' @importFrom graphics pie
@@ -1136,7 +1397,7 @@ abm_graph_oadata_pie <- function(df){
 
 #' Create stacked area graph for Open Access data
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @return a ggplot object
 #' @import ggplot2 dplyr reshape2 ktheme
 #' @export
@@ -1156,6 +1417,134 @@ abm_graph_oadata_stackedarea <- function(df){
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          legend.position="bottom",
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over Scopus FWCI by years
+#' 
+#' @param df a data frame at the format produced by abm_table_scop_normcit()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @export
+abm_graph_scop_normcit <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$fwci_x)))
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = fwci_x, group=1)) +
+    geom_point() + 
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Average FWCI") +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over Top 10\% publications by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table_scop_normcit()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom scales percent
+#' @export
+abm_graph_scop_top10 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.2, ceiling(max(df$top10_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top10_share, group=1)) +
+    geom_point() +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Share Top 10%") +
+    geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over SNIP by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @export
+abm_graph_scop_snip <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(2, ceiling(max(df$avg_snip)))
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = avg_snip, group=1)) +
+    geom_point() + 
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Average SNIP") +
+    ylim(0, ymax) +
+    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over Top 20\% journals by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom scales percent
+#' @export
+abm_graph_scop_top20 <- function(df){
+  kth_cols <- palette_kth(4)
+  ymax <- max(0.4, ceiling(max(df$top20_share)*10)/10)
+  
+  ggplot(data = df %>% filter(!interval == "Total"),
+         aes(x = interval, y = top20_share, group=1)) +
+    geom_point() +
+    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    xlab("Publication years") +
+    ylab("Share Journal Top 20%") +
+    geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
+    scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
+    theme_kth_osc() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+
+#' Create graph over international and corporate copublications by year, Scopus
+#' 
+#' @param df a data frame at the format produced by abm_table4()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @export
+abm_graph_scop_copub <- function(df){
+  kth_cols <- as.vector(palette_kth(4))
+  df_copub_long<- df %>%
+    select(interval, corp_share, int_share) %>% 
+    rename("Corporate" = corp_share,
+           "International" = int_share) %>% 
+    gather("Co-publication:", "value", -interval) %>% 
+    filter(!interval == "Total")
+  
+  ggplot(data = df_copub_long,
+         aes(x = interval, y = value, group = `Co-publication:`)) +
+    geom_line(aes(color = `Co-publication:`), linetype = "dashed") +
+    geom_point(aes(color = `Co-publication:`)) +
+    xlab("Publication years") +
+    ylab("Share of publications") +
+    scale_y_continuous(labels = percent, limits = c(0, 1)) +
+    scale_color_manual(values = kth_cols) +
     theme_kth_osc() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position="bottom",

@@ -2,27 +2,27 @@
 % Please edit documentation in R/abm.R
 \name{abm_table1}
 \alias{abm_table1}
-\title{Retrieve Table 1 (Publications in DiVA) for ABM}
+\title{Retrieve Table 1 (Publications in DiVA) for ABM, fractional counts}
 \usage{
 abm_table1(
+  data,
   con,
-  unit_code,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year
 )
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
+\item{data}{dataset with publications as tibble}
 
-\item{unit_code}{the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)}
+\item{con}{connection to db}
 
-\item{analysis_start}{first publication year of analysis, default 2012}
+\item{analysis_start}{first publication year of analysis, default from abm_config()}
 
-\item{analysis_stop}{last publication year of analysis, default 2018}
+\item{analysis_stop}{last publication year of analysis, default from abm_config()}
 }
 \value{
 data frame with publications by type and year
 }
 \description{
-Retrieve Table 1 (Publications in DiVA) for ABM
+Retrieve Table 1 (Publications in DiVA) for ABM, fractional counts
 }

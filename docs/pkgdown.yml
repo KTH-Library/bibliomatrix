@@ -1,8 +1,8 @@
-pandoc: 2.9.2.1
+pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   intro: intro.html
   public-data: public-data.html
-last_built: 2021-02-27T11:07Z
+last_built: 2021-03-23T11:36Z
 

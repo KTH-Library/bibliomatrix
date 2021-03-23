@@ -5,6 +5,7 @@
 \title{Link to Publication List download for KTH}
 \usage{
 abm_ui_button_publist(
+  data,
   is_loggedin,
   unit_label,
   unit_code,
@@ -13,6 +14,8 @@ abm_ui_button_publist(
 )
 }
 \arguments{
+\item{data}{dataset to make publication list from}
+
 \item{is_loggedin}{boolean parameter indicating logged in status}
 
 \item{unit_label}{the label for the organizational unit}

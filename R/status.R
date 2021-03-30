@@ -30,7 +30,9 @@ status_db <- function() {
     return (list (msg = msg, status = FALSE))
   }
   
-  res <- try(get_pubtype_order(pool_bib(source_type = "mssql")), silent = TRUE)
+  db <- pool_bib(source_type = "mssql")
+  res <- try(get_pubtype_order(db), silent = TRUE)
+  pool::poolClose(db)
 
   if (inherits(res, 'try-error')) {
     return (list (msg = geterrmessage(), status = FALSE))

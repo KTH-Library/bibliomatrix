@@ -308,8 +308,9 @@ abm_ui_kable_diva <- function(df_diva) {
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
-      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
-      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
+      # Note: include_thead = TRUE gives error in kableExtra versions > 1.1.0
+      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = FALSE) %>%
+      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = FALSE) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "768px")
   } else {
@@ -378,8 +379,9 @@ abm_ui_kable_diva_full <- function(df_diva_full) {
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
-      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
-      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
+      # Note: include_thead = TRUE gives error in kableExtra versions > 1.1.0
+      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = FALSE) %>%
+      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = FALSE) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "768px")
   } else {

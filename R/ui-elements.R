@@ -235,12 +235,14 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
     container = header,
     rownames = FALSE,
     extensions = "Buttons",
-    style = "bootstrap", class = "compact", width = "720",
+    style = "bootstrap",
+    class = "compact",
+    width = "720",
     options = list(
-      ordering = FALSE,
+      ordering = TRUE,
       bPaginate = TRUE,
       pageLength = 10,
-      dom = 'tBp',
+      dom = 'ftBp',
       buttons = list(
         list(extend = "copy", title = unit_title),
         list(extend = "csv", filename = filename, title = unit_title),

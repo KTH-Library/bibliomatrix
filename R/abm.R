@@ -965,12 +965,12 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   unit_tables <- function(x) {
     data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year, analysis_id = abm_config()$analysis_id)
     tabs <- list(
-      diva = abm_table1(data),
+      diva = abm_table1(data, db),
       wos_cit3y = abm_table2(data),
       wos_cf = abm_table3(data),
       wos_jcf = abm_table4(data),
       wos_copub = abm_table5(data),
-      diva_full = abm_table1_full(data),
+      diva_full = abm_table1_full(data, db),
       coverage = abm_coverage(data),
       summaries = abm_dash_indices(data),
       oa = abm_table6(data),
@@ -1036,12 +1036,12 @@ abm_private_data <- function(unit_code) {
   unit_tables <- function(x) {
     data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year)
     tabs <- list(
-      diva = abm_table1(data),
+      diva = abm_table1(data, db),
       wos_cit3y = abm_table2(data),
       wos_cf = abm_table3(data),
       wos_jcf = abm_table4(data),
       wos_copub = abm_table5(data),
-      diva_full = abm_table1_full(data),
+      diva_full = abm_table1_full(data, db),
       coverage = abm_coverage(data),
       summaries = abm_dash_indices(data),
       oa = abm_table6(data),

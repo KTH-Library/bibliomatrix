@@ -90,7 +90,7 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
       publications_kth <- abm_publications(data)
     } else {
       # we have publications for a "slug"
-      publications_kth <- # abm_publications_staffbased(con = con, unit_code = unit_code) %>%
+      publications_kth <-
         data %>%
         arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID) %>%
         mutate(Unit_code = unit_code) %>%
@@ -219,36 +219,40 @@ getcolnames <- function(indics) {
 
 #' Datatable for researchers
 #' 
-#' @param data data frame with researchers in a specific format (needs name, title)
+#' @param data data frame with researchers in specific format
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @importFrom DT datatable
 #' @export
 abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
-  
+
   filename <- paste0("ABM_researchers_", unit_file_label, "_", 
-    format(Sys.Date(), "%Y%m%d"))
+                     format(Sys.Date(), "%Y%m%d"))
   
   header <- eval(parse(text = getheader(names(data))))
-  
-  DT::datatable(data,
+                       
+  DT::datatable(
+    data,
     container = header,
     rownames = FALSE,
     extensions = "Buttons",
+    plugins = "natural",
     style = "bootstrap",
     class = "compact",
     width = "720",
     options = list(
+      order = list(list(1, "asc"), list(0, "asc")),
       ordering = TRUE,
+      columnDefs = list(list(type = 'natural', targets = list(0:length(data)-1))),
       bPaginate = TRUE,
       pageLength = 10,
-      dom = 'ftBp',
+      dom = 'fltBp',
       buttons = list(
         list(extend = "copy", title = unit_title),
         list(extend = "csv", filename = filename, title = unit_title),
         list(extend = "excel", filename = filename, title = unit_title))
-    ))
-  
+    )) %>%
+    DT::formatRound(length(data), digits = 1)
 }
 
 #' Datatable for DiVA publications

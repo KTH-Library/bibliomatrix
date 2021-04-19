@@ -50,15 +50,19 @@ unit_staff <- function(unit_slug = NULL) {
 #' @param analysis_stop last publication year of analysis
 #' @return tibble with all staff-based ABM data for selected organizational unit
 #' @export
-abm_staff_data <- function(con = con_bib(), kthids,
+abm_staff_data <- function(con, kthids,
                            analysis_start = abm_config()$start_year, 
                            analysis_stop = abm_config()$stop_year) {
-  
+
   res <- con %>%
     tbl("masterfile") %>%
-    filter(Unit_code %in% kthids, level == 3, is_kth == 1) %>%
+    filter(Unit_code %in% kthids &
+             level == 3 &
+             is_kth == 1 &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
     rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
-    collect() #%>% 
+    collect()
   
   auth_count<- res %>% group_by(PID) %>% tally() 
   colnames(auth_count)<- c("PID", "auth_count")
@@ -74,6 +78,45 @@ abm_staff_data <- function(con = con_bib(), kthids,
     select(-Unit_code, -Unit_Name, -analysis_id)  # removing redundant fields, that can be misleading after deduplication
 }
 
+#' Get staff list from slug
+#' 
+#' @param con A database connection
+#' @param unit_slug a string representing the KTH unit
+#' @param analysis_start first publication year of analysis
+#' @param analysis_stop last publication year of analysis
+#' @return tibble with staff list for selected organizational unit
+#' @export
+abm_staff_list <- function(con, unit_slug,
+                           analysis_start = abm_config()$start_year, 
+                           analysis_stop = abm_config()$stop_year) {
+  
+  researchers <-
+    con %>%
+    tbl("researchers") %>% 
+    collect() %>%
+    filter(stringr::str_starts(slug, unit_slug)) %>%
+    distinct() %>%
+    select(kthid, firstName, lastName, Title = `title.en`) %>%
+    collect()
+  
+  kthids <- researchers$kthid
+  pubs <- con %>%
+    tbl("masterfile") %>%
+    filter(Unit_code %in% kthids &
+             level == 3 &
+             is_kth == 1 &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>%
+    group_by(Unit_code) %>%
+    summarise(pubs = n(), fracs = sum(Unit_Fraction, na.rm = TRUE)) %>%
+    collect() %>% 
+    rename(kthid = Unit_code)
+  
+  researchers %>%
+    left_join(pubs, by = "kthid") %>% 
+    select(-kthid)
+}
+  
 #' Retrieve publication list for staffbased ABM
 #' 
 #' @param con connection to db, default is to use mssql connection

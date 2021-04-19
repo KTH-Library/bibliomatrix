@@ -7,7 +7,7 @@
 abm_ui_datatable_researchers(data, unit_file_label, unit_title)
 }
 \arguments{
-\item{data}{data frame with researchers in a specific format (needs name, title)}
+\item{data}{data frame with researchers in specific format}
 
 \item{unit_file_label}{the filename presented when users make use of the download button}
 

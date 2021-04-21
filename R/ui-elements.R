@@ -237,7 +237,6 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
     rownames = FALSE,
     extensions = "Buttons",
     plugins = "natural",
-    style = "bootstrap",
     class = "compact",
     width = "720",
     options = list(

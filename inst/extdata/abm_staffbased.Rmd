@@ -410,6 +410,9 @@ div.dt-buttons {
   position:relative;
   float:right;
 }
+table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
+    background-image: none !important;
+}
 </style>
 
 ```{r, fig.height=7, fig.width=3.75}

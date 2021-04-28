@@ -328,6 +328,8 @@ if(isTRUE(unit_level >= 0) && nrow(df_coverage %>% filter(Publication_Type == "P
       individuals also makes indicator averages very unreliable. </p>")
 
 }
+
+cat("<p>Note that the coverage numbers for Web of Science and Scopus apply to publications in the KTH bibliometric database Bibmet. If a WoS-id or Scoupus-id from DiVA can not be matched in Bibmet, it does not count as covered.</p>")
 ```
 
 Row

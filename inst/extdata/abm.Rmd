@@ -98,7 +98,7 @@ if(isTRUE(unit_level >= 0)){
 } else {
   
   unit_label <- 
-    ad_displayname2(kthid = params$unit_code)
+    kth_displayname(kthid = params$unit_code, "kthid")
 }
 
 #unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)

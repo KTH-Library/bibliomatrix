@@ -44,15 +44,14 @@ server <- function(input, output, session) {
             is_saml <- function(x) stringr::str_detect(x, re_saml)
             parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
             
-            # if shinyproxy with saml then we get user identity as kthid@kth.se
-            # if shinyproxy with ldap then we get user identity as LDAP accountname
             if (is_saml(ua)) {
                 kthid <- parse_id(ua)
             } else {
-                # we are not using public content and not saml -> likely LDAP
-                kthid <- ad_kthid2(ua)
+                # if shinyproxy with saml then we get user identity as kthid@kth.se
+                # if shinyproxy with ldap then we get user identity as LDAP accountname
+                message("Not shinyproxy/shiny and not SAML, warning... appears to use LDAP")
             }
-            kthid <- setNames(kthid, ad_displayname2(kthid))
+            kthid <- setNames(kthid, kth_displayname(kthid, "kthid"))
         } else {
             kthid <- NULL
         }

@@ -237,18 +237,19 @@ function() {
 #* @tag ABM service status
 function() {
   
-  status_ldap <- ifelse(status_ldap()$status == TRUE, "OK", "ERROR")
   status_db <- ifelse(status_db()$status == TRUE, "OK", "ERROR")
   status_renviron <- ifelse(status_renviron()$status == TRUE, "OK", "ERROR")
   status_kthapi <- ifelse(status_kthapi()$status == TRUE, "OK", "ERROR")
   
-  status_flag <- ifelse(all(status_ldap == "OK", status_db == "OK", 
-                            status_renviron == "OK", status_kthapi == "OK"), "OK", "ERROR")
+  status_flag <- 
+    ifelse(
+      all(status_db == "OK", status_renviron == "OK", status_kthapi == "OK"), 
+        "OK", "ERROR")
   
   status_ver <- installed.packages()[ ,"Version"]["bibliomatrix"]
   sprintf(
-    "APPLICATION_STATUS: %s\nVERSION: %s\nLDAP: %s\nDATABASE: %s\nRENVIRON: %s\nKTHAPI: %s",
-    status_flag, status_ver, status_ldap, status_db, status_renviron, status_kthapi
+    "APPLICATION_STATUS: %s\nVERSION: %s\nDATABASE: %s\nRENVIRON: %s\nKTHAPI: %s",
+    status_flag, status_ver, status_db, status_renviron, status_kthapi
   ) 
 }
 

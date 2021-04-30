@@ -7,16 +7,25 @@ library(shinythemes)
 # TODO: workound various issue with getting the sizing to work properly
 
 dashboardPage(skin = "black",
-  dashboardHeader(title = "ABM KTH 2019", 
-    tags$li(a(href = 'https://intra.kth.se/bibliometri',
-#      img(src = "kth-logo.png", height = 30, width = 30),
-      title = "KTHB",
-      style = "padding-top:10px; padding-bottom:10px;"),
-      class = "dropdown")),
-   dashboardSidebar(
-     uiOutput("units")
-  #   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
-   ),
+  dashboardHeader(title = paste("ABM KTH", bibliomatrix::abm_config()$stop_year + 1),
+    # tags$li(class = "dropdown",
+    #   #img(src = "kth-logo.png", height = 30, width = 30),
+    #   #style = "padding-top:10px; padding-bottom:10px;",
+    #   #class = "dropdown",
+    #   tags$li(class = "dropdown",
+    #     tags$a(href = 'https://kth.se/abm',
+    #       "Login", icon("sign-in"),
+    #       title = "Log in here if you are a student or employed at KTH" #,
+    #   ))
+    # )
+    uiOutput("login")#, inline = TRUE, container = tags$span)
+  ),
+  dashboardSidebar(
+    #tags$h4(textOutput("login")),
+    uiOutput("units"),
+    uiOutput("switcher")
+#   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
+  ),
   dashboardBody(
     # this inline CSS is intented to retain indentations on iPhone (which seems )
     tags$head(tags$style(HTML('

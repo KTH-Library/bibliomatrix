@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm.R
 \name{abm_graph_jcf}
 \alias{abm_graph_jcf}
-\title{Create graph over jcf by year}
+\title{Create graph over jcf by year, WoS}
 \usage{
 abm_graph_jcf(df)
 }
@@ -13,5 +13,5 @@ abm_graph_jcf(df)
 a ggplot object
 }
 \description{
-Create graph over jcf by year
+Create graph over jcf by year, WoS
 }

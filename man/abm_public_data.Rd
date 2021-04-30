@@ -31,13 +31,13 @@ To get fresh data cached, specify this flag.
 public <- abm_public_data()
 
 # get public data specifically for KTH and table 1
-unit_kth <- public \\%>\\% pluck("units", "KTH", 1)
+unit_kth <- public \\%>\\% pluck("units", "KTH", "diva")
 
 # get summary data for KTH
 public \\%>\\% pluck("units", "KTH", "summaries")
  
 # get public data specifically for KTH and table 1
-unit_kth <- public \\%>\\% pluck("units", "KTH", 1)
+unit_kth <- public \\%>\\% pluck("units", "KTH", "diva")
 
 # get public data for the school "I" and all five tables
 unit_i <- public \\%>\\% pluck("units", "I")

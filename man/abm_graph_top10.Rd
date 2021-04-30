@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm.R
 \name{abm_graph_top10}
 \alias{abm_graph_top10}
-\title{Create graph over Top 10\% publications by year}
+\title{Create graph over Top 10\% publications by year, Wos}
 \usage{
 abm_graph_top10(df)
 }
@@ -13,5 +13,5 @@ abm_graph_top10(df)
 a ggplot object
 }
 \description{
-Create graph over Top 10\% publications by year
+Create graph over Top 10\% publications by year, Wos
 }

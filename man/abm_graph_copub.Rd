@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm.R
 \name{abm_graph_copub}
 \alias{abm_graph_copub}
-\title{Create graph over international and Swedish non-university copublications by year}
+\title{Create graph over international and Swedish non-university copublications by year, WoS}
 \usage{
 abm_graph_copub(df)
 }
@@ -13,5 +13,5 @@ abm_graph_copub(df)
 a ggplot object
 }
 \description{
-Create graph over international and Swedish non-university copublications by year
+Create graph over international and Swedish non-university copublications by year, WoS
 }

@@ -4,10 +4,10 @@
 \alias{pool_bib}
 \title{Connection pool to Bibliometrics data source for KTH}
 \usage{
-pool_bib(source_type = c("mssql", "sqlite"))
+pool_bib(source_type = c("sqlite", "mssql"))
 }
 \arguments{
-\item{source_type}{one of "mssql" or "sqlite" with "mssql" being default}
+\item{source_type}{one of "sqlite" or "mssql" with "sqlite" being default}
 }
 \value{
 database connection

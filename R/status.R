@@ -30,7 +30,13 @@ status_db <- function() {
     return (list (msg = msg, status = FALSE))
   }
   
-  if (nrow(get_pubtype_order(pool_bib())) > 0)
+  res <- try(get_pubtype_order(pool_bib(source_type = "mssql")), silent = TRUE)
+
+  if (inherits(res, 'try-error')) {
+    return (list (msg = geterrmessage(), status = FALSE))
+  }
+  
+  if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
   
   list(msg = "Unknown issue with db", status = FALSE)
@@ -50,10 +56,24 @@ status_ldap <- function() {
                  "with all of these envvars set", paste(envvars))
     return (list (msg = msg, status = FALSE))
   }
-    
-  if (nrow(ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname")) > 0)
+
+  res <- try(res <- ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname"), silent = TRUE)
+  
+  if (inherits(res, 'try-error')) {
+    return (list (msg = geterrmessage(), status = FALSE))
+  }  
+  
+  if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
 
   list(msg = "Unknown issue with LDAP service account", status = FALSE)
   
+}
+
+#' Status message related to KTH API availability
+#' @return list with two slots for status message and status 
+#' @importFrom kthapi status_kthapi
+#' @export
+status_kthapi <- function() {
+  kthapi::status_kthapi()
 }

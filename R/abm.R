@@ -1589,13 +1589,13 @@ abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_conf
 #' @importFrom utils head
 #' @export
 abm_copub_countries <- function(con,
-                                     analysis_id,
-                                     unit_level,
-                                     unit_code,
-                                     exclude_swe = TRUE,
-                                     limit = NULL,
-                                     analysis_start = abm_config()$start_year,
-                                     analysis_stop = abm_config()$stop_year){
+                                analysis_id,
+                                unit_level,
+                                unit_code,
+                                exclude_swe = TRUE,
+                                limit = NULL,
+                                analysis_start = abm_config()$start_year,
+                                analysis_stop = abm_config()$stop_year){
   
   countries <- con %>%
     tbl("abm_copub_entities") %>% 
@@ -1606,13 +1606,13 @@ abm_copub_countries <- function(con,
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>% 
     group_by(country) %>%
-    summarise(p = sum(p),
+    summarise(p = sum(p, na.rm = TRUE),
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
               p_200 = sum(p_200, na.rm = TRUE),
               p_over200 = sum(p_over200, na.rm = TRUE)) %>% 
-    arrange(-p) %>% 
-    collect()
+    collect() %>% 
+    arrange(-p)
   
   if(exclude_swe == TRUE)
     countries <- countries %>% filter(country != "Sweden")
@@ -1655,13 +1655,13 @@ abm_copub_orgs <- function(con,
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>% 
     group_by(org, country) %>%
-    summarise(p = sum(p),
+    summarise(p = sum(p, na.rm = TRUE),
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
               p_200 = sum(p_200, na.rm = TRUE),
               p_over200 = sum(p_over200, na.rm = TRUE)) %>% 
-    arrange(-p) %>% 
-    collect()
+    collect() %>% 
+    arrange(-p)
   
   if(exclude_swe == TRUE)
     orgs <- orgs %>% filter(country != "Sweden")

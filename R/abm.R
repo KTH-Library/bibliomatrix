@@ -1573,3 +1573,101 @@ abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_conf
     filter(!is.na(UT)) %>%
     select("UT","Name_eng","Country_name","Org_type_code", "Unified_org_id")
 }
+
+#' Create table over co-publication countries for ABM unit
+#' 
+#' @param con a database connection to BIBMON
+#' @param analysis_id id for the analysis
+#' @param unit_level organization level
+#' @param unit_code code for the analyzed unit
+#' @param exclude_swe wether to exclude Sweden as co-publication country, default TRUE
+#' @param limit if set, limit the result to the first limit rows, default NULL
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return a tibble
+#' @import dplyr
+#' @importFrom utils head
+#' @export
+abm_copub_countries <- function(con,
+                                     analysis_id,
+                                     unit_level,
+                                     unit_code,
+                                     exclude_swe = TRUE,
+                                     limit = NULL,
+                                     analysis_start = abm_config()$start_year,
+                                     analysis_stop = abm_config()$stop_year){
+  
+  countries <- con %>%
+    tbl("abm_copub_entities") %>% 
+    filter(analysis_id == analysis_id &
+             level == unit_level &
+             Unit_code == unit_code &
+             entity == "Country" &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>% 
+    group_by(country) %>%
+    summarise(p = sum(p),
+              p_10 = sum(p_10, na.rm = TRUE),
+              p_50 = sum(p_50, na.rm = TRUE),
+              p_200 = sum(p_200, na.rm = TRUE),
+              p_over200 = sum(p_over200, na.rm = TRUE)) %>% 
+    arrange(-p) %>% 
+    collect()
+  
+  if(exclude_swe == TRUE)
+    countries <- countries %>% filter(country != "Sweden")
+  
+  if(!is.null(limit))
+    countries <- head(countries, limit)
+  
+  countries
+}
+
+#' Create table over co-publication countries for ABM unit
+#' 
+#' @param con a database connection to BIBMON
+#' @param analysis_id id for the analysis
+#' @param unit_level organization level
+#' @param unit_code code for the analyzed unit
+#' @param exclude_swe wether to exclude Swedish co-publication orgs, default FALSE
+#' @param limit if set, limit the result to the first limit rows, default 200
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return a tibble
+#' @import dplyr
+#' @importFrom utils head
+#' @export
+abm_copub_orgs <- function(con,
+                           analysis_id,
+                           unit_level,
+                           unit_code,
+                           exclude_swe = FALSE,
+                           limit = 200,
+                           analysis_start = abm_config()$start_year,
+                           analysis_stop = abm_config()$stop_year){
+  
+  orgs <- con %>%
+    tbl("abm_copub_entities") %>% 
+    filter(analysis_id == analysis_id &
+             level == unit_level &
+             Unit_code == unit_code &
+             entity == "Organization" &
+             Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop) %>% 
+    group_by(org, country) %>%
+    summarise(p = sum(p),
+              p_10 = sum(p_10, na.rm = TRUE),
+              p_50 = sum(p_50, na.rm = TRUE),
+              p_200 = sum(p_200, na.rm = TRUE),
+              p_over200 = sum(p_over200, na.rm = TRUE)) %>% 
+    arrange(-p) %>% 
+    collect()
+  
+  if(exclude_swe == TRUE)
+    orgs <- orgs %>% filter(country != "Sweden")
+  
+  if(!is.null(limit))
+    orgs <- head(orgs, limit)
+  
+  orgs
+}

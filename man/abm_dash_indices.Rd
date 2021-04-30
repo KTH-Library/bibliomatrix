@@ -4,12 +4,10 @@
 \alias{abm_dash_indices}
 \title{Retrieve dashboard indicators for ABM}
 \usage{
-abm_dash_indices(con = con_bib(), unit_code)
+abm_dash_indices(data)
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
-
-\item{unit_code}{the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)}
+\item{data}{dataset with publications as tibble}
 }
 \value{
 list with indicator values for dashboard startpage

@@ -14,6 +14,10 @@ params:
 ---
 
 ```{r setup, include=FALSE}
+
+### TODO:
+### - Move data table code for countries/org to functions in ui-elements.R
+
 # unit_codes for testing:
 # 
 # u1g9umtq
@@ -38,27 +42,6 @@ library(glue)
 library(extrafont)
 
 colors_vb <- palette_kth(4)
-
-unit_level <- abm_public_kth$meta %>% 
-     filter(unit_code == params$unit_code) %>%
-     pull(org_level)
-
-### INCLUDE THIS IN PUBLIC DATA AND ADD DATA RETRIEVAL TO LOGIC BELOW
-con <- pool_bib()
-df_copub_countries <- abm_copub_countries(con = con,
-                                          unit_level = ifelse(isTRUE(unit_level >= 0), unit_level, 3),
-                                          unit_code = params$unit_code,
-                                          analysis_id = abm_config()$analysis_id,
-                                          analysis_start = abm_config()$start_year,
-                                          analysis_stop = abm_config()$stop_year)
-df_copub_orgs <- abm_copub_orgs(con = con,
-                                unit_level = ifelse(isTRUE(unit_level >= 0), unit_level, 3),
-                                unit_code = params$unit_code,
-                                analysis_id = abm_config()$analysis_id,
-                                analysis_start = abm_config()$start_year,
-                                analysis_stop = abm_config()$stop_year)
-pool::poolClose(con)
-
 
 # Retrieve result tables to use in tabs and key indicators
 
@@ -88,6 +71,20 @@ if (params$use_package_data != TRUE) {
   df_coverage <- abm_coverage(data)
   con <- pool_bib()
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
+  df_copub_countries <- abm_copub_countries(con = con,
+                                            unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
+                                                                unit_meta$org_level, 3),
+                                            unit_code = params$unit_code,
+                                            analysis_id = abm_config()$analysis_id,
+                                            analysis_start = abm_config()$start_year,
+                                            analysis_stop = abm_config()$stop_year)
+  df_copub_orgs <- abm_copub_orgs(con = con,
+                                  unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
+                                                      unit_meta$org_level, 3),
+                                  unit_code = params$unit_code,
+                                  analysis_id = abm_config()$analysis_id,
+                                  analysis_start = abm_config()$start_year,
+                                  analysis_stop = abm_config()$stop_year)
   pool::poolClose(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, "diva")
@@ -96,6 +93,8 @@ if (params$use_package_data != TRUE) {
   df_cf <- pluck(abm_public_kth$units, params$unit_code, "wos_cf")
   df_jcf <- pluck(abm_public_kth$units, params$unit_code, "wos_jcf")
   df_copub <- pluck(abm_public_kth$units, params$unit_code, "wos_copub")
+  df_copub_countries <- pluck(abm_public_kth$units, params$unit_code, "wos_copub_countries")
+  df_copub_orgs <- pluck(abm_public_kth$units, params$unit_code, "wos_copub_orgs")
   df_oa <- pluck(abm_public_kth$units, params$unit_code, "oa")
   df_scop_cit <- pluck(abm_public_kth$units, params$unit_code, "scop_cit")
   df_scop_normcit <- pluck(abm_public_kth$units, params$unit_code, "scop_normcit")
@@ -104,6 +103,8 @@ if (params$use_package_data != TRUE) {
   df_coverage <- pluck(abm_public_kth$units, params$unit_code, "coverage")
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
+
+unit_level <- unit_meta %>% pull(org_level)
 
 if(isTRUE(unit_level >= 0)){
   

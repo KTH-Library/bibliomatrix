@@ -964,13 +964,28 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
+    
     data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year, analysis_id = abm_config()$analysis_id)
+    unit_level <- units_table %>% filter(unit_code == x) %>% pull(org_level)
+    
     tabs <- list(
       diva = abm_table1(data, db),
       wos_cit3y = abm_table2(data),
       wos_cf = abm_table3(data),
       wos_jcf = abm_table4(data),
       wos_copub = abm_table5(data),
+      wos_copub_countries = abm_copub_countries(con = db,
+                                                unit_level = unit_level,
+                                                unit_code = x,
+                                                analysis_id = abm_config()$analysis_id,
+                                                analysis_start = abm_config()$start_year,
+                                                analysis_stop = abm_config()$stop_year),
+      wos_copub_orgs = abm_copub_orgs(con = db,
+                                      unit_level = unit_level,
+                                      unit_code = x,
+                                      analysis_id = abm_config()$analysis_id,
+                                      analysis_start = abm_config()$start_year,
+                                      analysis_stop = abm_config()$stop_year),
       diva_full = abm_table1_full(data, db),
       coverage = abm_coverage(data),
       summaries = abm_dash_indices(data),

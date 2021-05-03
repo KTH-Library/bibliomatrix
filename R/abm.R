@@ -913,9 +913,6 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #' 
 #' # get public data specifically for KTH and table 1
 #' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
-#' 
-#' # get summary data for KTH
-#' public \%>\% pluck("units", "KTH", "summaries")
 #'  
 #' # get public data specifically for KTH and table 1
 #' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
@@ -972,7 +969,6 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       wos_copub = abm_table5(data),
       diva_full = abm_table1_full(data, db),
       coverage = abm_coverage(data),
-      summaries = abm_dash_indices(data),
       oa = abm_table6(data),
       scop_cit = abm_table_scop_cit(data),
       scop_normcit = abm_table_scop_normcit(data),
@@ -1043,7 +1039,6 @@ abm_private_data <- function(unit_code) {
       wos_copub = abm_table5(data),
       diva_full = abm_table1_full(data, db),
       coverage = abm_coverage(data),
-      summaries = abm_dash_indices(data),
       oa = abm_table6(data),
       scop_cit = abm_table_scop_cit(data),
       scop_normcit = abm_table_scop_normcit(data),

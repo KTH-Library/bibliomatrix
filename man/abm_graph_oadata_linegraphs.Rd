@@ -7,7 +7,7 @@
 abm_graph_oadata_linegraphs(df, type = c("ggplot", "plotly", "ggiraph"))
 }
 \arguments{
-\item{df}{a data frame at the format produced by abm_oa_data()}
+\item{df}{a data frame at the format produced by abm_table6()}
 
 \item{type}{the return type, one of "ggplot", "plotly" or "ggiraph"}
 }

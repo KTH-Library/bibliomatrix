@@ -399,28 +399,6 @@ abm_table5 <- function(data, analysis_start = abm_config()$start_year, analysis_
   bind_rows(table1, table2)
 }
 
-
-#' Retrieve OA-data for ABM
-#' 
-#' @param con connection to db, default is sqlite connection
-#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
-#' @return tibble with OA-status of all publications from selected organizational units
-#' @import DBI dplyr tidyr purrr
-#' @export
-abm_oa_data <- function(con = con_bib(), unit_code) {
-  
-  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
-  # and switch the order of the joined tables
-  
-  # IS THIS FUNCTION USED (previously used in abm_table6) ?
-  
-  abm_data(con = con, unit_code = unit_code) %>%
-    select("PID", "oa_status", "is_oa", 
-           "Publication_Type_DiVA", "Publication_Year")
-  
-}
-
-
 #' Retrieve Table 6 (OA data) for ABM
 #' 
 #' @param data dataset with publications as tibble

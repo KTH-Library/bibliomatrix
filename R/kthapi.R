@@ -2,7 +2,7 @@
 #' @param accountname the LDAP accountname
 #' @export
 #' @importFrom kthapi kth_profile
-ad_kthid2 <- function(accountname) {
+kthid_from_accountname <- function(accountname) {
   kth_profile(username = accountname)$content$kthId  
 }
 
@@ -10,6 +10,6 @@ ad_kthid2 <- function(accountname) {
 #' @param kthid the employee identifier
 #' @export
 #' @importFrom kthapi kth_displayname
-ad_displayname2 <- function(kthid) {
+displayname_from_kthid <- function(kthid) {
   kth_displayname(kthid, "kthid")
 }

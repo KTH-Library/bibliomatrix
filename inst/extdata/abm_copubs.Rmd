@@ -16,7 +16,7 @@ params:
 ```{r setup, include=FALSE}
 
 ### TODO:
-### - Move data table code for countries/org to functions in ui-elements.R
+### - Make kable versions of countries/org tables for mobile
 
 # unit_codes for testing:
 # 
@@ -892,57 +892,21 @@ table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
 }
 </style>
 ```{r}
- current_date <- format(Sys.Date(), "%Y%m%d")
-
- if (nrow(df_copub_countries) > 0) {
-   filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
-   
-   header <- eval(parse(text = bibliomatrix:::getheader(names(df_copub_countries))))
-   
-   DT::datatable(df_copub_countries,
-                 container = header,
-                 rownames = FALSE,
-                 extensions = "Buttons",
-                 options = list(
-                   ordering = TRUE,
-                   bPaginate = TRUE,
-                   dom = 'tBp',
-                   buttons = list(
-                     list(extend = "copy", title = abm_unit_title),
-                     list(extend = "csv", filename = filename, title = abm_unit_title),
-                     list(extend = "excel", filename = filename, title = abm_unit_title))
-                 ))
-  } else {
-    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
-  }
+abm_ui_datatable_copub_countries(
+  df_copub_countries,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+) 
 ```
 
 #### Co&#8209;publication organizations
 
 ```{r}
- current_date <- format(Sys.Date(), "%Y%m%d")
-
- if (nrow(df_copub_orgs) > 0) {
-   filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
-   
-   header <- eval(parse(text = bibliomatrix:::getheader(names(df_copub_orgs))))
-   
-   DT::datatable(df_copub_orgs,
-                 container = header,
-                 rownames = FALSE,
-                 extensions = "Buttons",
-                 options = list(
-                   ordering = TRUE,
-                   bPaginate = TRUE,
-                   dom = 'tBp',
-                   buttons = list(
-                     list(extend = "copy", title = abm_unit_title),
-                     list(extend = "csv", filename = filename, title = abm_unit_title),
-                     list(extend = "excel", filename = filename, title = abm_unit_title))
-                 ))
-  } else {
-    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
-  }
+abm_ui_datatable_copub_orgs(
+  df_copub_orgs,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+) 
 ```
 
 Open Access

@@ -934,6 +934,75 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
   }
 }
 
+#' Datatable for co-publication countries (WoS)
+#' 
+#' @param df_copub_countries data frame with co-publication countries and number of publications
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @export
+abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_copub_countries) > 0) {
+    filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_copub_countries))))
+    
+    DT::datatable(df_copub_countries,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = TRUE,
+                    bPaginate = TRUE,
+                    dom = 'tBp',
+                    buttons = list(
+                      list(extend = "copy", title = abm_unit_title),
+                      list(extend = "csv", filename = filename, title = abm_unit_title),
+                      list(extend = "excel", filename = filename, title = abm_unit_title))
+                  ))
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for co-publication organizations (WoS)
+#' 
+#' @param df_copub_orgs data frame with co-publication organizations and number of publications
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @export
+abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_copub_orgs) > 0) {
+    filename <- paste0("ABM_copub_orgs_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_copub_orgs))))
+    
+    DT::datatable(df_copub_orgs,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = TRUE,
+                    bPaginate = TRUE,
+                    dom = 'tBp',
+                    buttons = list(
+                      list(extend = "copy", title = abm_unit_title),
+                      list(extend = "csv", filename = filename, title = abm_unit_title),
+                      list(extend = "excel", filename = filename, title = abm_unit_title))
+                  ))
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+
 #' A note to keep in mind when interpreting results
 #' 
 #' @param data data frame with DiVA publication data in a specific format
@@ -1036,3 +1105,4 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
   }  
   
 }
+

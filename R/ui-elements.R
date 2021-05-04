@@ -959,9 +959,9 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                     bPaginate = TRUE,
                     dom = 'tBp',
                     buttons = list(
-                      list(extend = "copy", title = abm_unit_title),
-                      list(extend = "csv", filename = filename, title = abm_unit_title),
-                      list(extend = "excel", filename = filename, title = abm_unit_title))
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
                   ))
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -979,12 +979,14 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  if (nrow(df_copub_orgs) > 0) {
+  df <- df_copub_orgs %>% select(-unified_org_id)
+  
+  if (nrow(df) > 0) {
     filename <- paste0("ABM_copub_orgs_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_copub_orgs))))
+    header <- eval(parse(text = getheader(names(df))))
     
-    DT::datatable(df_copub_orgs,
+    DT::datatable(df,
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",
@@ -993,9 +995,9 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                     bPaginate = TRUE,
                     dom = 'tBp',
                     buttons = list(
-                      list(extend = "copy", title = abm_unit_title),
-                      list(extend = "csv", filename = filename, title = abm_unit_title),
-                      list(extend = "excel", filename = filename, title = abm_unit_title))
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
                   ))
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))

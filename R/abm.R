@@ -1625,7 +1625,8 @@ abm_copub_countries <- function(con,
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
               p_200 = sum(p_200, na.rm = TRUE),
-              p_over200 = sum(p_over200, na.rm = TRUE)) %>% 
+              p_over200 = sum(p_over200, na.rm = TRUE)) %>%
+    ungroup() %>% 
     collect() %>% 
     arrange(-p)
   
@@ -1669,12 +1670,13 @@ abm_copub_orgs <- function(con,
              entity == "Organization" &
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>% 
-    group_by(org, country) %>%
+    group_by(org, org_type_code, unified_org_id, country) %>%
     summarise(p = sum(p, na.rm = TRUE),
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
               p_200 = sum(p_200, na.rm = TRUE),
-              p_over200 = sum(p_over200, na.rm = TRUE)) %>% 
+              p_over200 = sum(p_over200, na.rm = TRUE)) %>%
+    ungroup() %>% 
     collect() %>% 
     arrange(-p)
   

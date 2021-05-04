@@ -968,12 +968,32 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
   }
 }
 
+#' HTML table for co-publication countries (WoS)
+#' 
+#' @param df_copub_countries data frame with co-publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_copub_countries <- function(df_copub_countries) {
+  if (nrow(df_copub_countries) > 0) {
+    df_copub_countries %>% 
+      kable(col.names = getcolnames(names(df_copub_countries)),
+            align = c("l", rep("r", ncol(df_copub_countries) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
 #' Datatable for co-publication organizations (WoS)
 #' 
 #' @param df_copub_orgs data frame with co-publication organizations and number of publications
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
+#' @importFrom dplyr select
 #' @export
 abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
   
@@ -1004,6 +1024,28 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   }
 }
 
+#' HTML table for co-publication organizations (WoS)
+#' 
+#' @param df_copub_orgs data frame with co-publication data in a specific format
+#' @import htmltools 
+#' @importFrom dplyr select
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_copub_orgs <- function(df_copub_orgs) {
+  
+  df <- df_copub_orgs %>% select(-unified_org_id)
+  
+  if (nrow(df) > 0) {
+    df %>%
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
 
 #' A note to keep in mind when interpreting results
 #' 

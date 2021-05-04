@@ -881,7 +881,7 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 
 ### Lists
 
-#### Co&#8209;publication countries
+#### **Co&#8209;publication countries** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -899,7 +899,13 @@ abm_ui_datatable_copub_countries(
 ) 
 ```
 
-#### Co&#8209;publication organizations
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+```{r}
+abm_ui_kable_copub_countries(df_copub_countries) 
+```
+
+
+#### **Co&#8209;publication organizations** {.no-mobile}
 
 ```{r}
 abm_ui_datatable_copub_orgs(
@@ -907,6 +913,11 @@ abm_ui_datatable_copub_orgs(
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
 ) 
+```
+
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+```{r}
+abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
 
 Open Access

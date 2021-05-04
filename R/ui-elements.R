@@ -981,7 +981,7 @@ abm_ui_kable_copub_countries <- function(df_copub_countries) {
       kable(col.names = getcolnames(names(df_copub_countries)),
             align = c("l", rep("r", ncol(df_copub_countries) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
-      scroll_box(width = "720px")
+      scroll_box(width = "720px", height = "400px")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }
@@ -1041,7 +1041,7 @@ abm_ui_kable_copub_orgs <- function(df_copub_orgs) {
       kable(col.names = getcolnames(names(df)),
             align = c("l", rep("r", ncol(df) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
-      scroll_box(width = "720px")
+      scroll_box(width = "720px", height = "400px")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }

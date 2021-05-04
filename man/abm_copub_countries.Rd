@@ -6,7 +6,7 @@
 \usage{
 abm_copub_countries(
   con,
-  analysis_id,
+  analysis_id = abm_config()$analysis_id,
   unit_level,
   unit_code,
   exclude_swe = TRUE,
@@ -18,7 +18,7 @@ abm_copub_countries(
 \arguments{
 \item{con}{a database connection to BIBMON}
 
-\item{analysis_id}{id for the analysis}
+\item{analysis_id}{id for the analysis, default from abm_config()}
 
 \item{unit_level}{organization level}
 

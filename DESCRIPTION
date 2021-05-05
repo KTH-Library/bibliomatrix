@@ -1,6 +1,6 @@
 Package: bibliomatrix
 Title: Provide Functionality for Bibliometric Analytics
-Version: 0.2
+Version: 1.3.2
 Authors@R: 
     as.person(c(
         "Gaël Serge Dubus <dubus@kth.se> [aut]", 
@@ -11,19 +11,18 @@ Authors@R:
     ))
 Description: Shared functionality for working with bibliometric analytics. This
     package is primarily used by the Bibliometrics team within the library at 
-    KTH - the Royal Insitute of Technology. It supports workflows related to the
+    KTH Royal Institute of Technology. It supports workflows related to the
     Annual Bibliometric Monitoring efforts. For example, it provides data access
-    to relational databases, database syncing functionality, LDAP/AD search 
-    functionality and more.
+    to some public data but also internal relational databases, 
+    database syncing functionality and more.
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 2.10)
 Suggests: 
     testthat (>= 2.1.0),
-    knitr,
     bench
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Imports: 
     DBI (>= 1.0.0),
     RSQLite (>= 2.1.2),
@@ -53,7 +52,30 @@ Imports:
     RColorBrewer (>= 1.1.2),
     openssl (>= 1.4.1),
     patchwork,
-    kableExtra
+    plotrix,
+    reshape2,
+    kableExtra (>= 1.1.0),
+    ggiraph (>= 0.7.0),
+    plotly (>= 4.9.2),
+    htmltools (>= 0.4.0),
+    writexl (>= 1.3),
+    flexdashboard (>= 0.5.1.1),
+    mime (>= 0.9),
+    DT (>= 0.12),
+    knitr (>= 1.28),
+    progress (>= 1.2.2),
+    ktheme,
+    kthapi,
+    lubridate (>= 1.7.9),
+    networkD3 (>= 0.4),
+    dbplyr (>= 2.0.0),
+    shinythemes,
+    here,
+    formattable
+Remotes: 
+    KTH-Library/kthapi,
+    KTH-Library/ktheme,
+    url::https://cran.r-project.org/src/contrib/Archive/kableExtra/kableExtra_1.1.0.tar.gz
 URL: https://github.com/KTH-Library/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues
 VignetteBuilder: knitr

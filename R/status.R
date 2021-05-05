@@ -30,30 +30,25 @@ status_db <- function() {
     return (list (msg = msg, status = FALSE))
   }
   
-  if (nrow(get_pubtype_order(pool_bib())) > 0)
+  db <- pool_bib(source_type = "mssql")
+  res <- try(get_pubtype_order(db), silent = TRUE)
+  pool::poolClose(db)
+
+  if (inherits(res, 'try-error')) {
+    return (list (msg = geterrmessage(), status = FALSE))
+  }
+  
+  if (nrow(res) > 0)
     return (list (msg = "OK", status = TRUE))
   
   list(msg = "Unknown issue with db", status = FALSE)
   
 }
 
-#' Status message related to db availability
+#' Status message related to KTH API availability
 #' @return list with two slots for status message and status 
+#' @importFrom kthapi status_kthapi
 #' @export
-status_ldap <- function() {
-
-  r_environ_path <- normalizePath("~/.Renviron", mustWork = FALSE)
-  envvars <- c("LDAP_USER", "LDAP_PASS", "LDAP_HOST", "LDAP_BASE")
-  
-  if (any(Sys.getenv(envvars) == "")) {
-    msg <- paste("Please use an .Renviron at", r_environ_path, 
-                 "with all of these envvars set", paste(envvars))
-    return (list (msg = msg, status = FALSE))
-  }
-    
-  if (nrow(ad_search(Sys.getenv("LDAP_USER"), search_type = "accountname")) > 0)
-    return (list (msg = "OK", status = TRUE))
-
-  list(msg = "Unknown issue with LDAP service account", status = FALSE)
-  
+status_kthapi <- function() {
+  kthapi::status_kthapi()
 }

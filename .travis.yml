@@ -1,25 +1,35 @@
 # R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
-
 language: r
-cache: packages
+cache: 
+  - packages
+  - $HOME/.ccache
 
-apt_packages:
-  - libxml2-dev
+addons:
+  apt:
+    packages:
+     - ccache
+     - libxml2-dev
+     - libsodium-dev
 
-r_build_args: --no-build-vignettes
-r_check_args: --no-build-vignettes --no-vignettes
+before_install:
+  - mkdir $HOME/.R && echo -e 'CXX_STD = CXX14\n\nVER=\nCCACHE=ccache\nCC=$(CCACHE) gcc$(VER) -std=gnu99\nCXX=$(CCACHE) g++$(VER)\nC11=$(CCACHE) g++$(VER)\nC14=$(CCACHE) g++$(VER)\nFC=$(CCACHE) gfortran$(VER)\nF77=$(CCACHE) gfortran$(VER)' > $HOME/.R/Makevars
+  - echo -e 'max_size = 5.0G\nsloppiness = include_file_ctime\nhash_dir=false' > $HOME/.ccache/ccache.conf
+
+r_build_args: "--no-build-vignettes"
+r_check_args: "--no-build-vignettes --no-vignettes"
 
 env:
   global:
-    - R_PKG="$(basename $TRAVIS_REPO_SLUG)"
-
+  - R_PKG="$(basename $TRAVIS_REPO_SLUG)"
+  
 deploy:
   provider: releases
   api_key:
-    secure: ExoA0kJaw+U9skSHGhNF0KI8JpjfkfU7Ai61ILxgOUfpVQlGRjCqqT9gDzKfbNT/pBtoKZfL4ZfwnH+agULbJ9lr07YR0XKzG92nv0GNV/WhqX/NZxNvGowaEp5pmVegFJisnSPvuuiQekLta1KxvGoNkNHP87PZdDnEA8wmLdgHxJfM2Vc4s/yChcjKmaDnuGS6JhUgrxZwmUZEUgCB14ogibogvwQyWmsOkPxZgczsC75R0iUoe5tCQR44NxEvYQOopvAsqPuAcdBamnRVjK6NEhV6SJjf6axGDu4mjXs/t/dTLCJnJbA2WNSX5eyXiq8eTu5E0Isq8cSBPOAW6SunDO9TkPnR1DW+XIroS/TwjQp3UjfK8DDxOGdlV6Az8JElDZPcvGwR0LYowjuhNLo3ept+PQJYZRlE7fGikkjiI2ZlLrior/D+Lhhp5sQLxM9OgvcjQxA/crXZbjwxmNzrSDxmT8+gcOJNxh4BfqaXQflRNJkuvS4jovVEh9U/LjRF+vUSaw6EAbMK+8jeDVv3+CVu3B8LIroM09GKp7YV8776MBxyP6Dk7XKcOMnm2M1r99LKYB+UFEJX8VpFnTVxAfMAYmaWEQqJmZkm1+vDs6VXFfk00mIP1qme4byb0GOXV6VKtvZ3iGz7M5TMv+M8m/FPVdmw6vJz0Bp/tIs=
+    secure: cDnXQDXxH6so7GjV6ERX/DgISek/JcT9witFe+IZ7MWURUdCjypbW39yqfpjvlIPfSwQ9KAoFzsPOfM90AiwjCCW5o05HoTR1TSgP8NmxjVd9rRJiRgzQDABFr2ago8vabxlAJwhFamej/nPGLql+QjeIwLBCuQiVxM9ayX/c3+XQ8+vapRC0KX9FuppnE12rCnxONlVb8ai9h2AbOfht4uIjWGg4zGB+OrdEP8c/YlpArS8lC2OMhDlgX6hbpGYKE2nMkOj1AXi83kVDo1WEGYJgy8XPTPL82p8/jgtdFDdVjGpEUKcw39VsZvtkCuZGzi3cKOzT5Caen83/AtuFWkbC+ol7DXF9ypZrRBYcU3W+bYnwvmOQmk/qMg1XrjvTlh5QTwadreUnMETXCJjzfyyTkVI+X5GGROEMqeBAY2kRq04b6PxoDemdNPEbDfuFLLC0uLV53LbqV9SFNp6NfNjLvghOU70li8bQ7wxUIXKeaye/5eOy7DwLuQPqEHd4YxutlxEfu49+8j54FL2n8M2SefRDhy46aBD7JOS9sLp0bj8wF8/F4YcIWwQaWENcSjApEIJyTRQvZ9RjfYr5A4s0ConSm/lFscAl5ZA9c72aas1F4C6ioJjF84NFR6iQuFVBjUaspQBzC38wFE91SVnXh2+07vkPigLGTX5U+M=
   file_glob: true
   file: ! "${R_PKG}_*.tar.gz"
-  cleanup: true
+  skip_cleanup: true
+  overwrite: true
   on:
     repo: KTH-Library/bibliomatrix
     tags: true

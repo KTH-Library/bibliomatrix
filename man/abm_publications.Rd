@@ -5,20 +5,17 @@
 \title{Retrieve publication list for ABM}
 \usage{
 abm_publications(
-  con,
-  unit_code,
+  data,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year
 )
 }
 \arguments{
-\item{con}{connection to db, default is to use mssql connection}
+\item{data}{dataset with publications as tibble}
 
-\item{unit_code}{the code for the analyzed unit (KTH, a one letter school code, an integer department code or a KTH-id)}
+\item{analysis_start}{first publication year of analysis, default from abm_config()}
 
-\item{analysis_start}{first publication year of analysis, default 2012}
-
-\item{analysis_stop}{last publication year of analysis, default 2018}
+\item{analysis_stop}{last publication year of analysis, default from abm_config()}
 }
 \value{
 tibble with publication list data for selected unit

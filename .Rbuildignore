@@ -20,4 +20,6 @@
 ^\.travis\.yml$
 ^inst/extdata/.*\.html$
 ^inst/shiny-apps/abm/www/cache/.*\.html$
-
+^inst/plumber/authorbased/poc*
+^inst/docker$
+^\.github$

@@ -117,10 +117,12 @@ db_counts <- function(con, tables) {
     n_cols = tbl(con, x) %>% ncol(),
     table = x
   )
+  nr <- purrr::possibly(df_rowcount, otherwise = NULL, quiet = TRUE)
+  nc <- purrr::possibly(df_colcount, otherwise = NULL, quiet = TRUE)
   
   # for all enumerated tables, count rows and cols
-  n_rows <- map_df(tables, df_rowcount)
-  n_cols <- map_df(tables, df_colcount)
+  n_rows <- map_df(tables, nr)
+  n_cols <- map_df(tables, nc)
   
   # compile summary results  
   n_rows %>% 
@@ -145,7 +147,7 @@ db_tables <- function(con) {
   enum_tables_mssql <- function() {
     con <- con_bib_mssql()
     tables <- odbc::dbListTables(
-      con, catalog_name = "BIBMON", schema_name = "dbo")
+      con, catalog_name = "BIBMON", schema_name = "dbo", table_type = "table")
     if (!length(tables)) return(NULL)
     res <- db_counts(con, tables)    
     dbDisconnect(con)
@@ -233,7 +235,8 @@ db_sync_table <- function(
 #' @export
 db_sync <- function(
   tables_included, 
-  tables_excluded = c("Document", "Bestresaddr_KTH", "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
+  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", "LastFailedJobs",
+                      "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE) 
 {
   c1 <- con_bib_mssql()
@@ -300,15 +303,15 @@ db_sqlite_location <- function() {
 #' This function returns a db connection to one of two possible pre-configured
 #' data sources containing Bibliometrics data
 #' 
-#' @param source_type one of "mssql" or "sqlite" with "mssql" being default
+#' @param source_type one of "sqlite" or "mssql" with "sqlite" being default
 #' @return database connection
 #' @export
-pool_bib <- function(source_type = c("mssql", "sqlite"))
+pool_bib <- function(source_type = c("sqlite", "mssql"))
 {
   type <- match.arg(source_type)
   switch(type,
-         mssql = pool_bib_mssql(),
-         sqlite = pool_bib_sqlite()
+         sqlite = pool_bib_sqlite(),
+         mssql = pool_bib_mssql()
   )
 }
 

@@ -1,0 +1,308 @@
+---
+title: "KTH Author-based ABM"
+output: 
+  flexdashboard::flex_dashboard:
+    logo: beta-logo.png
+    favicon: kth-logo.png
+    orientation: rows
+    vertical_layout: fill
+params:
+  snakify: TRUE
+  baseurl: "/ui/divisions/"
+---
+
+```{r, results='asis'}
+cat(sprintf("<style>                     
+.navbar {
+  background-color:%s;
+}
+</style>", unname(bibliomatrix::palette_kth()["cerise"])
+))                  
+
+```
+
+<!--
+Divisions {.tabset .tabset-fade}
+-------------------------------------
+
+### Divisions
+--->
+
+# Overview
+
+### Unit overview
+
+Units at KTH with links to a more detailed report. Links appear if the unit has more more than 4 distinct researchers with DiVA publications referenced in Web Of Science. Tooltips provide explanation for the table headings (on hover).
+
+```{r}
+library(bibliomatrix)
+library(dplyr)
+library(DT)
+library(formattable)
+
+linkify <- function(x, y)
+  sprintf("<a href='%s' target='_blank'>%s</a>", paste0(params$baseurl, sapply(y, function(z) URLencode(z, reserved = TRUE))), x)
+
+snakify <- function(x) gsub("/", "_", x, fixed = TRUE)
+
+if (params$snakify == TRUE)
+  linkify <- function(x, y)
+      sprintf("<a href='%s' target='_blank'>%s</a>", paste0(params$baseurl, sapply(y, function(z) snakify(z))), x)
+
+ds <- 
+  con_bib("sqlite") %>% tbl("unit_stats") %>% 
+  collect() %>% 
+#  bind_rows(ais) %>%
+  arrange(nd_researchers, n_pubs) %>% 
+  select(starts_with("n"), everything()) %>%
+  select(-c("pid", "desc_parent")) %>%
+  select(id = id, desc, everything()) %>%
+  mutate(has_link = (n_pubs > 10 & (nd_researchers > 4))) %>%
+  mutate(q1 = round(100 * nd_researchers / n_staff, 1)) %>%
+  mutate(q2 = round(100 * n_pubs_wos / n_pubs, 1)) %>%
+  mutate(desc = ifelse(has_link, linkify(desc, id), desc)) %>%
+  arrange(id, desc(q2)) %>%
+  select(Slug = id, `Unit name`=desc, n_staff, nd_researchers, 
+         ratio_staff = q1, n_pubs, n_pubs_wos, ratio_pubs = q2)
+
+  color_tile_divergent <- function(x) ifelse(x <= 0, 
+    color_tile("lightpink", "transparent")(x * c(x <= 0)),
+    color_tile("transparent", "lightblue")(x * c(x > 0)))
+
+  headers <- c(colnames(ds))
+
+  lookup <- readr::read_csv("field,tooltip
+  Slug,Organizational slug or short code
+  Unit name,Organizational name from KTH Catalogue
+  n_staff,Number of staff at the organizational unit
+  nd_researchers,Number of staff with publications in DiVA during the period
+  ratio_staff,Ratio between staff with publications and total staff at the unit
+  n_pubs,Number of publications in DiVA during the period
+  n_pubs_wos,Number of publications covered in Web Of Science
+  ratio_pubs,Ratio between publications in Web Of Science and those in DiVA")
+
+  tooltip <- function(x) {
+    lookup %>% left_join(tibble(tooltip = x)) %>% pull(tooltip)
+  }
+   
+  library(htmltools)
+
+  header_style <- function(x) paste(collapse = ",", sprintf(paste0(
+    "th('%s', class = 'display dt-left', style = ", 
+    "'padding-left: 10px; padding-right: 10px;', title = '%s')"), 
+      x, tooltip(x)))
+
+  tt <- header_style(headers)
+  my_container <- eval(parse(text = paste0(
+    "withTags(table(class = 'display dt-right', thead(tr(list(", tt , ")))))")))
+
+fdt <- function(data)
+  as.datatable(rownames = FALSE, class = "stripe", 
+    container = my_container, 
+    options = list(
+      initComplete = htmlwidgets::JS("
+          function(settings, json) {
+            $(this.api().table().container()).css({
+            'font-size': '12px',
+            });
+          }
+      "),
+      columnDefs = list(list(className = 'dt-left', targets = "_all")),
+      pageLength = 300L, bPaginate = FALSE, scrollY = 380,
+      dom = 'ftB'), x = formattable(data, 
+        align = c("l", "l", rep("r", length(headers) - 2)),
+        list(
+          n_staff = color_bar("lightgray"),
+          nd_researchers = color_bar("lightgray"),
+          n_pubs = color_bar("lightblue"),
+          n_pubs_wos = color_bar("lightblue"),
+          ratio_staff = color_tile("transparent", unname(palette_kth()["olive"])),
+          ratio_pubs = color_tile("transparent", unname(palette_kth()["olive"]))
+        )
+    )) %>% 
+  DT::formatStyle(columns = colnames(.$x$data), 
+      `font-size` = "12px", 
+      `class` = "display dt-right",
+      `style` = "padding-left: 10px"
+      )
+
+fdt(ds)
+```
+
+# Explore graph
+
+### Explore graph for KTH units
+
+Data from KTH Directory API. Click a node for details (opens KTH website), scroll to zoom, drag to pan. Nodes can be dragged around.
+
+```{r, out.width="100%"}
+le <- function(x) URLencode(x, reserved = TRUE)
+
+exclude <- 
+  ds %>% mutate(has_link = (n_pubs > 10 & (nd_researchers > 4))) %>% 
+  filter(has_link == FALSE) %>% pull(Slug)
+
+exclude <- c(exclude, "KTH")
+
+if (params$snakify == TRUE)
+  le <- snakify
+
+fn <- abm_graph_divisions(
+  base_url = params$baseurl, 
+  link_encoder = le,
+  links_exclude = exclude,
+  link_404 = "na",
+  use_size = TRUE,
+  prune_graph = TRUE
+) 
+
+fn$width <- "80%"
+fn$height <- "80%"
+
+#fn
+#htmlwidgets::saveWidget(fn, "~/abm-divisions.html")
+#browseURL("~/abm-divisions.html")
+
+fn <- htmlwidgets::onRender(
+  fn,
+  '
+function(el,x){
+debugger;
+  var optArray = [];
+  for (var i = 0; i < x.nodes.name.length - 1; i++) {
+    optArray.push(x.nodes.name[i]);
+  }
+
+  optArray = optArray.sort();
+
+  $(function () {
+    $("#search").autocomplete({
+      source: optArray
+    });
+  });
+
+  d3.select(".ui-widget button").node().onclick=searchNode;
+
+  function searchNode() {
+    debugger;
+    //find the node
+
+    var selectedVal = document.getElementById("search").value;
+    var svg = d3.select(el).select("svg");
+    var node = d3.select(el).selectAll(".node");
+
+    if (selectedVal == "none") {
+      node.style("stroke", "white").style("stroke-width", "10");
+    } else {
+      var selected = node.filter(function (d, i) {
+        return d.name != selectedVal;
+      });
+      selected.style("opacity", "0");
+      var link = svg.selectAll(".link")
+      link.style("opacity", "0");
+      d3.selectAll(".node, .link").transition()
+        .duration(5000)
+        .style("opacity", 1);
+    }
+  }
+}  
+  '
+)
+library(htmltools)
+
+browsable(
+  attachDependencies(
+    tagList(
+      tags$head(
+        tags$link(
+          href="https://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css",
+          rel="stylesheet"
+        )
+      ),
+      HTML(
+        '
+  <div class="ui-widget" style="display: flex; justify-content: flex-end">
+      <input id="search">
+      <button type="button">Search</button>
+  </div>
+  '     
+      ),
+      fn
+    ),
+    list(
+      rmarkdown::html_dependency_jquery(),
+      rmarkdown::html_dependency_jqueryui()
+    )
+  )
+)
+
+```
+
+
+
+ ```{r subpages, include=FALSE}
+
+#d <- ds %>% slice(1:5)
+
+# d <- data.frame(id = c("c", "s"), desc = c("chem", "phys"))
+# 
+# out <- NULL
+
+# allow duplicate labels (needed for subpages)
+# options(knitr.duplicate.label = "allow")
+# 
+# subpage_env <- new.env()
+
+
+# for (i in seq_along(d$id)) {
+# 
+#   assign("subpage_data", d[i,]$id, subpage_env)
+#   assign("division", d[i,]$desc, subpage_env)
+#   
+#   out <- c(out, knitr::knit_child("subpage.Rmd", envir = subpage_env))
+# 
+# }
+
+```
+
+<!-- `r #paste(knitr::knit_child(text = out), collapse = "")` -->
+
+# Information {data-orientation=rows data-icon="fa-info-circle"}
+
+### Author-based Annual Bibliometric Monitoring report
+
+This report provides an **author-based** bibliometric report with an overview and details for divisions, departments and schools at KTH.
+
+The aim of this overview, in addition to the "regular" ABM, is to assist monitoring, research evaluation and quality assurance at KTH. The regular ABM for KTH is available at https://kth.se/abm.
+
+**Differences from regular ABM report:**
+
+- Divisions at KTH are also included with an overview, including some aggregate data
+- Underlying set of publications for each unit is based on publications by currently employed staff. In the regular ABM, this set of publications is based on organizational tags specified in DiVA.
+
+**Note/caveats:**
+
+- Only publications from **currently employed staff** are included
+- Therefore results can be strongly influenced by staff turnover
+
+Please email your questions or ideas for improvements to [biblioteket@kth.se](mailto:biblioteket@kth.se)
+
+### Scope and limitations
+
+The bibliometric indicators referred are based on publications registered in DiVA and published in the period `r abm_config()$start_year`-`r abm_config()$stop_year`. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not currently affiliated to KTH, will not be included in the statistics. 
+
+**Data sources:**
+
+- Publications listed in DiVA in the period `r abm_config()$start_year`-`r abm_config()$stop_year` for `r abm_config()$default_unit` are included.
+
+- Staff data comes from the KTH Catalogue API, which lists employees current organizational belonging in KTH.
+
+- Statistics regarding citations and co‑publishing are based on the subset of publications in DiVA that are registered in Web of Science. 
+
+**Data scope:**
+
+- Some organizational units at KTH are large, while other divisions can be quite small. Units with more than **4 currently employed** researchers that have made publication contributions during the period are listed with a link to a more detailed report.
+
+- Smaller units with few publications do not provide such a link. This is done in order to avoid exposing individual researcher data, and to display results for that are big enough to allow meaningful calculations of bibliometric indicators.
+
+

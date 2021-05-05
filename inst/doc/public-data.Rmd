@@ -2,7 +2,7 @@
 title: "Using bundled data in `bibliomatrix`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{public-data}
+  %\VignetteIndexEntry{Using bundled data in `bibliomatrix`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

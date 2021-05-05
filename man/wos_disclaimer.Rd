@@ -7,7 +7,7 @@
 wos_disclaimer(
   derived_product = "ABM",
   derived_product_long = "KTH Annual Bibliometric Monitoring",
-  bibliometric_partner = "KTH Royal School of Technology",
+  bibliometric_partner = "KTH Royal Institute of Technology",
   firstyear = abm_config()$start_year,
   lastyear = abm_config()$stop_year
 )

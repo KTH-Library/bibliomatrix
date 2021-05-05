@@ -2,7 +2,7 @@
 title: "Introduction to usage of `bibliomatrix`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{intro}
+  %\VignetteIndexEntry{Introduction to usage of `bibliomatrix`}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,10 +16,9 @@ knitr::opts_chunk$set(
 
 The main parts of the `bibliomatrix` package are:
 
-- Functions to access bibliometric and LDAP/AD data from KTH (those need credentials to work)
 - A public dataset for the KTH Annual Bibliometric Monitoring (ABM)
 - A Shiny app and a flexdashboard layout for presenting the ABM
-- Functions related to filling the ABM presenation with results
+- Functions related to filling the ABM presentation with results
 
 ## Getting started
 
@@ -35,6 +34,7 @@ library(knitr)
 library(bench)
 library(DBI)
 library(pool)
+library(dbplyr)
 
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
@@ -53,7 +53,8 @@ Once this has been provided in the `.Renviron` file, data for the ABM tables can
 bibmon <- pool_bib("mssql")
 
 # get data for ABM table 1
-t1 <- abm_table1(con = bibmon, unit_code = "KTH")
+kth_data <- abm_data(bibmon, unit_code = "KTH")
+t1 <- abm_table1(kth_data)
 
 # display first few results
 t1 %>% 
@@ -64,55 +65,16 @@ t1 %>%
 # You can build a sqlite3 databsae for local use (this will take a while the first time)
 db_sync()
 localdb <- pool_bib("sqlite")
-t2 <- abm_table1(con = localdb, unit_code = "KTH")
+kth_data_local <- abm_data(localdb, unit_code = "KTH")
+t2 <- abm_table1(kth_data_local)
 
 # are the results the same?
 identical(t1, t2)
 
 # what about performance?
-bench_time(abm_table1(con = bibmon, unit_code = "KTH"))
-bench_time(abm_table1(con = localdb, unit_code = "KTH"))
+bench_time(abm_table1(abm_data(con = bibmon, unit_code = "KTH")))
+bench_time(abm_table1(abm_data(con = localdb, unit_code = "KTH")))
 
 poolClose(bibmon)
 poolClose(localdb)
 ```
-
-## Data from LDAP / Active Directory
-
-In order to get data from the Active Directory, an `.Renviron` file should be used with values being provided for the following envvars: `LDAP_USER` (service account name in LDAP for issuing queries with), `LDAP_PASS`, `LDAP_HOST` (the hostname for the LDAP server) and `LDAP_BASE` (for example "dc=ug,dc=kth,dc=se").
-
-```{r, fig.align='left'}
-# search Active Directory using an account name, return first 10 rows
-ad_search("agnel", "accountname") %>% head(10) %>% kable()
-
-# search AD using a KTH identifier, same result, so return first row only
-ad_search("u1z88syr", "kthid") %>% head(1) %>% kable()
-
-# default if search_type is not specified is to use KTH id
-#ad_search("u1z88syr")
-
-# display memberships for an Active Directory user with a specific KTH id
-ad_search("u1z88syr") %>% 
-  filter(str_starts(key, "ug.*Affiliation")) %>% 
-  kable() 
-
-# some functions have been defined to "translate" between identificators
-ad_accountname("u1z88syr")
-ad_kthid("agnel")
-
-# several kth identifiers can be processed, for example:
-kthids <-
-"u1kzf1xh
-u1g9umtq
-u1jr9fll 
-u1ygqmuy
-u13bp6vd
-u18qe64m" %>% read_lines()
-
-# display memberof entries beginning with "aff" for a given user
-ad_search(kthids[4]) %>% 
-  ad_memberof() %>% 
-  filter(str_starts(memberof, "aff")) %>%
-  kable()
-```
-

@@ -957,7 +957,7 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                   options = list(
                     ordering = TRUE,
                     bPaginate = TRUE,
-                    dom = 'tBp',
+                    dom = 'tBpf',
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -1001,6 +1001,8 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   df <- df_copub_orgs %>% select(-unified_org_id)
   
+  df$org_type_code<- as.factor(df$org_type_code)
+  
   if (nrow(df) > 0) {
     filename <- paste0("ABM_copub_orgs_", unit_file_label, "_", current_date)
     
@@ -1010,10 +1012,12 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",
+                  filter='top',
                   options = list(
                     ordering = TRUE,
                     bPaginate = TRUE,
-                    dom = 'tBp',
+                    dom = 'tBpf',
+                    #list(targets = 2, searchable = FALSE),
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),

@@ -1008,7 +1008,12 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
     
     header <- eval(parse(text = getheader(names(df))))
     
-    DT::datatable(df,
+    # formattable version of df, to wrap as DT later
+    df2<- formattable(df, list(p = color_bar("lightblue"), 
+                               p_10 = color_bar("lightblue")))
+    
+    
+    as.datatable(df2,
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",

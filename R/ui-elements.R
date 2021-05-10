@@ -950,7 +950,18 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
     
     header <- eval(parse(text = getheader(names(df_copub_countries))))
     
-    DT::datatable(df_copub_countries,
+    # formattable version of df, to wrap as DT later
+    df<- formattable(df_copub_countries, 
+                     list(
+                          #area(col = p_10:p_50) ~ color_tile("transparent", "pink") # doesn't work: "unused argument (col = p_10:p_50)"-error
+                          p = color_bar("lightgrey"), 
+                          p_10 = color_bar("lightblue"),
+                          p_50 = color_bar("lightblue"),
+                          p_200 = color_bar("lightblue"),
+                          p_over200 = color_bar("lightblue")
+                            ))
+    
+    as.datatable(df,
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",
@@ -1009,8 +1020,12 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
     header <- eval(parse(text = getheader(names(df))))
     
     # formattable version of df, to wrap as DT later
-    df2<- formattable(df, list(p = color_bar("lightblue"), 
-                               p_10 = color_bar("lightblue")))
+    df2<- formattable(df, list(p = color_bar("lightgrey"), 
+                               p_10 = color_bar("lightblue"),
+                               p_50 = color_bar("lightblue"),
+                               p_200 = color_bar("lightblue"),
+                               p_over200 = color_bar("lightblue")
+                               ))
     
     
     as.datatable(df2,

@@ -40,7 +40,7 @@ abm_config <- function() {
 
 abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level, analysisId) {
   res <- con %>% tbl("masterfile")
-  if (!missing(analysis_id))
+  if (!missing(analysisId))
     res <- res %>% filter(analysis_id == analysisId)
   if (!missing(unit_code))
     res <- res %>% filter(Unit_code %in% unit_code)

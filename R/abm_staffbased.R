@@ -4,11 +4,13 @@
 #' @param kthids a list of KTH-ids to retrieve publications for
 #' @param analysis_start first publication year of analysis
 #' @param analysis_stop last publication year of analysis
+#' @param analysis_id id for analysis
 #' @return tibble with all staff-based ABM data for selected organizational unit
 #' @export
 abm_staff_data <- function(con, kthids,
                            analysis_start = abm_config()$start_year, 
-                           analysis_stop = abm_config()$stop_year) {
+                           analysis_stop = abm_config()$stop_year,
+                           analysis_id = abm_config()$analysis_id) {
 
   res <- con %>%
     tbl("masterfile") %>%
@@ -16,7 +18,8 @@ abm_staff_data <- function(con, kthids,
              level == 3 &
              is_kth == 1 &
              Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop) %>%
+             Publication_Year <= analysis_stop &
+             analysis_id == analysis_id) %>%
     rename(Unit_Fraction_raw = Unit_Fraction, Unit_Fraction_adj_raw = Unit_Fraction_adj) %>%
     collect()
   

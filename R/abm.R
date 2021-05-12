@@ -8,6 +8,7 @@ abm_config <- function() {
   # this can later be expanded with more relevant defaults
   y_start <- 2013
   y_stop <- 2019
+  aid <- 1
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -15,11 +16,14 @@ abm_config <- function() {
   if (Sys.getenv("ABM_STOP_YEAR") != "")
     y_stop <- Sys.getenv("ABM_STOP_YEAR")
   
+  if (Sys.getenv("ABM_ANALYSIS_ID") != "")
+    aid <- Sys.getenv("ABM_ANALYSIS_ID")
+  
   list(
     start_year = y_start, 
     stop_year = y_stop,
     default_unit = "KTH",
-    analysis_id = 1
+    analysis_id = aid
   )
 }
 
@@ -1008,7 +1012,7 @@ abm_private_data <- function(unit_code) {
   
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
-    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year)
+    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year, analysis_id = abm_config()$analysis_id)
     tabs <- list(
       diva = abm_table1(data, db),
       wos_cit3y = abm_table2(data),

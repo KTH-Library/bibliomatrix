@@ -47,7 +47,7 @@ if (params$embed_data || !params$use_package_data) {
     con = con,
     unit_code = params$unit_code,
     pub_year = abm_config()$start_year:abm_config()$stop_year,
-    analysis_id = abm_config()$analysis_id
+    analysisId = abm_config()$analysis_id
     )
   pool::poolClose(con)
 }

@@ -10,7 +10,7 @@ abm_copub_orgs(
   unit_level,
   unit_code,
   exclude_swe = FALSE,
-  limit = 200,
+  limit = 1000,
   analysis_start = abm_config()$start_year,
   analysis_stop = abm_config()$stop_year
 )
@@ -26,7 +26,7 @@ abm_copub_orgs(
 
 \item{exclude_swe}{wether to exclude Swedish co-publication orgs, default FALSE}
 
-\item{limit}{if set, limit the result to the first limit rows, default 200}
+\item{limit}{if set, limit the result (for level 0 and 1) to the first limit rows, default 1000}
 
 \item{analysis_start}{first publication year of analysis, default from abm_config()}
 

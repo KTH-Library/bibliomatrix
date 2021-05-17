@@ -1645,7 +1645,7 @@ abm_copub_countries <- function(con,
 #' @param unit_level organization level
 #' @param unit_code code for the analyzed unit
 #' @param exclude_swe wether to exclude Swedish co-publication orgs, default FALSE
-#' @param limit if set, limit the result to the first limit rows, default 200
+#' @param limit if set, limit the result (for level 0 and 1) to the first limit rows, default 1000
 #' @param analysis_start first publication year of analysis, default from abm_config()
 #' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return a tibble
@@ -1657,7 +1657,7 @@ abm_copub_orgs <- function(con,
                            unit_level,
                            unit_code,
                            exclude_swe = FALSE,
-                           limit = 200,
+                           limit = 1000,
                            analysis_start = abm_config()$start_year,
                            analysis_stop = abm_config()$stop_year){
   
@@ -1669,7 +1669,7 @@ abm_copub_orgs <- function(con,
              entity == "Organization" &
              Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop) %>% 
-    group_by(org, org_type_code, unified_org_id, country) %>%
+    group_by(org, org_type, unified_org_id, country) %>%
     summarise(p = sum(p, na.rm = TRUE),
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
@@ -1682,7 +1682,7 @@ abm_copub_orgs <- function(con,
   if(exclude_swe == TRUE)
     orgs <- orgs %>% filter(country != "Sweden")
   
-  if(!is.null(limit))
+  if(!is.null(limit) & unit_level <= 1)
     orgs <- head(orgs, limit)
   
   orgs

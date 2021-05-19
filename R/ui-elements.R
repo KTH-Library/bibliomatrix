@@ -1012,7 +1012,7 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   df <- df_copub_orgs %>% select(-unified_org_id)
   
-  df$org_type_code<- as.factor(df$org_type_code)
+  df$org_type <- as.factor(df$org_type)
   
   if (nrow(df) > 0) {
     filename <- paste0("ABM_copub_orgs_", unit_file_label, "_", current_date)

@@ -71,7 +71,8 @@ Imports:
     dbplyr (>= 2.0.0),
     shinythemes,
     here,
-    formattable
+    formattable,
+    AzureAuth
 Remotes: 
     KTH-Library/kthapi,
     KTH-Library/ktheme,

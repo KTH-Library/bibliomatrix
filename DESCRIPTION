@@ -54,7 +54,7 @@ Imports:
     patchwork,
     plotrix,
     reshape2,
-    kableExtra (>= 1.1.0),
+    kableExtra,
     ggiraph (>= 0.7.0),
     plotly (>= 4.9.2),
     htmltools (>= 0.4.0),

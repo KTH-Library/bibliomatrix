@@ -941,6 +941,8 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
 #' @importFrom dplyr arrange
+#' @import formattable
+#' @importFrom ktheme palette_kth
 #' @export
 abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
   
@@ -1012,6 +1014,8 @@ abm_ui_kable_copub_countries <- function(df_copub_countries) {
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
 #' @importFrom dplyr select arrange
+#' @import formattable
+#' @importFrom ktheme palette_kth
 #' @export
 abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
   

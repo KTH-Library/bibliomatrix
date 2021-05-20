@@ -23,3 +23,4 @@ abm_decode_jwt <- function(x) {
   AzureAuth::decode_jwt(x)$payload[slots]
 }
 
+# TODO: fcn to parse $payloady$memberof, extract"pa.anstallda.x.xxxx", last segment

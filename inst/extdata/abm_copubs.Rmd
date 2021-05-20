@@ -880,7 +880,7 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 
 </div>
 
-### Lists
+### Countries and organizations
 
 #### **Co&#8209;publication countries** {.no-mobile}
 <style type="text/css">

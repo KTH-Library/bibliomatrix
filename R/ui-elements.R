@@ -940,26 +940,33 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
+#' @importFrom dplyr arrange
 #' @export
 abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
+  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
+  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  
   if (nrow(df_copub_countries) > 0) {
+
     filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
     
     header <- eval(parse(text = getheader(names(df_copub_countries))))
     
     # formattable version of df, to wrap as DT later
-    df<- formattable(df_copub_countries, 
+    df <- formattable(df_copub_countries, 
                      list(
                           #area(col = p_10:p_50) ~ color_tile("transparent", "pink") # doesn't work: "unused argument (col = p_10:p_50)"-error
-                          p = color_bar("lightgrey"), 
-                          p_10 = color_bar("lightblue"),
-                          p_50 = color_bar("lightblue"),
-                          p_200 = color_bar("lightblue"),
-                          p_over200 = color_bar("lightblue")
+                          p = color_bar(lightgrey), 
+                          p_10 = color_bar(lightblue),
+                          p_50 = color_bar(lightblue),
+                          p_200 = color_bar(lightblue),
+                          p_over200 = color_bar(lightblue)
                             ))
+    
+    df <- df %>% arrange(desc(p_10))
     
     as.datatable(df,
                   container = header,
@@ -968,7 +975,7 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                   options = list(
                     ordering = TRUE,
                     bPaginate = TRUE,
-                    dom = 'tBpf',
+                    dom = 'ftpB',
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -1004,13 +1011,16 @@ abm_ui_kable_copub_countries <- function(df_copub_countries) {
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
-#' @importFrom dplyr select
+#' @importFrom dplyr select arrange
 #' @export
 abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   df <- df_copub_orgs %>% select(-unified_org_id)
+  
+  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
+  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
   
   df$org_type <- as.factor(df$org_type)
   
@@ -1020,13 +1030,14 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
     header <- eval(parse(text = getheader(names(df))))
     
     # formattable version of df, to wrap as DT later
-    df2<- formattable(df, list(p = color_bar("lightgrey"), 
-                               p_10 = color_bar("lightblue"),
-                               p_50 = color_bar("lightblue"),
-                               p_200 = color_bar("lightblue"),
-                               p_over200 = color_bar("lightblue")
+    df2 <- formattable(df, list(p = color_bar(lightgrey), 
+                               p_10 = color_bar(lightblue),
+                               p_50 = color_bar(lightblue),
+                               p_200 = color_bar(lightblue),
+                               p_over200 = color_bar(lightblue)
                                ))
     
+    df2 <- df2 %>% arrange(desc(p_10))
     
     as.datatable(df2,
                   container = header,
@@ -1036,7 +1047,7 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                   options = list(
                     ordering = TRUE,
                     bPaginate = TRUE,
-                    dom = 'tBpf',
+                    dom = 'ftpB',
                     #list(targets = 2, searchable = FALSE),
                     buttons = list(
                       list(extend = "copy", title = unit_title),

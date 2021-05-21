@@ -232,6 +232,7 @@ db_sync_table <- function(
 #' @importFrom purrr map set_names
 #' @importFrom odbc dbDisconnect
 #' @importFrom DBI dbDisconnect
+#' @importFrom stringr str_starts
 #' @export
 db_sync <- function(
   tables_included, 

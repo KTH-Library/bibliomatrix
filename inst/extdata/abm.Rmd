@@ -67,6 +67,20 @@ if (params$use_package_data != TRUE) {
   df_coverage <- abm_coverage(data)
   con <- pool_bib()
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
+  df_copub_countries <- abm_copub_countries(con = con,
+                                            unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
+                                                                unit_meta$org_level, 3),
+                                            unit_code = params$unit_code,
+                                            analysis_id = abm_config()$analysis_id,
+                                            analysis_start = abm_config()$start_year,
+                                            analysis_stop = abm_config()$stop_year)
+  df_copub_orgs <- abm_copub_orgs(con = con,
+                                  unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
+                                                      unit_meta$org_level, 3),
+                                  unit_code = params$unit_code,
+                                  analysis_id = abm_config()$analysis_id,
+                                  analysis_start = abm_config()$start_year,
+                                  analysis_stop = abm_config()$stop_year)
   pool::poolClose(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, "diva")
@@ -75,6 +89,8 @@ if (params$use_package_data != TRUE) {
   df_cf <- pluck(abm_public_kth$units, params$unit_code, "wos_cf")
   df_jcf <- pluck(abm_public_kth$units, params$unit_code, "wos_jcf")
   df_copub <- pluck(abm_public_kth$units, params$unit_code, "wos_copub")
+  df_copub_countries <- pluck(abm_public_kth$units, params$unit_code, "wos_copub_countries")
+  df_copub_orgs <- pluck(abm_public_kth$units, params$unit_code, "wos_copub_orgs")
   df_oa <- pluck(abm_public_kth$units, params$unit_code, "oa")
   df_scop_cit <- pluck(abm_public_kth$units, params$unit_code, "scop_cit")
   df_scop_normcit <- pluck(abm_public_kth$units, params$unit_code, "scop_normcit")
@@ -84,9 +100,7 @@ if (params$use_package_data != TRUE) {
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
 }
 
-unit_level <- abm_public_kth$meta %>% 
-     filter(unit_code == params$unit_code) %>%
-     pull(org_level)
+unit_level <- unit_meta %>% pull(org_level)
 
 if(isTRUE(unit_level >= 0)){
   
@@ -789,10 +803,12 @@ Co&#8209;publishing
 
 #### `r unit_label`
 
-Row
+Row {.tabset}
 ---------------------
 
-### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+### Summary
+
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -801,7 +817,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r}
+```{r, fig.height=12}
 abm_ui_datatable_copub(
   df_copub,
   unit_file_label = unit_file_label, 
@@ -809,17 +825,14 @@ abm_ui_datatable_copub(
 )
 ```
 
-### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
 abm_ui_kable_copub(df_copub)
 ```
 
 
-Row
------------------
-
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -851,15 +864,58 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-Row
--------
-### **International and Swedish non-university co&#8209;publication**
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+
+#### **International and Swedish non-university co&#8209;publication**
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
+```
+
+</div>
+
+### Countries and organizations
+
+#### **Co&#8209;publication countries** {.no-mobile}
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
+    background-image: none !important;
+}
+</style>
+```{r}
+abm_ui_datatable_copub_countries(
+  df_copub_countries,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+) 
+```
+
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+```{r}
+abm_ui_kable_copub_countries(df_copub_countries) 
+```
+
+
+#### **Co&#8209;publication organizations** {.no-mobile}
+
+```{r}
+abm_ui_datatable_copub_orgs(
+  df_copub_orgs,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+) 
+```
+
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+```{r}
+abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
 
 Open Access

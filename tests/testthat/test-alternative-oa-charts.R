@@ -1,10 +1,19 @@
-skip_chart_tests <- TRUE
-
 test_that("alternative oa charts work", {
 
-  skip_if(skip_chart_tests, "by default skipping since Travis cannot sync db")  
-  df1 <- abm_table6(con = con_bib_sqlite(), unit_code = "KTH")
-  df2 <- abm_table6(con = con_bib_mssql(), unit_code = "KTH")
+  skip_on_ci()
+
+  c1 <- con_bib_sqlite()
+  on.exit(DBI::dbDisconnect(c1))
+
+  c2 <- con_bib_mssql()
+  on.exit(DBI::dbDisconnect(c2))
+  
+  d1 <- abm_data(con = c1, unit_code = "KTH")
+  d2 <-  abm_data(con = c2, unit_code = "KTH")
+  
+  df1 <- abm_table6(d1)
+  df2 <- abm_table6(d2)
+  
   p1 <- abm_graph_oadata_linegraphs(df1, "plotly")
   p2 <- abm_graph_oadata_linegraphs(df2, "plotly")
   
@@ -22,7 +31,6 @@ test_that("alternative oa charts work", {
   abm_graph_oadata_linegraphs(df1, "ggiraph")
   abm_graph_oadata_linegraphs(df1, "ggplot")
   abm_graph_oadata_linegraphs(df1, "plotly")
-  
   
   expect_true(identical(df1, df2))
   

@@ -2,7 +2,7 @@ context("API testing")
 
 test_that("local API deployment works", {
 
-  skip_on_travis()
+  skip_on_ci()
   
   # rs <- callr::r_bg(function() {
   #     pr <- plumber::plumb(system.file(package = "bibliomatrix", "plumber", "abm", "plumber.R"))

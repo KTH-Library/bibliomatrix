@@ -1,12 +1,7 @@
-# Set this flag to FALSE when testing locally, leave TRUE to skip these tests on Travis
-# since Travis does not have access to closed data sources
-skip_db_tests <- TRUE
-
-
 test_that("private data can be retrieved for five different kthids", {
   
-  skip_if(skip_db_tests, "skipping private data tests in case we're in the cloud")
-    
+  skip_on_ci()
+  
   library(dplyr)
   library(purrr)
   

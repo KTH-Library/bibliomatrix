@@ -171,66 +171,18 @@ abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "scopus")
 ```{r}
 has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
 last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
-
 ```
 
 ### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .no-mobile}
 
 ```{r, fig.width = 3.7, fig.height = 2}
-library(patchwork)
-
-if (has_rows == TRUE) {
-  
-  cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
-  
-  pub_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
-    value = cf, reference = 1.0, roundto = 2) #+ 
-    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
-    # ggplot2::theme(plot.margin = margin(0, 0, 10, 0)) +
-    # ggplot2::theme(
-    #   axis.title.x = element_blank(),
-    #   axis.line.y = element_blank(),
-    #   axis.text.y = element_blank(),
-    #   axis.ticks.y = element_blank(),
-    #   axis.title.y = element_blank(),
-    #   panel.grid.major.y = element_blank(),
-    #   panel.grid.minor = element_blank()
-    # )
-  
-  top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
-  
-  pub_bullet2 <- abm_bullet(label = "Share Top10% publications", 
-    value = top10_share, reference = 0.10, pct = TRUE) #+ 
-    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
-    # ggplot2::theme(plot.margin = margin(0, 0, 0, 0)) +
-    # ggplot2::theme(
-    #   axis.title.x = element_blank(),
-    #   axis.line.y = element_blank(),
-    #   axis.text.y = element_blank(),
-    #   axis.ticks.y = element_blank(),
-    #   axis.title.y = element_blank(),
-    #   panel.grid.major.y = element_blank(),
-    #   panel.grid.minor = element_blank()
-    # )
-  
-  bullets <- pub_bullet1 / pub_bullet2
-  
-  #bullets <- plotly::subplot(pub_bullet1, pub_bullet2, nrows = 2)
-  
-  bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_bullet_citations(df_cf)
 ```
 
 ### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75, fig.height = 2}
-if (has_rows == TRUE){
-   bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_bullet_citations(df_cf)
 ```
 
 ```{r}
@@ -242,36 +194,13 @@ last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
 ### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .no-mobile}
 
 ```{r, fig.width=3.8, fig.height = 2} 
-if (has_rows == TRUE) {
-  
-  jcf <- df_jcf %>% filter(interval == last_interval) %>% pull(jcf) %>% as.numeric()
-  
-  jour_bullet1 <- abm_bullet(label = "JCf, Field normalized journal citations", 
-    value = jcf, reference = 1.0, roundto = 2)
-
-  top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
-  
-  jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, 
-    reference = 0.20, pct = TRUE)
-  
-  bullets <- jour_bullet1 / jour_bullet2
-  #bullets <- subplot(jour_bullet1, jour_bullet2, nrows = 2)
-  
-  bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-
+abm_ui_bullet_journal(df_jcf)
 ```
 
 ### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .mobile}
 
 ```{r, fig.width=3.75, fig.height = 2}
-if (has_rows == TRUE){
-  bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_bullet_journal(df_jcf)
 ```
 
 
@@ -282,33 +211,13 @@ last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 
 ### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .no-mobile}
 ```{r, fig.width=3.75, fig.height = 2}
-
-if (has_rows == TRUE) {
-  
-  nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
-  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-  waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
-
-  int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
-  int_lbl <- sprintf("International: %d%%", round(100*int_share))
-  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
-
-  waffles <- waffle1 / waffle2
-#  waffles <- subplot(waffle1, waffle2, nrows = 2)
-  waffles
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_waffle_copub(df_copub)
 ```
 
 ### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .mobile}
 
 ```{r, fig.width=2.75, fig.height = 2}
-if (has_rows == TRUE) {
-  waffles
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_waffle_copub(df_copub)
 ```
 
 Row

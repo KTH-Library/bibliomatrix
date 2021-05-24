@@ -1248,3 +1248,83 @@ abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus")) {
     shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
   }
 }
+
+#' Bullet graph for citations in ABM 
+#' 
+#' @param df data frame with citation stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_bullet_citations <- function(df) {
+
+if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  
+  last_interval <- nth(df$interval, -2)
+  
+  cf <- as.numeric(filter(df, interval == last_interval)$cf)
+  
+  cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
+                            value = cf, reference = 1.0, roundto = 2)
+  
+  top10 <- as.numeric(filter(df, interval == last_interval)$top10_share)
+  
+  cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+                            value = top10, reference = 0.10, pct = TRUE)
+  
+  cit_bullet1 / cit_bullet2
+  
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}
+
+#' Bullet graph for journal citations in ABM 
+#' 
+#' @param df data frame with journal citation stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_bullet_journal <- function(df) {
+  
+  if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+    
+    last_interval <- nth(df$interval, -2)
+    
+    jcf <- as.numeric(filter(df, interval == last_interval)$jcf)
+    jcit_bullet1 <- abm_bullet(label = "JCf, Field normalized citations", 
+                               value = jcf, reference = 1.0, roundto = 2)
+    
+    top20 <- as.numeric(filter(df, interval == last_interval)$top20_share)
+    jcit_bullet2 <- abm_bullet(label = "Share in Top20% journals", 
+                               value = top20, reference = 0.20, pct = TRUE)
+    
+    jcit_bullet1 / jcit_bullet2
+    
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}
+
+#' Waffle graph for co-publications in ABM 
+#' 
+#' @param df data frame with co-publications stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_waffle_copub <- function(df) {
+  
+  if (df %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+    
+    last_interval <- nth(df$interval, -2)
+    
+    nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
+    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
+    waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+    
+    int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
+    int_lbl <- sprintf("International: %d%%", round(100*int_share))
+    waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+    
+    waffle1 / waffle2
+    
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}

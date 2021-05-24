@@ -701,6 +701,7 @@ abm_ui_kable_copub(df_copub)
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
+cat("<hr>")
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -728,6 +729,7 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
+cat("<hr>")
 ```
 
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>

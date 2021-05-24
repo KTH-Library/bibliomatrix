@@ -128,11 +128,13 @@ STATIC <- "https://kth-library.github.io/abm"
 
 <style>
 <!-- TODO: this does not work in responsive mobile mode -->
-.navbar-header{
+.navbar-header {
   width: 0px;
   visibility: hidden;
 }
-
+.nav-tabs-custom > .nav-tabs > li > a {
+  font-size: 2rem
+}
 </style>
 
 

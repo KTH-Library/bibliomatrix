@@ -99,68 +99,21 @@ lastyear <- max(names(df_diva[yrfields]))
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-if (nrow(df_diva) > 0) {
-  
-  total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
-  
-  vb1 <- valueBox(
-    value = round(total_pubs, 1),
-    color = colors_vb["cerise"],
-    icon = "fa-chart-bar",
-    href = "#publications-in-diva")
-  
-  vb1
-} else {
-  shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
-}
-
+abm_ui_valuebox_publications(df_diva, lastyear, colors_vb["cerise"])
 ```
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
-  
-  woscov <- df_coverage %>% 
-    filter(Publication_Type == "Peer reviewed") %>% 
-    summarise(woscov = sum(sumwos_frac) / sum(p_frac)) %>% 
-    pull(woscov)
-  
-  vb2 <- valueBox(
-    value = paste(100*round(woscov, 3), "%"),
-    color = colors_vb["cerise"],
-    icon = "fa-percent",
-    href = "#publications-in-diva")
-  
-  vb2
-} else {
-  shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
-}
-
+abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos")
 ```
 
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
-  
-  scopcov <- df_coverage %>% 
-    filter(Publication_Type == "Peer reviewed") %>% 
-    summarise(scopcov = sum(sumscop_frac) / sum(p_frac)) %>% 
-    pull(scopcov)
-  
-  vb2 <- valueBox(
-    value = paste(100*round(scopcov, 3), "%"),
-    color = unname(palette_kth()["gray"]),
-    icon = "fa-percent",
-    href = "#publications-in-diva")
-  
-  vb2
-} else {
-  shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
-}
-
+abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus")
 ```
+
 
 ```{r}
 has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
@@ -311,6 +264,11 @@ Row
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
+woscov <- df_coverage %>% 
+    filter(Publication_Type == "Peer reviewed") %>% 
+    summarise(woscov = sum(sumwos_frac) / sum(p_frac)) %>% 
+    pull(woscov)
+
 cat("<p>Indicators in the Citation impact, Journal impact and Co&#8209;publishing tabs are based on Web of Science publications only. Corresponding Scopus indicators can be found under the Scopus tab.</p>")
 
 if(isTRUE(unit_level >= 0) && nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {

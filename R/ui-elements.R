@@ -1189,3 +1189,62 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
   
 }
 
+#' Value box for number of publications in ABM 
+#' 
+#' @param df data frame with DiVA publications data in a specific format
+#' @param lastyear last year with DiVA publications
+#' @param vbcolor color of valueBox
+#' @importFrom flexdashboard valueBox
+#' @export
+abm_ui_valuebox_publications <- function(df, lastyear, vbcolor) {
+  
+  if (nrow(df) > 0) {
+    
+    total_pubs <- sum(df[, lastyear], na.rm = TRUE)
+    
+    valueBox(
+      value = round(total_pubs, 1),
+      color = vbcolor,
+      icon = "fa-chart-bar",
+      href = "#publications-in-diva")
+
+  } else {
+    shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+  }
+}
+
+#' Value box for coverage in ABM 
+#' 
+#' @param df data frame with coverage data
+#' @param vbcolor color of valueBox
+#' @param db database for which coverage will be shown ("wos" or "scopus")
+#' @importFrom flexdashboard valueBox
+#' @export
+abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus")) {
+
+  if (nrow(df %>% filter(Publication_Type == "Peer reviewed")) > 0) {
+    
+    type <- match.arg(db)
+    
+    if(type=="wos"){
+      cov <- df %>% 
+        filter(Publication_Type == "Peer reviewed") %>%
+        summarise(cov = sum(sumwos_frac) / sum(p_frac)) %>% 
+        pull(cov)
+    } else {
+      cov <- df %>% 
+        filter(Publication_Type == "Peer reviewed") %>%
+        summarise(cov = sum(sumscop_frac) / sum(p_frac)) %>% 
+        pull(cov)
+    }
+
+    valueBox(      
+      value = paste(100*round(cov, 3), "%"),
+      color = vbcolor,
+      icon = "fa-percent",
+      href = "#publications-in-diva")
+
+  } else {
+    shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+  }
+}

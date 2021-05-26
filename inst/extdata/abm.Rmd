@@ -133,7 +133,7 @@ STATIC <- "https://kth-library.github.io/abm"
   visibility: hidden;
 }
 .nav-tabs-custom > .nav-tabs > li > a {
-  font-size: 2rem
+  font-size: 1.5rem
 }
 </style>
 

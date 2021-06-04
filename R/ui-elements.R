@@ -1314,11 +1314,11 @@ abm_ui_waffle_copub <- function(df) {
     
     last_interval <- nth(df$interval, -2)
     
-    nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
+    nonuniv_share <- as.numeric(filter(df, interval == last_interval)$nonuniv_share)
     nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
     waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
     
-    int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
+    int_share <- as.numeric(filter(df, interval == last_interval)$int_share)
     int_lbl <- sprintf("International: %d%%", round(100*int_share))
     waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
     

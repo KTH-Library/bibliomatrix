@@ -89,12 +89,13 @@ cache_reports <- function(reports) {
   
 }
 
-con_cache <- function(dbpath) {
+con_cache <- function(dbpath, verbose = FALSE) {
   
   if (missing(dbpath))
     dbpath <- file.path(rappdirs::app_dir("bibmon")$config(), "reports.db")
   
-  message("Location for reports cache/db is: ", dbpath)
+  if (verbose)
+    message("Location for reports cache/db is: ", normalizePath(dbpath))
   
   if (!file.exists(dbpath)) {
     con <- con_bib_sqlite(create = TRUE, db_path = dbpath)
@@ -107,7 +108,7 @@ con_cache <- function(dbpath) {
 cache_report <- function(con, id, params) {
   
   if (missing(con)) {
-    con <- con_cache()
+    con <- con_cache(verbose = TRUE)
     on.exit(RSQLite::dbDisconnect(con))
   }
   

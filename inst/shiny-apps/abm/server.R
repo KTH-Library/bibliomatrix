@@ -1,7 +1,6 @@
 library(shiny)
 library(shinydashboard)
 library(shinythemes)
-library(kthapi)
 library(bibliomatrix)
 library(dplyr)
 library(purrr)
@@ -14,7 +13,7 @@ library(purrr)
 # TODO config below could be a fcn
 
 #Sys.setenv("ABM_IS_PUBLIC" = "TRUE")
-Sys.setenv("ABM_IS_PUBLIC" = "")
+#Sys.setenv("ABM_IS_PUBLIC" = "")
 
 ABM_IS_PUBLIC <- ifelse(Sys.getenv("ABM_IS_PUBLIC") != "", TRUE, FALSE)
 #Sys.setenv("ABM_API" = "")
@@ -44,6 +43,13 @@ server <- function(input, output, session) {
             is_saml <- function(x) stringr::str_detect(x, re_saml)
             parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
             
+            jwt <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
+            if (jwt != "") {
+                kthid <- abm_decode_jwt(jwt)$kthid
+                setNames(kthid, displayname_from_kthid(kthid))
+                return (kthid)
+            }
+            
             if (is_saml(ua)) {
                 kthid <- parse_id(ua)
             } else {
@@ -51,7 +57,7 @@ server <- function(input, output, session) {
                 # if shinyproxy with ldap then we get user identity as LDAP accountname
                 message("Not shinyproxy/shiny and not SAML, warning... appears to use LDAP")
             }
-            kthid <- setNames(kthid, kth_displayname(kthid, "kthid"))
+            kthid <- setNames(kthid, displayname_from_kthid(kthid))
         } else {
             kthid <- NULL
         }

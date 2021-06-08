@@ -154,7 +154,8 @@ server <- function(input, output, session) {
             #tags$div(HTML(rawToChar(report)))  # this causes CSS issues w navbar
             #b64 <- base64enc::dataURI(data = report, mime = "text/html")  # this causes slow enc
             
-            tf <- paste0(openssl::sha1(rawToChar(report)), ".html")
+            # NB: permission issue if not writing to cache dir (has o+wr)
+            tf <- paste0(file.path("cache", openssl::sha1(rawToChar(report))), ".html")
             readr::write_file(report, paste0("www/", tf))
             
             htmltools::tags$iframe(src = tf, 

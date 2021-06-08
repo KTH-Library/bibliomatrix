@@ -4,7 +4,7 @@
 \alias{abm_data}
 \title{Retrieve data for ABM tables and graphs from master table}
 \usage{
-abm_data(con = con_bib(), unit_code, pub_year, unit_level, analysis_id)
+abm_data(con = con_bib(), unit_code, pub_year, unit_level, analysisId)
 }
 \arguments{
 \item{con}{connection to db, default is sqlite connection}
@@ -15,7 +15,7 @@ abm_data(con = con_bib(), unit_code, pub_year, unit_level, analysis_id)
 
 \item{unit_level}{for filtering on organizational level, 0 = KTH, 1 = school, 2 = deparment, 3 = researcher.}
 
-\item{analysis_id}{for filtering on specific analysis, for example 1 = KTH ABM 2020}
+\item{analysisId}{for filtering on specific analysis, for example 1 = KTH ABM 2020}
 }
 \value{
 tibble with all ABM data for selected organizational units

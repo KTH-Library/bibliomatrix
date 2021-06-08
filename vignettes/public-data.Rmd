@@ -52,13 +52,10 @@ library(dplyr)
 kth_abm_tables <- abm_public_kth$units$KTH
 
 # Show parts of table 1
-knitr::kable(kth_abm_tables[[1]] %>% select(Publication_Type_DiVA, P_frac, WoS_coverage))
-
-# Get summary data for KTH
-kth_abm_tables$summaries
+knitr::kable(kth_abm_tables[["diva"]] %>% select(Publication_Type_DiVA, P_frac, WoS_coverage))
 
 # Note that numeric unit codes need to be enclosed with ` 
-abm_public_kth$units$`5851`$summaries
+abm_public_kth$units$`5851`$diva
 ```
 
 ### Order of publication types (`pubtype_order`)

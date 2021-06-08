@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4</span>
       </span>
     </div>
 
@@ -136,10 +136,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>abm_staff_data</span><span class='op'>(</span>
-  con <span class='op'>=</span> <span class='fu'><a href='con_bib.html'>con_bib</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='va'>con</span>,
   <span class='va'>kthids</span>,
   analysis_start <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>start_year</span>,
-  analysis_stop <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>stop_year</span>
+  analysis_stop <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>stop_year</span>,
+  analysisId <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>analysis_id</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -160,6 +161,10 @@
     <tr>
       <th>analysis_stop</th>
       <td><p>last publication year of analysis</p></td>
+    </tr>
+    <tr>
+      <th>analysisId</th>
+      <td><p>id for analysis</p></td>
     </tr>
     </table>
 

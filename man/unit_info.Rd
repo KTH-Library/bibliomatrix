@@ -4,10 +4,12 @@
 \alias{unit_info}
 \title{Retrieve information about ABM units (level 0-2) from database or from package data}
 \usage{
-unit_info(con)
+unit_info(con, analysisId = abm_config()$analysis_id)
 }
 \arguments{
 \item{con}{connection to db}
+
+\item{analysisId}{id for analysis of interest, default from abm_config()}
 }
 \value{
 tibble with information about ABM units

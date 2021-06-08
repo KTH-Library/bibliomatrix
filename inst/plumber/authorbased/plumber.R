@@ -30,7 +30,9 @@ render_report <- function(slug) {
   
   b <- blob::as_blob(I(list(read_file_raw(temp))))
   
-  data.frame(name = id, data = b)
+  data.frame(
+    name = id, data = b, 
+    visibility = "public", ts = Sys.time(), report = "staffbased")
 }
 
 cache_reports <- function(slugs) {
@@ -70,11 +72,39 @@ cache_reports <- function(slugs) {
   
 }
 
-cache_report <- function(con = con_bib("sqlite"), slug) {
+con_cache <- function(dbpath) {
+  
+  if (missing(dbpath))
+    dbpath <- file.path(rappdirs::app_dir("bibmon")$config(), "reports.db")
+  
+  if (!file.exists(dbpath)) {
+    con <- con_bib_sqlite(create = TRUE, db_path = dbpath)
+  }
+  
+  con_bib_sqlite(db_path = dbpath)
+  
+}
+
+cache_report <- function(con, slug) {
+  
+  if (missing(con)) {
+    con <- con_cache()
+    on.exit(RSQLite::dbDisconnect(con))
+  }
   
   id <- desnakify(utils::URLdecode(slug))
   
-  RSQLite::dbExecute(con, "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB)")
+  if (!RSQLite::dbExistsTable(con, "reports")) {
+
+    reports_ddl <- tibble(
+      name = character(0), data = blob::as_blob(character(0)), #data = blob::as_blob(I(list(raw(0)))),
+      visibility = character(0), ts = as.Date.POSIXct(integer(0)), report = character(0))
+    
+    RSQLite::dbWriteTable(con, "reports", reports_ddl)
+  }
+  
+  #RSQLite::dbExecute(con, 
+  #  "CREATE TABLE IF NOT EXISTS reports (name TEXT, data BLOB, visibility TEXT, ts TEXT, report TEXT)")
   
   cached <- con %>% tbl("reports") %>% filter(name == id) %>% collect()
   
@@ -94,15 +124,21 @@ cache_report <- function(con = con_bib("sqlite"), slug) {
   as.raw(unlist(df$data))  
 }
 
-cache_clear <- function(con = con_bib("sqlite")) {
+cache_clear <- function(con) {
+  if (missing(con)) {
+    con <- con_cache()
+    on.exit(RSQLite::dbDisconnect(con))
+  }
   if (RSQLite::dbExistsTable(con, "reports"))
     RSQLite::dbRemoveTable(con, "reports")  
 }
 
-cache_clear_report <- function(slug) {
+cache_clear_report <- function(con, slug) {
   
-  con <- con_bib("sqlite")
-  on.exit(RSQLite::dbDisconnect(con))
+  if (missing(con)) {
+    con <- con_cache()
+    on.exit(RSQLite::dbDisconnect(con))
+  }
   
   id <- desnakify(utils::URLdecode(slug))
   
@@ -119,18 +155,16 @@ cache_clear_report <- function(slug) {
   
 }
 
-cache_view <- function() {
+cache_view <- function(con) {
   
-  con <- con_bib("sqlite")
-  on.exit(RSQLite::dbDisconnect(con))
+  if (missing(con)) {
+    con <- con_cache()
+    on.exit(RSQLite::dbDisconnect(con))
+  }
   
   con %>% tbl("reports") %>% collect()
   
 }
-
-
-cxn <- con_bib("sqlite")
-#on.exit(RSQLite::dbDisconnect(cxn))
 
 #* @apiTitle Bibliometrics for KTH Divisions
 #* @apiDescription Get division level data for organizational units at KTH.
@@ -220,7 +254,7 @@ function() {
 #* @response 400 Invalid input.
 #* @tag Cache management
 function(slug) {
-  cache_clear_report(slug)
+  cache_clear_report(slug = slug)
 }
 
 #* Regenerate the full cache
@@ -237,18 +271,19 @@ function() {
 #* @tag ABM service status
 function() {
   
-  status_ldap <- ifelse(status_ldap()$status == TRUE, "OK", "ERROR")
   status_db <- ifelse(status_db()$status == TRUE, "OK", "ERROR")
   status_renviron <- ifelse(status_renviron()$status == TRUE, "OK", "ERROR")
   status_kthapi <- ifelse(status_kthapi()$status == TRUE, "OK", "ERROR")
   
-  status_flag <- ifelse(all(status_ldap == "OK", status_db == "OK", 
-                            status_renviron == "OK", status_kthapi == "OK"), "OK", "ERROR")
+  status_flag <- 
+    ifelse(
+      all(status_db == "OK", status_renviron == "OK", status_kthapi == "OK"), 
+        "OK", "ERROR")
   
   status_ver <- installed.packages()[ ,"Version"]["bibliomatrix"]
   sprintf(
-    "APPLICATION_STATUS: %s\nVERSION: %s\nLDAP: %s\nDATABASE: %s\nRENVIRON: %s\nKTHAPI: %s",
-    status_flag, status_ver, status_ldap, status_db, status_renviron, status_kthapi
+    "APPLICATION_STATUS: %s\nVERSION: %s\nDATABASE: %s\nRENVIRON: %s\nKTHAPI: %s",
+    status_flag, status_ver, status_db, status_renviron, status_kthapi
   ) 
 }
 

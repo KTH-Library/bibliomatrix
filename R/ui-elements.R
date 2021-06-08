@@ -90,7 +90,7 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
       publications_kth <- abm_publications(data)
     } else {
       # we have publications for a "slug"
-      publications_kth <- # abm_publications_staffbased(con = con, unit_code = unit_code) %>%
+      publications_kth <-
         data %>%
         arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID) %>%
         mutate(Unit_code = unit_code) %>%
@@ -219,34 +219,40 @@ getcolnames <- function(indics) {
 
 #' Datatable for researchers
 #' 
-#' @param data data frame with researchers in a specific format (needs name, title)
+#' @param data data frame with researchers in specific format
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @importFrom DT datatable
 #' @export
 abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
-  
+
   filename <- paste0("ABM_researchers_", unit_file_label, "_", 
-    format(Sys.Date(), "%Y%m%d"))
+                     format(Sys.Date(), "%Y%m%d"))
   
   header <- eval(parse(text = getheader(names(data))))
-  
-  DT::datatable(data,
+                       
+  DT::datatable(
+    data,
     container = header,
     rownames = FALSE,
     extensions = "Buttons",
-    style = "bootstrap", class = "compact", width = "720",
+    plugins = "natural",
+    style = "bootstrap",
+    class = "compact",
+    width = "720",
     options = list(
-      ordering = FALSE,
+      order = list(list(1, "asc"), list(0, "asc")),
+      ordering = TRUE,
+      columnDefs = list(list(type = 'natural', targets = list(0:length(data)-1))),
       bPaginate = TRUE,
       pageLength = 10,
-      dom = 'tBp',
+      dom = 'fltBp',
       buttons = list(
         list(extend = "copy", title = unit_title),
         list(extend = "csv", filename = filename, title = unit_title),
         list(extend = "excel", filename = filename, title = unit_title))
-    ))
-  
+    )) %>%
+    DT::formatRound(length(data), digits = 1)
 }
 
 #' Datatable for DiVA publications
@@ -308,8 +314,9 @@ abm_ui_kable_diva <- function(df_diva) {
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
-      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
-      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
+      # Note: include_thead = TRUE gives error in kableExtra versions > 1.1.0
+      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = FALSE) %>%
+      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = FALSE) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "768px")
   } else {
@@ -378,8 +385,9 @@ abm_ui_kable_diva_full <- function(df_diva_full) {
       mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
-      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = TRUE) %>%
-      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = TRUE) %>%
+      # Note: include_thead = TRUE gives error in kableExtra versions > 1.1.0
+      column_spec(column = ncol(df_diva) - 2, background = "#EEEEEE", border_left = "solid 1px #CCCCCC", include_thead = FALSE) %>%
+      column_spec(column = (ncol(df_diva) -1):ncol(df_diva), background = "#EEEEEE", include_thead = FALSE) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "768px")
   } else {
@@ -926,6 +934,158 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
   }
 }
 
+#' Datatable for co-publication countries (WoS)
+#' 
+#' @param df_copub_countries data frame with co-publication countries and number of publications
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom dplyr arrange
+#' @importFrom formattable formattable color_bar as.datatable proportion
+#' @importFrom ktheme palette_kth
+#' @export
+abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
+  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  
+  if (nrow(df_copub_countries) > 0) {
+
+    filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df_copub_countries))))
+    
+    # formattable version of df, to wrap as DT later
+    df <- formattable(df_copub_countries, 
+                     list(
+                          #area(col = p_10:p_50) ~ color_tile("transparent", "pink") # doesn't work: "unused argument (col = p_10:p_50)"-error
+                          p = color_bar(lightgrey), 
+                          p_10 = color_bar(lightblue),
+                          p_50 = color_bar(lightblue),
+                          p_200 = color_bar(lightblue),
+                          p_over200 = color_bar(lightblue)
+                            ))
+    
+    df <- df %>% arrange(desc(p_10))
+    
+    as.datatable(df,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = TRUE,
+                    bPaginate = TRUE,
+                    dom = 'ftpB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  ))
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' HTML table for co-publication countries (WoS)
+#' 
+#' @param df_copub_countries data frame with co-publication data in a specific format
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_copub_countries <- function(df_copub_countries) {
+  if (nrow(df_copub_countries) > 0) {
+    df_copub_countries %>% 
+      kable(col.names = getcolnames(names(df_copub_countries)),
+            align = c("l", rep("r", ncol(df_copub_countries) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px", height = "400px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for co-publication organizations (WoS)
+#' 
+#' @param df_copub_orgs data frame with co-publication organizations and number of publications
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools
+#' @importFrom dplyr select arrange
+#' @importFrom formattable formattable color_bar as.datatable proportion
+#' @importFrom ktheme palette_kth
+#' @export
+abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  df <- df_copub_orgs %>% select(-unified_org_id)
+  
+  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
+  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  
+  df$org_type <- as.factor(df$org_type)
+  
+  if (nrow(df) > 0) {
+    filename <- paste0("ABM_copub_orgs_", unit_file_label, "_", current_date)
+    
+    header <- eval(parse(text = getheader(names(df))))
+    
+    # formattable version of df, to wrap as DT later
+    df2 <- formattable(df, list(p = color_bar(lightgrey), 
+                               p_10 = color_bar(lightblue),
+                               p_50 = color_bar(lightblue),
+                               p_200 = color_bar(lightblue),
+                               p_over200 = color_bar(lightblue)
+                               ))
+    
+    df2 <- df2 %>% arrange(desc(p_10))
+    
+    as.datatable(df2,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  filter='top',
+                  options = list(
+                    ordering = TRUE,
+                    bPaginate = TRUE,
+                    dom = 'ftpB',
+                    #list(targets = 2, searchable = FALSE),
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  ))
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' HTML table for co-publication organizations (WoS)
+#' 
+#' @param df_copub_orgs data frame with co-publication data in a specific format
+#' @import htmltools 
+#' @importFrom dplyr select
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_copub_orgs <- function(df_copub_orgs) {
+  
+  df <- df_copub_orgs %>% select(-unified_org_id)
+  
+  if (nrow(df) > 0) {
+    df %>%
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px", height = "400px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
 #' A note to keep in mind when interpreting results
 #' 
 #' @param data data frame with DiVA publication data in a specific format
@@ -1027,4 +1187,147 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
     
   }  
   
+}
+
+#' Value box for number of publications in ABM 
+#' 
+#' @param df data frame with DiVA publications data in a specific format
+#' @param lastyear last year with DiVA publications
+#' @param vbcolor color of valueBox
+#' @param unit_label label to display if no data is available
+#' @importFrom flexdashboard valueBox
+#' @export
+abm_ui_valuebox_publications <- function(df, lastyear, vbcolor, unit_label) {
+  
+  if (nrow(df) > 0) {
+    
+    total_pubs <- sum(df[, lastyear], na.rm = TRUE)
+    
+    valueBox(
+      value = round(total_pubs, 1),
+      color = vbcolor,
+      icon = "fa-chart-bar",
+      href = "#publications-in-diva")
+
+  } else {
+    shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+  }
+}
+
+#' Value box for coverage in ABM 
+#' 
+#' @param df data frame with coverage data
+#' @param vbcolor color of valueBox
+#' @param db database for which coverage will be shown ("wos" or "scopus")
+#' @param unit_label label to display if no data is available
+#' @importFrom flexdashboard valueBox
+#' @export
+abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
+                                     unit_label) {
+
+  if (nrow(df %>% filter(Publication_Type == "Peer reviewed")) > 0) {
+    
+    type <- match.arg(db)
+    
+    if(type=="wos"){
+      cov <- df %>% 
+        filter(Publication_Type == "Peer reviewed") %>%
+        summarise(cov = sum(sumwos_frac) / sum(p_frac)) %>% 
+        pull(cov)
+    } else {
+      cov <- df %>% 
+        filter(Publication_Type == "Peer reviewed") %>%
+        summarise(cov = sum(sumscop_frac) / sum(p_frac)) %>% 
+        pull(cov)
+    }
+
+    valueBox(      
+      value = paste(100*round(cov, 3), "%"),
+      color = vbcolor,
+      icon = "fa-percent",
+      href = "#publications-in-diva")
+
+  } else {
+    shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+  }
+}
+
+#' Bullet graph for citations in ABM 
+#' 
+#' @param df data frame with citation stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_bullet_citations <- function(df) {
+
+if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  
+  last_interval <- nth(df$interval, -2)
+  
+  cf <- as.numeric(filter(df, interval == last_interval)$cf)
+  
+  cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
+                            value = cf, reference = 1.0, roundto = 2)
+  
+  top10 <- as.numeric(filter(df, interval == last_interval)$top10_share)
+  
+  cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+                            value = top10, reference = 0.10, pct = TRUE)
+  
+  cit_bullet1 / cit_bullet2
+  
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}
+
+#' Bullet graph for journal citations in ABM 
+#' 
+#' @param df data frame with journal citation stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_bullet_journal <- function(df) {
+  
+  if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+    
+    last_interval <- nth(df$interval, -2)
+    
+    jcf <- as.numeric(filter(df, interval == last_interval)$jcf)
+    jcit_bullet1 <- abm_bullet(label = "JCf, Field normalized citations", 
+                               value = jcf, reference = 1.0, roundto = 2)
+    
+    top20 <- as.numeric(filter(df, interval == last_interval)$top20_share)
+    jcit_bullet2 <- abm_bullet(label = "Share in Top20% journals", 
+                               value = top20, reference = 0.20, pct = TRUE)
+    
+    jcit_bullet1 / jcit_bullet2
+    
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}
+
+#' Waffle graph for co-publications in ABM 
+#' 
+#' @param df data frame with co-publications stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_waffle_copub <- function(df) {
+  
+  if (df %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+    
+    last_interval <- nth(df$interval, -2)
+    
+    nonuniv_share <- as.numeric(filter(df, interval == last_interval)$nonuniv_share)
+    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
+    waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+    
+    int_share <- as.numeric(filter(df, interval == last_interval)$int_share)
+    int_lbl <- sprintf("International: %d%%", round(100*int_share))
+    waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+    
+    waffle1 / waffle2
+    
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
 }

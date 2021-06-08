@@ -1,8 +1,6 @@
-skip_chart_tests <- TRUE
-
 test_that("plotly charts work for KTH", {
   
-  skip_if(skip_chart_tests, "by default skipping since Travis cannot sync db")  
+  skip_on_ci()
 
   uc <- "KTH"
   
@@ -36,8 +34,8 @@ test_that("plotly charts work for KTH", {
   w2 <-
     abm_waffle_pct_plotly(int_share, label = int_lbl)
   
-  plotly::subplot(subplot(w1), subplot(w2), nrows = 2)
-  
+  plotly::subplot(plotly::subplot(w1), plotly::subplot(w2), nrows = 2)
+
   abm_graph_diva(df_diva) + theme_kth()
   abm_graph_wos_coverage(df_diva) + theme_kth_osc()
   abm_graph_wos_coverage_plotly(df_diva)

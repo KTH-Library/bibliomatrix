@@ -36,8 +36,8 @@ colors_vb <- palette_kth(4)
 
 # Get authorbased data for selected org
 unit_code <- params$unit_code
-unit_members <- abm_researchers(params$unit_code)
 con <- con_bib()
+unit_members <- abm_researchers(unit_code)
 unit_publ<- abm_staff_data(con, unit_members)
 DBI::dbDisconnect(con)
 
@@ -63,7 +63,7 @@ if (unit_code %in% unit_info()$slug) {
   unit_label <- abm_divisions() %>% filter(id == unit_code) %>% pull(desc)
 }
 
-unit_file_label<- gsub("/", "_", params$unit_code)
+unit_file_label<- gsub("/", "_", unit_code)
 current_date <- format(Sys.Date(), "%Y%m%d")
 abm_unit_title<- paste0("ABM: ",unit_label)
 
@@ -76,6 +76,9 @@ STATIC <- "https://kth-library.github.io/abm"
 cat(sprintf("<style>                     
 .navbar {
   background-color:%s;
+}
+.nav-tabs-custom > .nav-tabs > li > a {
+  font-size: 1.5rem
 }
 </style>", unname(bibliomatrix::palette_kth()["cerise"])
 ))                  
@@ -99,68 +102,21 @@ lastyear <- max(names(df_diva[yrfields]))
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-if (nrow(df_diva) > 0) {
-  
-  total_pubs <- sum(df_diva[, lastyear], na.rm = TRUE)
-  
-  vb1 <- valueBox(
-    value = round(total_pubs, 1),
-    color = colors_vb["cerise"],
-    icon = "fa-chart-bar",
-    href = "#publications-in-diva")
-  
-  vb1
-} else {
-  shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
-}
-
+abm_ui_valuebox_publications(df_diva, lastyear, colors_vb["cerise"])
 ```
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
-  
-  woscov <- df_coverage %>% 
-    filter(Publication_Type == "Peer reviewed") %>% 
-    summarise(woscov = sum(sumwos_frac) / sum(p_frac)) %>% 
-    pull(woscov)
-  
-  vb2 <- valueBox(
-    value = paste(100*round(woscov, 3), "%"),
-    color = colors_vb["cerise"],
-    icon = "fa-percent",
-    href = "#publications-in-diva")
-  
-  vb2
-} else {
-  shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
-}
-
+abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos")
 ```
 
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-if (nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
-  
-  scopcov <- df_coverage %>% 
-    filter(Publication_Type == "Peer reviewed") %>% 
-    summarise(scopcov = sum(sumscop_frac) / sum(p_frac)) %>% 
-    pull(scopcov)
-  
-  vb2 <- valueBox(
-    value = paste(100*round(scopcov, 3), "%"),
-    color = unname(palette_kth()["gray"]),
-    icon = "fa-percent",
-    href = "#publications-in-diva")
-  
-  vb2
-} else {
-  shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
-}
-
+abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus")
 ```
+
 
 ```{r}
 has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
@@ -171,101 +127,29 @@ last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
 ### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .no-mobile}
 
 ```{r, fig.width = 3.7, fig.height = 2}
-library(patchwork)
-
-if (has_rows == TRUE) {
-  
-  cf <- df_cf %>% filter(interval == last_interval) %>% pull(cf) %>% as.numeric()
-  
-  pub_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
-    value = cf, reference = 1.0, roundto = 2) #+ 
-    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
-    # ggplot2::theme(plot.margin = margin(0, 0, 10, 0)) +
-    # ggplot2::theme(
-    #   axis.title.x = element_blank(),
-    #   axis.line.y = element_blank(),
-    #   axis.text.y = element_blank(),
-    #   axis.ticks.y = element_blank(),
-    #   axis.title.y = element_blank(),
-    #   panel.grid.major.y = element_blank(),
-    #   panel.grid.minor = element_blank()
-    # )
-  
-  top10_share <- as.numeric(filter(df_cf, interval == last_interval)$top10_share)
-  
-  pub_bullet2 <- abm_bullet(label = "Share Top10% publications", 
-    value = top10_share, reference = 0.10, pct = TRUE) #+ 
-    # ktheme::theme_kth_osc(plot_title_face = "plain", plot_title_size = 14) + 
-    # ggplot2::theme(plot.margin = margin(0, 0, 0, 0)) +
-    # ggplot2::theme(
-    #   axis.title.x = element_blank(),
-    #   axis.line.y = element_blank(),
-    #   axis.text.y = element_blank(),
-    #   axis.ticks.y = element_blank(),
-    #   axis.title.y = element_blank(),
-    #   panel.grid.major.y = element_blank(),
-    #   panel.grid.minor = element_blank()
-    # )
-  
-  bullets <- pub_bullet1 / pub_bullet2
-  
-  #bullets <- plotly::subplot(pub_bullet1, pub_bullet2, nrows = 2)
-  
-  bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_bullet_citations(df_cf)
 ```
 
 ### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75, fig.height = 2}
-if (has_rows == TRUE){
-   bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_bullet_citations(df_cf)
 ```
 
 ```{r}
-
 has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
 last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
-
 ```
 ### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .no-mobile}
 
 ```{r, fig.width=3.8, fig.height = 2} 
-if (has_rows == TRUE) {
-  
-  jcf <- df_jcf %>% filter(interval == last_interval) %>% pull(jcf) %>% as.numeric()
-  
-  jour_bullet1 <- abm_bullet(label = "JCf, Field normalized journal citations", 
-    value = jcf, reference = 1.0, roundto = 2)
-
-  top20_share <- as.numeric(filter(df_jcf, interval == last_interval)$top20_share)
-  
-  jour_bullet2 <- abm_bullet(label = "Share in Top20% journals", value = top20_share, 
-    reference = 0.20, pct = TRUE)
-  
-  bullets <- jour_bullet1 / jour_bullet2
-  #bullets <- subplot(jour_bullet1, jour_bullet2, nrows = 2)
-  
-  bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-
+abm_ui_bullet_journal(df_jcf)
 ```
 
 ### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .mobile}
 
 ```{r, fig.width=3.75, fig.height = 2}
-if (has_rows == TRUE){
-  bullets
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_bullet_journal(df_jcf)
 ```
 
 
@@ -276,33 +160,13 @@ last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
 
 ### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .no-mobile}
 ```{r, fig.width=3.75, fig.height = 2}
-
-if (has_rows == TRUE) {
-  
-  nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
-  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-  waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
-
-  int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
-  int_lbl <- sprintf("International: %d%%", round(100*int_share))
-  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
-
-  waffles <- waffle1 / waffle2
-#  waffles <- subplot(waffle1, waffle2, nrows = 2)
-  waffles
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_waffle_copub(df_copub)
 ```
 
 ### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .mobile}
 
 ```{r, fig.width=2.75, fig.height = 2}
-if (has_rows == TRUE) {
-  waffles
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
+abm_ui_waffle_copub(df_copub)
 ```
 
 Row
@@ -311,6 +175,11 @@ Row
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
+woscov <- df_coverage %>% 
+    filter(Publication_Type == "Peer reviewed") %>% 
+    summarise(woscov = sum(sumwos_frac) / sum(p_frac)) %>% 
+    pull(woscov)
+
 cat("<p>Indicators in the Citation impact, Journal impact and Co&#8209;publishing tabs are based on Web of Science publications only. Corresponding Scopus indicators can be found under the Scopus tab.</p>")
 
 if(isTRUE(unit_level >= 0) && nrow(df_coverage %>% filter(Publication_Type == "Peer reviewed")) > 0) {
@@ -328,6 +197,8 @@ if(isTRUE(unit_level >= 0) && nrow(df_coverage %>% filter(Publication_Type == "P
       individuals also makes indicator averages very unreliable. </p>")
 
 }
+
+cat("<p>Note that the coverage numbers for Web of Science and Scopus apply to publications in the KTH bibliometric database Bibmet. If a WoS-id or Scoupus-id from DiVA can not be matched in Bibmet, it does not count as covered.</p>")
 ```
 
 Row
@@ -372,16 +243,16 @@ abm_ui_button_publist(
 )
 ```
 
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+
 ```{r}
 con <- con_bib()
-researchers <- 
-  con %>%
-  tbl("researchers") %>% 
-  collect() %>%
-  filter(stringr::str_starts(slug, params$unit_code)) %>%
-  distinct() %>%
-  mutate(Name = paste(firstName, lastName)) %>%
-  select(Name, Title = `title.en`) %>% collect()
+researchers <- abm_staff_list(con, unit_code)
 DBI::dbDisconnect(con)
 
 abm_ui_datatable_researchers(
@@ -389,7 +260,6 @@ abm_ui_datatable_researchers(
   unit_file_label = unit_file_label,
   unit_title = abm_unit_title
 )
-
 ```
 
 Publications in DiVA
@@ -410,6 +280,9 @@ Row {.tabset}
 div.dt-buttons {
   position:relative;
   float:right;
+}
+table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
+    background-image: none !important;
 }
 </style>
 

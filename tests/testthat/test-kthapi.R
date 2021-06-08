@@ -1,20 +1,14 @@
-# by default set skip tests to TRUE when running on Travis cloud
-skip_kthapi_tests <- TRUE
-
 test_that("KTH Directory API query for accountname works", {
-  skip_if(skip_kthapi_tests, "skipping KTH Directory API query tests in case we're in the cloud")
-  res_ldap <- ad_displayname(kthid = ad_kthid("markussk"))
-  res_kthapi <- kthapi::kth_displayname("markussk", "username")
-  is_valid <- res_ldap == res_kthapi
-  expect_true(res_kthapi == "Markus Skyttner (markussk)" && is_valid)
+  skip_on_ci()
+  res_kthapi <- displayname_from_kthid("u1o2ujjd")
+  expect_true(res_kthapi == "Markus Skyttner (markussk)")
 })
 
 test_that("KTH Profiles API query for looking up 'kthid' from account name works", {
-  skip_if(skip_kthapi_tests, "skipping KTH Profiles API test in case we're in the cloud")
+  skip_on_ci()
   
-  r1 <- kthapi::kth_profile(username = "markussk")$content$kthId
-  r2 <- ad_kthid("markussk")
-
+  r1 <- kthid_from_accountname("markussk")
+  r2 <- "u1o2ujjd"
   expect_equal(r1, r2)
 })
 

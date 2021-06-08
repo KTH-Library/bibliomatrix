@@ -4,7 +4,7 @@
 \alias{abm_ui_valuebox_publications}
 \title{Value box for number of publications in ABM}
 \usage{
-abm_ui_valuebox_publications(df, lastyear, vbcolor)
+abm_ui_valuebox_publications(df, lastyear, vbcolor, unit_label)
 }
 \arguments{
 \item{df}{data frame with DiVA publications data in a specific format}
@@ -12,6 +12,8 @@ abm_ui_valuebox_publications(df, lastyear, vbcolor)
 \item{lastyear}{last year with DiVA publications}
 
 \item{vbcolor}{color of valueBox}
+
+\item{unit_label}{label to display if no data is available}
 }
 \description{
 Value box for number of publications in ABM

@@ -4,7 +4,7 @@
 \alias{abm_ui_valuebox_coverage}
 \title{Value box for coverage in ABM}
 \usage{
-abm_ui_valuebox_coverage(df, vbcolor, db = c("wos", "scopus"))
+abm_ui_valuebox_coverage(df, vbcolor, db = c("wos", "scopus"), unit_label)
 }
 \arguments{
 \item{df}{data frame with coverage data}
@@ -12,6 +12,8 @@ abm_ui_valuebox_coverage(df, vbcolor, db = c("wos", "scopus"))
 \item{vbcolor}{color of valueBox}
 
 \item{db}{database for which coverage will be shown ("wos" or "scopus")}
+
+\item{unit_label}{label to display if no data is available}
 }
 \description{
 Value box for coverage in ABM

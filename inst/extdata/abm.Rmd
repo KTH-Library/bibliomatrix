@@ -21,6 +21,7 @@ params:
 # u1ygqmuy
 # u13bp6vd
 # u18qe64m
+# u1o2ujjd
 
 library(flexdashboard)
 library(DT)
@@ -36,6 +37,7 @@ library(scales)
 library(kableExtra)
 library(glue)
 library(extrafont)
+library(kthapi)
 
 colors_vb <- palette_kth(4)
 
@@ -112,7 +114,7 @@ if(isTRUE(unit_level >= 0)){
 } else {
   
   unit_label <- 
-    kth_displayname(kthid = params$unit_code, "kthid")
+    kth_displayname(user = params$unit_code, "kthid")
 }
 
 #unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
@@ -121,7 +123,7 @@ if(isTRUE(unit_level >= 0)){
 
 current_date <- format(Sys.Date(), "%Y%m%d")
 
-abm_unit_title<- paste0("ABM: ",unit_label)
+abm_unit_title <- paste0("ABM: ", unit_label)
 
 STATIC <- "https://kth-library.github.io/abm"
 ```
@@ -148,26 +150,26 @@ Row  {data-height=240}
 
 ```{r}
   yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva))
-  firstyear <- min(names(df_diva[yrfields]))
-  lastyear <- max(names(df_diva[yrfields]))
+  firstyear <- min(as.integer(yrfields))
+  lastyear <- max(as.integer(yrfields))
 ```
 
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_publications(df_diva, lastyear, colors_vb[1])
+abm_ui_valuebox_publications(df_diva, lastyear, colors_vb[1], unit_label)
 ```
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "wos")
+abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "wos", unit_label)
 ```
 
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "scopus")
+abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "scopus", unit_label)
 ```
 
 ```{r}

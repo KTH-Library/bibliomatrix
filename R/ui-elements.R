@@ -1194,9 +1194,10 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
 #' @param df data frame with DiVA publications data in a specific format
 #' @param lastyear last year with DiVA publications
 #' @param vbcolor color of valueBox
+#' @param unit_label label to display if no data is available
 #' @importFrom flexdashboard valueBox
 #' @export
-abm_ui_valuebox_publications <- function(df, lastyear, vbcolor) {
+abm_ui_valuebox_publications <- function(df, lastyear, vbcolor, unit_label) {
   
   if (nrow(df) > 0) {
     
@@ -1218,9 +1219,11 @@ abm_ui_valuebox_publications <- function(df, lastyear, vbcolor) {
 #' @param df data frame with coverage data
 #' @param vbcolor color of valueBox
 #' @param db database for which coverage will be shown ("wos" or "scopus")
+#' @param unit_label label to display if no data is available
 #' @importFrom flexdashboard valueBox
 #' @export
-abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus")) {
+abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
+                                     unit_label) {
 
   if (nrow(df %>% filter(Publication_Type == "Peer reviewed")) > 0) {
     

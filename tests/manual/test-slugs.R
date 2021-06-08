@@ -1,7 +1,7 @@
 context("Testing enumeration of slugs and related researcher kthids")
 
 # by default set skip tests to TRUE when running on Travis cloud
-skip_kthapi_tests <- TRUE
+skip_on_ci()
 
 test_that("Catalog crawl descending into kth_catalog beneath slug 'j/jh/jhs' works", {
   skip_if(skip_kthapi_tests, "skipping KTH Directory API query tests in case we're in the cloud")

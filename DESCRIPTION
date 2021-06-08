@@ -72,7 +72,9 @@ Imports:
     AzureAuth,
     kthapi,
     ktheme,
-    DT
+    DT,
+    blob,
+    rlang
 Remotes: 
     KTH-Library/kthapi,
     KTH-Library/ktheme,

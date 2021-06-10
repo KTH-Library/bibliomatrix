@@ -72,8 +72,9 @@ render_reports <- function(myparamz = report_params()) {
 
 cache_reports <- function(reports) {
   
-  reports <- render_reports()
+  priv_reports <- render_reports()
   pub_reports <- render_reports(report_params(embed_data = FALSE))
+  reports <- bind_rows(priv_reports, pub_reports)
   
   message("Updating cache...")
   con <- con_cache()

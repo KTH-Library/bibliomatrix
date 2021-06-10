@@ -94,9 +94,9 @@ Row  {data-height=240}
 ---------------------
 
 ```{r}
-yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva))
-firstyear <- min(names(df_diva[yrfields]))
-lastyear <- max(names(df_diva[yrfields]))
+yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva), value = TRUE)
+firstyear <- min(yrfields)
+lastyear <- max(yrfields)
 ```
 
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**

@@ -149,24 +149,31 @@ Row  {data-height=240}
 ---------------------
 
 ```{r}
-  yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva))
-  firstyear <- min(as.integer(yrfields))
-  lastyear <- max(as.integer(yrfields))
+  yrfields <- grep("^[1-2][0-9]{3}$", names(df_diva), value = TRUE)
+  firstyear <- min(yrfields)
+  lastyear <- max(yrfields)
+  
+  as_range <- function(x, delim = "-") {
+    y <- as.integer(x)
+    paste(collapse = delim, na.omit(dplyr::case_when(
+      is.finite(y) ~ y
+    )))
+  }
 ```
 
-### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
+### **Publications in DiVA `r as_range(lastyear)`<br>(fractional counts)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
 abm_ui_valuebox_publications(df_diva, lastyear, colors_vb[1], unit_label)
 ```
 
-### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
+### **WoS coverage `r as_range(c(firstyear, lastyear))`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
 abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "wos", unit_label)
 ```
 
-### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
+### **Scopus coverage `r as_range(c(firstyear, lastyear))`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
 abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "scopus", unit_label)

@@ -1192,3 +1192,17 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 }
 ```
 </div>
+
+About
+=====================================
+
+#### `r unit_label`
+
+Row
+---------------------
+
+### **Background / overview (?)** {.no-padding}
+
+### **Indicator glossary** {.no-padding}
+
+### **Contact info and metadata for results(?)** {.no-padding}

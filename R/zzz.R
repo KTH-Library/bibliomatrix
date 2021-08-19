@@ -35,7 +35,7 @@ globalz <- "
     scop_fwci_x scop_int scop_snip sumscop_frac sumscop_full sumwos_frac
     sumwos_full P_full avg_snip corp_share description_en df_diva fwci_x is_kth
     description_en analysis_id
-    UT country entity org p_10 p_200 p_50 p_over200
+    UT country entity org p_10 p_200 p_50 p_over200 kth_frac org_type unified_org_id
 "
 
 # HACK: add global fcns / vars with spaces in the name

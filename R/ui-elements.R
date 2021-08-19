@@ -955,8 +955,6 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
 
     filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_copub_countries))))
-    
     # formattable version of df, to wrap as DT later
     df <- formattable(df_copub_countries %>% select(-kth_frac), 
                      list(
@@ -967,6 +965,8 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                           p_200 = color_bar(lightblue),
                           p_over200 = color_bar(lightblue)
                             ))
+    
+    header <- eval(parse(text = getheader(names(df))))
     
     as.datatable(df,
                   container = header,
@@ -995,9 +995,11 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
 #' @export
 abm_ui_kable_copub_countries <- function(df_copub_countries) {
   if (nrow(df_copub_countries) > 0) {
-    df_copub_countries  %>% select(-kth_frac) %>% 
-      kable(col.names = getcolnames(names(df_copub_countries)),
-            align = c("l", rep("r", ncol(df_copub_countries) - 1))) %>%
+    df <- df_copub_countries  %>% select(-kth_frac)
+    
+    df %>% 
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
       scroll_box(width = "720px", height = "400px")
   } else {

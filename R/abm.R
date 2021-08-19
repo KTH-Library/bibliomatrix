@@ -1624,10 +1624,11 @@ abm_copub_countries <- function(con,
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
               p_200 = sum(p_200, na.rm = TRUE),
-              p_over200 = sum(p_over200, na.rm = TRUE)) %>%
+              p_over200 = sum(p_over200, na.rm = TRUE),
+              kth_frac = sum(kth_frac, na.rm = TRUE)) %>%
     ungroup() %>% 
     collect() %>% 
-    arrange(-p)
+    arrange(-kth_frac)
   
   if(exclude_swe == TRUE)
     countries <- countries %>% filter(country != "Sweden")
@@ -1674,10 +1675,11 @@ abm_copub_orgs <- function(con,
               p_10 = sum(p_10, na.rm = TRUE),
               p_50 = sum(p_50, na.rm = TRUE),
               p_200 = sum(p_200, na.rm = TRUE),
-              p_over200 = sum(p_over200, na.rm = TRUE)) %>%
+              p_over200 = sum(p_over200, na.rm = TRUE),
+              kth_frac = sum(kth_frac, na.rm = TRUE)) %>%
     ungroup() %>% 
     collect() %>% 
-    arrange(-p)
+    arrange(-kth_frac)
   
   if(exclude_swe == TRUE)
     orgs <- orgs %>% filter(country != "Sweden")

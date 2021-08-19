@@ -958,7 +958,7 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
     header <- eval(parse(text = getheader(names(df_copub_countries))))
     
     # formattable version of df, to wrap as DT later
-    df <- formattable(df_copub_countries, 
+    df <- formattable(df_copub_countries %>% select(-kth_frac), 
                      list(
                           #area(col = p_10:p_50) ~ color_tile("transparent", "pink") # doesn't work: "unused argument (col = p_10:p_50)"-error
                           p = color_bar(lightgrey), 
@@ -967,8 +967,6 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                           p_200 = color_bar(lightblue),
                           p_over200 = color_bar(lightblue)
                             ))
-    
-    df <- df %>% arrange(desc(p_10))
     
     as.datatable(df,
                   container = header,
@@ -997,7 +995,7 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
 #' @export
 abm_ui_kable_copub_countries <- function(df_copub_countries) {
   if (nrow(df_copub_countries) > 0) {
-    df_copub_countries %>% 
+    df_copub_countries  %>% select(-kth_frac) %>% 
       kable(col.names = getcolnames(names(df_copub_countries)),
             align = c("l", rep("r", ncol(df_copub_countries) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
@@ -1021,7 +1019,7 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  df <- df_copub_orgs %>% select(-unified_org_id)
+  df <- df_copub_orgs %>% select(-c(kth_frac, unified_org_id))
   
   lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
   lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
@@ -1040,8 +1038,6 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                                p_200 = color_bar(lightblue),
                                p_over200 = color_bar(lightblue)
                                ))
-    
-    df2 <- df2 %>% arrange(desc(p_10))
     
     as.datatable(df2,
                   container = header,
@@ -1073,7 +1069,7 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
 #' @export
 abm_ui_kable_copub_orgs <- function(df_copub_orgs) {
   
-  df <- df_copub_orgs %>% select(-unified_org_id)
+  df <- df_copub_orgs %>% select(-c(kth_frac, unified_org_id))
   
   if (nrow(df) > 0) {
     df %>%

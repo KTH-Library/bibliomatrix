@@ -106,19 +106,19 @@ lastyear <- max(yrfields)
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_publications(df_diva, lastyear, colors_vb["cerise"])
+abm_ui_valuebox_publications(df_diva, lastyear, colors_vb["cerise"], unit_label)
 ```
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos")
+abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos", unit_label)
 ```
 
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus")
+abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus", unit_label)
 ```
 
 

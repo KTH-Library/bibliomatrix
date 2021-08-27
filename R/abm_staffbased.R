@@ -248,34 +248,3 @@ abm_copub_orgs_staffbased <- function(con,
   
   orgs
 }
-
-##### TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# - Fixa höjden på copubsidan (med en högre fig.heigh)
-# - Joina in Org_type och ersätt Org_type_code med denna
-# - Sätt ett lagom decimalformat på P(frac)
-##### TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

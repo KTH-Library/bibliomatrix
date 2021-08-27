@@ -8,6 +8,7 @@ abm_config <- function() {
   # this can later be expanded with more relevant defaults
   y_start <- 2013
   y_stop <- 2019
+  analysisId <- 1
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -15,11 +16,14 @@ abm_config <- function() {
   if (Sys.getenv("ABM_STOP_YEAR") != "")
     y_stop <- Sys.getenv("ABM_STOP_YEAR")
   
+  if (Sys.getenv("ABM_ANALYSIS_ID") != "")
+    analysisId <- Sys.getenv("ABM_ANALYSIS_ID")
+  
   list(
     start_year = y_start, 
     stop_year = y_stop,
     default_unit = "KTH",
-    analysis_id = 1
+    analysis_id = analysisId
   )
 }
 
@@ -29,15 +33,14 @@ abm_config <- function() {
 #' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
 #' @param pub_year for filtering on publication years, for example 2012, 2012:2018 or c(2012, 2014, 2016) (optional)
 #' @param unit_level for filtering on organizational level, 0 = KTH, 1 = school, 2 = deparment, 3 = researcher.
-#' @param analysis_id for filtering on specific analysis, for example 1 = KTH ABM 2020
+#' @param analysisId for filtering on specific analysis, for example 1 = KTH ABM 2020
 #' @return tibble with all ABM data for selected organizational units
 #' @import DBI dplyr tidyr purrr
 #' @export
-
-abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level, analysis_id) {
+abm_data <- function(con = con_bib(), unit_code, pub_year, unit_level, analysisId) {
   res <- con %>% tbl("masterfile")
-  if (!missing(analysis_id))
-    res <- res %>% filter(analysis_id == analysis_id)
+  if (!missing(analysisId))
+    res <- res %>% filter(analysis_id == analysisId)
   if (!missing(unit_code))
     res <- res %>% filter(Unit_code %in% unit_code)
   if (!missing(pub_year))
@@ -399,28 +402,6 @@ abm_table5 <- function(data, analysis_start = abm_config()$start_year, analysis_
   bind_rows(table1, table2)
 }
 
-
-#' Retrieve OA-data for ABM
-#' 
-#' @param con connection to db, default is sqlite connection
-#' @param unit_code for filtering on one or more unit code(s), which can be KTH, a one letter school code, an integer department code or a KTH-id (optional)
-#' @return tibble with OA-status of all publications from selected organizational units
-#' @import DBI dplyr tidyr purrr
-#' @export
-abm_oa_data <- function(con = con_bib(), unit_code) {
-  
-  # NB: we avoid a right_join which is not supported in SQLite3 and use a left join
-  # and switch the order of the joined tables
-  
-  # IS THIS FUNCTION USED (previously used in abm_table6) ?
-  
-  abm_data(con = con, unit_code = unit_code) %>%
-    select("PID", "oa_status", "is_oa", 
-           "Publication_Type_DiVA", "Publication_Year")
-  
-}
-
-
 #' Retrieve Table 6 (OA data) for ABM
 #' 
 #' @param data dataset with publications as tibble
@@ -562,6 +543,7 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
 #' @import DBI dplyr tidyr purrr
 #' @importFrom stats weighted.mean
 #' @export
+
 abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year){
   
   # Get publication level data for selected unit, relevant Scopus doctypes only
@@ -653,7 +635,6 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
     
   bind_rows(table1, table2)
 }
-
 
 #' Retrieve Co-publishing table (Scopus) for ABM
 #'
@@ -844,18 +825,19 @@ hiersort <- function(df, idfield, levelfield, parentfield, sortfield) {
 #' otherwise abm_public_kth$meta is returned
 #' 
 #' @param con connection to db
+#' @param analysisId id for analysis of interest, default from abm_config()
 #'
 #' @return tibble with information about ABM units
 #' @import DBI dplyr
 #' @importFrom stringr str_pad
 #' @export
 
-unit_info <- function(con){
+unit_info <- function(con, analysisId = abm_config()$analysis_id){
   
   if(missing(con)){
     abm_public_kth$meta 
   } else {
-    abm_units <- con %>% tbl("abm_org_info") %>% collect() %>% select(-"sort_order")
+    abm_units <- con %>% tbl("abm_org_info") %>% collect() %>% filter(analysis_id == analysisId) %>% select(-"sort_order")
     
     abm_units %>%
       # Get full sort order
@@ -913,9 +895,6 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #' 
 #' # get public data specifically for KTH and table 1
 #' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
-#' 
-#' # get summary data for KTH
-#' public \%>\% pluck("units", "KTH", "summaries")
 #'  
 #' # get public data specifically for KTH and table 1
 #' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
@@ -964,7 +943,10 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     
-    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year, analysis_id = abm_config()$analysis_id)
+    data <- abm_data(con = db, unit_code = x, 
+                     pub_year = abm_config()$start_year:abm_config()$stop_year, 
+                     analysisId = abm_config()$analysis_id)
+    
     unit_level <- units_table %>% filter(unit_code == x) %>% pull(org_level)
     
     tabs <- list(

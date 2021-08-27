@@ -3,7 +3,7 @@
 #' 
 #' This alternative pie chart can return three types of results - a ggplot object, a plotly object or a ggiraph svg object
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @param type the return type, one of "ggplot", "plotly" or "ggiraph"
 #' @return a ggplot object, ggiraph svg or plotly object as determined by type
 #' @import ggplot2 dplyr tidyr ggiraph ktheme
@@ -81,7 +81,7 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
 #' 
 #' Rationale: <https://www.perceptualedge.com/articles/visual_business_intelligence/save_the_pies_for_dessert.pdf>
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @param type the return type, one of "ggplot", "plotly" or "ggiraph"
 #' @return a ggplot object, ggiraph svg or plotly object as determined by type
 #' @import ggplot2 dplyr tidyr ggiraph ktheme
@@ -148,7 +148,7 @@ abm_graph_oadata_share <- function(df, type = c("ggplot", "plotly", "ggiraph")) 
 
 #' Plotly chart wrapping the abm_graph_oadata_stacked graph
 #' 
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @importFrom plotly plot_ly config layout ggplotly
 #' @export
 abm_graph_oadata_stackedarea_plotly <- function(df) {
@@ -164,7 +164,7 @@ abm_graph_oadata_stackedarea_plotly <- function(df) {
 #' 
 #' Rationale: \url{https://www.perceptualedge.com/articles/visual_business_intelligence/displays_for_combining_time-series_and_part-to-whole.pdf} and 
 #' \url{https://everydayanalytics.ca/2014/08/stacked-area-graphs-are-not-your-friend.html}
-#' @param df a data frame at the format produced by abm_oa_data()
+#' @param df a data frame at the format produced by abm_table6()
 #' @param type the return type, one of "ggplot", "plotly" or "ggiraph"
 #' @return a ggplot object, ggiraph svg or plotly object as determined by type
 #' @import ggplot2 dplyr tidyr ggiraph ktheme

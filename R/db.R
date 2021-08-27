@@ -71,12 +71,16 @@ con_bib_mssql <- function()
 #' This function relies on a "bibmon.db" file being present in the relevant application
 #' directory for a connection to the SQLite3 data source.
 #' 
+#' @param create boolean to create data if not exists, default: FALSE
+#' @param overwrite boolean to overwrite existing db, default: FALSE
+#' @param db_path file path to db location
 #' @import DBI RSQLite rappdirs
 #' @importFrom rappdirs app_dir
 #' @noRd
-con_bib_sqlite <- function(create = FALSE, overwrite = FALSE) 
+con_bib_sqlite <- function(create = FALSE, overwrite = FALSE, db_path) 
 {
-  db_path <- db_sqlite_location()
+  if (missing(db_path))
+    db_path <- db_sqlite_location()
   
   if (!file.exists(db_path) & !create) 
     stop("No sqlite3 db available at ", db_path)
@@ -232,6 +236,7 @@ db_sync_table <- function(
 #' @importFrom purrr map set_names
 #' @importFrom odbc dbDisconnect
 #' @importFrom DBI dbDisconnect
+#' @importFrom stringr str_starts
 #' @export
 db_sync <- function(
   tables_included, 

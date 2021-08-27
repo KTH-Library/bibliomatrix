@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.4</span>
       </span>
     </div>
 
@@ -137,11 +137,11 @@
 
     <pre class="usage"><span class='fu'>abm_copub_orgs</span><span class='op'>(</span>
   <span class='va'>con</span>,
-  <span class='va'>analysis_id</span>,
+  analysis_id <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>analysis_id</span>,
   <span class='va'>unit_level</span>,
   <span class='va'>unit_code</span>,
   exclude_swe <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  limit <span class='op'>=</span> <span class='fl'>200</span>,
+  limit <span class='op'>=</span> <span class='fl'>1000</span>,
   analysis_start <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>start_year</span>,
   analysis_stop <span class='op'>=</span> <span class='fu'><a href='abm_config.html'>abm_config</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>$</span><span class='va'>stop_year</span>
 <span class='op'>)</span></pre>
@@ -155,7 +155,7 @@
     </tr>
     <tr>
       <th>analysis_id</th>
-      <td><p>id for the analysis</p></td>
+      <td><p>id for the analysis, default from abm_config()</p></td>
     </tr>
     <tr>
       <th>unit_level</th>
@@ -171,7 +171,7 @@
     </tr>
     <tr>
       <th>limit</th>
-      <td><p>if set, limit the result to the first limit rows, default 200</p></td>
+      <td><p>if set, limit the result (for level 0 and 1) to the first limit rows, default 1000</p></td>
     </tr>
     <tr>
       <th>analysis_start</th>

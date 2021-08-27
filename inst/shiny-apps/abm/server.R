@@ -1,7 +1,6 @@
 library(shiny)
 library(shinydashboard)
 library(shinythemes)
-
 library(bibliomatrix)
 library(dplyr)
 library(purrr)
@@ -44,6 +43,13 @@ server <- function(input, output, session) {
             is_saml <- function(x) stringr::str_detect(x, re_saml)
             parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
             
+            jwt <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
+            if (jwt != "") {
+                kthid <- abm_decode_jwt(jwt)$kthid
+                setNames(kthid, displayname_from_kthid(kthid))
+                return (kthid)
+            }
+            
             if (is_saml(ua)) {
                 kthid <- parse_id(ua)
             } else {
@@ -51,7 +57,7 @@ server <- function(input, output, session) {
                 # if shinyproxy with ldap then we get user identity as LDAP accountname
                 message("Not shinyproxy/shiny and not SAML, warning... appears to use LDAP")
             }
-            kthid <- setNames(kthid, kth_displayname(kthid, "kthid"))
+            kthid <- setNames(kthid, displayname_from_kthid(kthid))
         } else {
             kthid <- NULL
         }
@@ -131,7 +137,6 @@ server <- function(input, output, session) {
             out <- ""
         }
         
-        cat(ABM_IS_PUBLIC, ": public state\n")
         out
     })
     
@@ -139,41 +144,28 @@ server <- function(input, output, session) {
         
         req(input$unitid)
         
-        loc_www <- system.file("shiny-apps", "abm", "www", "cache",
-           package = "bibliomatrix", mustWork = TRUE)
+        cat("Report for:", input$unitid, "private visibility:", !ABM_IS_PUBLIC, "\n")
         
-        if (ABM_IS_PUBLIC == TRUE) {
-            f <- paste0(input$unitid, ".html")
+        report <- abm_report(id = input$unitid, is_private = !ABM_IS_PUBLIC)
+        is_ok <- !is.null(report)
+            
+        if (is_ok) {    
+            
+            #tags$div(HTML(rawToChar(report)))  # this causes CSS issues w navbar
+            #b64 <- base64enc::dataURI(data = report, mime = "text/html")  # this causes slow enc
+            
+            # NB: permission issue if not writing to cache dir (has o+wr)
+            tf <- paste0(file.path("cache", openssl::sha1(rawToChar(report))), ".html")
+            readr::write_file(report, paste0("www/", tf))
+            
+            htmltools::tags$iframe(src = tf, 
+                frameborder = 0, scrolling = "auto", height="100%", width="100%")
+            
         } else {
-            if (is_employee(input$unitid)) {
-                f <- paste0(openssl::sha1(input$unitid), ".html")
-            } else {
-                f <- paste0(input$unitid, "-embed.html")
-            }
+            paste("No report available for this unit, please contact the system owner.")
         }
         
-        ff <- file.path(loc_www, f)
-        if (!file.exists(ff)) {
-            www <- dash_src(input$unitid)
-            cat("Not in cache, requesting from: ", www, "\n")
-            w <- try(httr::GET(www), silent = TRUE)
-            if (!inherits(w, 'try-error') && httr::status_code(w) == 200) {
-                html <- httr::content(w, as = "raw")
-            } else {
-                html <- charToRaw(sprintf("<h1>API at %s did not return data</h1>", www))
-                #f <- sprintf("data:text/html;base64,%s", base64enc::base64encode(msg))
-                f <- "error.html"
-                ff <- file.path(loc_www, f)
-            }
-            cat("Writing ", f, " to ", ff, "\n")
-            writeBin(html, ff)
-        } else {
-            cat("Found in cache: ", f, "\n")
-        }
-        
-        tags$iframe(src = paste0("cache/", f), 
-            width = "100%", height = "100%",
-            frameborder = 0, scrolling = 'auto')
+
     })    
     
 }

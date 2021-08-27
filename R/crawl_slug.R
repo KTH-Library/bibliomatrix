@@ -478,8 +478,12 @@ abm_divisions <- function(con =  con_bib()) {
 #' @rdname abm_unit_pubs
 #' @export 
 abm_unit_pubs <- function(unit_slug) {
+  con <- con_bib()
+  on.exit(DBI::dbDisconnect(con))
+
   ids <- abm_researchers(unit_slug)
-  abm_staff_data(kthids = ids) 
+  
+  abm_staff_data(con = con, kthids = ids)
 }
 
 #' Summary for a list of publications

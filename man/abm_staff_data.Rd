@@ -8,7 +8,8 @@ abm_staff_data(
   con,
   kthids,
   analysis_start = abm_config()$start_year,
-  analysis_stop = abm_config()$stop_year
+  analysis_stop = abm_config()$stop_year,
+  analysisId = abm_config()$analysis_id
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ abm_staff_data(
 \item{analysis_start}{first publication year of analysis}
 
 \item{analysis_stop}{last publication year of analysis}
+
+\item{analysisId}{id for analysis}
 }
 \value{
 tibble with all staff-based ABM data for selected organizational unit

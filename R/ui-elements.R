@@ -941,7 +941,7 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
 #' @importFrom dplyr arrange
-#' @import formattable
+#' @importFrom formattable formattable color_bar as.datatable proportion
 #' @importFrom ktheme palette_kth
 #' @export
 abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
@@ -1016,7 +1016,7 @@ abm_ui_kable_copub_countries <- function(df_copub_countries) {
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
 #' @importFrom dplyr select arrange
-#' @import formattable
+#' @importFrom formattable formattable color_bar as.datatable proportion
 #' @importFrom ktheme palette_kth
 #' @export
 abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
@@ -1191,3 +1191,145 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
   
 }
 
+#' Value box for number of publications in ABM 
+#' 
+#' @param df data frame with DiVA publications data in a specific format
+#' @param lastyear last year with DiVA publications
+#' @param vbcolor color of valueBox
+#' @param unit_label label to display if no data is available
+#' @importFrom flexdashboard valueBox
+#' @export
+abm_ui_valuebox_publications <- function(df, lastyear, vbcolor, unit_label) {
+  
+  if (nrow(df) > 0) {
+    
+    total_pubs <- sum(df[, lastyear], na.rm = TRUE)
+    
+    valueBox(
+      value = round(total_pubs, 1),
+      color = vbcolor,
+      icon = "fa-chart-bar",
+      href = "#publications-in-diva")
+
+  } else {
+    shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+  }
+}
+
+#' Value box for coverage in ABM 
+#' 
+#' @param df data frame with coverage data
+#' @param vbcolor color of valueBox
+#' @param db database for which coverage will be shown ("wos" or "scopus")
+#' @param unit_label label to display if no data is available
+#' @importFrom flexdashboard valueBox
+#' @export
+abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
+                                     unit_label) {
+
+  if (nrow(df %>% filter(Publication_Type == "Peer reviewed")) > 0) {
+    
+    type <- match.arg(db)
+    
+    if(type=="wos"){
+      cov <- df %>% 
+        filter(Publication_Type == "Peer reviewed") %>%
+        summarise(cov = sum(sumwos_frac) / sum(p_frac)) %>% 
+        pull(cov)
+    } else {
+      cov <- df %>% 
+        filter(Publication_Type == "Peer reviewed") %>%
+        summarise(cov = sum(sumscop_frac) / sum(p_frac)) %>% 
+        pull(cov)
+    }
+
+    valueBox(      
+      value = paste(100*round(cov, 3), "%"),
+      color = vbcolor,
+      icon = "fa-percent",
+      href = "#publications-in-diva")
+
+  } else {
+    shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
+  }
+}
+
+#' Bullet graph for citations in ABM 
+#' 
+#' @param df data frame with citation stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_bullet_citations <- function(df) {
+
+if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  
+  last_interval <- nth(df$interval, -2)
+  
+  cf <- as.numeric(filter(df, interval == last_interval)$cf)
+  
+  cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
+                            value = cf, reference = 1.0, roundto = 2)
+  
+  top10 <- as.numeric(filter(df, interval == last_interval)$top10_share)
+  
+  cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+                            value = top10, reference = 0.10, pct = TRUE)
+  
+  cit_bullet1 / cit_bullet2
+  
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}
+
+#' Bullet graph for journal citations in ABM 
+#' 
+#' @param df data frame with journal citation stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_bullet_journal <- function(df) {
+  
+  if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+    
+    last_interval <- nth(df$interval, -2)
+    
+    jcf <- as.numeric(filter(df, interval == last_interval)$jcf)
+    jcit_bullet1 <- abm_bullet(label = "JCf, Field normalized citations", 
+                               value = jcf, reference = 1.0, roundto = 2)
+    
+    top20 <- as.numeric(filter(df, interval == last_interval)$top20_share)
+    jcit_bullet2 <- abm_bullet(label = "Share in Top20% journals", 
+                               value = top20, reference = 0.20, pct = TRUE)
+    
+    jcit_bullet1 / jcit_bullet2
+    
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}
+
+#' Waffle graph for co-publications in ABM 
+#' 
+#' @param df data frame with co-publications stats by 3year interval
+#' @import patchwork
+#' @export
+abm_ui_waffle_copub <- function(df) {
+  
+  if (df %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+    
+    last_interval <- nth(df$interval, -2)
+    
+    nonuniv_share <- as.numeric(filter(df, interval == last_interval)$nonuniv_share)
+    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
+    waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+    
+    int_share <- as.numeric(filter(df, interval == last_interval)$int_share)
+    int_lbl <- sprintf("International: %d%%", round(100*int_share))
+    waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+    
+    waffle1 / waffle2
+    
+  } else {
+    shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+  }
+}

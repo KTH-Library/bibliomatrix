@@ -235,7 +235,7 @@ db_sync_table <- function(
 #' @export
 db_sync <- function(
   tables_included, 
-  tables_excluded = c("OA_status", "Document", "Bestresaddr_KTH", "LastFailedJobs",
+  tables_excluded = c("OA_status", "Document", "LastFailedJobs",
                       "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
   overwrite_existing = FALSE) 
 {

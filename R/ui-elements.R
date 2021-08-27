@@ -956,7 +956,7 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
     filename <- paste0("ABM_copub_countries_", unit_file_label, "_", current_date)
     
     # formattable version of df, to wrap as DT later
-    df <- formattable(df_copub_countries %>% select(-kth_frac), 
+    df <- formattable(df_copub_countries %>% rename(`Publications (frac)` = kth_frac), 
                      list(
                           #area(col = p_10:p_50) ~ color_tile("transparent", "pink") # doesn't work: "unused argument (col = p_10:p_50)"-error
                           p = color_bar(lightgrey), 
@@ -980,7 +980,8 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
                       list(extend = "excel", filename = filename, title = unit_title))
-                  ))
+                  ))%>% 
+      formatRound(7, digits = 1, mark = "")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }
@@ -995,9 +996,10 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
 #' @export
 abm_ui_kable_copub_countries <- function(df_copub_countries) {
   if (nrow(df_copub_countries) > 0) {
-    df <- df_copub_countries  %>% select(-kth_frac)
+    df <- df_copub_countries  %>% rename(`Publications (frac)` = kth_frac)
     
     df %>% 
+      mutate_at(vars(7), function(x) sprintf("%.1f", x)) %>% 
       kable(col.names = getcolnames(names(df)),
             align = c("l", rep("r", ncol(df) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%
@@ -1021,7 +1023,7 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  df <- df_copub_orgs %>% select(-c(kth_frac, unified_org_id))
+  df <- df_copub_orgs %>% select(-unified_org_id) %>% rename(`Publications (frac)` = kth_frac)
   
   lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
   lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
@@ -1055,7 +1057,8 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
                       list(extend = "excel", filename = filename, title = unit_title))
-                  ))
+                  )) %>% 
+      formatRound(9, digits = 1, mark = "")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }
@@ -1071,10 +1074,11 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
 #' @export
 abm_ui_kable_copub_orgs <- function(df_copub_orgs) {
   
-  df <- df_copub_orgs %>% select(-c(kth_frac, unified_org_id))
+  df <- df_copub_orgs %>% select(-unified_org_id) %>% rename(`Publications (frac)` = kth_frac)
   
   if (nrow(df) > 0) {
     df %>%
+      mutate_at(vars(9), function(x) sprintf("%.1f", x)) %>% 
       kable(col.names = getcolnames(names(df)),
             align = c("l", rep("r", ncol(df) - 1))) %>%
       kable_styling(bootstrap_options = c("responsive")) %>%

@@ -1192,3 +1192,13 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 }
 ```
 </div>
+
+<i class="fa fa-info-circle" aria-hidden="true"></i> About
+===========================
+
+#### 
+
+Row  {data-height=1024}
+---------------------
+
+<iframe allowfullscreen="true" src="https://KTH-Library.github.io/abm/About_ABM.html" style="border: 0px solid #ddd; min-height: 1024px" width="100%" height="100%"></iframe>

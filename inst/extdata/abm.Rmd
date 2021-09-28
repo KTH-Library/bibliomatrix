@@ -271,20 +271,8 @@ The bibliometric indicators referred are based on publications registered in DiV
 
 Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science (Citation impact, Journal impact and Co&#8209;publishing tabs) or Scopus (Scopus tab).
 
-### **Further information**
-
-- [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
-- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
-- [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
-- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
-- [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
-- [Report on Open Access publishing at KTH](`r STATIC`/OARapport.pdf){target="_blank"}
-
-For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
-
 Row
-----------------------
-
+--------------------------------
 ### **Publication data**
 
 ```{r, echo=FALSE}
@@ -321,12 +309,6 @@ if (params$embed_data == TRUE && params$is_employee != TRUE) {
   )
 }
 
-```
-
-### **Attributions**
-
-```{r, echo=FALSE, results="asis"}
-wos_attribution()
 ```
 
 Publications in DiVA

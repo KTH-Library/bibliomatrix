@@ -95,3 +95,115 @@ abm_publications_staffbased <- function(con, unit_code,
   
 }
 
+
+#' Create staffbased table over co-publication countries for ABM unit
+#' 
+#' @param con a database connection to BIBMON
+#' @param publist a publication list including at least WebofScience_ID, Unit_fraction and n_authors
+#' @param exclude_swe wether to exclude Sweden as co-publication country, default TRUE
+#' @param limit if set, limit the result to the first limit rows, default NULL
+#' @return a tibble
+#' @import dplyr
+#' @importFrom utils head
+#' @export
+abm_copub_countries_staffbased <- function(con,
+                                           publist,
+                                           exclude_swe = TRUE,
+                                           limit = NULL){
+  
+  
+  uts <- publist %>%
+    filter(!is.na(WebofScience_ID)) %>%
+    select(WebofScience_ID, Unit_Fraction, n_authors) %>%
+    rename(UT = WebofScience_ID)
+  
+  uts_countries <- con %>%
+    tbl("Bestresaddr_KTH") %>%
+    filter(UT %in% !!uts$UT) %>%
+    select(UT, Country_name) %>%
+    collect() %>%
+    rename(country = Country_name) %>% 
+    unique()
+  
+  countries <- uts %>%
+    inner_join(uts_countries, by = "UT") %>%
+    mutate( p_10 = ifelse(n_authors <= 10,  1, 0),
+            p_50 = ifelse(n_authors %in% 11:50, 1, 0),
+            p_200 = ifelse(n_authors %in% 51:200, 1, 0),
+            p_over200 = ifelse(n_authors > 200, 1, 0)) %>%
+    group_by(country) %>%
+    summarise( p = n(),
+               p_10 = sum(p_10, na.rm = TRUE),
+               p_50 = sum(p_50, na.rm = TRUE),
+               p_200 = sum(p_200, na.rm = TRUE),
+               p_over200 = sum(p_over200, na.rm = TRUE),
+               kth_frac = sum(Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup() %>% 
+    arrange(-kth_frac)
+  
+  if(exclude_swe == TRUE)
+    countries <- countries %>% filter(country != "Sweden")
+  
+  if(!is.null(limit))
+    countries <- head(countries, limit)
+  
+  countries
+}
+
+#' Create staffbased table over co-publication organizations for ABM unit
+#' 
+#' @param con a database connection to BIBMON
+#' @param publist a publication list including at least WebofScience_ID, Unit_fraction and n_authors
+#' @param exclude_swe wether to exclude Sweden as co-publication country, default TRUE
+#' @param limit if set, limit the result to the first limit rows, default NULL
+#' @return a tibble
+#' @import dplyr
+#' @importFrom utils head
+#' @export
+abm_copub_orgs_staffbased <- function(con,
+                                      publist,
+                                      exclude_swe = FALSE,
+                                      limit = 1000){
+  
+  uts <- publist %>%
+    filter(!is.na(WebofScience_ID)) %>%
+    select(WebofScience_ID, Unit_Fraction, n_authors) %>%
+    rename(UT = WebofScience_ID)
+  
+  orgtype <- con %>% 
+    tbl("Organization_type")
+
+  uts_orgs <- con %>%
+    tbl("Bestresaddr_KTH") %>%
+    filter(UT %in% !!uts$UT & Unified_org_id != 8) %>%
+    inner_join(orgtype, by = "Org_type_code") %>% 
+    select(UT, Name_eng, Org_type_eng, Unified_org_id, Country_name) %>%
+    collect() %>%
+    rename(org = Name_eng, org_type = Org_type_eng, unified_org_id = Unified_org_id, country = Country_name) %>% 
+    unique()
+  
+  orgs <- uts %>%
+    inner_join(uts_orgs, by = "UT") %>%
+    mutate( p_10 = ifelse(n_authors <= 10,  1, 0),
+            p_50 = ifelse(n_authors %in% 11:50, 1, 0),
+            p_200 = ifelse(n_authors %in% 51:200, 1, 0),
+            p_over200 = ifelse(n_authors > 200, 1, 0)) %>%
+    group_by(org, org_type, unified_org_id, country) %>%
+    summarise(p = n(),
+              p_10 = sum(p_10, na.rm = TRUE),
+              p_50 = sum(p_50, na.rm = TRUE),
+              p_200 = sum(p_200, na.rm = TRUE),
+              p_over200 = sum(p_over200, na.rm = TRUE),
+              kth_frac = sum(Unit_Fraction, na.rm = TRUE)) %>%
+    ungroup() %>% 
+    collect() %>% 
+    arrange(-kth_frac)
+  
+  if(exclude_swe == TRUE)
+    orgs <- orgs %>% filter(country != "Sweden")
+  
+  if(!is.null(limit))
+    orgs <- head(orgs, limit)
+  
+  orgs
+}

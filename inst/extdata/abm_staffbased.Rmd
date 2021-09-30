@@ -39,6 +39,10 @@ unit_code <- params$unit_code
 con <- con_bib()
 unit_members <- abm_researchers(unit_code)
 unit_publ<- abm_staff_data(con, unit_members)
+df_copub_countries <- abm_copub_countries_staffbased(con = con,
+                                                     publist = unit_publ)
+df_copub_orgs <- abm_copub_orgs_staffbased(con = con,
+                                           publist = unit_publ)
 DBI::dbDisconnect(con)
 
 # Get ABM tables
@@ -102,19 +106,19 @@ lastyear <- max(yrfields)
 ### **Publications in DiVA `r ifelse(!is.na(lastyear), lastyear, "")`<br>(fractional counts)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_publications(df_diva, lastyear, colors_vb["cerise"])
+abm_ui_valuebox_publications(df_diva, lastyear, colors_vb["cerise"], unit_label)
 ```
 
 ### **WoS coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos")
+abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos", unit_label)
 ```
 
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus")
+abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus", unit_label)
 ```
 
 
@@ -209,23 +213,6 @@ Row
 The bibliometric indicators referred are based on publications registered in DiVA. Only publications from currently employed researchers at KTH are included. The rolling nature of this report means that it provides more of a current overview and less of a historic stable trend, since it excludes publications written by researchers that are no longer affiliated to KTH, but have been at some point in time. 
 
 Indicators in the Citation impact, Journal impact and Co&#8209;publishing tabs are based on Web of Science publications only. Corresponding Scopus indicators can be found under the Scopus tab.
-
-### **Further information**
-
-- [Guide to the Annual Bibliometric Monitoring at KTH](`r STATIC`/ABM_guide.pdf){target="_blank"}
-- [Description of data, methods and indicators in KTH Annual Bibliometric Monitoring](`r STATIC`/Description_data_and_methods_ABM.pdf){target="_blank"}
-- [Formal definitions of field normalized citation indicators at KTH](`r STATIC`/Formal_definitions_field_normalized_citation.pdf){target="_blank"}
-- [Information about DiVA and the registration process - Handle publications in DiVA](https://www.kth.se/en/biblioteket/publicera-analysera/hantera-publikationer){target="_blank"}
-- [President decision about the Annual Bibliometric Monitoring](`r STATIC`/Beslut_ABM.pdf){target="_blank"}
-- [Report on Open Access publishing at KTH](`r STATIC`/OARapport.pdf){target="_blank"}
-
-For further questions, contact the KTH Library at [biblioteket@kth.se](mailto:biblioteket@kth.se).
-
-### **Attributions**
-
-```{r, echo=FALSE, results="asis"}
-wos_attribution()
-```
 
 Row
 --------------------------------
@@ -569,10 +556,12 @@ Co&#8209;publishing
 
 #### `r unit_label`
 
-Row
+Row {.tabset}
 ---------------------
 
-### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+### Summary
+
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -581,7 +570,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r}
+```{r, fig.height = 14}
 abm_ui_datatable_copub(
   df_copub,
   unit_file_label = unit_file_label, 
@@ -589,17 +578,13 @@ abm_ui_datatable_copub(
 )
 ```
 
-### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
 abm_ui_kable_copub(df_copub)
 ```
 
-
-Row
------------------
-
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -608,15 +593,58 @@ abm_ui_note(df_copub, df_coverage, unit_level, is_fractional = FALSE, is_wos = T
 
 ```
 
-Row
--------
-### **International and Swedish non-university co&#8209;publication**
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+
+#### **International and Swedish non-university co&#8209;publication**
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
+```
+
+</div>
+
+### Countries and organizations
+
+#### **Co&#8209;publication countries** {.no-mobile}
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
+    background-image: none !important;
+}
+</style>
+```{r}
+abm_ui_datatable_copub_countries(
+  df_copub_countries,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+) 
+```
+
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+```{r}
+abm_ui_kable_copub_countries(df_copub_countries) 
+```
+
+
+#### **Co&#8209;publication organizations** {.no-mobile}
+
+```{r}
+abm_ui_datatable_copub_orgs(
+  df_copub_orgs,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+) 
+```
+
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+```{r}
+abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
 
 Open Access
@@ -934,3 +962,14 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 }
 ```
 </div>
+
+<i class="fa fa-info-circle" aria-hidden="true"></i> About
+===========================
+
+#### 
+
+Row  {data-height=1024}
+---------------------
+
+<iframe allowfullscreen="true" src="https://KTH-Library.github.io/abm/About_ABM.html" style="border: 0px solid #ddd; min-height: 1024px" width="100%" height="100%"></iframe>
+

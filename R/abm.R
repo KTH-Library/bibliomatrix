@@ -1671,3 +1671,35 @@ abm_copub_orgs <- function(con,
   
   orgs
 }
+
+
+#' Calculate average jcf across years
+#' 
+#' This function calculates average jcf across a set of years per department.
+#' This three-year average is used as an performance indicator at KTH. 
+#' 
+#' @param con connection to db
+#' @param starty first publication year of analysis
+#' @param stopy last publication year of analysis
+#' @return tibble average jcf along with dept name, school name, along with full and fractional publ. counts.
+#' @import DBI dplyr
+#' @export
+mean_jcf<- function(con,starty,stopy){
+  
+  dept_wos<- con %>% tbl("masterfile") %>% filter(level == 2, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
+  collect()
+  
+  dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) %>% filter(!is.na(jcf))
+  
+  jcf_av<- dept_wos_unique %>% group_by(Unit_Name, Unit_code) %>% 
+    summarise(jcf_frac = sum(Unit_Fraction * jcf, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              P_full = n()) %>% 
+    ungroup() %>% arrange(desc(jcf_frac))
+  
+  jcf_final<- jcf_av %>% left_join(unit_info() %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
+    left_join(unit_info() %>% select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) %>% #to join in school name
+    select(-parent_org_id) %>% relocate(unit_long_en) %>% rename("School name" = unit_long_en)
+  
+  jcf_final
+}

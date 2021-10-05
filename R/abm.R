@@ -1681,12 +1681,13 @@ abm_copub_orgs <- function(con,
 #' @param con connection to db
 #' @param starty first publication year of analysis
 #' @param stopy last publication year of analysis
+#' @param analysis_level organization analysis level. Default is 2 (department).
 #' @return tibble average jcf along with dept name, school name, along with full and fractional publ. counts.
 #' @import DBI dplyr
 #' @export
-mean_jcf<- function(con,starty,stopy){
+mean_jcf<- function(con,starty,stopy, analysis_level=2){
   
-  dept_wos<- con %>% tbl("masterfile") %>% filter(level == 2, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
+  dept_wos<- con %>% tbl("masterfile") %>% filter(level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
   collect()
   
   dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) %>% filter(!is.na(jcf))

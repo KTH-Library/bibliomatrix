@@ -21,7 +21,8 @@ A report used in ABM
 \dontrun{
 if(interactive()){
  r1 <- abm_report(id = "KTH", is_private = FALSE)
- r2 <- abm_reports("u1o2ujjd", is_private = TRUE)
+ r2 <- abm_report("u1o2ujjd", is_private = TRUE)
+ view_report(r2$data)
  }
 }
 }

@@ -8,11 +8,24 @@ render_report <- function(rmd, myparams) {
     rmd <- system.file(package = "bibliomatrix", 
       "extdata", "abm.Rmd")
   
+  # Workaround for shiny-server usage due to permission denied when rendering reports
+  # see https://github.com/hadley/mastering-shiny/blob/master/rmarkdown-report/app.R#L3-L6  
+  # intermediate files may get permission denied for shiny user, indicated by:
+  # Error in file(con, "w") : cannot open the connection
+  # In file(con, "w") : cannot open file 'abm.knit.md': Permission denied
+  # NB: also if error "Could not fetch https://KTH-Library.github.io/abm/About_ABM.html" appears...
+  # this may be due to VPN being active
+  
+  report_dir <- tempdir(check = TRUE)
+  file.copy(file.path(dirname(rmd), "/"), report_dir, recursive = TRUE, overwrite = TRUE)
+  report_path <- file.path(report_dir, basename(rmd))
+  
   rmarkdown::render(
-    input = rmd,
+    input = report_path,
     output_file = I(temp), 
     params = myparams,
-    quiet = TRUE
+    quiet = TRUE,
+    envir = new.env(parent = globalenv())
   )  
   
   b <- blob::as_blob(I(list(readr::read_file_raw(temp))))
@@ -70,24 +83,28 @@ render_reports <- function(myparamz = report_params()) {
   
 }
 
-cache_reports <- function(reports) {
+cache_reports <- function() {
   
+  message("Rendering reports for private app")
   priv_reports <- render_reports()
+  
+  message("Rendering reports for public app")
   pub_reports <- render_reports(report_params(embed_data = FALSE))
+  
+  message("Combining reports before writing to cache...")
   reports <- bind_rows(priv_reports, pub_reports)
   
   message("Updating cache...")
   con <- con_cache()
   on.exit(RSQLite::dbDisconnect(con))
 
+  message("Clearing any existing cached data")
   cache_clear()
+  
+  message("Writing new data to cache")
   RSQLite::dbWriteTable(con, "reports", reports)
   message("Done")
 
-  #upd <- con %>% tbl("reports") %>% collect() %>% 
-  # mutate(visibility = ifelse(grepl("x86", report), 0, 1))
-  #dbWriteTable(con, "reports", upd, overwrite = TRUE)
-  
 }
 
 con_cache <- function(dbpath, verbose = FALSE) {
@@ -207,8 +224,9 @@ view_report <- function(blob) {
 #' @examples 
 #' \dontrun{
 #' if(interactive()){
-#'  r1 <- abm_report(id = "KTH", is_private = FALSE)
-#'  r2 <- abm_reports("u1o2ujjd", is_private = TRUE)
+#'  r1 <- abm_report(id = "177", is_private = FALSE)
+#'  view_report(list(r1))
+#'  r2 <- abm_report("u1o2ujjd", is_private = TRUE)
 #'  }
 #' }
 #' @seealso 
@@ -218,27 +236,35 @@ view_report <- function(blob) {
 #' @importFrom rlang .data
 abm_report <- function(id, is_private) {
 
-  is_valid_org <- id %in% as.character(abm_public_kth$meta$Diva_org_id)
+  apk <- abm_public_kth
+  is_valid_org <- id %in% as.character(apk$meta$Diva_org_id)
   
   if (is_valid_org) {
     
     uc <- abm_public_kth$meta %>% filter(id == as.character(Diva_org_id)) %>% pull(unit_code)
     
-    report <- 
+    report <- tryCatch(
       view_reports() %>% 
       filter(.data$name == uc, .data$visibility == as.integer(is_private)) %>%
       arrange(desc(.data$ts)) %>%
       slice(1) %>%
       collect %>%
       pull(.data$data) %>%
-      unlist()
+      unlist(),
+      error = function(e) FALSE)
     
-    return (report)
+    if (!is.null(report) && report != FALSE)
+      return (report)
+    
+    myparams <- 
+      report_params(ids = uc, is_employee = FALSE, use_package_data = TRUE, embed_data = is_private)[[1]]
+    
+    cache_report(id = id, params = myparams)
     
   } else {
     
     is_valid_kthid <- tryCatch(
-      kthapi::kth_profile(kthid = id)$content$kthId == id, 
+      kthapi::kth_profile(kthid = id), 
       error = function(e) FALSE)
     
     if (!is_valid_kthid) {
@@ -254,3 +280,5 @@ abm_report <- function(id, is_private) {
     
 }
 
+#cache_reports()
+# view_reports()

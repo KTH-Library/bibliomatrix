@@ -1683,14 +1683,15 @@ abm_copub_orgs <- function(con,
 #' @param starty first publication year of analysis
 #' @param stopy last publication year of analysis
 #' @param analysis_level organization analysis level. Default is 2 (department).
-#' @param analysis_id the version id to be used from masterfile
+#' @param analysis_version_id the analysis_id id to be used from masterfile
 #' @return tibble average jcf along with dept name, school name, along with full and fractional publ. counts.
 #' @import DBI dplyr
 #' @export
-mean_jcf_units<- function(con,starty,stopy, analysis_level=2, analysis_id){
+mean_jcf_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
   
-  dept_wos<- con %>% tbl("masterfile") %>% filter(level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
-  collect()
+  dept_wos<- con %>% tbl("masterfile") %>% 
+            filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
+            collect()
   
   dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) %>% filter(!is.na(jcf))
   

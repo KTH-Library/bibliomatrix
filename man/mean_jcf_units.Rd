@@ -4,7 +4,7 @@
 \alias{mean_jcf_units}
 \title{Calculate average jcf across years}
 \usage{
-mean_jcf_units(con, starty, stopy, analysis_level = 2, analysis_id)
+mean_jcf_units(con, starty, stopy, analysis_level = 2, analysis_version_id)
 }
 \arguments{
 \item{con}{connection to db}
@@ -15,7 +15,7 @@ mean_jcf_units(con, starty, stopy, analysis_level = 2, analysis_id)
 
 \item{analysis_level}{organization analysis level. Default is 2 (department).}
 
-\item{analysis_id}{the version id to be used from masterfile}
+\item{analysis_version_id}{the analysis_id id to be used from masterfile}
 }
 \value{
 tibble average jcf along with dept name, school name, along with full and fractional publ. counts.

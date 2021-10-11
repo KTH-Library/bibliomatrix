@@ -200,7 +200,10 @@ abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_
     filter(Publication_Year >= analysis_start &
            Publication_Year <= analysis_stop - 2 &
            Publication_Type_WoS %in% c("Article", "Proceedings Paper", "Review", "Letter", "Editorial")) %>%
-    mutate(uncited = ifelse(Citations_3yr == 0, 1, 0))
+    mutate(uncited = ifelse(Citations_3yr == 0, 1, 0)) %>% 
+    select(Publication_Year, Unit_Fraction, Citations_3yr, uncited, WebofScience_ID) %>%
+    unique()
+    
   
   # Year dependent part of table
   table1 <-
@@ -265,7 +268,9 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop - 1 &
              Publication_Type_WoS %in% c("Article", "Review") & 
-             !is.na(cf))
+             !is.na(cf)) %>% 
+    select(Publication_Year, Unit_Fraction_adj, cf, Ptop10, WebofScience_ID) %>%
+    unique()
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
@@ -316,7 +321,9 @@ abm_table4 <- function(data, analysis_start = abm_config()$start_year, analysis_
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              Publication_Type_WoS %in% c("Article", "Review") &
-             !is.na(jcf))
+             !is.na(jcf)) %>% 
+    select(Publication_Year, Unit_Fraction, jcf, Jtop20, WebofScience_ID) %>%
+    unique()
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
@@ -366,7 +373,9 @@ abm_table5 <- function(data, analysis_start = abm_config()$start_year, analysis_
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              Publication_Type_WoS %in% c("Article", "Review") &
-             !is.na(int))
+             !is.na(int)) %>% 
+    select(Publication_Year, Unit_Fraction, swe_nuniv, int, WebofScience_ID) %>%
+    unique()
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
@@ -500,7 +509,9 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
              Publication_Year <= analysis_stop &
              scop_doctype %in% c("Article", "Conference Paper", "Review", "Letter", "Editorial") &
              !is.na(scop_cscxo)) %>%
-    mutate(uncited = ifelse(scop_cscxo > 0, 0, 1))
+    mutate(uncited = ifelse(scop_cscxo > 0, 0, 1)) %>%
+    select(Publication_Year, Unit_Fraction, scop_cscxo, uncited, ScopusID) %>%
+    unique()
   
   # Year dependent part of table
   table1 <-
@@ -551,7 +562,9 @@ abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_yea
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop - 1 &
              scop_doctype %in% c("Article", "Review", "Conference Paper") & 
-             !is.na(scop_fwci_x))
+             !is.na(scop_fwci_x)) %>%
+    select(Publication_Year, Unit_Fraction, scop_fwci_x, scop_Ptop10, ScopusID) %>%
+    unique()
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
@@ -602,7 +615,9 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              scop_doctype %in% c("Article", "Review", "Conference Paper") &
-             !is.na(scop_snip))
+             !is.na(scop_snip)) %>%
+    select(Publication_Year, Unit_Fraction, scop_snip, scop_Jtop20, ScopusID) %>%
+    unique()
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
@@ -652,7 +667,9 @@ abm_table_scop_copub <- function(data, analysis_start = abm_config()$start_year,
     filter(Publication_Year >= analysis_start &
              Publication_Year <= analysis_stop &
              scop_doctype %in% c("Article", "Review", "Conference Paper") &
-             !is.na(scop_int))
+             !is.na(scop_int)) %>%
+    select(Publication_Year, Unit_Fraction, scop_corp, scop_int, ScopusID) %>%
+    unique()
   
   # Duplicate rows so that publications are connected to all intervals they should belong to according to publication year
   orgdata3year <-
@@ -737,8 +754,7 @@ abm_coverage <- function(data, analysis_start = abm_config()$start_year, analysi
              Publication_Year <= analysis_stop &
              Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
     mutate(wos_bin = ifelse(!is.na(Doc_id), 1, 0),
-           scop_bin = ifelse(!is.na(ScopusID), 1, 0)) %>%
-    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin, scop_bin) %>%
+           scop_bin = ifelse(!is.na(ScopusID), 1, 0)) %>% 
     group_by(Publication_Year, Publication_Type_DiVA) %>%
     summarise(p_frac = sum(Unit_Fraction, na.rm = TRUE),
               p_full = n(),
@@ -754,6 +770,7 @@ abm_coverage <- function(data, analysis_start = abm_config()$start_year, analysi
     collect()
   
   peerreviewed <- orgdata %>%
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin, scop_bin) %>%
     group_by(Publication_Year) %>%
     summarise(p_frac = sum(p_frac),
               p_full = sum(p_full),

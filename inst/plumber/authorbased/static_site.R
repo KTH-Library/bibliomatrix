@@ -44,7 +44,7 @@ static_site_script <- function(base_url = "http://localhost:8080") {
   script
 }
 
-readr::write_lines(static_site_script(), path = "gen_static_site.sh")
+readr::write_lines(static_site_script(), file = "gen_static_site.sh")
 Sys.chmod("gen_static_site.sh", "755", use_umask = FALSE)
 
 message("before running the gen_static_site.sh script, first start the API...")

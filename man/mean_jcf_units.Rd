@@ -21,7 +21,7 @@ mean_jcf_units(con, starty, stopy, analysis_level = 2, analysis_version_id)
 tibble average jcf along with dept name, school name, along with full and fractional publ. counts.
 }
 \description{
-This function calculates average jcf across a set of years per department.
-Data is based on masterfile, using a specific analysis_id
+This function calculates average jcf across a set of years per department, using fractional counting.
+Data is based on masterfile, using a specific analysis_id (i.e. data version nr.)
 This three-year average is used as an performance indicator at KTH.
 }

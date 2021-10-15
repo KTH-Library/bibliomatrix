@@ -1675,8 +1675,8 @@ abm_copub_orgs <- function(con,
 
 #' Calculate average jcf across years
 #' 
-#' This function calculates average jcf across a set of years per department.
-#' Data is based on masterfile, using a specific analysis_id
+#' This function calculates average jcf across a set of years per department, using fractional counting.
+#' Data is based on masterfile, using a specific analysis_id (i.e. data version nr.)
 #' This three-year average is used as an performance indicator at KTH. 
 #' 
 #' @param con connection to db
@@ -1703,7 +1703,8 @@ mean_jcf_units<- function(con,starty,stopy, analysis_level=2, analysis_version_i
   
   jcf_final<- jcf_av %>% left_join(unit_info() %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
     left_join(unit_info() %>% select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) %>% #to join in school name
-    select(-parent_org_id) %>% relocate(unit_long_en) %>% rename("School name" = unit_long_en)
+    select(-parent_org_id) %>% relocate(unit_long_en) %>% 
+    rename("School name" = unit_long_en)
   
   jcf_final
 }

@@ -6,7 +6,7 @@
 \usage{
 abm_copub_orgs(
   con,
-  analysis_id = abm_config()$analysis_id,
+  analysisId = abm_config()$analysis_id,
   unit_level,
   unit_code,
   exclude_swe = FALSE,
@@ -18,7 +18,7 @@ abm_copub_orgs(
 \arguments{
 \item{con}{a database connection to BIBMON}
 
-\item{analysis_id}{id for the analysis, default from abm_config()}
+\item{analysisId}{id for the analysis, default from abm_config()}
 
 \item{unit_level}{organization level}
 

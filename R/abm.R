@@ -1573,7 +1573,7 @@ abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_conf
 #' Create table over co-publication countries for ABM unit
 #' 
 #' @param con a database connection to BIBMON
-#' @param analysis_id id for the analysis, default from abm_config()
+#' @param analysisId id for the analysis, default from abm_config()
 #' @param unit_level organization level
 #' @param unit_code code for the analyzed unit
 #' @param exclude_swe wether to exclude Sweden as co-publication country, default TRUE
@@ -1585,7 +1585,7 @@ abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_conf
 #' @importFrom utils head
 #' @export
 abm_copub_countries <- function(con,
-                                analysis_id = abm_config()$analysis_id,
+                                analysisId = abm_config()$analysis_id,
                                 unit_level,
                                 unit_code,
                                 exclude_swe = TRUE,
@@ -1595,7 +1595,7 @@ abm_copub_countries <- function(con,
   
   countries <- con %>%
     tbl("abm_copub_entities") %>% 
-    filter(analysis_id == analysis_id &
+    filter(analysis_id == analysisId &
              level == unit_level &
              Unit_code == unit_code &
              entity == "Country" &
@@ -1624,7 +1624,7 @@ abm_copub_countries <- function(con,
 #' Create table over co-publication countries for ABM unit
 #' 
 #' @param con a database connection to BIBMON
-#' @param analysis_id id for the analysis, default from abm_config()
+#' @param analysisId id for the analysis, default from abm_config()
 #' @param unit_level organization level
 #' @param unit_code code for the analyzed unit
 #' @param exclude_swe wether to exclude Swedish co-publication orgs, default FALSE
@@ -1636,7 +1636,7 @@ abm_copub_countries <- function(con,
 #' @importFrom utils head
 #' @export
 abm_copub_orgs <- function(con,
-                           analysis_id = abm_config()$analysis_id,
+                           analysisId = abm_config()$analysis_id,
                            unit_level,
                            unit_code,
                            exclude_swe = FALSE,
@@ -1646,7 +1646,7 @@ abm_copub_orgs <- function(con,
   
   orgs <- con %>%
     tbl("abm_copub_entities") %>% 
-    filter(analysis_id == analysis_id &
+    filter(analysis_id == analysisId &
              level == unit_level &
              Unit_code == unit_code &
              entity == "Organization" &

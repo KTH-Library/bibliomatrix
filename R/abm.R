@@ -1031,7 +1031,10 @@ abm_private_data <- function(unit_code) {
   
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
-    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year)
+    data <- abm_data(con = db,
+                     unit_code = x,
+                     pub_year = abm_config()$start_year:abm_config()$stop_year,
+                     analysisId = abm_config()$analysis_id)
     tabs <- list(
       diva = abm_table1(data, db),
       wos_cit3y = abm_table2(data),

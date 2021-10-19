@@ -755,6 +755,7 @@ abm_coverage <- function(data, analysis_start = abm_config()$start_year, analysi
              Publication_Type_DiVA %in% c("Article, peer review", "Conference paper, peer review")) %>%
     mutate(wos_bin = ifelse(!is.na(Doc_id), 1, 0),
            scop_bin = ifelse(!is.na(ScopusID), 1, 0)) %>% 
+    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin, scop_bin) %>%
     group_by(Publication_Year, Publication_Type_DiVA) %>%
     summarise(p_frac = sum(Unit_Fraction, na.rm = TRUE),
               p_full = n(),
@@ -770,7 +771,6 @@ abm_coverage <- function(data, analysis_start = abm_config()$start_year, analysi
     collect()
   
   peerreviewed <- orgdata %>%
-    select(Publication_Year, Publication_Type_DiVA, Unit_Fraction, wos_bin, scop_bin) %>%
     group_by(Publication_Year) %>%
     summarise(p_frac = sum(p_frac),
               p_full = sum(p_full),

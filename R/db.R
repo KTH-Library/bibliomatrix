@@ -241,7 +241,8 @@ db_sync_table <- function(
 db_sync <- function(
   tables_included, 
   tables_excluded = c("OA_status", "Document", "LastFailedJobs",
-                      "DIVA_School_Dept", "Diva_departments", "Doc_statistics"),
+                      "DIVA_School_Dept", "Diva_departments", "Doc_statistics",
+                      "masterfile_full", "masterfile_2021jan", "masterfile_2019dec"),
   overwrite_existing = FALSE) 
 {
   c1 <- con_bib_mssql()

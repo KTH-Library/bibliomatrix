@@ -248,10 +248,10 @@ Book
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># what about performance?</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.64s   1.68s</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.36s   4.56s</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   594ms   612ms</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.75s   1.77s</span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">poolClose</span>(bibmon)</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">poolClose</span>(localdb)</span></code></pre></div>

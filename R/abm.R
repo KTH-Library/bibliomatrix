@@ -975,13 +975,13 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       wos_copub_countries = abm_copub_countries(con = db,
                                                 unit_level = unit_level,
                                                 unit_code = x,
-                                                analysis_id = abm_config()$analysis_id,
+                                                analysisId = abm_config()$analysis_id,
                                                 analysis_start = abm_config()$start_year,
                                                 analysis_stop = abm_config()$stop_year),
       wos_copub_orgs = abm_copub_orgs(con = db,
                                       unit_level = unit_level,
                                       unit_code = x,
-                                      analysis_id = abm_config()$analysis_id,
+                                      analysisId = abm_config()$analysis_id,
                                       analysis_start = abm_config()$start_year,
                                       analysis_stop = abm_config()$stop_year),
       diva_full = abm_table1_full(data, db),
@@ -1048,7 +1048,10 @@ abm_private_data <- function(unit_code) {
   
   # for a kthid, retrieve all abm tables
   unit_tables <- function(x) {
-    data <- abm_data(con = db, unit_code = x, pub_year = abm_config()$start_year:abm_config()$stop_year)
+    data <- abm_data(con = db,
+                     unit_code = x,
+                     pub_year = abm_config()$start_year:abm_config()$stop_year,
+                     analysisId = abm_config()$analysis_id)
     tabs <- list(
       diva = abm_table1(data, db),
       wos_cit3y = abm_table2(data),
@@ -1590,7 +1593,7 @@ abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_conf
 #' Create table over co-publication countries for ABM unit
 #' 
 #' @param con a database connection to BIBMON
-#' @param analysis_id id for the analysis, default from abm_config()
+#' @param analysisId id for the analysis, default from abm_config()
 #' @param unit_level organization level
 #' @param unit_code code for the analyzed unit
 #' @param exclude_swe wether to exclude Sweden as co-publication country, default TRUE
@@ -1602,7 +1605,7 @@ abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_conf
 #' @importFrom utils head
 #' @export
 abm_copub_countries <- function(con,
-                                analysis_id = abm_config()$analysis_id,
+                                analysisId = abm_config()$analysis_id,
                                 unit_level,
                                 unit_code,
                                 exclude_swe = TRUE,
@@ -1612,7 +1615,7 @@ abm_copub_countries <- function(con,
   
   countries <- con %>%
     tbl("abm_copub_entities") %>% 
-    filter(analysis_id == analysis_id &
+    filter(analysis_id == analysisId &
              level == unit_level &
              Unit_code == unit_code &
              entity == "Country" &
@@ -1641,7 +1644,7 @@ abm_copub_countries <- function(con,
 #' Create table over co-publication countries for ABM unit
 #' 
 #' @param con a database connection to BIBMON
-#' @param analysis_id id for the analysis, default from abm_config()
+#' @param analysisId id for the analysis, default from abm_config()
 #' @param unit_level organization level
 #' @param unit_code code for the analyzed unit
 #' @param exclude_swe wether to exclude Swedish co-publication orgs, default FALSE
@@ -1653,7 +1656,7 @@ abm_copub_countries <- function(con,
 #' @importFrom utils head
 #' @export
 abm_copub_orgs <- function(con,
-                           analysis_id = abm_config()$analysis_id,
+                           analysisId = abm_config()$analysis_id,
                            unit_level,
                            unit_code,
                            exclude_swe = FALSE,
@@ -1663,7 +1666,7 @@ abm_copub_orgs <- function(con,
   
   orgs <- con %>%
     tbl("abm_copub_entities") %>% 
-    filter(analysis_id == analysis_id &
+    filter(analysis_id == analysisId &
              level == unit_level &
              Unit_code == unit_code &
              entity == "Organization" &
@@ -1687,4 +1690,41 @@ abm_copub_orgs <- function(con,
     orgs <- head(orgs, limit)
   
   orgs
+}
+
+
+#' Calculate average jcf across years
+#' 
+#' This function calculates average jcf across a set of years per department, using fractional counting.
+#' Data is based on masterfile, using a specific analysis_id (i.e. data version nr.)
+#' This three-year average is used as an performance indicator at KTH. 
+#' 
+#' @param con connection to db
+#' @param starty first publication year of analysis
+#' @param stopy last publication year of analysis
+#' @param analysis_level organization analysis level. Default is 2 (department).
+#' @param analysis_version_id the analysis_id id to be used from masterfile
+#' @return tibble average jcf along with dept name, school name, along with full and fractional publ. counts.
+#' @import DBI dplyr
+#' @export
+mean_jcf_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
+  
+  dept_wos<- con %>% tbl("masterfile") %>% 
+            filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
+            collect()
+  
+  dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) %>% filter(!is.na(jcf))
+  
+  jcf_av<- dept_wos_unique %>% group_by(Unit_Name, Unit_code) %>% 
+    summarise(jcf_frac = sum(Unit_Fraction * jcf, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+              P_frac = sum(Unit_Fraction, na.rm = TRUE),
+              P_full = n()) %>% 
+    ungroup() %>% arrange(desc(jcf_frac))
+  
+  jcf_final<- jcf_av %>% left_join(unit_info() %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
+    left_join(unit_info() %>% select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) %>% #to join in school name
+    select(-parent_org_id) %>% relocate(unit_long_en) %>% 
+    rename("School name" = unit_long_en)
+  
+  jcf_final
 }

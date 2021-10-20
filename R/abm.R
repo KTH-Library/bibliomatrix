@@ -713,29 +713,39 @@ abm_table_scop_copub <- function(data, analysis_start = abm_config()$start_year,
 #' @export
 abm_dash_indices <- function(data){
   
-  # Fetch table 1 for total number of publications and lastyear
-  t1 <- abm_table1(data)
-  lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
+  if(nrow(data) > 0) {
+    # Fetch table 1 for total number of publications and lastyear
+    t1 <- abm_table1(data)
+    lastyear <- max(as.integer(names(t1)[grep("[0-9]{4}", names(t1))]))
   
-  # Fetch table 3 for cf and top10
-  t3 <- abm_table3(data) %>%
-    filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
+    # Fetch table 3 for cf and top10
+    t3 <- abm_table3(data) %>%
+      filter(interval == paste(lastyear - 3, lastyear - 1, sep = "-"))
   
-  # Fetch table 4 for jcf and top20
-  t4 <- abm_table4(data) %>%
-    filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
+    # Fetch table 4 for jcf and top20
+    t4 <- abm_table4(data) %>%
+      filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
-  # Fetch table 5 for non-univ and international copublications
-  t5 <- abm_table5(data) %>%
-    filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
+    # Fetch table 5 for non-univ and international copublications
+    t5 <- abm_table5(data) %>%
+      filter(interval == paste(lastyear - 2, lastyear, sep = "-"))
   
-  list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
-       cf = t3$cf,
-       top10_share = t3$top10_share,
-       jcf = t4$jcf,
-       top20_share = t4$top20_share,
-       copub_nonuniv = t5$nonuniv_share,
-       copub_internat = t5$int_share)
+    list(tot_pubs_frac = sum(t1[, as.character(lastyear)], na.rm = TRUE),
+         cf = t3$cf,
+         top10_share = t3$top10_share,
+         jcf = t4$jcf,
+         top20_share = t4$top20_share,
+         copub_nonuniv = t5$nonuniv_share,
+         copub_internat = t5$int_share)
+  } else {
+    list(tot_pubs_frac = numeric(0),
+         cf = numeric(0),
+         top10_share = numeric(0),
+         jcf = numeric(0),
+         top20_share = numeric(0),
+         copub_nonuniv = numeric(0),
+         copub_internat = numeric(0))
+  }
 }
 
 #' Retrieve WoS and Scopus coverage for peer reviewed DiVA publication types
@@ -1042,7 +1052,7 @@ abm_private_data <- function(unit_code) {
   
   # retrieve unit codes
   units_table <- 
-    unit_info(con = db) %>%
+    unit_info() %>%
     collect() %>%
     arrange(-desc(org_level)) 
   

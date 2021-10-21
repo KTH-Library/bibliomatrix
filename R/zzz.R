@@ -34,10 +34,10 @@ globalz <- "
     scop_Jtop20 scop_Ptop10 scop_bin scop_corp scop_cscxo scop_doctype
     scop_fwci_x scop_int scop_snip sumscop_frac sumscop_full sumwos_frac
     sumwos_full P_full avg_snip corp_share description_en df_diva fwci_x is_kth
-    description_en analysis_id
+    description_en analysis_id 
     UT country entity org p_10 p_200 p_50 p_over200
     Country_name Name_eng Org_type_eng Unified_org_id kth_frac n_authors
-    org_type unified_org_id
+    org_type unified_org_id Publication_year
 "
 
 # HACK: add global fcns / vars with spaces in the name

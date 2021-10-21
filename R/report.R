@@ -264,7 +264,7 @@ abm_report <- function(id, is_private) {
   } else {
     
     is_valid_kthid <- tryCatch(
-      kthapi::kth_profile(kthid = id), 
+      !is.null(kthapi::kth_profile(kthid = id)), 
       error = function(e) FALSE)
     
     if (!is_valid_kthid) {

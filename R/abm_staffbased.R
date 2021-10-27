@@ -175,7 +175,8 @@ abm_copub_orgs_staffbased <- function(con,
 
   uts_orgs <- con %>%
     tbl("Bestresaddr_KTH") %>%
-    filter(UT %in% !!uts$UT & Unified_org_id != 8) %>%
+    filter(UT %in% !!uts$UT,
+           coalesce(Unified_org_id, 0) != 8) %>%
     inner_join(orgtype, by = "Org_type_code") %>% 
     select(UT, Name_eng, Org_type_eng, Unified_org_id, Country_name) %>%
     collect() %>%

@@ -171,16 +171,17 @@ abm_copub_orgs_staffbased <- function(con,
     rename(UT = WebofScience_ID)
   
   orgtype <- con %>% 
-    tbl("Organization_type")
+    tbl("Organization_type") %>% 
+    collect()
 
   uts_orgs <- con %>%
     tbl("Bestresaddr_KTH") %>%
     filter(UT %in% !!uts$UT,
            coalesce(Unified_org_id, 0) != 8) %>%
-    inner_join(orgtype, by = "Org_type_code") %>% 
-    select(UT, Name_eng, Org_type_eng, Unified_org_id, Country_name) %>%
+    select(UT, Name_eng, Org_type_code, Unified_org_id, Country_name) %>%
     collect() %>%
-    rename(org = Name_eng, org_type = Org_type_eng, unified_org_id = Unified_org_id, country = Country_name) %>% 
+    left_join(orgtype, by = "Org_type_code") %>% 
+    rename(org = Name_eng, org_type = Org_type_eng, unified_org_id = Unified_org_id, country = Country_name) %>%
     unique()
   
   orgs <- uts %>%

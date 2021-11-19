@@ -187,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 Publication_Type_DiVA
 </th>
 <th style="text-align:right;">
-2013
+2014
 </th>
 </tr>
 </thead>
@@ -197,7 +197,7 @@ Publication_Type_DiVA
 Article, peer review
 </td>
 <td style="text-align:right;">
-1464.81903
+4611.3986
 </td>
 </tr>
 <tr>
@@ -205,7 +205,7 @@ Article, peer review
 Article, other
 </td>
 <td style="text-align:right;">
-83.02708
+346.6329
 </td>
 </tr>
 <tr>
@@ -213,7 +213,7 @@ Article, other
 Conference paper, peer review
 </td>
 <td style="text-align:right;">
-935.70799
+2639.0617
 </td>
 </tr>
 <tr>
@@ -221,7 +221,7 @@ Conference paper, peer review
 Conference paper, other
 </td>
 <td style="text-align:right;">
-377.58044
+786.6530
 </td>
 </tr>
 <tr>
@@ -229,7 +229,7 @@ Conference paper, other
 Book
 </td>
 <td style="text-align:right;">
-17.31492
+47.9500
 </td>
 </tr>
 </tbody>
@@ -248,10 +248,10 @@ Book
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># what about performance?</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   4.36s   4.56s</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   3.41s   3.42s</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.75s   1.77s</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1.38s   1.38s</span></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">poolClose</span>(bibmon)</span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">poolClose</span>(localdb)</span></code></pre></div>

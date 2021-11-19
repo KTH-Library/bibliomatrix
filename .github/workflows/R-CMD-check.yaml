@@ -52,13 +52,18 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install system dependencies
+      - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
         run: |
           while read -r cmd
           do
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+
+      - name: Install system dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          pacman -Sy --noconfirm mingw-w64-i686-glpk mingw-w64-i686-libxml2 mingw-w64-i686-gmp mingw-w64-x86_64-glpk mingw-w64-x86_64-libxml2 mingw-w64-x86_64-gmp
 
       - name: Install dependencies
         run: |

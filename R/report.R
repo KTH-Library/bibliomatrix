@@ -16,8 +16,9 @@ render_report <- function(rmd, myparams) {
   # NB: also if error "Could not fetch https://KTH-Library.github.io/abm/About_ABM.html" appears...
   # this may be due to VPN being active
   
+  copy_files <- file.path(dirname(rmd), list.files(dirname(rmd)))
   report_dir <- tempdir(check = TRUE)
-  file.copy(file.path(dirname(rmd), "/"), report_dir, recursive = TRUE, overwrite = TRUE)
+  file.copy(copy_files, report_dir, recursive = TRUE, overwrite = TRUE)
   report_path <- file.path(report_dir, basename(rmd))
   
   rmarkdown::render(
@@ -264,7 +265,7 @@ abm_report <- function(id, is_private) {
   } else {
     
     is_valid_kthid <- tryCatch(
-      kthapi::kth_profile(kthid = id), 
+      !is.null(kthapi::kth_profile(kthid = id)), 
       error = function(e) FALSE)
     
     if (!is_valid_kthid) {

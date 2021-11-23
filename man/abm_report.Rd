@@ -20,9 +20,9 @@ A report used in ABM
 \examples{
 \dontrun{
 if(interactive()){
- r1 <- abm_report(id = "KTH", is_private = FALSE)
+ r1 <- abm_report(id = "177", is_private = FALSE)
+ view_report(list(r1))
  r2 <- abm_report("u1o2ujjd", is_private = TRUE)
- view_report(r2$data)
  }
 }
 }

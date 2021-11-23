@@ -7,7 +7,8 @@
 db_sync(
   tables_included,
   tables_excluded = c("OA_status", "Document", "LastFailedJobs", "DIVA_School_Dept",
-    "Diva_departments", "Doc_statistics"),
+    "Diva_departments", "Doc_statistics", "masterfile_full", "masterfile_2021jan",
+    "masterfile_2019dec"),
   overwrite_existing = FALSE
 )
 }

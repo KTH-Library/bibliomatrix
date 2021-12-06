@@ -108,7 +108,7 @@ fdt <- function(data)
           }
       "),
       columnDefs = list(list(className = 'dt-left', targets = "_all")),
-      pageLength = 300L, bPaginate = FALSE, scrollY = 380,
+      pageLength = 300L, bPaginate = FALSE, scrollY = "70vh",
       dom = 'ftB'), x = formattable(data, 
         align = c("l", "l", rep("r", length(headers) - 2)),
         list(

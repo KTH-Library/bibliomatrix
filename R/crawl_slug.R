@@ -275,7 +275,7 @@ abm_graph_divisions <- function(base_url = "dash/",
   groups <- as.character(sort(unique(nodes$fgroup)))
   
   domain <- jsonlite::toJSON(groups)
-  range <- jsonlite::toJSON(palette_kth_digital(length(groups)))
+  range <- jsonlite::toJSON(palette_kth(length(groups)))
   ColourScale <- sprintf("d3.scaleOrdinal().domain(%s).range(%s);", domain, range)
   
   nodes$size <- 1

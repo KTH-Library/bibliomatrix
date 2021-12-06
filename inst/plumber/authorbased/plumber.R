@@ -6,36 +6,60 @@ library(htmlwidgets)
 library(readr)
 library(rmarkdown)
 library(blob)
+library(RSQLite)
+library(DBI)
 
 desnakify <- function(x) gsub("_", "/", x, fixed = TRUE)
 
-render_report <- function(slug) {
+render_report_staffbased <- function(slug) {
   
   id <- desnakify(slug)
   temp <- tempfile()
   on.exit(unlink(temp))
   
+  rmd <- system.file(package = "bibliomatrix", "extdata", "abm_staffbased.Rmd")
+  
+  # Workaround for shiny-server usage due to permission denied when rendering reports
+  # see https://github.com/hadley/mastering-shiny/blob/master/rmarkdown-report/app.R#L3-L6  
+  # intermediate files may get permission denied for shiny user, indicated by:
+  # Error in file(con, "w") : cannot open the connection
+  # In file(con, "w") : cannot open file 'abm.knit.md': Permission denied
+  # NB: also if error "Could not fetch https://KTH-Library.github.io/abm/About_ABM.html" appears...
+  # this may be due to VPN being active
+  
+  copy_files <- file.path(dirname(rmd), list.files(dirname(rmd)))
+  report_dir <- tempdir(check = TRUE)
+  file.copy(copy_files, report_dir, recursive = TRUE, overwrite = TRUE)
+  report_path <- file.path(report_dir, basename(rmd))
+  
+  myparams <- list(
+    unit_code = id, 
+    is_employee = FALSE, 
+    embed_data = FALSE, 
+    use_package_data = TRUE
+  )
+  
   rmarkdown::render(
-    #here::here("inst/extdata/abm_staffbased.Rmd"), 
-    input = system.file(package = "bibliomatrix", "extdata", "abm_staffbased.Rmd"),
+    input = report_path,
     output_file = I(temp), 
-    params = list(
-      unit_code = id, 
-      is_employee = FALSE, 
-      embed_data = FALSE, 
-      use_package_data = TRUE
-    ),
-    quiet = TRUE
+    params = myparams,
+    quiet = TRUE,
+    envir = new.env(parent = globalenv())
   )  
   
-  b <- blob::as_blob(I(list(read_file_raw(temp))))
+  b <- blob::as_blob(I(list(readr::read_file_raw(temp))))
+  
+  is_visible <- FALSE
+  if (isTRUE(myparams$embed_data))
+    is_visible <- TRUE
   
   data.frame(
     name = id, data = b, 
     visibility = "public", ts = Sys.time(), report = "staffbased")
+  
 }
 
-cache_reports <- function(slugs) {
+cache_reports_staffbased <- function(slugs) {
   
   if (missing(slugs)) {
     unit_schools <- unique(abm_divisions()$pid)
@@ -49,7 +73,7 @@ cache_reports <- function(slugs) {
   
   render_report_pb <- function(x) {
     pb$tick(tokens = list(what = x))
-    rr <- purrr::possibly(render_report, otherwise = FALSE, quiet = FALSE)
+    rr <- purrr::possibly(render_report_staffbased, otherwise = FALSE, quiet = FALSE)
     res <- rr(x)
     if (isFALSE(res)) {
       message("Failed rendering for ", x)
@@ -62,39 +86,24 @@ cache_reports <- function(slugs) {
   
   reports <- map_df(slugs, render_report_pb)
   
-  message("Updating cache...")
+  message("Appending data to cache...")
   con <- con_bib("sqlite")
   on.exit(RSQLite::dbDisconnect(con))
-  
-  cache_clear()
-  RSQLite::dbWriteTable(con, "reports", reports)
+  RSQLite::dbWriteTable(con, "reports", reports, append = TRUE)
   message("Done")
   
 }
 
-con_cache <- function(dbpath) {
-  
-  if (missing(dbpath))
-    dbpath <- file.path(rappdirs::app_dir("bibmon")$config(), "reports.db")
-  
-  if (!file.exists(dbpath)) {
-    con <- con_bib_sqlite(create = TRUE, db_path = dbpath)
-  }
-  
-  con_bib_sqlite(db_path = dbpath)
-  
-}
-
-cache_report <- function(con, slug) {
+cache_report_staffbased <- function(con, slug) {
   
   if (missing(con)) {
-    con <- con_cache()
+    con <- bibliomatrix:::con_cache(verbose = TRUE)
     on.exit(RSQLite::dbDisconnect(con))
   }
   
   id <- desnakify(utils::URLdecode(slug))
   
-  if (!RSQLite::dbExistsTable(con, "reports")) {
+  if (!DBI::dbExistsTable(con, "reports")) {
 
     reports_ddl <- tibble(
       name = character(0), data = blob::as_blob(character(0)), #data = blob::as_blob(I(list(raw(0)))),
@@ -113,57 +122,15 @@ cache_report <- function(con, slug) {
     return(as.raw(unlist(d)))
   }
   
-  df <- render_report(id)
+  df <- render_report_staffbased(slug = id)
   
-  if (!RSQLite::dbExistsTable("reports")) {
+  if (!DBI::dbExistsTable(con, "reports")) {
     RSQLite::dbWriteTable(con, "reports", df)
   } else {
     RSQLite::dbWriteTable(con, "reports", df, append = TRUE)
   }
   
   as.raw(unlist(df$data))  
-}
-
-cache_clear <- function(con) {
-  if (missing(con)) {
-    con <- con_cache()
-    on.exit(RSQLite::dbDisconnect(con))
-  }
-  if (RSQLite::dbExistsTable(con, "reports"))
-    RSQLite::dbRemoveTable(con, "reports")  
-}
-
-cache_clear_report <- function(con, slug) {
-  
-  if (missing(con)) {
-    con <- con_cache()
-    on.exit(RSQLite::dbDisconnect(con))
-  }
-  
-  id <- desnakify(utils::URLdecode(slug))
-  
-  cached <- con %>% tbl("reports") %>% filter(name == id) %>% collect()
-  
-  res <- 0
-  
-  if (nrow(cached) >= 1) {
-    sql <- sprintf("delete from reports where name = '%s'", id)
-    res <- DBI::dbExecute(con, sql)
-  }
-  
-  return(list(rows_affected = res))
-  
-}
-
-cache_view <- function(con) {
-  
-  if (missing(con)) {
-    con <- con_cache()
-    on.exit(RSQLite::dbDisconnect(con))
-  }
-  
-  con %>% tbl("reports") %>% collect()
-  
 }
 
 #* @apiTitle Bibliometrics for KTH Divisions
@@ -235,7 +202,7 @@ render_na <- function() {
 #* @tag ABM visual
 render_division <- function(slug = "j_jj_jjn") {
   
-  cache_report(slug = slug)
+  cache_report_staffbased(slug = slug)
 
 }
 
@@ -254,7 +221,8 @@ function() {
 #* @response 400 Invalid input.
 #* @tag Cache management
 function(slug) {
-  cache_clear_report(slug = slug)
+  id <- desnakify(utils::URLdecode(slug))
+  cache_clear_report(id = id)
 }
 
 #* Regenerate the full cache
@@ -262,7 +230,7 @@ function(slug) {
 #* @response 400 Invalid input.
 #* @tag Cache management
 function() {
-  cache_reports()
+  cache_reports_staffbased()
 }
 
 #* An endpoint to be used by monitoring services in the KTH IT Operations infrastructure

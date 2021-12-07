@@ -43,11 +43,13 @@ abm_staff_data <- function(con, kthids,
 #' @param unit_slug a string representing the KTH unit
 #' @param analysis_start first publication year of analysis
 #' @param analysis_stop last publication year of analysis
+#' @param analysisId id for analysis
 #' @return tibble with staff list for selected organizational unit
 #' @export
 abm_staff_list <- function(con, unit_slug,
                            analysis_start = abm_config()$start_year, 
-                           analysis_stop = abm_config()$stop_year) {
+                           analysis_stop = abm_config()$stop_year,
+                           analysisId = abm_config()$analysis_id) {
   
   researchers <-
     con %>%
@@ -55,8 +57,7 @@ abm_staff_list <- function(con, unit_slug,
     collect() %>%
     filter(stringr::str_starts(slug, unit_slug)) %>%
     distinct() %>%
-    select(kthid, firstName, lastName, Title = `title.en`) %>%
-    collect()
+    select(kthid, firstName, lastName, Title = `title.en`)
   
   kthids <- researchers$kthid
   pubs <- con %>%
@@ -65,7 +66,8 @@ abm_staff_list <- function(con, unit_slug,
              level == 3 &
              is_kth == 1 &
              Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop) %>%
+             Publication_Year <= analysis_stop &
+             analysis_id == analysisId) %>%
     group_by(Unit_code) %>%
     summarise(pubs = n(), fracs = sum(Unit_Fraction, na.rm = TRUE)) %>%
     collect() %>% 
@@ -75,26 +77,6 @@ abm_staff_list <- function(con, unit_slug,
     left_join(pubs, by = "kthid") %>% 
     select(-kthid)
 }
-  
-#' Retrieve publication list for staffbased ABM
-#' 
-#' @param con connection to db, default is to use mssql connection
-#' @param unit_code the kthids belonging to the analyzed unit
-#' @param analysis_start first publication year of analysis, default 2012
-#' @param analysis_stop last publication year of analysis, default 2018
-#' @return tibble with publication list data for selected unit
-#' @import DBI dplyr tidyr purrr
-#' @export
-abm_publications_staffbased <- function(con, unit_code, 
-                                        analysis_start = abm_config()$start_year, 
-                                        analysis_stop = abm_config()$stop_year) {
-  ### Probably obsolete ###
-  abm_staff_data(kthids = abm_researchers(unit_code), 
-                 analysis_start = analysis_start, analysis_stop = analysis_stop, con = con) %>% 
-    arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
-  
-}
-
 
 #' Create staffbased table over co-publication countries for ABM unit
 #' 

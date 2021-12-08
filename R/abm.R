@@ -1738,3 +1738,4 @@ mean_jcf_units<- function(con,starty,stopy, analysis_level=2, analysis_version_i
   
   jcf_final
 }
+

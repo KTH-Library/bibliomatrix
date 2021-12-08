@@ -25,13 +25,10 @@ library(here)
 ## DO THIS when pushing
 
 document()
-
+check()
 # remember to update the bundled data
 db_sync(overwrite_existing = TRUE)
 source(here("data-raw/public_data.R"))
-
-check()
-
 
 # changes to abm.Rmd may require Ctrl-Shift-B (for new internal pkg data to be installed)!
 

@@ -1738,7 +1738,9 @@ mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_ver
               summarise(cf_frac = sum(Unit_Fraction * cf, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
                   log_cf_frac = sum(Unit_Fraction * Cf_log, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
                   cf_full = mean(cf,na.rm = TRUE),
+                  top5_frac = sum(Unit_Fraction * Ptop5, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
                   top10_frac = sum(Unit_Fraction * Ptop10, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                  top25_frac = sum(Unit_Fraction * Ptop25, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
                   P_frac_cf = sum(Unit_Fraction, na.rm = TRUE),
                   P_full_cf = n()) %>% 
               ungroup() 

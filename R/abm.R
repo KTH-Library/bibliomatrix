@@ -1703,39 +1703,64 @@ abm_copub_orgs <- function(con,
 }
 
 
-#' Calculate average jcf across years
+#' Calculate average citation indicators across years
 #' 
-#' This function calculates average jcf across a set of years per department, using fractional counting.
+#' This function calculates average indicator values (jcf, cf etc) across a set of years per department, using fractional counting.
 #' Data is based on masterfile, using a specific analysis_id (i.e. data version nr.)
-#' This three-year average is used as an performance indicator at KTH. 
+#' This three-year average of jcf is used as an performance indicator at KTH. 
 #' 
 #' @param con connection to db
 #' @param starty first publication year of analysis
 #' @param stopy last publication year of analysis
 #' @param analysis_level organization analysis level. Default is 2 (department).
 #' @param analysis_version_id the analysis_id id to be used from masterfile
-#' @return tibble average jcf along with dept name, school name, along with full and fractional publ. counts.
+#' @return tibble average citation indicators along with dept name, school name, along with full and fractional publ. counts.
 #' @import DBI dplyr
 #' @export
-mean_jcf_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
+mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
   
   dept_wos<- con %>% tbl("masterfile") %>% 
             filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
             collect()
   
-  dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) %>% filter(!is.na(jcf))
+  dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) 
   
-  jcf_av<- dept_wos_unique %>% group_by(Unit_Name, Unit_code) %>% 
-    summarise(jcf_frac = sum(Unit_Fraction * jcf, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
-              P_frac = sum(Unit_Fraction, na.rm = TRUE),
-              P_full = n()) %>% 
-    ungroup() %>% arrange(desc(jcf_frac))
+  jcf_av<- dept_wos_unique %>% filter(!is.na(jcf)) %>% 
+              group_by(Unit_Name, Unit_code) %>% 
+              summarise(jcf_frac = sum(Unit_Fraction * jcf, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                Jtop20_frac = sum(Unit_Fraction * Jtop20, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                P_frac_jcf = sum(Unit_Fraction, na.rm = TRUE),
+                P_full_jcf = n()) %>% 
+              ungroup() %>% arrange(desc(jcf_frac))
   
-  jcf_final<- jcf_av %>% left_join(unit_info() %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
+  cf_av<- dept_wos_unique %>% filter(!is.na(cf)) %>% 
+              group_by(Unit_Name, Unit_code) %>% 
+              summarise(cf_frac = sum(Unit_Fraction * cf, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                  log_cf_frac = sum(Unit_Fraction * Cf_log, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                  cf_full = mean(cf,na.rm = TRUE),
+                  top5_frac = sum(Unit_Fraction * Ptop5, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                  top10_frac = sum(Unit_Fraction * Ptop10, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                  top25_frac = sum(Unit_Fraction * Ptop25, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
+                  P_frac_cf = sum(Unit_Fraction, na.rm = TRUE),
+                  P_full_cf = n()) %>% 
+              ungroup() 
+  
+  oa_av<- dept_wos_unique %>% filter(!is.na(is_oa)) %>% 
+              group_by(Unit_Name, Unit_code) %>% 
+              summarise(oa_share=mean(as.logical(is_oa), na.rm=TRUE),
+              P_full_OA = n()) %>% 
+          ungroup()
+  
+  indicator_final<- jcf_av %>% left_join(unit_info() %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
+    left_join(cf_av %>% select(-Unit_Name), by=c("Unit_code" = "Unit_code")) %>%
+    left_join(oa_av %>% select(-Unit_Name), by=c("Unit_code" = "Unit_code")) %>%
     left_join(unit_info() %>% select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) %>% #to join in school name
     select(-parent_org_id) %>% relocate(unit_long_en) %>% 
-    rename("School name" = unit_long_en)
+    rename("Parent name" = unit_long_en)
   
-  jcf_final
+  indicator_final$starty<- starty
+  indicator_final$stopy<- stopy
+  
+  indicator_final
 }
 

@@ -1758,6 +1758,9 @@ mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_ver
     select(-parent_org_id) %>% relocate(unit_long_en) %>% 
     rename("Parent name" = unit_long_en)
   
+  indicator_final$starty<- starty
+  indicator_final$stopy<- stopy
+  
   indicator_final
 }
 

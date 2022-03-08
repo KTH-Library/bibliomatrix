@@ -54,19 +54,20 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @param unit_file_label the label for the download
 #' @param is_authorbased indicates if the button is used for author based
 #'   data, default: FALSE
-#' @import htmltools flexdashboard
+#' @import htmltools flexdashboard dplyr
 #' @importFrom mime guess_type
 #' @importFrom writexl write_xlsx
 #' @export
 abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit_file_label,
                                   is_authorbased = FALSE) {
   
-  if(missing(data))
-    data = NULL
+  if (missing(data)) {
+    data <- data.frame()
+  } else {
+    # Do not include fields added to masterfile for other reasons than ABM
+    data <- data %>% select(-any_of(c("Ptop5", "Cf_log"))) %>% collect()
+  }
   
-  # Do not include fields added to masterfile for other reasons than ABM
-  data <- data %>% select(-c(Ptop5, Cf_log))
-
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (is_loggedin == TRUE) {
@@ -249,6 +250,8 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
       columnDefs = list(list(type = 'natural', targets = list(0:length(data)-1))),
       bPaginate = TRUE,
       pageLength = 10,
+      scrollX = TRUE, 
+      scrollY = "100vh",
       dom = 'fltBp',
       buttons = list(
         list(extend = "copy", title = unit_title),
@@ -285,6 +288,8 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
         ordering = FALSE,
         bPaginate = FALSE,
         pageLength = 100,
+        scrollX = TRUE, 
+        scrollY = "100vh",
         dom = 'tB',
         buttons = list(
           list(extend = "copy", title = unit_title),
@@ -354,6 +359,8 @@ abm_ui_datatable_diva_full <- function(df_diva_full, unit_file_label, unit_title
                     ordering = FALSE,
                     bPaginate = FALSE,
                     pageLength = 100,
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     dom = 'tB',
                     buttons = list(
                       list(extend = "copy", title = unit_title),
@@ -422,6 +429,8 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
       options = list(
         ordering = FALSE,
         bPaginate = FALSE,
+        scrollX = TRUE, 
+        scrollY = "100vh",
         dom = 'tB',
         buttons = list(
           list(extend = "copy", title = unit_title),
@@ -482,6 +491,8 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
         ordering = FALSE,
         bPaginate = FALSE,
         dom = 'tB',
+        scrollX = TRUE, 
+        scrollY = "100vh",
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -544,6 +555,8 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
                     ordering = FALSE,
                     bPaginate = FALSE,
                     dom = 'tB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -605,6 +618,8 @@ abm_ui_datatable_copub <- function(df_copub, unit_file_label, unit_title) {
         ordering = FALSE,
         bPaginate = FALSE,
         dom = 'tB',
+        scrollX = TRUE, 
+        scrollY = "100vh",
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -664,6 +679,8 @@ abm_ui_datatable_oa <- function(df_oa, unit_file_label, unit_title) {
         ordering = FALSE,
         bPaginate = FALSE,
         dom = 'tB',
+        scrollX = TRUE, 
+        scrollY = "100vh",
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -722,6 +739,8 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
                     ordering = FALSE,
                     bPaginate = FALSE,
                     dom = 'tB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -782,6 +801,8 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
                     ordering = FALSE,
                     bPaginate = FALSE,
                     dom = 'tB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -844,6 +865,8 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
                     ordering = FALSE,
                     bPaginate = FALSE,
                     dom = 'tB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -905,6 +928,8 @@ abm_ui_datatable_scop_copub <- function(df_scop_copub, unit_file_label, unit_tit
                     ordering = FALSE,
                     bPaginate = FALSE,
                     dom = 'tB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -979,6 +1004,8 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                     ordering = TRUE,
                     bPaginate = TRUE,
                     dom = 'ftpB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -1055,6 +1082,8 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                     ordering = TRUE,
                     bPaginate = TRUE,
                     dom = 'ftpB',
+                    scrollX = TRUE, 
+                    scrollY = "100vh",
                     #list(targets = 2, searchable = FALSE),
                     buttons = list(
                       list(extend = "copy", title = unit_title),

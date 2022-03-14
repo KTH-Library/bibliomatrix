@@ -664,7 +664,7 @@ Co&#8209;publishing {data-orientation=rows}
 
 #### `r unit_label`
 
-Row {.tabset data-height=700}
+Row {.tabset data-height=1100}
 ---------------------
 
 ### Summary
@@ -675,6 +675,10 @@ Row {.tabset data-height=700}
 div.dt-buttons {
   position:relative;
   float:right;
+}
+.dataTables_scrollBody {
+    height:300px !important;
+    max-height:300px !important;
 }
 </style>
 
@@ -750,6 +754,10 @@ div.dt-buttons {
 }
 table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
     background-image: none !important;
+}
+.dataTables_scrollBody {
+    height:300px !important;
+    max-height:300px !important;
 }
 </style>
 ```{r}
@@ -875,6 +883,10 @@ Row {.tabset data-height=1100}
 div.dt-buttons {
   position:relative;
   float:right;
+}
+.dataTables_scrollBody {
+    height:300px !important;
+    max-height:300px !important;
 }
 </style>
 

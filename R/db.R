@@ -39,13 +39,20 @@ con_bib_mssql <- function()
     is_valid <- !is.na(timeout)
     stopifnot(is_valid)
   }
+
+  if (Sys.getenv("SQL_SERVER_DRIVER") == "") {
+    drv <- "ODBC Driver 17 for SQL Server"
+  } else {
+    drv <- Sys.getenv("SQL_SERVER_DRIVER")
+  }
+
   
   if(startsWith(Sys.getenv("OS"), "Windows")) {
     # encoding Windows-1252 curiously gives neat UTF-8 output from DB on Windows
     # (while encoding UTF-8 does not)
     dbConnect(
       odbc(),
-      driver = "ODBC Driver 17 for SQL Server",
+      driver = drv,
       Port = 1433,
       server = Sys.getenv("DBHOST"),
       database = Sys.getenv("DBNAME"),
@@ -56,7 +63,7 @@ con_bib_mssql <- function()
   } else {
     dbConnect(
       odbc(),
-      driver = "ODBC Driver 17 for SQL Server",
+      driver = drv,
       Port = 1433,
       server = Sys.getenv("DBHOST"),
       database = Sys.getenv("DBNAME"),

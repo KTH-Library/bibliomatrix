@@ -57,6 +57,7 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #' @import htmltools flexdashboard dplyr
 #' @importFrom mime guess_type
 #' @importFrom writexl write_xlsx
+#' @importFrom rmarkdown html_dependency_font_awesome
 #' @export
 abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit_file_label,
                                   is_authorbased = FALSE) {
@@ -85,7 +86,7 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
       HTML(paste("Publication list for", unit_label))) 
     
     icon_download <- htmltools::attachDependencies(icon_download,
-      flexdashboard:::html_dependencies_fonts(TRUE, FALSE))
+      list(html_dependency_font_awesome()))
     
     # export to xlsx format, into tempdir so we can embed a file link
     

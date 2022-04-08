@@ -1039,7 +1039,8 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
     header <- eval(parse(text = getheader(names(df))))
     
     # formattable version of df, to wrap as DT later
-    df2 <- formattable(df, list(p = color_bar(lightgrey), 
+    df2 <- formattable(df, align = c(rep('r',ncol(df))), 
+                       list(p = color_bar(lightgrey), 
                                p_10 = color_bar(lightblue),
                                p_50 = color_bar(lightblue),
                                p_200 = color_bar(lightblue),
@@ -1335,4 +1336,17 @@ abm_ui_waffle_copub <- function(df) {
   } else {
     shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
   }
+}
+
+#' Create table over co-publication organizations for list of publications
+#'
+#' @param color a background color to use
+#' 
+color_bar <- function (color = "lightgray", fun = proportion, ...) 
+{
+  fun <- match.fun(fun)
+  formattable::formatter("span", style = function(x) formattable::style(display = "inline-block", 
+                                                           direction = "ltr", `border-radius` = "0px", 
+                                                           `padding-right` = "0px", `background-color` = formattable::csscolor(color), 
+                                                           width = percent(fun(as.numeric(x), ...))))
 }

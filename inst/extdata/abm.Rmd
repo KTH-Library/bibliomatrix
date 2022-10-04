@@ -301,8 +301,8 @@ if (isTRUE(unit_level == 1)){
 abm_ui_button_publist(
   data = data,
   is_loggedin = params$embed_data,
-  unit_label = unit_label, 
-  unit_code = params$unit_code, 
+  unit_label = unit_label,
+  unit_code = params$unit_code,
   unit_file_label = unit_file_label,
   is_authorbased = FALSE
 )

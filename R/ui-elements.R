@@ -64,12 +64,12 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
   if(missing(data))
     data = NULL
   
-  # Do not include fields added to masterfile for other reasons than ABM
-  data <- data %>% select(-c(Ptop5, Cf_log))
-
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (is_loggedin == TRUE) {
+    
+    # Do not include fields added to masterfile for other reasons than ABM
+    data <- data %>% select(-c("Ptop5", "Cf_log"))
     
     embed_data <- function(path)
       paste0("data:", mime::guess_type(path), ";base64,", 

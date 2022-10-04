@@ -24,3 +24,13 @@ NULL
 #' For information regarding how to access the data for various units at KTH,
 #' please look at the examples for the \code{\link{abm_public_data}} function.
 "abm_public_kth"
+
+# Suppress R CMD check note
+#' @importFrom RColorBrewer brewer.pal
+#' @importFrom curl curl
+#' @importFrom dbplyr as.sql
+#' @importFrom here dr_here
+#' @importFrom httr accept
+#' @importFrom openssl askpass
+#' @importFrom shinythemes shinytheme
+NULL

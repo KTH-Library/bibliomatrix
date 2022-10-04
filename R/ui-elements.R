@@ -1336,3 +1336,132 @@ abm_ui_waffle_copub <- function(df) {
     shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
   }
 }
+
+#' Datatable for SDG publicaitons by year
+#' 
+#' @param df_sdg_year data frame with data on SDG pubs
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools dplyr
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_sdg_year <- function(df_sdg_year, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_sdg_year) > 0) {
+    
+    filename <- paste0("ABM_table_sdg_year_", unit_file_label, "_", current_date)
+    
+    df <- df_sdg_year %>% select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac)
+    
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      formatRound(c(2, 3), digits = 1) %>% 
+      formatPercentage(4, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for SDG publicaitons by year
+#' 
+#' @param df_sdg_year data frame with data on SDG pubs
+#' @import htmltools dplyr
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_sdg_year <- function(df_sdg_year) {
+  if (nrow(df_sdg_year) > 0) {
+    
+    df <- df_sdg_year %>% select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac)
+    
+    df %>% 
+      select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac) %>%
+      mutate_at(vars(2:3), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(4), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for SDG publicaitons by goal
+#' 
+#' @param df_sdg_table data frame with data on SDG pubs
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools dplyr
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title) {
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_sdg_table) > 0) {
+    
+    filename <- paste0("ABM_table_sdg_", unit_file_label, "_", current_date)
+    
+    df <- df_sdg_table %>% filter(SDG_Displayname != 'None') %>% select(SDG_Displayname, p_frac)
+    
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      formatRound(2, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for SDG publicaitons by goal
+#' 
+#' @param df_sdg_year data frame with data on SDG pubs
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_sdg_table <- function(df_sdg_year) {
+  if (nrow(df_sdg_year) > 0) {
+    
+    df <- df_sdg_table %>% filter(SDG_Displayname != 'None') %>% select(SDG_Displayname, p_frac)
+    
+    df %>% 
+      mutate_at(vars(2), function(x) sprintf("%.1f", x)) %>%
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}

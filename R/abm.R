@@ -1001,7 +1001,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       scop_cit = abm_table_scop_cit(data),
       scop_normcit = abm_table_scop_normcit(data),
       scop_snip = abm_table_scop_snip(data),
-      scop_copub = abm_table_scop_copub(data)
+      scop_copub = abm_table_scop_copub(data),
+      scop_sdg_year = abm_sdg_year(data, db),
+      scop_sdg_table = abm_sdg_table(data, db)
     )
   }
   
@@ -1076,6 +1078,8 @@ abm_private_data <- function(unit_code) {
       scop_normcit = abm_table_scop_normcit(data),
       scop_snip = abm_table_scop_snip(data),
       scop_copub = abm_table_scop_copub(data),
+      scop_sdg_year = abm_sdg_year(data, db),
+      scop_sdg_table = abm_sdg_table(data, db),
       publications = abm_publications(data)
     )
   }
@@ -1764,3 +1768,73 @@ mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_ver
   indicator_final
 }
 
+
+#' Create table over SDGs for the selected unit
+#'
+#' @param data dataset with publications as tibble
+#' @param con a database connection to BIBMON
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return a tibble
+#' @import dplyr
+#' @importFrom stringr str_pad
+#' @export
+abm_sdg_table <- function(data,
+                          con,
+                          analysisId = abm_config()$analysis_id,
+                          analysis_start = abm_config()$start_year,
+                          analysis_stop = abm_config()$stop_year) {
+  
+  
+  sdg <- con %>%
+    tbl("abm_sdg") %>% 
+    filter(analysis_id == analysisId) %>% 
+    collect()
+  
+  data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Conference Paper", "Review")) %>%
+    select(ScopusID, Unit_Fraction) %>%
+    left_join(sdg, by = "ScopusID") %>%
+    mutate(SDG_Displayname = ifelse (!is.na(SDG), paste0("SDG ", str_pad(SDG, 2, "left", "0"), " - ", SDG_Name), "None")) %>%
+    group_by(SDG_Displayname) %>% 
+    summarise(p = n(), p_frac = sum(Unit_Fraction))
+}
+
+#' Create table over any SDG by year for the selected unit
+#'
+#' @param data dataset with publications as tibble
+#' @param con a database connection to BIBMON
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return a tibble
+#' @import dplyr
+#' @export
+abm_sdg_year <- function(data,
+                         con,
+                         analysisId = abm_config()$analysis_id,
+                         analysis_start = abm_config()$start_year,
+                         analysis_stop = abm_config()$stop_year) {
+  
+  
+  sdg <- con %>%
+    tbl("abm_sdg") %>%
+    filter(analysis_id == analysisId) %>% 
+    collect()
+  
+  data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Conference Paper", "Review")) %>%
+    select(ScopusID, Publication_Year, Unit_Fraction) %>%
+    mutate(any_sdg = ifelse(ScopusID %in% sdg$ScopusID, 1, 0)) %>% 
+    group_by(Publication_Year) %>% 
+    summarise(p = n(),
+              p_frac = sum(Unit_Fraction),
+              p_sdg = sum(any_sdg),
+              p_sdg_frac = sum(any_sdg * Unit_Fraction),
+              share_sdg = p_sdg / p,
+              share_sdg_frac = p_sdg_frac / p_frac)
+  
+}

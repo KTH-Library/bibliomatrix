@@ -4,10 +4,10 @@
 \alias{abm_ui_kable_sdg_table}
 \title{HTML table for SDG publicaitons by goal}
 \usage{
-abm_ui_kable_sdg_table(df_sdg_year)
+abm_ui_kable_sdg_table(df_sdg_table)
 }
 \arguments{
-\item{df_sdg_year}{data frame with data on SDG pubs}
+\item{df_sdg_table}{data frame with data on SDG pubs}
 }
 \description{
 HTML table for SDG publicaitons by goal

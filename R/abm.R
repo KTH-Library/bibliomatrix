@@ -1723,6 +1723,8 @@ abm_copub_orgs <- function(con,
 #' @export
 mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
   
+  Cf_log <- Ptop5 <- Ptop25 <- NULL
+
   dept_wos<- con %>% tbl("masterfile") %>% 
             filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
             collect()
@@ -1785,7 +1787,8 @@ abm_sdg_table <- function(data,
                           analysisId = abm_config()$analysis_id,
                           analysis_start = abm_config()$start_year,
                           analysis_stop = abm_config()$stop_year) {
-  
+
+  SDG <- SDG_Name <- SDG_Displayname <- NULL
   
   sdg <- con %>%
     tbl("abm_sdg") %>% 
@@ -1819,6 +1822,7 @@ abm_sdg_year <- function(data,
                          analysis_start = abm_config()$start_year,
                          analysis_stop = abm_config()$stop_year) {
   
+  any_sdg <- p_sdg <- p_sdg_frac <- NULL
   
   sdg <- con %>%
     tbl("abm_sdg") %>%

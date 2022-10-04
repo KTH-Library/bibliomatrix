@@ -1347,6 +1347,8 @@ abm_ui_waffle_copub <- function(df) {
 #' @export
 abm_ui_datatable_sdg_year <- function(df_sdg_year, unit_file_label, unit_title) {
   
+  p_sdg_frac <- share_sdg_frac <- NULL
+  
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (nrow(df_sdg_year) > 0) {
@@ -1386,12 +1388,14 @@ abm_ui_datatable_sdg_year <- function(df_sdg_year, unit_file_label, unit_title) 
 #' @importFrom kableExtra kable_styling scroll_box
 #' @export
 abm_ui_kable_sdg_year <- function(df_sdg_year) {
+  
+  p_sdg_frac <- share_sdg_frac <- NULL
+  
   if (nrow(df_sdg_year) > 0) {
     
     df <- df_sdg_year %>% select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac)
     
-    df %>% 
-      select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac) %>%
+    df %>%
       mutate_at(vars(2:3), function(x) sprintf("%.1f", x)) %>%
       mutate_at(vars(4), function(x) sprintf("%.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df)),
@@ -1412,6 +1416,8 @@ abm_ui_kable_sdg_year <- function(df_sdg_year) {
 #' @importFrom DT formatRound formatPercentage formatStyle
 #' @export
 abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title) {
+  
+  SDG_Displayname <- NULL
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
@@ -1445,13 +1451,16 @@ abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title
 
 #' HTML table for SDG publicaitons by goal
 #' 
-#' @param df_sdg_year data frame with data on SDG pubs
+#' @param df_sdg_table data frame with data on SDG pubs
 #' @import htmltools 
 #' @importFrom knitr kable
 #' @importFrom kableExtra kable_styling scroll_box
 #' @export
-abm_ui_kable_sdg_table <- function(df_sdg_year) {
-  if (nrow(df_sdg_year) > 0) {
+abm_ui_kable_sdg_table <- function(df_sdg_table) {
+  
+  share_sdg_frac <- SDG_Displayname <- NULL
+  
+  if (nrow(df_sdg_table) > 0) {
     
     df <- df_sdg_table %>% filter(SDG_Displayname != 'None') %>% select(SDG_Displayname, p_frac)
     
@@ -1465,3 +1474,4 @@ abm_ui_kable_sdg_table <- function(df_sdg_year) {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
   }
 }
+

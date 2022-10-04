@@ -1773,6 +1773,7 @@ mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_ver
 #'
 #' @param data dataset with publications as tibble
 #' @param con a database connection to BIBMON
+#' @param analysisId id for the analysis, default from abm_config()
 #' @param analysis_start first publication year of analysis, default from abm_config()
 #' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return a tibble
@@ -1806,6 +1807,7 @@ abm_sdg_table <- function(data,
 #'
 #' @param data dataset with publications as tibble
 #' @param con a database connection to BIBMON
+#' @param analysisId id for the analysis, default from abm_config()
 #' @param analysis_start first publication year of analysis, default from abm_config()
 #' @param analysis_stop last publication year of analysis, default from abm_config()
 #' @return a tibble

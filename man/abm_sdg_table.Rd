@@ -17,6 +17,8 @@ abm_sdg_table(
 
 \item{con}{a database connection to BIBMON}
 
+\item{analysisId}{id for the analysis, default from abm_config()}
+
 \item{analysis_start}{first publication year of analysis, default from abm_config()}
 
 \item{analysis_stop}{last publication year of analysis, default from abm_config()}

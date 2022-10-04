@@ -24,6 +24,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -36,23 +38,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.6</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -72,7 +68,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/KTH-Library/bibliomatrix/">
+  <a href="https://github.com/KTH-Library/bibliomatrix/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -89,41 +85,40 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="bibliomatrix-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#bibliomatrix-" class="anchor"></a>bibliomatrix <img src="reference/figures/sticker.png" align="right">
+<div class="section level1">
+<div class="page-header"><h1 id="bibliomatrix-">bibliomatrix <img src="reference/figures/sticker.png" align="right"><a class="anchor" aria-label="anchor" href="#bibliomatrix-"></a>
 </h1></div>
 <!-- badges: start -->
 
 <p>The goal of bibliomatrix is to provide a common set of functionality for the Annual Bibliometric Monitoring efforts from the Bibliometrics team at the KTH Library.</p>
-<div id="contact" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contact" class="anchor"></a>Contact</h2>
-<p>If you have queries related to the content, functionality or methods used, please send an email to the KTH Library at <a href="mailto:biblioteket@kth.se" class="email">biblioteket@kth.se</a>. For technical queries or feature requests, please <a href="https://github.com/KTH-Library/bibliomatrix/issues">open an issue</a> on this repository.</p>
+<div class="section level2">
+<h2 id="contact">Contact<a class="anchor" aria-label="anchor" href="#contact"></a>
+</h2>
+<p>If you have queries related to the content, functionality or methods used, please send an email to the KTH Library at <a href="mailto:biblioteket@kth.se" class="email">biblioteket@kth.se</a>. For technical queries or feature requests, please <a href="https://github.com/KTH-Library/bibliomatrix/issues" class="external-link">open an issue</a> on this repository.</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the latest development version of bibliomatrix from <a href="https://KTH-Library.github.com/bibliomatrix">GitHub</a> with:</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the latest development version of bibliomatrix from <a href="https://KTH-Library.github.com/bibliomatrix" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"KTH-Library/bibliomatrix"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"KTH-Library/bibliomatrix"</span><span class="op">)</span></span></code></pre></div>
 <p>If you don’t already have <code>devtools</code>, this package can be installed first with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<div id="public-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#public-data" class="anchor"></a>Public data</h3>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="public-data">Public data<a class="anchor" aria-label="anchor" href="#public-data"></a>
+</h3>
 <p>The package includes data from the KTH Annual Bibliometric Monitoring (ABM) public part.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix">bibliomatrix</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-
-<span class="co"># Simple example showing some KTH units for which ABM results are public</span>
-<span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">unit_code</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pipe"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Simple example showing some KTH units for which ABM results are public</span></span>
+<span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">unit_code</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pipe"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">unit_code</th>
@@ -157,13 +152,13 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># KTH is level 0, schools level 1 and departments level 2.</span>
-<span class="co"># Some basic information about KTH schools:</span>
-<span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">org_level</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Diva_org_id</span>, <span class="va">unit_code</span>, <span class="va">unit_short</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pipe"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># KTH is level 0, schools level 1 and departments level 2.</span></span>
+<span><span class="co"># Some basic information about KTH schools:</span></span>
+<span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">org_level</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Diva_org_id</span>, <span class="va">unit_code</span>, <span class="va">unit_short</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pipe"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="11%">
@@ -211,15 +206,15 @@
 </tbody>
 </table>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># Get ABM results for KTH</span>
-<span class="va">kth_abm_tables</span> <span class="op">&lt;-</span> <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">KTH</span>
-
-<span class="co"># Show parts of ABM table 1 for KTH</span>
-<span class="va">kth_abm_tables</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Publication_Type_DiVA</span>, <span class="va">P_frac</span>, <span class="va">WoS_coverage</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">P_frac</span> <span class="op">&gt;</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pipe"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Get ABM results for KTH</span></span>
+<span><span class="va">kth_abm_tables</span> <span class="op">&lt;-</span> <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">KTH</span></span>
+<span></span>
+<span><span class="co"># Show parts of ABM table 1 for KTH</span></span>
+<span><span class="va">kth_abm_tables</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Publication_Type_DiVA</span>, <span class="va">P_frac</span>, <span class="va">WoS_coverage</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">P_frac</span> <span class="op">&gt;</span> <span class="fl">50</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"pipe"</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Publication_Type_DiVA</th>
@@ -286,54 +281,62 @@
 </table>
 </div>
 </div>
-<div id="development" class="section level2">
-<h2 class="hasAnchor">
-<a href="#development" class="anchor"></a>Development</h2>
-<p>To further develop or change the package, please refer to instructions at <a href="http://r-pkgs.org/" class="uri">http://r-pkgs.org/</a>, then fork this repo, clone it, make the changes and whe done, submit a PR with the changes.</p>
+<div class="section level2">
+<h2 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a>
+</h2>
+<p>To further develop or change the package, please refer to instructions at <a href="http://r-pkgs.org/" class="external-link uri">http://r-pkgs.org/</a>, then fork this repo, clone it, make the changes and whe done, submit a PR with the changes.</p>
 <p>If you wish to work from the CLI, you can use this approach:</p>
-<p><a href="https://github.com/KTH-Library/kontarion#contributions" class="uri">https://github.com/KTH-Library/kontarion#contributions</a></p>
-<p>For a concrete example - to make a change with regards to adding tests, follow instructions for how to <a href="https://r-pkgs.org/tests.html">add a test</a> and add it in <code>test/testthat/</code> making sure that it verifies expected results, then do the Ctrl+Shift+{D,T,E} steps (if using keyboard shortcuts) and then use git to commit and push the changes to your fork, then issue a PR.</p>
+<p><a href="https://github.com/KTH-Library/kontarion#contributions" class="external-link uri">https://github.com/KTH-Library/kontarion#contributions</a></p>
+<p>For a concrete example - to make a change with regards to adding tests, follow instructions for how to <a href="https://r-pkgs.org/tests.html" class="external-link">add a test</a> and add it in <code>test/testthat/</code> making sure that it verifies expected results, then do the Ctrl+Shift+{D,T,E} steps (if using keyboard shortcuts) and then use git to commit and push the changes to your fork, then issue a PR.</p>
 </div>
-<div id="releasing-a-stable-version" class="section level2">
-<h2 class="hasAnchor">
-<a href="#releasing-a-stable-version" class="anchor"></a>Releasing a stable version</h2>
+<div class="section level2">
+<h2 id="releasing-a-stable-version">Releasing a stable version<a class="anchor" aria-label="anchor" href="#releasing-a-stable-version"></a>
+</h2>
 <p>Before making a stable release from the master branch, ensure all tests are successful and that any issues identified from deployments in the staging/reference environment have been resolved.</p>
 <p>Then agree with the team on semantic versioning number for the stable release. Normally given a format such as “1.0.0”, this would mean to bump the third (last) number for a patch/bugfix, to bump the second number for a minor update, such as when adding non-breaking functionality, and to bump the first number for any major update that might involve potentially backwards-compatibility breaking major refactorings or rewrites.</p>
-<p>To <a href="http://r-pkgs.had.co.nz/release.html">release a stable version</a>, use the following steps:</p>
+<p>To <a href="http://r-pkgs.had.co.nz/release.html" class="external-link">release a stable version</a>, use the following steps:</p>
 <ul>
-<li>Change the <a href="http://r-pkgs.had.co.nz/release.html#release-version">version number</a> for the package in the <a href="DESCRIPTION">DESCRIPTION file</a>
+<li>Change the <a href="http://r-pkgs.had.co.nz/release.html#release-version" class="external-link">version number</a> for the package in the <a href="DESCRIPTION">DESCRIPTION file</a>
 </li>
 <li>Make a local build in order to update the documentation site (this documentation is generated by <code>pkgdown</code> and does not build on cloud servers through Travis. It needs therefore to be built locally since the cloud servers do not have required network connectivity to database and LDAP sources) by following the steps in <a href="dev.R">dev.R</a>
 </li>
-<li>Provide docs in <a href="http://r-pkgs.had.co.nz/release.html#news">NEWS.md</a> for what is new in the version, preferably by linking to the relevant corresponding GitHub milestone issues that have been adressed in the release.</li>
+<li>Provide docs in <a href="http://r-pkgs.had.co.nz/release.html#news" class="external-link">NEWS.md</a> for what is new in the version, preferably by linking to the relevant corresponding GitHub milestone issues that have been adressed in the release.</li>
 <li>Commit and push the changes using <code>git</code>
 </li>
 <li>Tag the release version and push the tag using <code>git tag -a 0.9 -m     "0.9"</code> and <code>git push origin 0.9</code> which will cause Travis to build and publish the release on the <a href="/releases">GitHub Releases tab of the repository</a>.</li>
 </ul>
-<p>This versioned release can now be used elsewhere, such as in the <a href="https://github.com/KTH-Library/kontarion"><code>kontarion</code> repo</a> when making a versioned release there where the tagged <code>bibliomatrix</code> release for this specific version can be explicitly specified.</p>
+<p>This versioned release can now be used elsewhere, such as in the <a href="https://github.com/KTH-Library/kontarion" class="external-link"><code>kontarion</code> repo</a> when making a versioned release there where the tagged <code>bibliomatrix</code> release for this specific version can be explicitly specified.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/KTH-Library/bibliomatrix/">https://​github.com/​KTH-Library/​bibliomatrix/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/KTH-Library/bibliomatrix/issues">https://​github.com/​KTH-Library/​bibliomatrix/​issues</a>
-</li>
+<li><a href="https://github.com/KTH-Library/bibliomatrix/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/KTH-Library/bibliomatrix/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing bibliomatrix</a></li>
+</ul>
+</div>
+
 <div class="developers">
-<h2>Developers</h2>
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Gaël Serge Dubus <br><small class="roles"> Author </small>  </li>
 <li>Tobias Jeppsson <br><small class="roles"> Author </small>  </li>
@@ -343,23 +346,26 @@
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/KTH-Library/bibliomatrix"><img src="https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master" alt="Travis build status"></a></li>
-<li><a href="https://github.com/KTH-Library/bibliomatrix/actions"><img src="https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://travis-ci.org/KTH-Library/bibliomatrix" class="external-link"><img src="https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master" alt="Travis build status"></a></li>
+<li><a href="https://github.com/KTH-Library/bibliomatrix/actions" class="external-link"><img src="https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Gaël Serge Dubus, Tobias Jeppsson, Agne Larsson, David Minguillo, Markus Skyttner.</p>
+  <p></p>
+<p>Developed by Gaël Serge Dubus, Tobias Jeppsson, Agne Larsson, David Minguillo, Markus Skyttner.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -367,6 +373,8 @@
 
   
 
+
+  
 
   </body>
 </html>

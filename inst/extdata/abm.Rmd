@@ -43,6 +43,8 @@ colors_vb <- palette_kth(4)
 
 # Retrieve result tables to use in tabs and key indicators
 
+data <- data.frame()
+
 if (params$embed_data || !params$use_package_data) {
   con <- pool_bib()
   data <- abm_data(
@@ -50,7 +52,7 @@ if (params$embed_data || !params$use_package_data) {
     unit_code = params$unit_code,
     pub_year = abm_config()$start_year:abm_config()$stop_year,
     analysisId = abm_config()$analysis_id
-    )
+    ) %>% collect()
   pool::poolClose(con)
 }
 
@@ -389,7 +391,7 @@ abm_ui_kable_diva_full(df_diva_full)
 ```
 
 
-Row
+Row 
 ---------------------
 
 ### **Publication volume** {.no-padding .no-mobile}
@@ -440,7 +442,7 @@ Citation impact
 
 #### `r unit_label`
 
-Row
+Row {data-height=350}
 ---------------------
 
 ### **Citations 3-year window, fractional counts** {.no-mobile}
@@ -583,7 +585,7 @@ Journal impact
 
 #### `r unit_label`
 
-Row
+Row {data-height=350}
 ---------------------
 
 ### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
@@ -669,12 +671,12 @@ if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 
-Co&#8209;publishing
+Co&#8209;publishing {data-orientation=rows}
 =====================================
 
 #### `r unit_label`
 
-Row {.tabset}
+Row {.tabset data-height=1100}
 ---------------------
 
 ### Summary
@@ -686,9 +688,13 @@ div.dt-buttons {
   position:relative;
   float:right;
 }
+.dataTables_scrollBody {
+    height:300px !important;
+    max-height:300px !important;
+}
 </style>
 
-```{r, fig.height=15}
+```{r}
 abm_ui_datatable_copub(
   df_copub,
   unit_file_label = unit_file_label, 
@@ -698,7 +704,7 @@ abm_ui_datatable_copub(
 
 #### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
-```{r, fig.width=3.75}
+```{r}
 abm_ui_kable_copub(df_copub)
 ```
 
@@ -761,6 +767,10 @@ div.dt-buttons {
 table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
     background-image: none !important;
 }
+.dataTables_scrollBody {
+    height:300px !important;
+    max-height:300px !important;
+}
 </style>
 ```{r}
 abm_ui_datatable_copub_countries(
@@ -796,7 +806,7 @@ Open Access
 
 #### `r unit_label`
 
-Row
+Row {data-height=450}
 ---------------------
 
 ### **Open Access publications, full counts** {.no-mobile}
@@ -876,7 +886,7 @@ Scopus
 
 #### `r unit_label`
 
-Row {.tabset data-height=1200}
+Row {.tabset data-height=1100}
 -----------------------------------------------------------------------
 
 ### Citation Impact
@@ -885,6 +895,10 @@ Row {.tabset data-height=1200}
 div.dt-buttons {
   position:relative;
   float:right;
+}
+.dataTables_scrollBody {
+    height:300px !important;
+    max-height:300px !important;
 }
 </style>
 

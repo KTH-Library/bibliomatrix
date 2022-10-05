@@ -39,7 +39,20 @@ dashboardPage(skin = "black",
         text-align: left !important;
         align-items: left !important;
       }
-    '))),
+    ')), HTML("
+      <!-- Matomo -->
+      <script>
+        var _paq = window._paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+          var u=\"https://analytics.sys.kth.se/\";
+          _paq.push(['setTrackerUrl', u+'matomo.php']);
+          _paq.push(['setSiteId', '3']);
+          var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+          g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+      </script>")),
     box(width = 12, height = "90vh", 
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),
       htmlOutput("frame")

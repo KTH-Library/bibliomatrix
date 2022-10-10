@@ -45,13 +45,15 @@ server <- function(input, output, session) {
             
             jwt <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
             if (jwt != "") {
-                kthid <- abm_decode_jwt(jwt)$kthid
-                setNames(kthid, displayname_from_kthid(kthid))
+                payload <- abm_decode_jwt(jwt)
+                kthid <- payload$kthid
+                kthid <- setNames(kthid, sprintf("%s (%s)", payload$unique_name[1], payload$username))
                 return (kthid)
             }
             
             if (is_saml(ua)) {
                 kthid <- parse_id(ua)
+                kthid <- setNames(kthid, displayname_from_kthid(kthid))
             } else {
                 # if shinyproxy with saml then we get user identity as kthid@kth.se
                 # if shinyproxy with ldap then we get user identity as LDAP accountname

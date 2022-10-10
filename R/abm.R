@@ -1125,7 +1125,7 @@ abm_graph_diva <- function(df) {
 }
 
 
-#' Create graph over WoS coverage by year
+#' Create graph over WoS coverage by DiVA publication type
 #' 
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
@@ -1842,5 +1842,44 @@ abm_sdg_year <- function(data,
               p_sdg_frac = sum(any_sdg * Unit_Fraction),
               share_sdg = p_sdg / p,
               share_sdg_frac = p_sdg_frac / p_frac)
-  
 }
+
+
+#' Create graph over SDGs
+#' 
+#' @param df a data frame at the format produced by abm_sdg_table()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom stats reorder
+#' @importFrom scales label_number
+#' @export
+abm_graph_sdg <- function(df) {
+  
+  SDG_Displayname <- NULL
+  
+  kth_cols <- palette_kth()
+
+  pmax <- max(df$p_frac)
+  
+  if (pmax > 200){
+    ymax <- trunc(1+pmax/100, 2)*100
+    ybreaks <- seq(0, ymax, 100)
+  } else {
+    ymax <- trunc(1+pmax/10, 1)*10
+    ybreaks <- seq(0, ymax, 10)
+  }
+  
+  ggplot(data = df,
+           aes(x = SDG_Displayname)) +
+    geom_bar(aes(weight = p_frac), fill = kth_cols["blue"]) +
+    xlab(NULL) +
+    ylab("P (frac)") +
+    coord_flip() +
+    scale_x_discrete(limits = rev(levels(as.factor(df$SDG_Displayname)))) +
+    scale_y_continuous(labels = label_number(),
+                       breaks = ybreaks, limits = c(0, ymax)) +
+    theme(axis.text.y  = element_text(hjust = 0),
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank())
+}
+

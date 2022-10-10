@@ -1274,6 +1274,15 @@ abm_ui_datatable_sdg_table(
 abm_ui_kable_sdg_table(df_sdg_table)
 ```
 
+##### **Sustainable Development Goals**
+
+```{r}
+if(nrow(df_sdg_table) > 0) {
+  abm_graph_sdg(df_sdg_table)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
 
 <i class="fa fa-info-circle" aria-hidden="true"></i> About
 ===========================

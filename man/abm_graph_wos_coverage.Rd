@@ -2,7 +2,7 @@
 % Please edit documentation in R/abm.R
 \name{abm_graph_wos_coverage}
 \alias{abm_graph_wos_coverage}
-\title{Create graph over WoS coverage by year}
+\title{Create graph over WoS coverage by DiVA publication type}
 \usage{
 abm_graph_wos_coverage(df)
 }
@@ -13,5 +13,5 @@ abm_graph_wos_coverage(df)
 a ggplot object
 }
 \description{
-Create graph over WoS coverage by year
+Create graph over WoS coverage by DiVA publication type
 }

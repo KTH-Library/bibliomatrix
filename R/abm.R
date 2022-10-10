@@ -1857,6 +1857,8 @@ abm_graph_sdg <- function(df) {
   
   SDG_Displayname <- NULL
   
+  df <- df %>% filter(SDG_Displayname != 'None')
+  
   kth_cols <- palette_kth()
 
   pmax <- max(df$p_frac)
@@ -1870,7 +1872,7 @@ abm_graph_sdg <- function(df) {
   }
   
   ggplot(data = df,
-           aes(x = SDG_Displayname)) +
+         aes(x = SDG_Displayname)) +
     geom_bar(aes(weight = p_frac), fill = kth_cols["blue"]) +
     xlab(NULL) +
     ylab("P (frac)") +
@@ -1882,4 +1884,3 @@ abm_graph_sdg <- function(df) {
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())
 }
-

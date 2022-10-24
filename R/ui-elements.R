@@ -64,9 +64,6 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
   
   if (missing(data)) {
     data <- data.frame()
-  } else {
-    # Do not include fields added to masterfile for other reasons than ABM
-    data <- data %>% select(-any_of(c("Ptop5", "Cf_log"))) %>% collect()
   }
   
   current_date <- format(Sys.Date(), "%Y%m%d")
@@ -74,7 +71,7 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
   if (is_loggedin == TRUE) {
     
     # Do not include fields added to masterfile for other reasons than ABM
-    data <- data %>% select(-c("Ptop5", "Cf_log"))
+    data <- data %>% select(-any_of(c("Ptop5", "Cf_log")))
     
     embed_data <- function(path)
       paste0("data:", mime::guess_type(path), ";base64,", 

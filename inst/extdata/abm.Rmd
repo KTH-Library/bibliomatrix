@@ -38,6 +38,7 @@ library(kableExtra)
 library(glue)
 library(extrafont)
 library(kthapi)
+library(DBI)
 
 colors_vb <- palette_kth(4)
 
@@ -46,14 +47,14 @@ colors_vb <- palette_kth(4)
 data <- data.frame()
 
 if (params$embed_data || !params$use_package_data) {
-  con <- pool_bib()
+  con <- con_bib()
   data <- abm_data(
     con = con,
     unit_code = params$unit_code,
     pub_year = abm_config()$start_year:abm_config()$stop_year,
     analysisId = abm_config()$analysis_id
     ) %>% collect()
-  pool::poolClose(con)
+  dbDisconnect(con)
 }
 
 if (params$use_package_data != TRUE) {
@@ -69,7 +70,7 @@ if (params$use_package_data != TRUE) {
   df_scop_snip <- abm_table_scop_snip(data)
   df_scop_copub <- abm_table_scop_copub(data)
   df_coverage <- abm_coverage(data)
-  con <- pool_bib()
+  con <- con_bib()
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
   df_copub_countries <- abm_copub_countries(con = con,
                                             unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
@@ -95,7 +96,7 @@ if (params$use_package_data != TRUE) {
                                 analysisId = abm_config()$analysis_id,
                                 analysis_start = abm_config()$start_year,
                                 analysis_stop = abm_config()$stop_year)
-  pool::poolClose(con)
+  dbDisconnect(con)
 } else {
   df_diva <- pluck(abm_public_kth$units, params$unit_code, "diva")
   df_diva_full <- pluck(abm_public_kth$units, params$unit_code, "diva_full")
@@ -325,7 +326,7 @@ if (params$embed_data == TRUE && params$is_employee != TRUE) {
 
 ```
 
-Publications in DiVA
+Publication summary
 =====================================
 
 #### `r unit_label`
@@ -345,7 +346,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=7, fig.width=3.75}
+```{r, fig.height=10, fig.width=3.75}
 
 abm_ui_datatable_diva(
   df_diva, 
@@ -383,6 +384,14 @@ abm_ui_datatable_diva_full(
 
 ```
 <!-- </div> -->
+
+`r if(params$embed_data == FALSE) {"\\begin{comment}"} else {NULL}`
+### Publication list
+```{r, echo=FALSE}
+abm_ui_datatable_publications(data, "", "")
+```
+`r if(params$embed_data == FALSE) {"\\end{comment}"} else {NULL}`
+
 
 #### **Publication volume, full count** {.no-padding .mobile}
 
@@ -681,7 +690,7 @@ Row {.tabset data-height=1100}
 
 ### Summary
 
-#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -702,14 +711,14 @@ abm_ui_datatable_copub(
 )
 ```
 
-#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
+##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r}
 abm_ui_kable_copub(df_copub)
 ```
 
 
-#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
@@ -745,7 +754,7 @@ cat("<hr>")
 
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
 
-#### **International and Swedish non-university co&#8209;publication**
+##### **International and Swedish non-university co&#8209;publication**
 ```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
@@ -758,7 +767,7 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 
 ### Countries and organizations
 
-#### **Co&#8209;publication countries** {.no-mobile}
+##### **Co&#8209;publication countries** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -772,6 +781,7 @@ table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
     max-height:300px !important;
 }
 </style>
+
 ```{r}
 abm_ui_datatable_copub_countries(
   df_copub_countries,
@@ -780,13 +790,13 @@ abm_ui_datatable_copub_countries(
 ) 
 ```
 
-#### **Co&#8209;publication countries** {.no-padding .mobile}
+##### **Co&#8209;publication countries** {.no-padding .mobile}
 ```{r}
 abm_ui_kable_copub_countries(df_copub_countries) 
 ```
 
 
-#### **Co&#8209;publication organizations** {.no-mobile}
+##### **Co&#8209;publication organizations** {.no-mobile}
 
 ```{r}
 abm_ui_datatable_copub_orgs(
@@ -796,7 +806,7 @@ abm_ui_datatable_copub_orgs(
 ) 
 ```
 
-#### **Co&#8209;publication countries** {.no-padding .mobile}
+##### **Co&#8209;publication countries** {.no-padding .mobile}
 ```{r}
 abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
@@ -835,7 +845,6 @@ abm_ui_datatable_oa(
 ```{r, fig.width=3.75}
 abm_ui_kable_oa(df_oa)
 ```
-
 
 Row
 -------
@@ -890,7 +899,6 @@ Row {.tabset data-height=1100}
 -----------------------------------------------------------------------
 
 ### Citation Impact
-
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -902,14 +910,7 @@ div.dt-buttons {
 }
 </style>
 
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:center'>
-
-<div>
-
-Column
-------
-
-<div style='padding:10px;'>
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 
 ##### **Citations, open window** {.no-mobile}
 
@@ -927,48 +928,6 @@ abm_ui_datatable_scop_cit(
 abm_ui_kable_scop_cit(df_scop_cit)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
-
-```{r, echo=FALSE, results="asis"}
-cat("<hr>")
-cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
-
-if(isTRUE(unit_level >= 0)){
-
-  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
-  mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
-  minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
-
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
-
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
-} else {
-
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
-}
-cat("<hr>")
-```
-
-##### **Average field weighted citation impact (FWCI)**
-
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_normcit(df_scop_normcit)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-</div>
-</div>
-
-<div>
-<div style='padding:10px;'>
-
 ##### **Field weighted citation impact (FWCI)** {.no-mobile}
 
 ```{r, fig.height = 6, fig.width = 6}
@@ -985,14 +944,37 @@ abm_ui_datatable_scop_normcit(
 abm_ui_kable_scop_normcit(df_scop_normcit)
 ```
 
+</div>
+
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
+
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+
+```{r, echo=FALSE, results="asis"}
+cat("<hr>")
+cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
+if(isTRUE(unit_level >= 0)){
+  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
+  minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+} else {
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+}
+cat("<hr>")
+```
+
+
 ##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
-
 if(isTRUE(unit_level >= 0)){
-
   intervals <- df_scop_normcit %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   scopcov_normcit <- df_coverage %>%
     filter(Publication_Type == "Peer reviewed")
@@ -1004,23 +986,32 @@ if(isTRUE(unit_level >= 0)){
     group_by(interval) %>% 
     summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
               sumscop_full = sum(sumscop_full))
-
   mincov <- min(scopcov_normcit$scopcov_frac)
   minpubs <- min(scopcov_normcit$sumscop_full)
   
   cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
-
   if(minpubs < 50)
     cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-
 } else {
-
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-
 }
 cat("<hr>")
+```
+
+</div>
+
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
+
+##### **Average field weighted citation impact (FWCI)**
+
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_normcit(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
 ```
 
 ##### **Share of publications among Top 10% cited**
@@ -1033,8 +1024,6 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 }
 ```
 
-</div>
-</div>
 </div>
 
 ### Journal Impact
@@ -1101,6 +1090,8 @@ if(isTRUE(unit_level >= 0)){
 }
 cat("<hr>")
 ```
+</div>
+
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
 
@@ -1127,7 +1118,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```  
 </div>
 </div>
-</div>
+
 
 ### Co&#8209;publishing
 
@@ -1201,9 +1192,15 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 ```
 </div>
 
-### SDG
+SDG
+=====================================
 
-##### **Any Sustainable Development Goal** {.no-mobile}
+#### `r unit_label`
+
+Row {data-height=450}
+---------------------
+
+### **Publications with any Sustainable Development Goal (fractional counts)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1220,16 +1217,42 @@ abm_ui_datatable_sdg_year(
 )
 ```
 
-##### **Any Sustainable Development Goal** {.mobile}
+### **Publications with any Sustainable Development Goal (fractional counts)** {.mobile}
 
 ```{r}
 abm_ui_kable_sdg_year(df_sdg_year)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+
+### **Sustainable Development Goals (fractional counts)** {.no-mobile}
+
+<style type="text/css">
+div.dt-buttons {
+  position:relative;
+  float:right;
+}
+</style>
+
+```{r, fig.height = 4}
+abm_ui_datatable_sdg_table(
+  df_sdg_table,
+  unit_file_label = unit_file_label, 
+  unit_title = abm_unit_title
+)
+```
+
+### **Sustainable Development Goals (fractional counts)** {.mobile}
+
+```{r}
+abm_ui_kable_sdg_table(df_sdg_table)
+```
+
+Row {data-height=100}
+---------------------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
-cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1247,36 +1270,36 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
 
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
 
-##### **Sustainable Development Goals** {.no-mobile}
+```{r, echo=FALSE, results="asis"}
+cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
-<style type="text/css">
-div.dt-buttons {
-  position:relative;
-  float:right;
+if(isTRUE(unit_level >= 0)){
+
+  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
+  minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
+
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+
+} else {
+
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+
 }
-</style>
-
-```{r, fig.height = 4}
-abm_ui_datatable_sdg_table(
-  df_sdg_table,
-  unit_file_label = unit_file_label, 
-  unit_title = abm_unit_title
-)
 ```
 
-##### **Sustainable Development Goals** {.mobile}
+Row {data-height=650}
+---------------------
 
-```{r}
-abm_ui_kable_sdg_table(df_sdg_table)
-```
+### **Sustainable Development Goals (fractional counts)**
 
-##### **Sustainable Development Goals**
-
-```{r}
+```{r, fig.height=8, fig.width = 20}
 if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
   abm_graph_sdg(df_sdg_table)
 } else {

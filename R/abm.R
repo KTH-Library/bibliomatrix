@@ -1852,17 +1852,23 @@ abm_sdg_year <- function(data,
 #' @import ggplot2 dplyr ktheme
 #' @importFrom stats reorder
 #' @importFrom scales label_number
+#' @importFrom stringr str_pad
 #' @export
 abm_graph_sdg <- function(df) {
   
   SDG_Displayname <- NULL
-  
-  df <- df %>% filter(SDG_Displayname != 'None')
-  
-  kth_cols <- palette_kth()
 
-  pmax <- max(df$p_frac)
+  if(nrow(df) > 0){
+    colors <- sdg_colors() %>%
+      mutate(goal_nr = str_pad(goal, 2, "left", "0")) %>% 
+      select(goal_nr, color)
+    sdgs <- df %>%
+      filter(SDG_Displayname != 'None') %>% 
+      mutate(goal_nr = substr(SDG_Displayname, 5, 6)) %>%
+      inner_join(colors, by = "goal_nr")
   
+  pmax <- max(sdgs$p_frac)
+
   if (pmax > 200){
     ymax <- trunc(1+pmax/100, 2)*100
     ybreaks <- seq(0, ymax, 100)
@@ -1871,16 +1877,19 @@ abm_graph_sdg <- function(df) {
     ybreaks <- seq(0, ymax, 10)
   }
   
-  ggplot(data = df,
+  ggplot(data = sdgs,
          aes(x = SDG_Displayname)) +
-    geom_bar(aes(weight = p_frac), fill = kth_cols["blue"]) +
+    geom_bar(aes(weight = p_frac), fill = sdgs$color) +
     xlab(NULL) +
     ylab("P (frac)") +
     coord_flip() +
-    scale_x_discrete(limits = rev(levels(as.factor(df$SDG_Displayname)))) +
-    scale_y_continuous(labels = label_number(),
-                       breaks = ybreaks, limits = c(0, ymax)) +
+    scale_x_discrete(limits = rev(levels(as.factor(sdgs$SDG_Displayname)))) +
+    scale_y_continuous(breaks = ybreaks,
+                       minor_breaks = NULL,
+                       limits = c(0, ymax),
+                       expand = c(0, 10)) +
     theme(axis.text.y  = element_text(hjust = 0),
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())
+  }
 }

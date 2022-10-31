@@ -262,6 +262,51 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
     DT::formatRound(length(data), digits = 1)
 }
 
+
+#' Datatable for publication list
+#' 
+#' @param data data frame with list of publications
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools dplyr
+#' @export
+abm_ui_datatable_publications <- function(data, unit_title, unit_file_label){
+  
+  if(nrow(data) > 0){
+    filename <- paste0("ABM_publications_", unit_file_label, "_", 
+                       format(Sys.Date(), "%Y%m%d"))
+    
+    header <- eval(parse(text = getheader(names(data))))
+    
+    DT::datatable(
+      data,
+      container = header,
+      rownames = FALSE,
+      extensions = "Buttons",
+      plugins = "natural",
+      style = "bootstrap",
+      class = "compact",
+      width = "720",
+      options = list(
+        order = list(list(1, "asc"), list(0, "asc")),
+        ordering = TRUE,
+        columnDefs = list(list(type = 'natural', targets = list(0:length(data)-1))),
+        bPaginate = TRUE,
+        pageLength = 10,
+        scrollX = TRUE, 
+        scrollY = "100vh",
+        dom = 'fltBp',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+      ))
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+
 #' Datatable for DiVA publications
 #' 
 #' @param df_diva data frame with DiVA publication data in a specific format

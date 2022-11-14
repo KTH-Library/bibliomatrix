@@ -326,22 +326,22 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
     header <- eval(parse(text = getheader(names(diva_table)) %>% abm_format_header_divatable()))
     
     DT::datatable(diva_table,
-      container = header,
-      rownames = FALSE,
-      extensions = c("Buttons"),
-      style = "bootstrap", class = "compact", width = "720",
-      options = list(
-        ordering = FALSE,
-        bPaginate = FALSE,
-        pageLength = 100,
-        scrollX = TRUE, 
-        scrollY = "100vh",
-        dom = 'tB',
-        buttons = list(
-          list(extend = "copy", title = unit_title),
-          list(extend = "csv", filename = filename, title = unit_title),
-          list(extend = "excel", filename = filename, title = unit_title))
-        )) %>%
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  fillContainer = TRUE,
+                  style = "bootstrap", class = "compact", width = "720",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    scrollX = TRUE,
+                    scrollY = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
       DT::formatRound(2:(length(diva_table)-2), digits = 1, mark = "") %>%
       DT::formatPercentage((length(diva_table)-1):length(diva_table), digits = 1) %>%
       abm_format_rows() %>%
@@ -399,14 +399,14 @@ abm_ui_datatable_diva_full <- function(df_diva_full, unit_file_label, unit_title
     DT::datatable(diva_table,
                   container = header,
                   rownames = FALSE,
-                  extensions = c("Buttons"),
-                  style = "bootstrap", class = "compact", width = "720",
+                  fillContainer = TRUE,
+                  extensions = "Buttons",
+                  style = "bootstrap", class = "compact", width = "100%",
                   options = list(
                     ordering = FALSE,
                     bPaginate = FALSE,
-                    pageLength = 100,
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     dom = 'tB',
                     buttons = list(
                       list(extend = "copy", title = unit_title),
@@ -469,20 +469,21 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
     header <- eval(parse(text = getheader(names(df_city3y))))
     
     DT::datatable(df_city3y,
-      container = header,
-      rownames = FALSE,
-      extensions = "Buttons",
-      options = list(
-        ordering = FALSE,
-        bPaginate = FALSE,
-        scrollX = TRUE, 
-        scrollY = "100vh",
-        dom = 'tB',
-        buttons = list(
-          list(extend = "copy", title = unit_title),
-          list(extend = "csv", filename = filename, title = unit_title),
-          list(extend = "excel", filename = filename, title = unit_title))
-        )) %>%
+                  container = header,
+                  rownames = FALSE,
+                  fillContainer = TRUE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    scrollX = TRUE, 
+                    scrollY = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
       DT::formatRound(2:5, digits = 1, mark = "") %>%
       DT::formatPercentage(6, digits = 1) %>%
       abm_format_rows()

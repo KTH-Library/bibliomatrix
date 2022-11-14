@@ -331,13 +331,11 @@ Publication summary
 
 #### `r unit_label`
 
-Row {.tabset}
+Row {.tabset data-height=600}
 ---------------------
 
 ### Fractional count
 #### **Publication volume, fractionalized** {.no-padding .no-mobile}
-
-<!-- <div style='width:720px;margin:auto'> -->
 
 <style type="text/css">
 div.dt-buttons {
@@ -346,26 +344,23 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=10, fig.width=3.75}
-
+```{r, fig.width=3.75}
 abm_ui_datatable_diva(
-  df_diva, 
-  unit_file_label = unit_file_label, 
+  df_diva,
+  unit_file_label = unit_file_label,
   unit_title = abm_unit_title
 )
 
 ```
-<!-- </div> -->
 
 #### **Publication volume, fractionalized** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
 abm_ui_kable_diva(df_diva)
 ```
+
 ### Full count
 #### **Publication volume, full count** {.no-padding .no-mobile}
-
-<!-- <div style='width:720px;margin:auto'> -->
 
 <style type="text/css">
 div.dt-buttons {
@@ -374,7 +369,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=7, fig.width=3.75}
+```{r, fig.width=3.75}
 
 abm_ui_datatable_diva_full(
   df_diva_full, 
@@ -383,22 +378,12 @@ abm_ui_datatable_diva_full(
 )
 
 ```
-<!-- </div> -->
-
-`r if(params$embed_data == FALSE) {"\\begin{comment}"} else {NULL}`
-### Publication list
-```{r, echo=FALSE}
-abm_ui_datatable_publications(data, "", "")
-```
-`r if(params$embed_data == FALSE) {"\\end{comment}"} else {NULL}`
-
 
 #### **Publication volume, full count** {.no-padding .mobile}
 
 ```{r, fig.width=3.75}
 abm_ui_kable_diva_full(df_diva_full)
 ```
-
 
 Row 
 ---------------------

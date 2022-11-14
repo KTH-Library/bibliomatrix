@@ -376,7 +376,7 @@ Citation impact
 
 #### `r unit_label`
 
-Row
+Row {data-height=350}
 ---------------------
 
 ### **Citations 3-year window, fractional counts** {.no-mobile}
@@ -492,7 +492,7 @@ Journal impact
 
 #### `r unit_label`
 
-Row
+Row {data-height=350}
 ---------------------
 
 ### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
@@ -612,7 +612,7 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 
 ### Countries and organizations
 
-#### **Co&#8209;publication countries** {.no-mobile}
+##### **Co&#8209;publication countries** {.no-mobile data-height=400}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -622,7 +622,8 @@ table.dataTable thead .sorting_asc, .sorting_desc, .sorting {
     background-image: none !important;
 }
 </style>
-```{r}
+
+```{r, fig.height=6}
 abm_ui_datatable_copub_countries(
   df_copub_countries,
   unit_file_label = unit_file_label, 
@@ -630,15 +631,15 @@ abm_ui_datatable_copub_countries(
 ) 
 ```
 
-#### **Co&#8209;publication countries** {.no-padding .mobile}
+##### **Co&#8209;publication countries** {.no-padding .mobile}
 ```{r}
 abm_ui_kable_copub_countries(df_copub_countries) 
 ```
 
 
-#### **Co&#8209;publication organizations** {.no-mobile}
+##### **Co&#8209;publication organizations** {.no-mobile}
 
-```{r}
+```{r, fig.height=6}
 abm_ui_datatable_copub_orgs(
   df_copub_orgs,
   unit_file_label = unit_file_label, 
@@ -646,7 +647,7 @@ abm_ui_datatable_copub_orgs(
 ) 
 ```
 
-#### **Co&#8209;publication countries** {.no-padding .mobile}
+##### **Co&#8209;publication countries** {.no-padding .mobile}
 ```{r}
 abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
@@ -656,7 +657,7 @@ Open Access
 
 #### `r unit_label`
 
-Row
+Row {data-height=400}
 ---------------------
 
 ### **Open Access publications, full counts** {.no-mobile}

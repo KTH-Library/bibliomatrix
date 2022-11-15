@@ -252,7 +252,7 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
       bPaginate = TRUE,
       pageLength = 10,
       scrollX = TRUE, 
-      scrollY = "100vh",
+      scrollY = FALSE,
       dom = 'fltBp',
       buttons = list(
         list(extend = "copy", title = unit_title),
@@ -294,7 +294,7 @@ abm_ui_datatable_publications <- function(data, unit_title, unit_file_label){
         bPaginate = TRUE,
         pageLength = 10,
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         dom = 'fltBp',
         buttons = list(
           list(extend = "copy", title = unit_title),
@@ -329,7 +329,7 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",
-                  fillContainer = TRUE,
+                  fillContainer = FALSE,
                   style = "bootstrap", class = "compact", width = "720",
                   options = list(
                     ordering = FALSE,
@@ -399,7 +399,7 @@ abm_ui_datatable_diva_full <- function(df_diva_full, unit_file_label, unit_title
     DT::datatable(diva_table,
                   container = header,
                   rownames = FALSE,
-                  fillContainer = TRUE,
+                  fillContainer = FALSE,
                   extensions = "Buttons",
                   style = "bootstrap", class = "compact", width = "100%",
                   options = list(
@@ -471,7 +471,7 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
     DT::datatable(df_city3y,
                   container = header,
                   rownames = FALSE,
-                  fillContainer = TRUE,
+                  fillContainer = FALSE,
                   extensions = "Buttons",
                   options = list(
                     ordering = FALSE,
@@ -539,7 +539,7 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
         bPaginate = FALSE,
         dom = 'tB',
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -603,7 +603,7 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -660,13 +660,14 @@ abm_ui_datatable_copub <- function(df_copub, unit_file_label, unit_title) {
     DT::datatable(df_copub,
       container = header,
       rownames = FALSE,
+      fillContainer = FALSE,
       extensions = "Buttons",
       options = list(
         ordering = FALSE,
         bPaginate = FALSE,
         dom = 'tB',
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -727,7 +728,7 @@ abm_ui_datatable_oa <- function(df_oa, unit_file_label, unit_title) {
         bPaginate = FALSE,
         dom = 'tB',
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -787,7 +788,7 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -849,7 +850,7 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -913,7 +914,7 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -969,6 +970,7 @@ abm_ui_datatable_scop_copub <- function(df_scop_copub, unit_file_label, unit_tit
     
     DT::datatable(df_scop_copub,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
@@ -976,7 +978,7 @@ abm_ui_datatable_scop_copub <- function(df_scop_copub, unit_file_label, unit_tit
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -1044,20 +1046,21 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
     header <- eval(parse(text = getheader(names(df))))
     
     as.datatable(df,
-                  container = header,
-                  rownames = FALSE,
-                  extensions = "Buttons",
-                  options = list(
-                    ordering = TRUE,
-                    bPaginate = TRUE,
-                    dom = 'ftpB',
-                    scrollX = TRUE, 
-                    scrollY = "100vh",
-                    buttons = list(
-                      list(extend = "copy", title = unit_title),
-                      list(extend = "csv", filename = filename, title = unit_title),
-                      list(extend = "excel", filename = filename, title = unit_title))
-                  ))%>% 
+                 container = header,
+                 rownames = FALSE,
+                 fillContainer = FALSE,
+                 extensions = "Buttons",
+                 options = list(
+                   ordering = TRUE,
+                   bPaginate = TRUE,
+                   dom = 'ftpB',
+                   scrollX = TRUE, 
+                   scrollY = FALSE,
+                   buttons = list(
+                     list(extend = "copy", title = unit_title),
+                     list(extend = "csv", filename = filename, title = unit_title),
+                     list(extend = "excel", filename = filename, title = unit_title))
+                 ))%>% 
       formatRound(7, digits = 1, mark = "")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -1121,22 +1124,23 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                                ))
     
     as.datatable(df2,
-                  container = header,
-                  rownames = FALSE,
-                  extensions = "Buttons",
-                  filter='top',
-                  options = list(
-                    ordering = TRUE,
-                    bPaginate = TRUE,
-                    dom = 'ftpB',
-                    scrollX = TRUE, 
-                    scrollY = "100vh",
-                    #list(targets = 2, searchable = FALSE),
-                    buttons = list(
-                      list(extend = "copy", title = unit_title),
-                      list(extend = "csv", filename = filename, title = unit_title),
-                      list(extend = "excel", filename = filename, title = unit_title))
-                  )) %>% 
+                 container = header,
+                 rownames = FALSE,
+                 fillContainer = FALSE,
+                 extensions = "Buttons",
+                 filter='top',
+                 options = list(
+                   ordering = TRUE,
+                   bPaginate = TRUE,
+                   dom = 'ftpB',
+                   scrollX = TRUE, 
+                   scrollY = FALSE,
+                   #list(targets = 2, searchable = FALSE),
+                   buttons = list(
+                     list(extend = "copy", title = unit_title),
+                     list(extend = "csv", filename = filename, title = unit_title),
+                     list(extend = "excel", filename = filename, title = unit_title))
+                 )) %>% 
       formatRound(9, digits = 1, mark = "")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))

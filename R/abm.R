@@ -1856,7 +1856,7 @@ abm_sdg_year <- function(data,
 #' @export
 abm_graph_sdg <- function(df) {
   
-  SDG_Displayname <- NULL
+  SDG_Displayname <- color <- goal <- goal_nr <- NULL
 
   if(nrow(df) > 0){
     colors <- sdg_colors() %>%

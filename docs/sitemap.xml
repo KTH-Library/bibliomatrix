@@ -142,6 +142,9 @@
     <loc>/reference/abm_graph_scop_top20.html</loc>
   </url>
   <url>
+    <loc>/reference/abm_graph_sdg.html</loc>
+  </url>
+  <url>
     <loc>/reference/abm_graph_top10.html</loc>
   </url>
   <url>
@@ -302,6 +305,9 @@
   </url>
   <url>
     <loc>/reference/abm_ui_datatable_oa.html</loc>
+  </url>
+  <url>
+    <loc>/reference/abm_ui_datatable_publications.html</loc>
   </url>
   <url>
     <loc>/reference/abm_ui_datatable_researchers.html</loc>

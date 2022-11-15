@@ -781,6 +781,7 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
     
     DT::datatable(df_scop_cit,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
@@ -843,6 +844,7 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
     
     DT::datatable(df_scop_normcit,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(

@@ -884,8 +884,8 @@ div.dt-buttons {
 }
 </style>
 
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
 ##### **Citations, open window** {.no-mobile}
 
@@ -904,41 +904,6 @@ abm_ui_kable_scop_cit(df_scop_cit)
 ```
 </div>
 <div>
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
-
-```{r, echo=FALSE, results="asis"}
-cat("<hr>")
-cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
-if(isTRUE(unit_level >= 0)){
-  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
-  mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
-  minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
-           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
-           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
-  if(minpubs < 50)
-    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
-} else {
-  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
-}
-cat("<hr>")
-```
-</div>
-<div>
-##### **Average field weighted citation impact (FWCI)**
-
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_normcit(df_scop_normcit)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-</div>
-</div>
-
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
-<div>
 ##### **Field weighted citation impact (FWCI)** {.no-mobile}
 
 ```{r, fig.height = 6, fig.width = 6}
@@ -956,12 +921,33 @@ abm_ui_kable_scop_normcit(df_scop_normcit)
 ```
 
 </div>
+</div>
 
-<div>
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
+
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+
+```{r, echo=FALSE, results="asis", fig.width=6}
+cat("<hr>")
+cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
+if(isTRUE(unit_level >= 0)){
+  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
+  minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
+  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+           "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
+           "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
+  if(minpubs < 50)
+    cat("<b>Indicators based on < 50 publications are considered unreliable</b>")
+} else {
+  cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
+}
+cat("<hr>")
+```
 
 ##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
 
-```{r, echo=FALSE, results="asis"}
+```{r, echo=FALSE, results="asis", fig.width=6}
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 if(isTRUE(unit_level >= 0)){
@@ -991,8 +977,20 @@ cat("<hr>")
 ```
 
 </div>
-<div>
 
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
+<div>
+##### **Average field weighted citation impact (FWCI)**
+
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_normcit(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+</div>
+<div>
 ##### **Share of publications among Top 10% cited**
 
 ```{r, fig.height = 4, fig.width = 6}
@@ -1002,7 +1000,6 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
-
 </div>
 </div>
 </div>

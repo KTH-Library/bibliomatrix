@@ -1446,6 +1446,7 @@ abm_ui_datatable_sdg_year <- function(df_sdg_year, unit_file_label, unit_title) 
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
+                    columnDefs = list(list(className = 'dt-left', targets = 0)),
                     ordering = FALSE,
                     bPaginate = FALSE,
                     dom = 'tB',

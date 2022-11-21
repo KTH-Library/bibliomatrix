@@ -49,5 +49,5 @@ jobs:
           upload-snapshots: true
           args: 'c("--no-manual", "--no-build-vignettes", "--no-vignettes", "--ignore-vignettes")'
           error-on: '"warning"'
-          build-args: 'c("--no-build-vignettes")'
+          build-args: 'c("--no-build-vignettes", "--no-manual")'
           check-dir: '"check"'

@@ -1844,51 +1844,6 @@ abm_sdg_year <- function(data,
               share_sdg_frac = p_sdg_frac / p_frac)
 }
 
-#' @importFrom dplyr tibble mutate
-sdg_colors <- function() {
-  # from https://github.com/CMUSustainability/SDGmapR/blob/main/data-raw/DATASET.R
-  dplyr::tibble(
-    goal = c(1:17),
-    color = c(
-      '#e5243b', '#DDA63A', '#4C9F38', '#C5192D', '#FF3A21', '#26BDE2',
-      '#FCC30B', '#A21942', '#FD6925', '#DD1367', '#FD9D24', '#BF8B2E',
-      '#3F7E44', '#0A97D9', '#56C02B', '#00689D', '#19486A'
-    ),
-    short_desc = c(
-      "No Poverty", "Zero Hunger", "Good Health and Well-being",
-      "Quality Education", "Gender Equality", "Clean Water and Sanitation",
-      "Affordable and Clean Energy", "Decent Work and Economic Growth",
-      "Industry, Innovation and Infrastructure", "Reducing Inequality",
-      "Sustainable Cities and Communities",
-      "Responsible Consumption and Production", "Climate Action",
-      "Life Below Water", "Life On Land",
-      "Peace, Justice, and Strong Institutions",
-      "Partnerships for the Goals"
-    ),
-    long_desc = c(
-      "End poverty in all its forms everywhere",
-      "End hunger, achieve food security and improved nutrition and promote sustainable agriculture",
-      "Ensure healthy lives and promote well-being for all at all ages",
-      "Ensure inclusive and equitable quality education and promote lifelong learning opportunities for all",
-      "Achieve gender equality and empower all women and girls",
-      "Ensure availability and sustainable management of water and sanitation for all",
-      "Ensure access to affordable, reliable, sustainable and modern energy for all",
-      "Promote sustained, inclusive and sustainable economic growth, full and productive employment and decent work for all",
-      "Build resilient infrastructure, promote inclusive and sustainable industrialization and foster innovation",
-      "Reduce inequality within and among countries",
-      "Make cities and human settlements inclusive, safe, resilient and sustainable",
-      "Ensure sustainable consumption and production patterns",
-      "Take urgent action to combat climate change and its impacts",
-      "Conserve and sustainably use the oceans, seas and marine resources for sustainable development",
-      "Protect, restore and promote sustainable use of terrestrial ecosystems, sustainably manage forests, combat desertification, and halt and reverse land degradation and halt biodiversity loss",
-      "Promote peaceful and inclusive societies for sustainable development, provide access to justice for all and build effective, accountable and inclusive institutions at all levels",
-      "Strengthen the means of implementation and revitalize the global partnership for sustainable development"
-    )) %>%
-    mutate(color = toupper(.data$color)) %>%
-    mutate(long_desc = paste0(.data$long_desc, "."))
-}
-
-
 #' Create graph over SDGs
 #' 
 #' @param df a data frame at the format produced by abm_sdg_table()

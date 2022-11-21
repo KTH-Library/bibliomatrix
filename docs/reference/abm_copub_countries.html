@@ -66,57 +66,40 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">abm_copub_countries</span><span class="op">(</span></span>
-<span>  <span class="va">con</span>,</span>
-<span>  analysisId <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">analysis_id</span>,</span>
-<span>  <span class="va">unit_level</span>,</span>
-<span>  <span class="va">unit_code</span>,</span>
-<span>  exclude_swe <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  limit <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  analysis_start <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">start_year</span>,</span>
-<span>  analysis_stop <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stop_year</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">abm_copub_countries</span><span class="op">(</span>
+  <span class="va">con</span>,
+  analysisId <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">analysis_id</span>,
+  <span class="va">unit_level</span>,
+  <span class="va">unit_code</span>,
+  exclude_swe <span class="op">=</span> <span class="cn">TRUE</span>,
+  limit <span class="op">=</span> <span class="cn">NULL</span>,
+  analysis_start <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">start_year</span>,
+  analysis_stop <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stop_year</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>con</dt>
 <dd><p>a database connection to BIBMON</p></dd>
-
-
 <dt>analysisId</dt>
 <dd><p>id for the analysis, default from abm_config()</p></dd>
-
-
 <dt>unit_level</dt>
 <dd><p>organization level</p></dd>
-
-
 <dt>unit_code</dt>
 <dd><p>code for the analyzed unit</p></dd>
-
-
 <dt>exclude_swe</dt>
 <dd><p>wether to exclude Sweden as co-publication country, default TRUE</p></dd>
-
-
 <dt>limit</dt>
 <dd><p>if set, limit the result to the first limit rows, default NULL</p></dd>
-
-
 <dt>analysis_start</dt>
 <dd><p>first publication year of analysis, default from abm_config()</p></dd>
-
-
 <dt>analysis_stop</dt>
 <dd><p>last publication year of analysis, default from abm_config()</p></dd>
-
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    
-
-<p>a tibble</p>
+    <p>a tibble</p>
     </div>
 
   </div>
@@ -131,7 +114,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
       </footer></div>

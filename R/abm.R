@@ -921,19 +921,19 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #' public <- abm_public_data()
 #' 
 #' # get public data specifically for KTH and table 1
-#' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
+#' unit_kth <- public %>% pluck("units", "KTH", "diva")
 #'  
 #' # get public data specifically for KTH and table 1
-#' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
+#' unit_kth <- public %>% pluck("units", "KTH", "diva")
 #' 
 #' # get public data for the school "I" and all five tables
-#' unit_i <- public \%>\% pluck("units", "I")
+#' unit_i <- public %>% pluck("units", "I")
 #' 
 #' # get public data for the architecture institution, table 1
-#' uc <- public \%>\% pluck("meta") \%>\% 
-#'   filter(unit_long_en == "Architecture") \%>\% pull(unit_code)
+#' uc <- public %>% pluck("meta") %>% 
+#'   filter(unit_long_en == "Architecture") %>% pull(unit_code)
 #'   
-#' public \%>\% pluck("units", uc, 1)
+#' public %>% pluck("units", uc, 1)
 #' 
 #' }   
 abm_public_data <- function(overwrite_cache = FALSE) {
@@ -1039,10 +1039,10 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #' private <- abm_private_data('u1kzf1xh')
 #' 
 #' # get table 1 for the kthid
-#' private \%>\% pluck('units', 'u1kzf1xh', 1)
+#' private %>% pluck('units', 'u1kzf1xh', 1)
 #' 
 #' # get publications for the kthid
-#' private \%>\% pluck('units', 'u1kzf1xh', 'publications')
+#' private %>% pluck('units', 'u1kzf1xh', 'publications')
 #' 
 #' }   
 abm_private_data <- function(unit_code) {
@@ -1843,6 +1843,7 @@ abm_sdg_year <- function(data,
               share_sdg = p_sdg / p,
               share_sdg_frac = p_sdg_frac / p_frac)
 }
+
 
 #' Create graph over SDGs
 #' 

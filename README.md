@@ -9,6 +9,7 @@
 status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
 [![R build
 status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
+[![R-CMD-check](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of bibliomatrix is to provide a common set of functionality for
@@ -56,14 +57,14 @@ abm_public_kth$meta %>%
   knitr::kable(format = "pipe")
 ```
 
-| unit\_code | unit\_long\_en                                         |
-| :--------- | :----------------------------------------------------- |
-| KTH        | KTH Royal Institute of Technology                      |
-| A          | School of Architecture and the Built Environment (ABE) |
-| 5851       | Architecture                                           |
-| 5857       | Civil and Architectural Engineering                    |
-| 875600     | Philosophy and History                                 |
-| 5869       | Real Estate and Construction Management                |
+| unit_code | unit_long_en                                           |
+|:----------|:-------------------------------------------------------|
+| KTH       | KTH Royal Institute of Technology                      |
+| A         | School of Architecture and the Built Environment (ABE) |
+| 5851      | Architecture                                           |
+| 5857      | Civil and Architectural Engineering                    |
+| 875600    | Philosophy and History                                 |
+| 5869      | Real Estate and Construction Management                |
 
 ``` r
 
@@ -75,13 +76,13 @@ abm_public_kth$meta %>%
   knitr::kable(format = "pipe")
 ```
 
-| Diva\_org\_id | unit\_code | unit\_short | unit\_long\_en                                                              |
-| ------------: | :--------- | :---------- | :-------------------------------------------------------------------------- |
-|          5850 | A          | ABE         | School of Architecture and the Built Environment (ABE)                      |
-|        879223 | E          | EECS        | School of Electrical Engineering and Computer Science (EECS)                |
-|          6091 | S          | SCI         | School of Engineering Sciences (SCI)                                        |
-|        879224 | C          | CBH         | School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH) |
-|          6023 | I          | ITM         | School of Industrial Engineering and Management (ITM)                       |
+| Diva_org_id | unit_code | unit_short | unit_long_en                                                                |
+|------------:|:----------|:-----------|:----------------------------------------------------------------------------|
+|        5850 | A         | ABE        | School of Architecture and the Built Environment (ABE)                      |
+|      879223 | E         | EECS       | School of Electrical Engineering and Computer Science (EECS)                |
+|        6091 | S         | SCI        | School of Engineering Sciences (SCI)                                        |
+|      879224 | C         | CBH        | School of Engineering Sciences in Chemistry, Biotechnology and Health (CBH) |
+|        6023 | I         | ITM        | School of Industrial Engineering and Management (ITM)                       |
 
 ``` r
 
@@ -95,19 +96,18 @@ kth_abm_tables[[1]] %>%
   knitr::kable(format = "pipe")
 ```
 
-| Publication\_Type\_DiVA       |     P\_frac | WoS\_coverage |
-| :---------------------------- | ----------: | ------------: |
-| Article, peer review          | 10330.64910 |     0.8814042 |
-| Article, other                |   743.83892 |     0.8160024 |
-| Conference paper, peer review |  5631.67421 |     0.5829022 |
-| Conference paper, other       |  1758.63001 |     0.0294805 |
-| Book                          |   100.54508 |     0.0000000 |
-| Anthology (editor)            |    61.76667 |     0.0000000 |
-| Chapter in book               |   927.51339 |     0.0460833 |
-| Article, book review          |    97.10000 |     0.5880536 |
-| Report                        |   643.56521 |     0.0000000 |
-| Doctorate thesis              |  1976.00000 |     0.0000000 |
-| Licentiate thesis             |   749.00000 |     0.0000000 |
+| Publication_Type_DiVA         |     P_frac | WoS_coverage |
+|:------------------------------|-----------:|-------------:|
+| Article, peer review          | 10365.0160 |    0.8876244 |
+| Article, other                |   654.5046 |    0.8230426 |
+| Conference paper, peer review |  4882.7028 |    0.6218883 |
+| Conference paper, other       |  1132.6493 |    0.0500621 |
+| Book                          |   101.9401 |    0.0049048 |
+| Chapter in book               |   958.5153 |    0.0284989 |
+| Article, book review          |    87.1000 |    0.5637199 |
+| Report                        |   451.5233 |    0.0000000 |
+| Doctoral thesis               |  1899.0000 |    0.0000000 |
+| Licentiate thesis             |   503.0000 |    0.0000000 |
 
 ## Development
 
@@ -143,23 +143,23 @@ refactorings or rewrites.
 To [release a stable version](http://r-pkgs.had.co.nz/release.html), use
 the following steps:
 
-  - Change the [version
-    number](http://r-pkgs.had.co.nz/release.html#release-version) for
-    the package in the [DESCRIPTION file](DESCRIPTION)
-  - Make a local build in order to update the documentation site (this
-    documentation is generated by `pkgdown` and does not build on cloud
-    servers through Travis. It needs therefore to be built locally since
-    the cloud servers do not have required network connectivity to
-    database and LDAP sources) by following the steps in [dev.R](dev.R)
-  - Provide docs in [NEWS.md](http://r-pkgs.had.co.nz/release.html#news)
-    for what is new in the version, preferably by linking to the
-    relevant corresponding GitHub milestone issues that have been
-    adressed in the release.
-  - Commit and push the changes using `git`
-  - Tag the release version and push the tag using `git tag -a 0.9 -m
-    "0.9"` and `git push origin 0.9` which will cause Travis to build
-    and publish the release on the [GitHub Releases tab of the
-    repository](/releases).
+- Change the [version
+  number](http://r-pkgs.had.co.nz/release.html#release-version) for the
+  package in the [DESCRIPTION file](DESCRIPTION)
+- Make a local build in order to update the documentation site (this
+  documentation is generated by `pkgdown` and does not build on cloud
+  servers through Travis. It needs therefore to be built locally since
+  the cloud servers do not have required network connectivity to
+  database and LDAP sources) by following the steps in [dev.R](dev.R)
+- Provide docs in [NEWS.md](http://r-pkgs.had.co.nz/release.html#news)
+  for what is new in the version, preferably by linking to the relevant
+  corresponding GitHub milestone issues that have been adressed in the
+  release.
+- Commit and push the changes using `git`
+- Tag the release version and push the tag using
+  `git tag -a 0.9 -m "0.9"` and `git push origin 0.9` which will cause
+  Travis to build and publish the release on the [GitHub Releases tab of
+  the repository](/releases).
 
 This versioned release can now be used elsewhere, such as in the
 [`kontarion` repo](https://github.com/KTH-Library/kontarion) when making

@@ -24,10 +24,10 @@ This returns an object which contains data for an individual researcher at KTH
 private <- abm_private_data('u1kzf1xh')
 
 # get table 1 for the kthid
-private \\%>\\% pluck('units', 'u1kzf1xh', 1)
+private \%>\% pluck('units', 'u1kzf1xh', 1)
 
 # get publications for the kthid
-private \\%>\\% pluck('units', 'u1kzf1xh', 'publications')
+private \%>\% pluck('units', 'u1kzf1xh', 'publications')
 
 }   
 }

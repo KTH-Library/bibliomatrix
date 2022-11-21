@@ -1,6 +1,10 @@
+# bibliomatrix 1.7
+
+* This version includes changes listed here: <https://github.com/KTH-Library/bibliomatrix/milestone/11?closed=1>
+
 # bibliomatrix 1.6
 
-* This version includes changes listed here: https://github.com/KTH-Library/bibliomatrix/milestone/10?closed=1
+* This version includes changes listed here: <https://github.com/KTH-Library/bibliomatrix/milestone/10?closed=1>
 
 # bibliomatrix 1.5
 

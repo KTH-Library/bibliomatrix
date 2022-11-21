@@ -64,14 +64,14 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
   
   if (missing(data)) {
     data <- data.frame()
-  } else {
-    # Do not include fields added to masterfile for other reasons than ABM
-    data <- data %>% select(-any_of(c("Ptop5", "Cf_log"))) %>% collect()
   }
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (is_loggedin == TRUE) {
+    
+    # Do not include fields added to masterfile for other reasons than ABM
+    data <- data %>% select(-any_of(c("Ptop5", "Cf_log")))
     
     embed_data <- function(path)
       paste0("data:", mime::guess_type(path), ";base64,", 
@@ -252,7 +252,7 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
       bPaginate = TRUE,
       pageLength = 10,
       scrollX = TRUE, 
-      scrollY = "100vh",
+      scrollY = FALSE,
       dom = 'fltBp',
       buttons = list(
         list(extend = "copy", title = unit_title),
@@ -261,6 +261,51 @@ abm_ui_datatable_researchers <- function(data, unit_file_label, unit_title) {
     )) %>%
     DT::formatRound(length(data), digits = 1)
 }
+
+
+#' Datatable for publication list
+#' 
+#' @param data data frame with list of publications
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools dplyr
+#' @export
+abm_ui_datatable_publications <- function(data, unit_title, unit_file_label){
+  
+  if(nrow(data) > 0){
+    filename <- paste0("ABM_publications_", unit_file_label, "_", 
+                       format(Sys.Date(), "%Y%m%d"))
+    
+    header <- eval(parse(text = getheader(names(data))))
+    
+    DT::datatable(
+      data,
+      container = header,
+      rownames = FALSE,
+      extensions = "Buttons",
+      plugins = "natural",
+      style = "bootstrap",
+      class = "compact",
+      width = "720",
+      options = list(
+        order = list(list(1, "asc"), list(0, "asc")),
+        ordering = TRUE,
+        columnDefs = list(list(type = 'natural', targets = list(0:length(data)-1))),
+        bPaginate = TRUE,
+        pageLength = 10,
+        scrollX = TRUE, 
+        scrollY = FALSE,
+        dom = 'fltBp',
+        buttons = list(
+          list(extend = "copy", title = unit_title),
+          list(extend = "csv", filename = filename, title = unit_title),
+          list(extend = "excel", filename = filename, title = unit_title))
+      ))
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
 
 #' Datatable for DiVA publications
 #' 
@@ -281,22 +326,22 @@ abm_ui_datatable_diva <- function(df_diva, unit_file_label, unit_title) {
     header <- eval(parse(text = getheader(names(diva_table)) %>% abm_format_header_divatable()))
     
     DT::datatable(diva_table,
-      container = header,
-      rownames = FALSE,
-      extensions = c("Buttons"),
-      style = "bootstrap", class = "compact", width = "720",
-      options = list(
-        ordering = FALSE,
-        bPaginate = FALSE,
-        pageLength = 100,
-        scrollX = TRUE, 
-        scrollY = "100vh",
-        dom = 'tB',
-        buttons = list(
-          list(extend = "copy", title = unit_title),
-          list(extend = "csv", filename = filename, title = unit_title),
-          list(extend = "excel", filename = filename, title = unit_title))
-        )) %>%
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  fillContainer = FALSE,
+                  style = "bootstrap", class = "compact", width = "720",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    scrollX = TRUE,
+                    scrollY = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
       DT::formatRound(2:(length(diva_table)-2), digits = 1, mark = "") %>%
       DT::formatPercentage((length(diva_table)-1):length(diva_table), digits = 1) %>%
       abm_format_rows() %>%
@@ -354,14 +399,14 @@ abm_ui_datatable_diva_full <- function(df_diva_full, unit_file_label, unit_title
     DT::datatable(diva_table,
                   container = header,
                   rownames = FALSE,
-                  extensions = c("Buttons"),
-                  style = "bootstrap", class = "compact", width = "720",
+                  fillContainer = FALSE,
+                  extensions = "Buttons",
+                  style = "bootstrap", class = "compact", width = "100%",
                   options = list(
                     ordering = FALSE,
                     bPaginate = FALSE,
-                    pageLength = 100,
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     dom = 'tB',
                     buttons = list(
                       list(extend = "copy", title = unit_title),
@@ -424,20 +469,21 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
     header <- eval(parse(text = getheader(names(df_city3y))))
     
     DT::datatable(df_city3y,
-      container = header,
-      rownames = FALSE,
-      extensions = "Buttons",
-      options = list(
-        ordering = FALSE,
-        bPaginate = FALSE,
-        scrollX = TRUE, 
-        scrollY = "100vh",
-        dom = 'tB',
-        buttons = list(
-          list(extend = "copy", title = unit_title),
-          list(extend = "csv", filename = filename, title = unit_title),
-          list(extend = "excel", filename = filename, title = unit_title))
-        )) %>%
+                  container = header,
+                  rownames = FALSE,
+                  fillContainer = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    scrollX = TRUE, 
+                    scrollY = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
       DT::formatRound(2:5, digits = 1, mark = "") %>%
       DT::formatPercentage(6, digits = 1) %>%
       abm_format_rows()
@@ -493,7 +539,7 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
         bPaginate = FALSE,
         dom = 'tB',
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -557,7 +603,7 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -614,13 +660,14 @@ abm_ui_datatable_copub <- function(df_copub, unit_file_label, unit_title) {
     DT::datatable(df_copub,
       container = header,
       rownames = FALSE,
+      fillContainer = FALSE,
       extensions = "Buttons",
       options = list(
         ordering = FALSE,
         bPaginate = FALSE,
         dom = 'tB',
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -681,7 +728,7 @@ abm_ui_datatable_oa <- function(df_oa, unit_file_label, unit_title) {
         bPaginate = FALSE,
         dom = 'tB',
         scrollX = TRUE, 
-        scrollY = "100vh",
+        scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
           list(extend = "csv", filename = filename, title = unit_title),
@@ -734,6 +781,7 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
     
     DT::datatable(df_scop_cit,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
@@ -741,7 +789,7 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -796,6 +844,7 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
     
     DT::datatable(df_scop_normcit,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
@@ -803,7 +852,7 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -867,7 +916,7 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -923,6 +972,7 @@ abm_ui_datatable_scop_copub <- function(df_scop_copub, unit_file_label, unit_tit
     
     DT::datatable(df_scop_copub,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
@@ -930,7 +980,7 @@ abm_ui_datatable_scop_copub <- function(df_scop_copub, unit_file_label, unit_tit
                     bPaginate = FALSE,
                     dom = 'tB',
                     scrollX = TRUE, 
-                    scrollY = "100vh",
+                    scrollY = FALSE,
                     buttons = list(
                       list(extend = "copy", title = unit_title),
                       list(extend = "csv", filename = filename, title = unit_title),
@@ -998,20 +1048,21 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
     header <- eval(parse(text = getheader(names(df))))
     
     as.datatable(df,
-                  container = header,
-                  rownames = FALSE,
-                  extensions = "Buttons",
-                  options = list(
-                    ordering = TRUE,
-                    bPaginate = TRUE,
-                    dom = 'ftpB',
-                    scrollX = TRUE, 
-                    scrollY = "100vh",
-                    buttons = list(
-                      list(extend = "copy", title = unit_title),
-                      list(extend = "csv", filename = filename, title = unit_title),
-                      list(extend = "excel", filename = filename, title = unit_title))
-                  ))%>% 
+                 container = header,
+                 rownames = FALSE,
+                 fillContainer = FALSE,
+                 extensions = "Buttons",
+                 options = list(
+                   ordering = TRUE,
+                   bPaginate = TRUE,
+                   dom = 'ftpB',
+                   scrollX = TRUE, 
+                   scrollY = FALSE,
+                   buttons = list(
+                     list(extend = "copy", title = unit_title),
+                     list(extend = "csv", filename = filename, title = unit_title),
+                     list(extend = "excel", filename = filename, title = unit_title))
+                 ))%>% 
       formatRound(7, digits = 1, mark = "")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -1075,22 +1126,23 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                                ))
     
     as.datatable(df2,
-                  container = header,
-                  rownames = FALSE,
-                  extensions = "Buttons",
-                  filter='top',
-                  options = list(
-                    ordering = TRUE,
-                    bPaginate = TRUE,
-                    dom = 'ftpB',
-                    scrollX = TRUE, 
-                    scrollY = "100vh",
-                    #list(targets = 2, searchable = FALSE),
-                    buttons = list(
-                      list(extend = "copy", title = unit_title),
-                      list(extend = "csv", filename = filename, title = unit_title),
-                      list(extend = "excel", filename = filename, title = unit_title))
-                  )) %>% 
+                 container = header,
+                 rownames = FALSE,
+                 fillContainer = FALSE,
+                 extensions = "Buttons",
+                 filter='top',
+                 options = list(
+                   ordering = TRUE,
+                   bPaginate = TRUE,
+                   dom = 'ftpB',
+                   scrollX = TRUE, 
+                   scrollY = FALSE,
+                   #list(targets = 2, searchable = FALSE),
+                   buttons = list(
+                     list(extend = "copy", title = unit_title),
+                     list(extend = "csv", filename = filename, title = unit_title),
+                     list(extend = "excel", filename = filename, title = unit_title))
+                 )) %>% 
       formatRound(9, digits = 1, mark = "")
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -1366,3 +1418,143 @@ abm_ui_waffle_copub <- function(df) {
     shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
   }
 }
+
+#' Datatable for SDG publicaitons by year
+#' 
+#' @param df_sdg_year data frame with data on SDG pubs
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools dplyr
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_sdg_year <- function(df_sdg_year, unit_file_label, unit_title) {
+  
+  p_sdg_frac <- share_sdg_frac <- NULL
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_sdg_year) > 0) {
+    
+    filename <- paste0("ABM_table_sdg_year_", unit_file_label, "_", current_date)
+    
+    df <- df_sdg_year %>% select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac)
+    
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    columnDefs = list(list(className = 'dt-left', targets = 0)),
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      formatRound(c(2, 3), digits = 1) %>% 
+      formatPercentage(4, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for SDG publicaitons by year
+#' 
+#' @param df_sdg_year data frame with data on SDG pubs
+#' @import htmltools dplyr
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_sdg_year <- function(df_sdg_year) {
+  
+  p_sdg_frac <- share_sdg_frac <- NULL
+  
+  if (nrow(df_sdg_year) > 0) {
+    
+    df <- df_sdg_year %>% select(Publication_Year, p_frac, p_sdg_frac, share_sdg_frac)
+    
+    df %>%
+      mutate_at(vars(2:3), function(x) sprintf("%.1f", x)) %>%
+      mutate_at(vars(4), function(x) sprintf("%.1f%%", x * 100)) %>%
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+
+#' Datatable for SDG publicaitons by goal
+#' 
+#' @param df_sdg_table data frame with data on SDG pubs
+#' @param unit_file_label the filename presented when users make use of the download button
+#' @param unit_title the label presented when users make use of the download button
+#' @import htmltools dplyr
+#' @importFrom DT formatRound formatPercentage formatStyle
+#' @export
+abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title) {
+  
+  SDG_Displayname <- NULL
+  
+  current_date <- format(Sys.Date(), "%Y%m%d")
+  
+  if (nrow(df_sdg_table) > 0) {
+    
+    filename <- paste0("ABM_table_sdg_", unit_file_label, "_", current_date)
+    
+    df <- df_sdg_table %>% filter(SDG_Displayname != 'None') %>% select(SDG_Displayname, p_frac)
+    
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
+                  container = header,
+                  rownames = FALSE,
+                  extensions = "Buttons",
+                  options = list(
+                    ordering = FALSE,
+                    bPaginate = FALSE,
+                    dom = 'tB',
+                    buttons = list(
+                      list(extend = "copy", title = unit_title),
+                      list(extend = "csv", filename = filename, title = unit_title),
+                      list(extend = "excel", filename = filename, title = unit_title))
+                  )) %>%
+      formatRound(2, digits = 1) %>%
+      abm_format_rows()
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }  
+}
+
+#' HTML table for SDG publicaitons by goal
+#' 
+#' @param df_sdg_table data frame with data on SDG pubs
+#' @import htmltools 
+#' @importFrom knitr kable
+#' @importFrom kableExtra kable_styling scroll_box
+#' @export
+abm_ui_kable_sdg_table <- function(df_sdg_table) {
+  
+  share_sdg_frac <- SDG_Displayname <- NULL
+  
+  if (nrow(df_sdg_table) > 0) {
+    
+    df <- df_sdg_table %>% filter(SDG_Displayname != 'None') %>% select(SDG_Displayname, p_frac)
+    
+    df %>% 
+      mutate_at(vars(2), function(x) sprintf("%.1f", x)) %>%
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) %>%
+      kable_styling(bootstrap_options = c("responsive")) %>%
+      scroll_box(width = "720px")
+  } else {
+    withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
+  }
+}
+

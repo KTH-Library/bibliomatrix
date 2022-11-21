@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Travis build status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
 [![R build status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
+[![R-CMD-check](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of bibliomatrix is to provide a common set of functionality for the Annual Bibliometric Monitoring efforts from the Bibliometrics team at the KTH Library.

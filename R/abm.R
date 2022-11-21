@@ -6,9 +6,9 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  y_start <- 2014
-  y_stop <- 2020
-  analysisId <- 3
+  y_start <- 2015
+  y_stop <- 2021
+  analysisId <- 6
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -921,19 +921,19 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #' public <- abm_public_data()
 #' 
 #' # get public data specifically for KTH and table 1
-#' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
+#' unit_kth <- public %>% pluck("units", "KTH", "diva")
 #'  
 #' # get public data specifically for KTH and table 1
-#' unit_kth <- public \%>\% pluck("units", "KTH", "diva")
+#' unit_kth <- public %>% pluck("units", "KTH", "diva")
 #' 
 #' # get public data for the school "I" and all five tables
-#' unit_i <- public \%>\% pluck("units", "I")
+#' unit_i <- public %>% pluck("units", "I")
 #' 
 #' # get public data for the architecture institution, table 1
-#' uc <- public \%>\% pluck("meta") \%>\% 
-#'   filter(unit_long_en == "Architecture") \%>\% pull(unit_code)
+#' uc <- public %>% pluck("meta") %>% 
+#'   filter(unit_long_en == "Architecture") %>% pull(unit_code)
 #'   
-#' public \%>\% pluck("units", uc, 1)
+#' public %>% pluck("units", uc, 1)
 #' 
 #' }   
 abm_public_data <- function(overwrite_cache = FALSE) {
@@ -1001,7 +1001,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
       scop_cit = abm_table_scop_cit(data),
       scop_normcit = abm_table_scop_normcit(data),
       scop_snip = abm_table_scop_snip(data),
-      scop_copub = abm_table_scop_copub(data)
+      scop_copub = abm_table_scop_copub(data),
+      scop_sdg_year = abm_sdg_year(data, db),
+      scop_sdg_table = abm_sdg_table(data, db)
     )
   }
   
@@ -1037,10 +1039,10 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #' private <- abm_private_data('u1kzf1xh')
 #' 
 #' # get table 1 for the kthid
-#' private \%>\% pluck('units', 'u1kzf1xh', 1)
+#' private %>% pluck('units', 'u1kzf1xh', 1)
 #' 
 #' # get publications for the kthid
-#' private \%>\% pluck('units', 'u1kzf1xh', 'publications')
+#' private %>% pluck('units', 'u1kzf1xh', 'publications')
 #' 
 #' }   
 abm_private_data <- function(unit_code) {
@@ -1076,6 +1078,8 @@ abm_private_data <- function(unit_code) {
       scop_normcit = abm_table_scop_normcit(data),
       scop_snip = abm_table_scop_snip(data),
       scop_copub = abm_table_scop_copub(data),
+      scop_sdg_year = abm_sdg_year(data, db),
+      scop_sdg_table = abm_sdg_table(data, db),
       publications = abm_publications(data)
     )
   }
@@ -1121,7 +1125,7 @@ abm_graph_diva <- function(df) {
 }
 
 
-#' Create graph over WoS coverage by year
+#' Create graph over WoS coverage by DiVA publication type
 #' 
 #' @param df a data frame at the format produced by abm_table1()
 #' @return a ggplot object
@@ -1719,6 +1723,8 @@ abm_copub_orgs <- function(con,
 #' @export
 mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
   
+  Cf_log <- Ptop5 <- Ptop25 <- NULL
+
   dept_wos<- con %>% tbl("masterfile") %>% 
             filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
             collect()
@@ -1764,3 +1770,126 @@ mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_ver
   indicator_final
 }
 
+
+#' Create table over SDGs for the selected unit
+#'
+#' @param data dataset with publications as tibble
+#' @param con a database connection to BIBMON
+#' @param analysisId id for the analysis, default from abm_config()
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return a tibble
+#' @import dplyr
+#' @importFrom stringr str_pad
+#' @export
+abm_sdg_table <- function(data,
+                          con,
+                          analysisId = abm_config()$analysis_id,
+                          analysis_start = abm_config()$start_year,
+                          analysis_stop = abm_config()$stop_year) {
+
+  SDG <- SDG_Name <- SDG_Displayname <- NULL
+  
+  sdg <- con %>%
+    tbl("abm_sdg") %>% 
+    filter(analysis_id == analysisId) %>% 
+    collect()
+  
+  data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Conference Paper", "Review")) %>%
+    select(ScopusID, Unit_Fraction) %>%
+    left_join(sdg, by = "ScopusID") %>%
+    mutate(SDG_Displayname = ifelse (!is.na(SDG), paste0("SDG ", str_pad(SDG, 2, "left", "0"), " - ", SDG_Name), "None")) %>%
+    group_by(SDG_Displayname) %>% 
+    summarise(p = n(), p_frac = sum(Unit_Fraction))
+}
+
+#' Create table over any SDG by year for the selected unit
+#'
+#' @param data dataset with publications as tibble
+#' @param con a database connection to BIBMON
+#' @param analysisId id for the analysis, default from abm_config()
+#' @param analysis_start first publication year of analysis, default from abm_config()
+#' @param analysis_stop last publication year of analysis, default from abm_config()
+#' @return a tibble
+#' @import dplyr
+#' @export
+abm_sdg_year <- function(data,
+                         con,
+                         analysisId = abm_config()$analysis_id,
+                         analysis_start = abm_config()$start_year,
+                         analysis_stop = abm_config()$stop_year) {
+  
+  any_sdg <- p_sdg <- p_sdg_frac <- NULL
+  
+  sdg <- con %>%
+    tbl("abm_sdg") %>%
+    filter(analysis_id == analysisId) %>% 
+    collect()
+  
+  data %>%
+    filter(Publication_Year >= analysis_start &
+             Publication_Year <= analysis_stop &
+             scop_doctype %in% c("Article", "Conference Paper", "Review")) %>%
+    select(ScopusID, Publication_Year, Unit_Fraction) %>%
+    mutate(any_sdg = ifelse(ScopusID %in% sdg$ScopusID, 1, 0)) %>% 
+    group_by(Publication_Year) %>% 
+    summarise(p = n(),
+              p_frac = sum(Unit_Fraction),
+              p_sdg = sum(any_sdg),
+              p_sdg_frac = sum(any_sdg * Unit_Fraction),
+              share_sdg = p_sdg / p,
+              share_sdg_frac = p_sdg_frac / p_frac)
+}
+
+
+#' Create graph over SDGs
+#' 
+#' @param df a data frame at the format produced by abm_sdg_table()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom stats reorder
+#' @importFrom scales label_number
+#' @importFrom stringr str_pad
+#' @export
+abm_graph_sdg <- function(df) {
+  
+  SDG_Displayname <- color <- goal <- goal_nr <- NULL
+
+  if(nrow(df) > 0){
+    colors <- sdg_colors() %>%
+      mutate(goal_nr = str_pad(goal, 2, "left", "0")) %>% 
+      select(goal_nr, color)
+    sdgs <- df %>%
+      filter(SDG_Displayname != 'None') %>% 
+      mutate(goal_nr = substr(SDG_Displayname, 5, 6)) %>%
+      inner_join(colors, by = "goal_nr")
+  
+  pmax <- max(sdgs$p_frac)
+
+  if (pmax > 200){
+    ymax <- trunc(1+pmax/100, 2)*100
+    ybreaks <- seq(0, ymax, 100)
+  } else {
+    ymax <- trunc(1+pmax/10, 1)*10
+    ybreaks <- seq(0, ymax, 10)
+  }
+  
+  ggplot(data = sdgs,
+         aes(x = SDG_Displayname)) +
+    geom_bar(aes(weight = p_frac), fill = sdgs$color) +
+    xlab(NULL) +
+    ylab("P (frac)") +
+    coord_flip() +
+    scale_x_discrete(limits = rev(levels(as.factor(sdgs$SDG_Displayname)))) +
+    scale_y_continuous(breaks = ybreaks,
+                       minor_breaks = NULL,
+                       limits = c(0, ymax),
+                       expand = c(0, 10)) +
+    theme(axis.text.y  = element_text(hjust = 0),
+          panel.grid.major.y = element_blank(),
+          panel.grid.minor.y = element_blank())
+  }
+}

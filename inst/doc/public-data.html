@@ -26,14 +26,7 @@
     </style>
 
 
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
+<style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
@@ -153,61 +146,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">unit_info</span>()</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 x 20</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    analysis_id Diva_org_id unit_code unit_short unit_long_en   unit_long_en_ind~</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          &lt;int&gt;       &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;            </span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1           3         177 KTH       KTH        KTH Royal Ins~ &quot;KTH Royal Insti~</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2           3        5850 A         ABE        School of Arc~ &quot;    School of A~</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3           3        5851 5851      &lt;NA&gt;       Architecture   &quot;        Archite~</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4           3        5857 5857      &lt;NA&gt;       Civil and Arc~ &quot;        Civil a~</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5           3      875600 875600    &lt;NA&gt;       Philosophy an~ &quot;        Philoso~</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6           3        5869 5869      &lt;NA&gt;       Real Estate a~ &quot;        Real Es~</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7           3       13604 13604     &lt;NA&gt;       Sustainable d~ &quot;        Sustain~</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8           3        5884 5884      &lt;NA&gt;       Urban Plannin~ &quot;        Urban P~</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9           3      879223 E         EECS       School of Ele~ &quot;    School of E~</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10           3      882650 882650    &lt;NA&gt;       Computer Scie~ &quot;        Compute~</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 25 more rows, and 14 more variables: unit_long_en_indent2 &lt;chr&gt;,</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   unit_long_sv &lt;chr&gt;, parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 35 x 19</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1         177 KTH       KTH        KTH Royal I… Kungliga Te…            NA</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2        5850 A         ABE        School of A… Skolan för …           177</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3        5851 5851      &lt;NA&gt;       Architecture Arkitektur            5850</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4        5857 5857      &lt;NA&gt;       Civil and A… Byggvetensk…          5850</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5      875600 875600    &lt;NA&gt;       Philosophy … Filosofi oc…          5850</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       13604 13604     &lt;NA&gt;       Sustainable… Hållbar utv…          5850</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8        5884 5884      &lt;NA&gt;       Urban Plann… Samhällspla…          5850</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9      879223 E         EECS       School of E… Skolan för …           177</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10      882650 882650    &lt;NA&gt;       Computer Sc… Datavetensk…        879223</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 25 more rows, and 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   sort_order &lt;int&gt;</span></span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># The unit_code is used in most functions related to ABM</span></span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id</span></span>
 <span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">unit_info</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(unit_code <span class="sc">==</span> <span class="st">&quot;I&quot;</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 20</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en   unit_long_en_inde~</span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt;       &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;             </span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           3        6023 I         ITM        School of Ind~ &quot;    School of In~</span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 19</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        6023 I         ITM        School of I… Skolan för …           177</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
 <span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   sort_order &lt;int&gt;</span></span>
 <span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">unit_info</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(unit_code <span class="sc">==</span> <span class="st">&quot;5869&quot;</span>)</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 20</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en   unit_long_en_inde~</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt;       &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;          &lt;chr&gt;             </span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           3        5869 5869      &lt;NA&gt;       Real Estate a~ &quot;        Real Est~</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 x 19</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        5869 5869      &lt;NA&gt;       Real Estate… Fastigheter…          5850</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
 <span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   sort_order &lt;int&gt;</span></span>
 <span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="co"># The org_level field is 0 for KTH, 1 for schools and 2 for departments. Info for all schools:</span></span>
 <span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="fu">unit_info</span>() <span class="sc">%&gt;%</span> <span class="fu">filter</span>(org_level <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 20</span></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en    unit_long_en_ind~</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt;       &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;            </span></span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1           3        5850 A         ABE        School of Arch~ &quot;    School of A~</span></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2           3      879223 E         EECS       School of Elec~ &quot;    School of E~</span></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3           3        6091 S         SCI        School of Engi~ &quot;    School of E~</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4           3      879224 C         CBH        School of Engi~ &quot;    School of E~</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5           3        6023 I         ITM        School of Indu~ &quot;    School of I~</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 x 19</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   Diva_org_id unit_code unit_short unit_long_en unit_long_sv parent_org_id</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;                &lt;int&gt;</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1        5850 A         ABE        School of A… Skolan för …           177</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2      879223 E         EECS       School of E… Skolan för …           177</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3        6091 S         SCI        School of E… Skolan för …           177</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4      879224 C         CBH        School of E… Skolan för …           177</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5        6023 I         ITM        School of I… Skolan för …           177</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 13 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, unit_long_en_indent1 &lt;chr&gt;,</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   unit_long_en_indent2 &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span>
 <span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span>
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   sort_order &lt;int&gt;</span></span>
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
@@ -257,10 +250,10 @@ WoS_coverage
 Article, peer review
 </td>
 <td style="text-align:right;">
-10405.87372
+10393.32988
 </td>
 <td style="text-align:right;">
-0.8866392
+0.8835230
 </td>
 </tr>
 <tr>
@@ -268,10 +261,10 @@ Article, peer review
 Article, other
 </td>
 <td style="text-align:right;">
-704.13960
+721.43333
 </td>
 <td style="text-align:right;">
-0.8277691
+0.8281790
 </td>
 </tr>
 <tr>
@@ -279,10 +272,10 @@ Article, other
 Conference paper, peer review
 </td>
 <td style="text-align:right;">
-5193.59446
+5442.42000
 </td>
 <td style="text-align:right;">
-0.6049876
+0.5841180
 </td>
 </tr>
 <tr>
@@ -290,10 +283,10 @@ Conference paper, peer review
 Conference paper, other
 </td>
 <td style="text-align:right;">
-1263.44470
+1515.36912
 </td>
 <td style="text-align:right;">
-0.0412378
+0.0284521
 </td>
 </tr>
 <tr>
@@ -301,10 +294,10 @@ Conference paper, other
 Book
 </td>
 <td style="text-align:right;">
-104.19444
+106.09270
 </td>
 <td style="text-align:right;">
-0.0047987
+0.0047129
 </td>
 </tr>
 <tr>
@@ -312,10 +305,10 @@ Book
 Anthology (editor)
 </td>
 <td style="text-align:right;">
-50.23333
+50.15000
 </td>
 <td style="text-align:right;">
-0.0066357
+0.0066467
 </td>
 </tr>
 <tr>
@@ -323,10 +316,10 @@ Anthology (editor)
 Chapter in book
 </td>
 <td style="text-align:right;">
-937.89524
+913.05607
 </td>
 <td style="text-align:right;">
-0.0321464
+0.0355217
 </td>
 </tr>
 <tr>
@@ -334,10 +327,10 @@ Chapter in book
 Article, book review
 </td>
 <td style="text-align:right;">
-90.10000
+89.60000
 </td>
 <td style="text-align:right;">
-0.5338513
+0.5535714
 </td>
 </tr>
 <tr>
@@ -345,10 +338,10 @@ Article, book review
 Proceeding (editor)
 </td>
 <td style="text-align:right;">
-30.60357
+34.81786
 </td>
 <td style="text-align:right;">
-0.0490139
+0.0287209
 </td>
 </tr>
 <tr>
@@ -356,7 +349,7 @@ Proceeding (editor)
 Report
 </td>
 <td style="text-align:right;">
-480.81582
+563.12609
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -367,7 +360,7 @@ Report
 Doctoral thesis
 </td>
 <td style="text-align:right;">
-1956.00000
+1970.00000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -378,7 +371,7 @@ Doctoral thesis
 Licentiate thesis
 </td>
 <td style="text-align:right;">
-568.00000
+667.00000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -389,7 +382,7 @@ Licentiate thesis
 Patent
 </td>
 <td style="text-align:right;">
-49.28571
+15.00000
 </td>
 <td style="text-align:right;">
 0.0000000
@@ -401,21 +394,21 @@ Patent
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that numeric unit codes need to be enclosed with ` </span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>abm_public_kth<span class="sc">$</span>units<span class="sc">$</span><span class="st">`</span><span class="at">5851</span><span class="st">`</span><span class="sc">$</span>diva</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 12 x 11</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Publication_Type_DiVA `2014` `2015` `2016` `2017` `2018` `2019` `2020` P_frac</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;                  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Article, peer review    11   11.8     8.5  12.3     5.17  6.09   3.62   58.5 </span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Article, other          NA    2       1     3      NA    NA     NA       6   </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Conference paper, pe~    6.2  7.33    1.25  4.96    2.33  7.33   3      32.4 </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Conference paper, ot~   15   11.3    11.6  10.6    10    10.5    1      70.1 </span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Book                     2    0.333   2     0.333   1     0.333 NA       6   </span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Anthology (editor)       1   NA      NA     4.33   NA     0.333  3       8.67</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Chapter in book         15.3 11      16.2  19.6    24.5  12     12     111.  </span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Article, book review     1    2      NA     2      NA     1      3       9   </span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Proceeding (editor)     NA    1      NA    NA      NA    NA     NA       1   </span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Report                   2   10.4     2.33  1.52   NA     1      0.167  17.4 </span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 Doctoral thesis          1   NA       3     5       3    NA      4      16   </span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 Licentiate thesis       NA   NA       1    NA      NA     2     NA       3   </span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ... with 2 more variables: WoS_coverage &lt;dbl&gt;, Scopus_coverage &lt;dbl&gt;</span></span></code></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    Publication_Typ… `2013` `2014` `2015` `2016` `2017` `2018` `2019` P_frac</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;             &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 Article, peer r…  3.83    11   10.8     8.5  11.8     5.17  6.09   57.2 </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 Article, other    2.17    NA    2       1     3      NA    NA       8.17</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 Conference pape… 19.4      6.2  7.33    1.25  4.96    1.33  7.08   47.5 </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 Conference pape… 17.2     15   11.3     7.62  5.62    2.5   2.5    61.8 </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 Book              0.833    2    0.333   2     0.333   1     0.333   6.83</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 Anthology (edit…  0.667    1   NA      NA     3.33   NA     0.333   5.33</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 Chapter in book   9.67    15.3  9.67   15.2  18.6    22.5   9.67  101.  </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 Article, book r… NA        1    2      NA     2      NA    NA       5   </span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 Proceeding (edi… NA       NA    1      NA    NA      NA    NA       1   </span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 Report            4.5      2   10.4     2.33  1.5    NA     1      21.8 </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 Doctoral thesis   2        1   NA       3     5       3    NA      14   </span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 Licentiate thes… NA       NA   NA       1    NA      NA     2       3   </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 2 more variables: WoS_coverage &lt;dbl&gt;, Scopus_coverage &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div id="order-of-publication-types-pubtype_order" class="section level3">
 <h3>Order of publication types (<code>pubtype_order</code>)</h3>

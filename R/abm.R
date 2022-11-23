@@ -1888,6 +1888,7 @@ abm_graph_sdg <- function(df) {
                        minor_breaks = NULL,
                        limits = c(0, ymax),
                        expand = c(0, 10)) +
+    theme_kth_osc() + 
     theme(axis.text.y  = element_text(hjust = 0),
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())

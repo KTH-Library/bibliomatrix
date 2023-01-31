@@ -180,7 +180,7 @@ abm_ui_waffle_copub(df_copub)
 Row
 --------------------------------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#overview){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 woscov <- df_coverage %>% 
@@ -416,7 +416,7 @@ abm_ui_kable_cf(df_cf)
 Row
 --------------------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#overview){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article, Proceedings paper, Review, Letter and Editorial.<br>")
@@ -441,7 +441,7 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#overview){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Web of Science publication types Article and Review.<br>")
@@ -627,7 +627,7 @@ abm_ui_kable_copub(df_copub)
 ```
 
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#co-publishing){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
@@ -754,7 +754,7 @@ abm_ui_kable_oa(df_oa)
 Row
 -------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#open-access){target="_blank" style="position:relative;float:right;"}
 
 The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
 
@@ -852,7 +852,7 @@ abm_ui_kable_scop_normcit(df_scop_normcit)
 
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis", fig.width=6}
 cat("<hr>")
@@ -872,7 +872,7 @@ if(isTRUE(unit_level >= 0)){
 cat("<hr>")
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis", fig.width=6}
 cat("<hr>")
@@ -958,7 +958,7 @@ abm_ui_datatable_scop_snip(
 abm_ui_kable_scop_snip(df_scop_snip)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
@@ -1050,7 +1050,7 @@ abm_ui_datatable_scop_copub(
 abm_ui_kable_scop_copub(df_scop_copub)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative;float:right;"}
+##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
@@ -1155,7 +1155,7 @@ abm_ui_kable_sdg_table(df_sdg_table)
 Row {data-height=100}
 ---------------------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#sdg){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
@@ -1177,7 +1177,7 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.pdf){target="_blank" style="position:relative; float:right;"}
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#sdg){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")

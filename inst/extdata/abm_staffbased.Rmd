@@ -754,27 +754,6 @@ abm_ui_kable_oa(df_oa)
 Row
 -------
 
-### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#open-access){target="_blank" style="position:relative;float:right;"}
-
-The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
-
-In summary, the different OA types can be described as follows:
-
-- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
-
-- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
-
-- *Green:* The full text has been found in an institutional repository, such as DiVA.
-
-- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
-
-
-**N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
-
-
-Row
--------
-
 ### **Overview of Open Access publications - piechart** 
 
 ```{r, fig.width=8}
@@ -794,6 +773,26 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
+Row
+-------
+
+### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#open-access){target="_blank" style="position:relative;float:right;"}
+
+The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
+
+In summary, the different OA types can be described as follows:
+
+- *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
+
+- *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
+
+- *Green:* The full text has been found in an institutional repository, such as DiVA.
+
+- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
+
+
+**N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
 
 Scopus
 =====================================

@@ -1757,10 +1757,10 @@ mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_ver
               P_full_OA = n()) %>% 
           ungroup()
   
-  indicator_final<- jcf_av %>% left_join(unit_info() %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
+  indicator_final<- jcf_av %>% left_join(unit_info(con = con, analysisId = analysis_version_id) %>% select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) %>% 
     left_join(cf_av %>% select(-Unit_Name), by=c("Unit_code" = "Unit_code")) %>%
     left_join(oa_av %>% select(-Unit_Name), by=c("Unit_code" = "Unit_code")) %>%
-    left_join(unit_info() %>% select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) %>% #to join in school name
+    left_join(unit_info(con = con, analysisId = analysis_version_id) %>% select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) %>% #to join in school name
     select(-parent_org_id) %>% relocate(unit_long_en) %>% 
     rename("Parent name" = unit_long_en)
   

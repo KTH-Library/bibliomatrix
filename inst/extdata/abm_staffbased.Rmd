@@ -30,8 +30,7 @@ library(kableExtra)
 library(glue)
 library(extrafont)
 
-colors_vb <- palette_kth(4)
-
+colors_vb <- palette_kth()
 # Retrieve result tables to use in tabs and key indicators
 
 # Get authorbased data for selected org
@@ -88,8 +87,13 @@ cat(sprintf("<style>
 .nav-tabs-custom > .nav-tabs > li > a {
   font-size: 1.5rem
 }
-</style>", unname(bibliomatrix::palette_kth()["cerise"])
-))                  
+</style>", colors_vb["cerise"]),
+'<style type="text/css">
+  body{
+  font-family: Figtree;
+}
+</style>'
+)
 
 ```  
 
@@ -122,7 +126,7 @@ abm_ui_valuebox_coverage(df_coverage, colors_vb["cerise"], "wos", unit_label)
 ### **Scopus coverage `r ifelse(!is.na(firstyear), paste(firstyear, "-", lastyear), "")`<br>(peer reviewed)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
-abm_ui_valuebox_coverage(df_coverage, unname(palette_kth()["gray"]), "scopus", unit_label)
+abm_ui_valuebox_coverage(df_coverage, colors_vb["gray"], "scopus", unit_label)
 ```
 
 

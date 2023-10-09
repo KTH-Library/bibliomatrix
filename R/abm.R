@@ -6,9 +6,9 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  y_start <- 2015
-  y_stop <- 2021
-  analysisId <- 6
+  y_start <- 2016
+  y_stop <- 2022
+  analysisId <- 7
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -1108,7 +1108,7 @@ abm_graph_diva <- function(df) {
     gather("year", "value", -Publication_Type_DiVA) %>%
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
-  colvals <- unname(ktheme::palette_kth(13, type = "qual"))
+  colvals <- unname(ktheme::palette_kth_neo(13, type = "qual"))
   
   ggplot(data = df_diva_long,
          aes(x = year)) +
@@ -1117,7 +1117,7 @@ abm_graph_diva <- function(df) {
          y = "Number of publications (fractional)",
          fill = NULL) +
     scale_fill_manual(values = colvals) +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position = "right",
           panel.grid.major.x = element_blank(),
@@ -1135,7 +1135,7 @@ abm_graph_diva <- function(df) {
 #' @export
 abm_graph_wos_coverage <- function(df) {
   
-  kth_cols <- palette_kth()
+  kth_cols <- palette_kth_neo()
   
   df <- 
     df %>% 
@@ -1154,7 +1154,7 @@ abm_graph_wos_coverage <- function(df) {
   coord_flip() +
   scale_y_continuous(labels = percent_format(accuracy = 5L), 
     breaks = seq(0, 1, 0.2), limits = c(0, 1)) +
-  theme_kth_osc(axis_text_size = rel(1.1)) + #, ticks = TRUE) +
+  theme_kth_neo(axis_text_size = rel(1.1)) + #, ticks = TRUE) +
   theme(axis.text.y  = element_text(hjust = 0),
         panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank())
@@ -1167,18 +1167,18 @@ abm_graph_wos_coverage <- function(df) {
 #' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_cf <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(2, ceiling(max(df$cf)))
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = cf, group=1)) +
     geom_point() + 
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Average Cf") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    theme_kth_osc() +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"]) +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1192,18 +1192,18 @@ abm_graph_cf <- function(df){
 #' @importFrom scales percent
 #' @export
 abm_graph_top10 <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(0.2, ceiling(max(df$top10_share)*10)/10)
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Share Top 10%") +
-    geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+    geom_hline(yintercept = 0.1, color = kth_cols["blue3"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1216,18 +1216,18 @@ abm_graph_top10 <- function(df){
 #' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_jcf <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(2, ceiling(max(df$jcf)))
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = jcf, group=1)) +
     geom_point() + 
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Average Journal Cf") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    theme_kth_osc() +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"]) +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1241,18 +1241,18 @@ abm_graph_jcf <- function(df){
 #' @importFrom scales percent
 #' @export
 abm_graph_top20 <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(0.4, ceiling(max(df$top20_share)*10)/10)
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top20_share, group=1)) +
     geom_point() +
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Share Journal Top 20%") +
-    geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
+    geom_hline(yintercept = 0.2, color = kth_cols["blue3"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1265,7 +1265,7 @@ abm_graph_top20 <- function(df){
 #' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_copub <- function(df){
-  kth_cols <- as.vector(palette_kth(4))
+  kth_cols <- as.vector(palette_kth_neo(n = 5, type = "seq"))
   df_copub_long<- df %>%
     select(interval, nonuniv_share, int_share) %>% 
     rename("Swedish Non-university" = nonuniv_share,
@@ -1280,8 +1280,8 @@ abm_graph_copub <- function(df){
     xlab("Publication years") +
     ylab("Share of publications") +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
-    scale_color_manual(values = kth_cols) +
-    theme_kth_osc() +
+    scale_color_manual(values = kth_cols[c(1,3)]) +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position="bottom",
           panel.grid.major.x = element_blank(),
@@ -1291,16 +1291,20 @@ abm_graph_copub <- function(df){
 #' Create waffle chart (5 rows, 20 columns) for any single percentage
 #' 
 #' @param pct a percentage expressed as a decimal number 0 <= pct <= 1
-#' @param col a vector with colors for filling (optional)
 #' @param label a title for the chart, displayed above the waffle (optional)
+#' @param col a vector with colors for filling (optional)
 #'
 #' @return a ggplot object
 #' @import waffle
 #' @importFrom ggplot2 theme guides element_blank
 #' @import ktheme
 #' @export
-abm_waffle_pct <- function(pct, 
-                           col = as.character(c(palette_kth()["blue"], "gray")), label = NULL){
+abm_waffle_pct <- function(pct, label, col) {
+  
+  if(missing(col)){
+    col <- palette_kth_neo(n = 7, type = "div")[c(2,4)] |> unname()
+  }
+    
   if(pct < 0.0 | pct > 1.0)
     stop("Please give a number between 0 and 1")
   yes <- round(100*pct)
@@ -1310,7 +1314,7 @@ abm_waffle_pct <- function(pct,
          colors = col,
          legend_pos = "none",
          title = label) +
-    theme_kth_osc() + 
+    theme_kth_neo() + 
     theme(
       plot.title = element_text(size = 12),
       axis.text.x = element_blank(), 
@@ -1340,19 +1344,18 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
   title <- sprintf(paste0("%s = %.", roundto, "f%s"), 
                    label, value, ifelse(pct, "%", ""))
   
-  blue <- tolower(palette_kth()["blue"])
-  cerise <- tolower(palette_kth()["cerise"])
-  
+  cols <- palette_kth_neo(n = 7, type = "div")
+
   ggplot(tibble(measure = label, target = reference, value = value)) +
     labs(title = title) +
     geom_bar(aes(x = measure, y = max(2 * target, ceiling(value))), 
-             fill = "lightgray", stat = "identity", width = 0.7, alpha = 1) +
+             fill = cols["M"], stat = "identity", width = 0.7, alpha = 1) +
     geom_bar(aes(x = measure, y = value), 
-             fill = blue,  stat = "identity", width = 0.4) +
+             fill = cols["H2"],  stat = "identity", width = 0.4) +
     geom_errorbar(aes(x = measure, y = target, ymin = target, ymax = target), 
-                  color = cerise, width = 0.9, size = 1.1) +
+                  color = cols["L2"], width = 0.9, size = 1.1) +
     coord_flip() +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(
       plot.title = element_text(size = 12, hjust = 0.05),
       axis.text.x = element_text(size = 8),
@@ -1381,7 +1384,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
 #' @export
 abm_graph_oadata_pie <- function(df){
   #unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
-  #kth_cols <- as.vector(palette_kth(4))
+  #kth_cols <- as.vector(palette_kth_neo(4))
   
   unpaywall_colors <- data.frame("Gold"="#F9BC01",
                                  "Hybrid"="#8D4EB4",
@@ -1448,7 +1451,7 @@ abm_graph_oadata_stackedarea <- function(df){
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position="bottom",
           panel.grid.major.x = element_blank(),
@@ -1462,18 +1465,18 @@ abm_graph_oadata_stackedarea <- function(df){
 #' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_scop_normcit <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(2, ceiling(max(df$fwci_x)))
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = fwci_x, group=1)) +
     geom_point() + 
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Average FWCI") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    theme_kth_osc() +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"]) +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1487,18 +1490,18 @@ abm_graph_scop_normcit <- function(df){
 #' @importFrom scales percent
 #' @export
 abm_graph_scop_top10 <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(0.2, ceiling(max(df$top10_share)*10)/10)
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top10_share, group=1)) +
     geom_point() +
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Share Top 10%") +
-    geom_hline(yintercept = 0.1, color = kth_cols["lightblue"]) +
+    geom_hline(yintercept = 0.1, color = kth_cols["blue3"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1511,18 +1514,18 @@ abm_graph_scop_top10 <- function(df){
 #' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_scop_snip <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(2, ceiling(max(df$avg_snip)))
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = avg_snip, group=1)) +
     geom_point() + 
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Average SNIP") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["lightblue"]) +
-    theme_kth_osc() +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"]) +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1536,18 +1539,18 @@ abm_graph_scop_snip <- function(df){
 #' @importFrom scales percent
 #' @export
 abm_graph_scop_top20 <- function(df){
-  kth_cols <- palette_kth(4)
+  kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(0.4, ceiling(max(df$top20_share)*10)/10)
   
   ggplot(data = df %>% filter(!interval == "Total"),
          aes(x = interval, y = top20_share, group=1)) +
     geom_point() +
-    geom_line(color = kth_cols["blue"], linetype = "dashed") +
+    geom_line(color = kth_cols["blue1"], linetype = "dashed") +
     xlab("Publication years") +
     ylab("Share Journal Top 20%") +
-    geom_hline(yintercept = 0.2, color = kth_cols["lightblue"]) +
+    geom_hline(yintercept = 0.2, color = kth_cols["blue3"]) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
-    theme_kth_osc() +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
@@ -1560,7 +1563,7 @@ abm_graph_scop_top20 <- function(df){
 #' @import ggplot2 dplyr ktheme
 #' @export
 abm_graph_scop_copub <- function(df){
-  kth_cols <- as.vector(palette_kth(4))
+  kth_cols <- as.vector(palette_kth_neo(n = 5, type = "seq"))
   df_copub_long<- df %>%
     select(interval, corp_share, int_share) %>% 
     rename("Corporate" = corp_share,
@@ -1575,8 +1578,8 @@ abm_graph_scop_copub <- function(df){
     xlab("Publication years") +
     ylab("Share of publications") +
     scale_y_continuous(labels = percent, limits = c(0, 1)) +
-    scale_color_manual(values = kth_cols) +
-    theme_kth_osc() +
+    scale_color_manual(values = kth_cols[c(1,3)]) +
+    theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position="bottom",
           panel.grid.major.x = element_blank(),
@@ -1721,12 +1724,12 @@ abm_copub_orgs <- function(con,
 #' @return tibble average citation indicators along with dept name, school name, along with full and fractional publ. counts.
 #' @import DBI dplyr
 #' @export
-mean_indicator_units<- function(con,starty,stopy, analysis_level=2, analysis_version_id){
+mean_indicator_units <- function(con,starty,stopy, analysis_level=2, analysis_version_id){
   
   Cf_log <- Ptop5 <- Ptop25 <- NULL
 
   dept_wos<- con %>% tbl("masterfile") %>% 
-            filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_year,starty,stopy), !is.na(Doc_id)) %>%
+            filter(analysis_id == analysis_version_id, level == analysis_level, between(Publication_Year,starty,stopy), !is.na(Doc_id)) %>%
             collect()
   
   dept_wos_unique<- dept_wos %>% distinct(Unit_code, Doc_id, .keep_all=TRUE) 
@@ -1888,7 +1891,7 @@ abm_graph_sdg <- function(df) {
                        minor_breaks = NULL,
                        limits = c(0, ymax),
                        expand = c(0, 10)) +
-    theme_kth_osc() + 
+    theme_kth_neo() + 
     theme(axis.text.y  = element_text(hjust = 0),
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())

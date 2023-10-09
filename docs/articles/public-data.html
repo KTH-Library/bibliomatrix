@@ -103,105 +103,102 @@ whole, its five schools and about 30 departments. The dataset, named
 <h3 id="unit-info-meta">Unit info (<code>meta</code>)<a class="anchor" aria-label="anchor" href="#unit-info-meta"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-
-<span class="co"># To show the units included in the ABM, use either abm_public_kth$meta or the unit_info() function.</span>
-<span class="co"># (If no database connection is given to unit_info), abm_public_kth$meta is used anyway)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span><span class="op">)</span>
-<span class="co">#&gt; [1] TRUE</span>
-
-<span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 20</span></span>
-<span class="co">#&gt;    analysis_id Diva_or…¹ unit_…² unit_…³ unit_…⁴ unit_…⁵ unit_…⁶ unit_…⁷ paren…⁸</span>
-<span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>           6       177 KTH     KTH     KTH Ro… <span style="color: #949494;">"</span>KTH R… KTH Ro… Kungli…      <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>           6      <span style="text-decoration: underline;">5</span>850 A       ABE     School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>           6      <span style="text-decoration: underline;">5</span>851 5851    <span style="color: #BB0000;">NA</span>      Archit… <span style="color: #949494;">"</span>     …       … Arkite…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>           6      <span style="text-decoration: underline;">5</span>857 5857    <span style="color: #BB0000;">NA</span>      Civil … <span style="color: #949494;">"</span>     …       … Byggve…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>           6    <span style="text-decoration: underline;">875</span>600 875600  <span style="color: #BB0000;">NA</span>      Philos… <span style="color: #949494;">"</span>     …       … Filoso…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>           6      <span style="text-decoration: underline;">5</span>869 5869    <span style="color: #BB0000;">NA</span>      Real E… <span style="color: #949494;">"</span>     …       … Fastig…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>           6     <span style="text-decoration: underline;">13</span>604 13604   <span style="color: #BB0000;">NA</span>      Sustai… <span style="color: #949494;">"</span>     …       … Hållba…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>           6      <span style="text-decoration: underline;">5</span>884 5884    <span style="color: #BB0000;">NA</span>      Urban … <span style="color: #949494;">"</span>     …       … Samhäl…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>           6    <span style="text-decoration: underline;">879</span>223 E       EECS    School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>           6    <span style="text-decoration: underline;">882</span>650 882650  <span style="color: #BB0000;">NA</span>      Comput… <span style="color: #949494;">"</span>     …       … Datave…  <span style="text-decoration: underline;">879</span>223</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 24 more rows, 11 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, and abbreviated variable names</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​Diva_org_id, ²​unit_code, ³​unit_short, ⁴​unit_long_en,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​unit_long_en_indent1, ⁶​unit_long_en_indent2, ⁷​unit_long_sv, ⁸​parent_org_id</span></span>
-
-<span class="co"># The unit_code is used in most functions related to ABM</span>
-<span class="co"># For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id</span>
-<span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"I"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span>
-<span class="co">#&gt;   analysis_id Diva_org…¹ unit_…² unit_…³ unit_…⁴ unit_…⁵ unit_…⁶ unit_…⁷ paren…⁸</span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           6       <span style="text-decoration: underline;">6</span>023 I       ITM     School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 11 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, and abbreviated variable names</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​Diva_org_id, ²​unit_code, ³​unit_short, ⁴​unit_long_en,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​unit_long_en_indent1, ⁶​unit_long_en_indent2, ⁷​unit_long_sv, ⁸​parent_org_id</span></span>
-<span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"5869"</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span>
-<span class="co">#&gt;   analysis_id Diva_org…¹ unit_…² unit_…³ unit_…⁴ unit_…⁵ unit_…⁶ unit_…⁷ paren…⁸</span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           6       <span style="text-decoration: underline;">5</span>869 5869    <span style="color: #BB0000;">NA</span>      Real E… <span style="color: #949494;">"</span>     …       … Fastig…    <span style="text-decoration: underline;">5</span>850</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 11 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, and abbreviated variable names</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​Diva_org_id, ²​unit_code, ³​unit_short, ⁴​unit_long_en,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​unit_long_en_indent1, ⁶​unit_long_en_indent2, ⁷​unit_long_sv, ⁸​parent_org_id</span></span>
-
-<span class="co"># The org_level field is 0 for KTH, 1 for schools and 2 for departments. Info for all schools:</span>
-<span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">org_level</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 20</span></span>
-<span class="co">#&gt;   analysis_id Diva_org…¹ unit_…² unit_…³ unit_…⁴ unit_…⁵ unit_…⁶ unit_…⁷ paren…⁸</span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           6       <span style="text-decoration: underline;">5</span>850 A       ABE     School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>           6     <span style="text-decoration: underline;">879</span>223 E       EECS    School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>           6       <span style="text-decoration: underline;">6</span>091 S       SCI     School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>           6     <span style="text-decoration: underline;">879</span>224 C       CBH     School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>           6       <span style="text-decoration: underline;">6</span>023 I       ITM     School… <span style="color: #949494;">"</span>    S…     Sc… Skolan…     177</span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 11 more variables: org_level &lt;int&gt;, active &lt;int&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;, and abbreviated variable names</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​Diva_org_id, ²​unit_code, ³​unit_short, ⁴​unit_long_en,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ⁵​unit_long_en_indent1, ⁶​unit_long_en_indent2, ⁷​unit_long_sv, ⁸​parent_org_id</span></span>
-
-<span class="co"># The parent_org_id field can be used to show all departments of some particular school</span>
-<span class="co"># (note that the parent id is always a Diva organization id).</span>
-<span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">parent_org_id</span> <span class="op">==</span> <span class="fl">6023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">unit_code</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">unit_long_en</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 2</span></span>
-<span class="co">#&gt;   unit_code unit_long_en                               </span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 6024      Energy Technology                          </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 6030      Industrial Economics and Management (Dept.)</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 879306    Learning                                   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 6038      Machine Design (Dept.)                     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 6048      Materials Science and Engineering          </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 6061      Production Engineering                     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 880900    Sustainable production development</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># To show the units included in the ABM, use either abm_public_kth$meta or the unit_info() function.</span></span>
+<span><span class="co"># (If no database connection is given to unit_info), abm_public_kth$meta is used anyway)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 20</span></span></span>
+<span><span class="co">#&gt;    analysis_id Diva_org_id unit_code unit_short unit_long_en                    </span></span>
+<span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>           6         177 KTH       KTH        KTH Royal Institute of Technolo…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>           6        <span style="text-decoration: underline;">5</span>850 A         ABE        School of Architecture and the …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>           6        <span style="text-decoration: underline;">5</span>851 5851      <span style="color: #BB0000;">NA</span>         Architecture                    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>           6        <span style="text-decoration: underline;">5</span>857 5857      <span style="color: #BB0000;">NA</span>         Civil and Architectural Enginee…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>           6      <span style="text-decoration: underline;">875</span>600 875600    <span style="color: #BB0000;">NA</span>         Philosophy and History          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>           6        <span style="text-decoration: underline;">5</span>869 5869      <span style="color: #BB0000;">NA</span>         Real Estate and Construction Ma…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>           6       <span style="text-decoration: underline;">13</span>604 13604     <span style="color: #BB0000;">NA</span>         Sustainable development, Enviro…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>           6        <span style="text-decoration: underline;">5</span>884 5884      <span style="color: #BB0000;">NA</span>         Urban Planning and Environment  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>           6      <span style="text-decoration: underline;">879</span>223 E         EECS       School of Electrical Engineerin…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>           6      <span style="text-decoration: underline;">882</span>650 882650    <span style="color: #BB0000;">NA</span>         Computer Science                </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24 more rows</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more variables: unit_long_en_indent1 &lt;chr&gt;, unit_long_en_indent2 &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   unit_long_sv &lt;chr&gt;, parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;</span></span></span>
+<span></span>
+<span><span class="co"># The unit_code is used in most functions related to ABM</span></span>
+<span><span class="co"># For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id</span></span>
+<span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"I"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span></span>
+<span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
+<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           6        <span style="text-decoration: underline;">6</span>023 I         ITM        School of I… <span style="color: #949494;">"</span>    School of Indu…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span>
+<span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"5869"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span></span>
+<span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
+<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           6        <span style="text-decoration: underline;">5</span>869 5869      <span style="color: #BB0000;">NA</span>         Real Estate… <span style="color: #949494;">"</span>        Real Estat…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span>
+<span></span>
+<span><span class="co"># The org_level field is 0 for KTH, 1 for schools and 2 for departments. Info for all schools:</span></span>
+<span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">org_level</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 20</span></span></span>
+<span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
+<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           6        <span style="text-decoration: underline;">5</span>850 A         ABE        School of A… <span style="color: #949494;">"</span>    School of Arch…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>           6      <span style="text-decoration: underline;">879</span>223 E         EECS       School of E… <span style="color: #949494;">"</span>    School of Elec…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>           6        <span style="text-decoration: underline;">6</span>091 S         SCI        School of E… <span style="color: #949494;">"</span>    School of Engi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>           6      <span style="text-decoration: underline;">879</span>224 C         CBH        School of E… <span style="color: #949494;">"</span>    School of Engi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>           6        <span style="text-decoration: underline;">6</span>023 I         ITM        School of I… <span style="color: #949494;">"</span>    School of Indu…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span>
+<span></span>
+<span><span class="co"># The parent_org_id field can be used to show all departments of some particular school</span></span>
+<span><span class="co"># (note that the parent id is always a Diva organization id).</span></span>
+<span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">parent_org_id</span> <span class="op">==</span> <span class="fl">6023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">unit_code</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">unit_long_en</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 2</span></span></span>
+<span><span class="co">#&gt;   unit_code unit_long_en                               </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 6024      Energy Technology                          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 6030      Industrial Economics and Management (Dept.)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 879306    Learning                                   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 6038      Machine Design (Dept.)                     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 6048      Materials Science and Engineering          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 6061      Production Engineering                     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> 880900    Sustainable production development</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="abm-tables-units">ABM tables (<code>units</code>)<a class="anchor" aria-label="anchor" href="#abm-tables-units"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>
-
-<span class="co"># The five tables presented in the ABM is available in abm_public_kth$units for each unit.</span>
-
-<span class="co"># Get public ABM results for KTH</span>
-<span class="va">kth_abm_tables</span> <span class="op">&lt;-</span> <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">KTH</span>
-
-<span class="co"># Show parts of table 1</span>
-<span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kth_abm_tables</span><span class="op">[[</span><span class="st">"diva"</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Publication_Type_DiVA</span>, <span class="va">P_frac</span>, <span class="va">WoS_coverage</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The five tables presented in the ABM is available in abm_public_kth$units for each unit.</span></span>
+<span></span>
+<span><span class="co"># Get public ABM results for KTH</span></span>
+<span><span class="va">kth_abm_tables</span> <span class="op">&lt;-</span> <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">KTH</span></span>
+<span></span>
+<span><span class="co"># Show parts of table 1</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kth_abm_tables</span><span class="op">[[</span><span class="st">"diva"</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Publication_Type_DiVA</span>, <span class="va">P_frac</span>, <span class="va">WoS_coverage</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -361,55 +358,54 @@ Patent
 </tbody>
 </table>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># Note that numeric unit codes need to be enclosed with ` </span>
-<span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">`5851`</span><span class="op">$</span><span class="va">diva</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 11</span></span>
-<span class="co">#&gt;    Publication…¹ `2015` `2016` `2017` `2018` `2019` `2020` `2021` P_frac WoS_c…²</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Article, pee… 11.8     8.5  12.2     5.17  7.92   3.96    4.04  53.5   0.330 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Article, oth…  2.5     2     1.75    0.5   2     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      8.75  0     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Conference p…  7.33    1.25  4.96    2.33  7.40   3       1     27.3   0.196 </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Conference p… 13.3    12.6  12.6    13    10.5    1       6     69.1   0.010<span style="text-decoration: underline;">9</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Book           0.333   2.33  0.667   1     0.833 <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      5.17  0.096<span style="text-decoration: underline;">8</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Anthology (e… <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     4.33   <span style="color: #BB0000;">NA</span>     0.667  2.83   <span style="color: #BB0000;">NA</span>      7.83  0     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Chapter in b… 11      16.3  22.6    30.5  14.5   13      11    119.    0     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Article, boo…  2      <span style="color: #BB0000;">NA</span>     2      <span style="color: #BB0000;">NA</span>     1      3      <span style="color: #BB0000;">NA</span>      8     0.5   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Proceeding (…  1      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>       1      2     0     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Report        10.4     2.33  2.52   <span style="color: #BB0000;">NA</span>     2      0.167   1     18.4   0     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Doctoral the… <span style="color: #BB0000;">NA</span>       3     5       3    <span style="color: #BB0000;">NA</span>      4       4     19     0     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Licentiate t… <span style="color: #BB0000;">NA</span>       1    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     2     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      3     0     </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 1 more variable: Scopus_coverage &lt;dbl&gt;, and abbreviated variable names</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   ¹​Publication_Type_DiVA, ²​WoS_coverage</span></span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Note that numeric unit codes need to be enclosed with ` </span></span>
+<span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">`5851`</span><span class="op">$</span><span class="va">diva</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 11</span></span></span>
+<span><span class="co">#&gt;    Publication_Type_DiVA `2015` `2016` `2017` `2018` `2019` `2020` `2021` P_frac</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Article, peer review  11.8     8.5  12.2     5.17  7.92   3.96    4.04  53.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Article, other         2.5     2     1.75    0.5   2     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      8.75</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Conference paper, pe…  7.33    1.25  4.96    2.33  7.40   3       1     27.3 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Conference paper, ot… 13.3    12.6  12.6    13    10.5    1       6     69.1 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Book                   0.333   2.33  0.667   1     0.833 <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      5.17</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Anthology (editor)    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     4.33   <span style="color: #BB0000;">NA</span>     0.667  2.83   <span style="color: #BB0000;">NA</span>      7.83</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Chapter in book       11      16.3  22.6    30.5  14.5   13      11    119.  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Article, book review   2      <span style="color: #BB0000;">NA</span>     2      <span style="color: #BB0000;">NA</span>     1      3      <span style="color: #BB0000;">NA</span>      8   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Proceeding (editor)    1      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>       1      2   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Report                10.4     2.33  2.52   <span style="color: #BB0000;">NA</span>     2      0.167   1     18.4 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Doctoral thesis       <span style="color: #BB0000;">NA</span>       3     5       3    <span style="color: #BB0000;">NA</span>      4       4     19   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Licentiate thesis     <span style="color: #BB0000;">NA</span>       1    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     2     <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      3   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: WoS_coverage &lt;dbl&gt;, Scopus_coverage &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="order-of-publication-types-pubtype_order">Order of publication types (<code>pubtype_order</code>)<a class="anchor" aria-label="anchor" href="#order-of-publication-types-pubtype_order"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span>
-
-<span class="co"># The only current use for the pubtype_order part of the public data is to present</span>
-<span class="co"># the DiVA publication type numbers in a consistent manner</span>
-<span class="va">abm_public_kth</span><span class="op">$</span><span class="va">pubtype_order</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 16 × 2</span></span>
-<span class="co">#&gt;    pt_ordning diva_publication_type        </span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          1 Article, peer review         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>          2 Article, other               </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>          3 Conference paper, peer review</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>          4 Conference paper, other      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>          5 Book                         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>          6 Anthology (editor)           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>          7 Chapter in book              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>          8 Article, book review         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>          9 Proceeding (editor)          </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>         10 Report                       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span>         11 Doctoral thesis              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span>         12 Licentiate thesis            </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">13</span>         13 Patent                       </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">14</span>         14 Popular science etc.         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">15</span>         15 Other                        </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">16</span>         16 Not published material</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The only current use for the pubtype_order part of the public data is to present</span></span>
+<span><span class="co"># the DiVA publication type numbers in a consistent manner</span></span>
+<span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">pubtype_order</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 16 × 2</span></span></span>
+<span><span class="co">#&gt;    pt_ordning diva_publication_type        </span></span>
+<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          1 Article, peer review         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>          2 Article, other               </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>          3 Conference paper, peer review</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>          4 Conference paper, other      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>          5 Book                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>          6 Anthology (editor)           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>          7 Chapter in book              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>          8 Article, book review         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>          9 Proceeding (editor)          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>         10 Report                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>         11 Doctoral thesis              </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>         12 Licentiate thesis            </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>         13 Patent                       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>         14 Popular science etc.         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>         15 Other                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>         16 Not published material</span></span></code></pre></div>
 </div>
   </div>
 
@@ -428,7 +424,7 @@ Patent
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

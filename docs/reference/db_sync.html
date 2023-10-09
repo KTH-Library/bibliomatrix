@@ -72,13 +72,13 @@ memory exceptions when moving large tables.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">db_sync</span><span class="op">(</span>
-  <span class="va">tables_included</span>,
-  tables_excluded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OA_status"</span>, <span class="st">"Document"</span>, <span class="st">"LastFailedJobs"</span>, <span class="st">"DIVA_School_Dept"</span>,
-    <span class="st">"Diva_departments"</span>, <span class="st">"Doc_statistics"</span>, <span class="st">"masterfile_full"</span>, <span class="st">"masterfile_2021jan"</span>,
-    <span class="st">"masterfile_2019dec"</span><span class="op">)</span>,
-  overwrite_existing <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">db_sync</span><span class="op">(</span></span>
+<span>  <span class="va">tables_included</span>,</span>
+<span>  tables_excluded <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"OA_status"</span>, <span class="st">"Document"</span>, <span class="st">"LastFailedJobs"</span>, <span class="st">"DIVA_School_Dept"</span>,</span>
+<span>    <span class="st">"Diva_departments"</span>, <span class="st">"Doc_statistics"</span>, <span class="st">"masterfile_full"</span>, <span class="st">"masterfile_2021jan"</span>,</span>
+<span>    <span class="st">"masterfile_2019dec"</span><span class="op">)</span>,</span>
+<span>  overwrite_existing <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,17 +86,24 @@ memory exceptions when moving large tables.</p>
     <dl><dt>tables_included</dt>
 <dd><p>a vector of table names in the source db to be 
 included, by default all tables are included except those excluded</p></dd>
+
+
 <dt>tables_excluded</dt>
 <dd><p>a vector of table names in the source db to be
 excluded, by default a number of tables are excluded, specify NULL
 to not explicitly exclude any tables</p></dd>
+
+
 <dt>overwrite_existing</dt>
 <dd><p>a logical to indicate whether destination tables
 should be overwritten if they already exist</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>invisible result with vector of boolean status flags for synced tables</p>
+    
+
+<p>invisible result with vector of boolean status flags for synced tables</p>
     </div>
 
   </div>
@@ -111,7 +118,7 @@ should be overwritten if they already exist</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

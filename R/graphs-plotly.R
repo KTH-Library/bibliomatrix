@@ -137,9 +137,14 @@ abm_bullet_plotly2 <- function(
 #' @import ggplot2 ktheme
 #' @importFrom plotly add_trace config layout ggplotly
 #' @export
-abm_waffle_pct_plotly <- function(pct, col = as.character(c(palette_kth()["blue"], "gray")), label = NULL) {
+abm_waffle_pct_plotly <- function(pct, col, label = NULL) {
+
+  if(missing(col)){
+    col <- palette_kth_neo(n = 7, type = "div")[c(2,4)] |> unname()
+  }
+  
   p1 <- 
-    abm_waffle_pct(pct, col, label) + 
+    abm_waffle_pct(pct, label, col) + 
     theme(panel.spacing = unit(0, "lines")) +
     ggplot2::theme(
       panel.grid.major.y = element_blank(),

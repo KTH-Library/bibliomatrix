@@ -3,7 +3,7 @@ title: "KTH Author-based ABM"
 output: 
   flexdashboard::flex_dashboard:
     logo: beta-logo.png
-    favicon: kth-logo.png
+    favicon: KTH_logo_RGB_svart.png
     orientation: rows
     vertical_layout: fill
 params:

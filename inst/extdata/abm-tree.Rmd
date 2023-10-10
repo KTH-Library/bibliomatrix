@@ -4,7 +4,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: rows
     vertical_layout: scroll
-    favicon: kth-logo.png
+    favicon: KTH_logo_RGB_svart.png
     source_code: embed
 ---
 

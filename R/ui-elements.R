@@ -1021,14 +1021,14 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
 #' @import htmltools
 #' @importFrom dplyr arrange
 #' @importFrom formattable formattable color_bar as.datatable proportion
-#' @importFrom ktheme palette_kth
+#' @importFrom ktheme palette_kth_neo
 #' @export
 abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
-  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  lightblue <- unname(palette_kth_neo()["lightblue"])
+  lightgrey <- unname(palette_kth_neo()["gray"])
   
   if (nrow(df_copub_countries) > 0) {
 
@@ -1099,7 +1099,7 @@ abm_ui_kable_copub_countries <- function(df_copub_countries) {
 #' @import htmltools
 #' @importFrom dplyr select arrange
 #' @importFrom formattable formattable color_bar as.datatable proportion
-#' @importFrom ktheme palette_kth
+#' @importFrom ktheme palette_kth_neo
 #' @export
 abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
   
@@ -1107,8 +1107,8 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   df <- df_copub_orgs %>% select(-unified_org_id) %>% rename(`Publications (frac)` = kth_frac)
   
-  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
-  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  lightblue <- unname(palette_kth_neo()["lightblue"])
+  lightgrey <- unname(palette_kth_neo()["gray"])
   
   df$org_type <- as.factor(df$org_type)
   

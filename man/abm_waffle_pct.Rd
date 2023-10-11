@@ -4,18 +4,14 @@
 \alias{abm_waffle_pct}
 \title{Create waffle chart (5 rows, 20 columns) for any single percentage}
 \usage{
-abm_waffle_pct(
-  pct,
-  col = as.character(c(palette_kth()["blue"], "gray")),
-  label = NULL
-)
+abm_waffle_pct(pct, label, col)
 }
 \arguments{
 \item{pct}{a percentage expressed as a decimal number 0 <= pct <= 1}
 
-\item{col}{a vector with colors for filling (optional)}
-
 \item{label}{a title for the chart, displayed above the waffle (optional)}
+
+\item{col}{a vector with colors for filling (optional)}
 }
 \value{
 a ggplot object

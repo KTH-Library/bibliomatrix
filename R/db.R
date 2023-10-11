@@ -46,31 +46,15 @@ con_bib_mssql <- function()
     drv <- Sys.getenv("SQL_SERVER_DRIVER")
   }
 
-  
-  if(startsWith(Sys.getenv("OS"), "Windows")) {
-    # encoding Windows-1252 curiously gives neat UTF-8 output from DB on Windows
-    # (while encoding UTF-8 does not)
-    dbConnect(
-      odbc(),
-      driver = drv,
-      Port = 1433,
-      server = Sys.getenv("DBHOST"),
-      database = Sys.getenv("DBNAME"),
-      UID = Sys.getenv("DBUSER"),
-      PWD = Sys.getenv("DBPASS"),
-      timeout = timeout,
-      encoding = "Windows-1252")
-  } else {
-    dbConnect(
-      odbc(),
-      driver = drv,
-      Port = 1433,
-      server = Sys.getenv("DBHOST"),
-      database = Sys.getenv("DBNAME"),
-      UID = Sys.getenv("DBUSER"),
-      PWD = Sys.getenv("DBPASS"),
-      timeout = timeout)
-  }
+  dbConnect(
+    odbc(),
+    driver = drv,
+    Port = 1433,
+    server = Sys.getenv("DBHOST"),
+    database = Sys.getenv("DBNAME"),
+    UID = Sys.getenv("DBUSER"),
+    PWD = Sys.getenv("DBPASS"),
+    timeout = timeout)
 }
 
 #' Connection to Bibliometrics data source for KTH using SQLite3 db
@@ -337,6 +321,7 @@ pool_bib <- function(source_type = c("sqlite", "mssql"))
 #' @import DBI odbc pool
 #' @noRd
 pool_bib_mssql <- function() {
+
   envvars <- c("DBHOST", "DBNAME", "DBUSER", "DBPASS")
   
   if (any(Sys.getenv(envvars) == "")) {
@@ -344,30 +329,29 @@ pool_bib_mssql <- function() {
     stop("Please use an .Renviron with these envvars set", paste(envvars))
   }
   
-  if(startsWith(Sys.getenv("OS"), "Windows")) {
-    # encoding Windows-1252 curiously gives neat UTF-8 output from DB on Windows
-    # (while encoding UTF-8 does not)
-    dbPool(
-      odbc(),
-      driver = "ODBC Driver 17 for SQL Server",
-      Port = 1433,
-      server = Sys.getenv("DBHOST"),
-      database = Sys.getenv("DBNAME"),
-      UID = Sys.getenv("DBUSER"),
-      PWD = Sys.getenv("DBPASS"),
-      timeout = 30,
-      encoding = "Windows-1252")
+  if (Sys.getenv("DBTIMEOUT") == "") {
+    timeout <- 60
   } else {
-    dbPool(
-      odbc(),
-      driver = "ODBC Driver 17 for SQL Server",
-      Port = 1433,
-      server = Sys.getenv("DBHOST"),
-      database = Sys.getenv("DBNAME"),
-      UID = Sys.getenv("DBUSER"),
-      PWD = Sys.getenv("DBPASS"),
-      timeout = 30)
+    timeout <- strtoi(Sys.getenv("DBTIMEOUT"))
+    is_valid <- !is.na(timeout)
+    stopifnot(is_valid)
   }
+  
+  if (Sys.getenv("SQL_SERVER_DRIVER") == "") {
+    drv <- "ODBC Driver 17 for SQL Server"
+  } else {
+    drv <- Sys.getenv("SQL_SERVER_DRIVER")
+  }
+  
+  dbPool(
+    odbc(),
+    driver = drv,
+    Port = 1433,
+    server = Sys.getenv("DBHOST"),
+    database = Sys.getenv("DBNAME"),
+    UID = Sys.getenv("DBUSER"),
+    PWD = Sys.getenv("DBPASS"),
+    timeout = timeout)
 }
 
 #' Connection pool to Bibliometrics data source for KTH using SQLite3 db

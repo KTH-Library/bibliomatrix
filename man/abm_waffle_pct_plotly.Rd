@@ -4,11 +4,7 @@
 \alias{abm_waffle_pct_plotly}
 \title{Create alternate waffle chart (with plotly)}
 \usage{
-abm_waffle_pct_plotly(
-  pct,
-  col = as.character(c(palette_kth()["blue"], "gray")),
-  label = NULL
-)
+abm_waffle_pct_plotly(pct, col, label = NULL)
 }
 \arguments{
 \item{pct}{a percentage expressed as a decimal number 0 <= pct <= 1}

@@ -131,8 +131,9 @@ server <- function(input, output, session) {
                 style = "padding-top:7px; padding-bottom:7px;",
                 tags$li(class = "dropdown", 
                     tags$a(href = ABM_URL_PRIVATE, 
+                           style = "padding:7px;",
                         class = "button button-primary button-sm",
-                        "Use your KTH account", icon("sign-in"), " ... ", img(src = "kth-logo.png", height = 30, width = 30),
+                        "Use your KTH account", icon("sign-in"), " ... ", img(src = "KTH_logo_RGB_bla.png", height = 30, width = 30),
                         title = "Switch to view your own publications if you are a KTH researcher")
                 )
             )            

@@ -1027,8 +1027,9 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  lightblue <- unname(palette_kth_neo()["lightblue"])
-  lightgrey <- unname(palette_kth_neo()["gray"])
+  pal <- palette_kth_neo(17)
+  lightblue <- unname(pal["lightteal"])
+  lightgrey <- unname(pal["sand"])
   
   if (nrow(df_copub_countries) > 0) {
 
@@ -1107,8 +1108,9 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   df <- df_copub_orgs %>% select(-unified_org_id) %>% rename(`Publications (frac)` = kth_frac)
   
-  lightblue <- unname(palette_kth_neo()["lightblue"])
-  lightgrey <- unname(palette_kth_neo()["gray"])
+  pal <- palette_kth_neo(17)
+  lightblue <- unname(pal["lightteal"])
+  lightgrey <- unname(pal["sand"])
   
   df$org_type <- as.factor(df$org_type)
   

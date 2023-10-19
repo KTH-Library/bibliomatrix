@@ -13,6 +13,20 @@ params:
   embed_data: FALSE
 ---
 
+```{css echo=FALSE}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/figtree-v5-latin_latin-ext-regular.woff2') format('woff');
+}
+
+body {
+  font-family: 'Figtree';
+}
+```
+
+
 ```{r setup, include=FALSE}
 # unit_codes for testing:
 # 
@@ -143,13 +157,6 @@ abm_unit_title <- paste0("ABM: ", unit_label)
 
 STATIC <- "https://kth-library.github.io/abm"
 ```
-
-<style type = "text/css">
-  body{
-  font-family: Figtree;
-}
-</style>
-
 
 <style>
 <!-- TODO: this does not work in responsive mobile mode -->

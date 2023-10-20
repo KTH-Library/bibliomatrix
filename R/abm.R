@@ -430,16 +430,16 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
     group_by(Publication_Year) %>%
     summarise(P_tot=n(),
               oa_count=sum(as.logical(is_oa), na.rm=TRUE),
+              diamond_count=sum(as.logical(oa_status=="diamond"), na.rm=TRUE),
               gold_count=sum(as.logical(oa_status=="gold"), na.rm=TRUE),
               hybrid_count=sum(as.logical(oa_status=="hybrid"), na.rm=TRUE),
               green_count=sum(as.logical(oa_status=="green"), na.rm=TRUE),
-              bronze_count=sum(as.logical(oa_status=="bronze"), na.rm=TRUE),
               closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
               oa_share=mean(as.logical(is_oa), na.rm=TRUE)) %>%
     ungroup() %>%
     mutate(Publication_Year_ch = as.character(Publication_Year)) %>%
     arrange(Publication_Year_ch) %>%
-    select(Publication_Year_ch, P_tot, oa_count, gold_count, hybrid_count, green_count, bronze_count, closed_count, oa_share)
+    select(Publication_Year_ch, P_tot, oa_count, diamond_count, gold_count, hybrid_count, green_count, closed_count, oa_share)
   
   # Insert blank years
   years_to_add <- table1[!(as.character(as.numeric(table1$Publication_Year_ch)+1) %in% table1$Publication_Year_ch)
@@ -461,10 +461,10 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
       table1 <- table1 %>% rbind(data.frame(Publication_Year_ch = as.character(year),
                                             P_tot = integer(1),
                                             oa_count = integer(1),
+                                            diamond_count = integer(1),
                                             gold_count = integer(1),
                                             hybrid_count = integer(1),
                                             green_count = integer(1),
-                                            bronze_count = integer(1),
                                             closed_count = integer(1),
                                             oa_share = 0))
     }
@@ -481,10 +481,10 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
     summarise(Publication_Year_ch="Total",
               P_tot=sum(P_tot),
               oa_count=sum(oa_count),
+              diamond_count=sum(diamond_count),
               gold_count=sum(gold_count),
               hybrid_count=sum(hybrid_count),
               green_count=sum(green_count),
-              bronze_count=sum(bronze_count),
               closed_count=sum(closed_count),
               oa_share=sum(oa_count)/sum(P_tot))
   
@@ -1373,43 +1373,33 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
     )
 }
 
-
-
 #' Create pie chart for Open Access data
 #' 
 #' @param df a data frame at the format produced by abm_table6()
 #' @return a pie chart object
 #' @import ggplot2 dplyr plotrix
 #' @importFrom graphics pie
+#' @importFrom ktheme unpaywall_colors
 #' @export
 abm_graph_oadata_pie <- function(df){
-  #unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
-  #kth_cols <- as.vector(palette_kth_neo(4))
-  
-  unpaywall_colors <- data.frame("Gold"="#F9BC01",
-                                 "Hybrid"="#8D4EB4",
-                                 "Green"="#20E168",
-                                 "Bronze"="#CD7F32",
-                                 "Closed"="#BBBBBB") %>%
-    rename("Not OA"="Closed")
   
   df_oa_graphdata <- df %>%
     filter(Publication_Year_ch == "Total") %>%
-    select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
-    rename("Gold" = gold_count,
+    select(diamond_count, gold_count, hybrid_count, green_count, closed_count) %>%
+    rename("Diamond" = diamond_count,
+           "Gold" = gold_count,
            "Hybrid" = hybrid_count,
            "Green" = green_count,
-           "Bronze" = bronze_count,
            "Not OA" = closed_count)
   
   percentages <- df %>%
     filter(Publication_Year_ch == "Total") %>%
-    mutate(gold_count = 100*gold_count/P_tot,
+    mutate(diamond_count = 100*diamond_count/P_tot,
+           gold_count = 100*gold_count/P_tot,
            hybrid_count = 100*hybrid_count/P_tot,
            green_count = 100*green_count/P_tot,
-           bronze_count = 100*bronze_count/P_tot,
            closed_count = 100*closed_count/P_tot) %>%
-    select(gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
+    select(diamond_count, gold_count, hybrid_count, green_count, closed_count) %>%
     t() %>%
     format(digits=2) %>%
     t()
@@ -1417,14 +1407,13 @@ abm_graph_oadata_pie <- function(df){
   #Remove empty categories
   df_oa_graphdata <- df_oa_graphdata[,t(df_oa_graphdata)[,1]!=0]
   percentages <- percentages[,t(percentages)[,1] %>% as.numeric() != 0]
-  unpaywall_colors <- unpaywall_colors %>%
-    names(.) %in% names(df_oa_graphdata) %>%
-    unpaywall_colors[.] %>%
-    t()
+  unpaywall_cols <- unpaywall_colors() %>%
+    filter(oa_status %in% names(df_oa_graphdata)) %>%
+    pull(oa_color)
   
   labls <- paste(names(df_oa_graphdata), "\n", percentages, " %", separator="")
-  pie(t(df_oa_graphdata),  labels = c("","","","","",""), col = unpaywall_colors, cex = 0.8, radius = 0.8)
-  pieangles <- floating.pie(x=t(df_oa_graphdata), col = unpaywall_colors)
+  pie(t(df_oa_graphdata),  labels = c("","","","","",""), col = unpaywall_cols, cex = 0.8, radius = 0.8)
+  pieangles <- floating.pie(x=t(df_oa_graphdata), col = unpaywall_cols)
   pie.labels(labels = labls, radius = 1.1, angles = pieangles, cex = 0.8)
 }
 
@@ -1436,18 +1425,20 @@ abm_graph_oadata_pie <- function(df){
 #' @import ggplot2 dplyr reshape2 ktheme
 #' @export
 abm_graph_oadata_stackedarea <- function(df){
-  unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
+ 
+  unpaywall_cols <- unpaywall_colors() |> pull(oa_color)
+
   df_oa_graphdata <- df %>%
     filter(Publication_Year_ch != "Total") %>%
-    select(Publication_Year_ch, gold_count, hybrid_count, green_count, bronze_count, closed_count) %>%
-    rename("Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Bronze" = bronze_count, "Not OA" = closed_count)
+    select(Publication_Year_ch, diamond_count, gold_count, hybrid_count, green_count, closed_count) %>%
+    rename("Diamond" = diamond_count, "Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Not OA" = closed_count)
   
   xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year_ch") %>%
     rename("OA type:"=variable)
   
   ggplot(xymelt, aes(x = Publication_Year_ch, y = value, fill = `OA type:`, group = `OA type:`)) +
-    scale_fill_manual(values=unpaywall_cols) + 
-    geom_area() +
+    scale_fill_manual(values = unpaywall_cols) + 
+    geom_area() + 
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +

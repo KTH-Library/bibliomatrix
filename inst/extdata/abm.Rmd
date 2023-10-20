@@ -874,14 +874,13 @@ The Open Access type of the publications was fetched from the [Unpaywall REST AP
 
 In summary, the different OA types can be described as follows:
 
+- *Diamond*: The full text has been found on a publisher website, there is no article publication cost.
+
 - *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
 
 - *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
 
 - *Green:* The full text has been found in an institutional repository, such as DiVA.
-
-- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
-
 
 **N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
 

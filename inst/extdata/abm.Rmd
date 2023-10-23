@@ -13,6 +13,20 @@ params:
   embed_data: FALSE
 ---
 
+```{css echo=FALSE}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/figtree-v5-latin_latin-ext-regular.woff2') format('woff2');
+}
+
+body {
+  font-family: 'Figtree';
+}
+```
+
+
 ```{r setup, include=FALSE}
 # unit_codes for testing:
 # 
@@ -144,13 +158,6 @@ abm_unit_title <- paste0("ABM: ", unit_label)
 STATIC <- "https://kth-library.github.io/abm"
 ```
 
-<style type = "text/css">
-  body{
-  font-family: Figtree;
-}
-</style>
-
-
 <style>
 <!-- TODO: this does not work in responsive mobile mode -->
 .navbar-header {
@@ -159,6 +166,9 @@ STATIC <- "https://kth-library.github.io/abm"
 }
 .nav-tabs-custom > .nav-tabs > li > a {
   font-size: 1.5rem
+}
+.navbar {
+  background-color:#004791;
 }
 </style>
 
@@ -856,14 +866,13 @@ The Open Access type of the publications was fetched from the [Unpaywall REST AP
 
 In summary, the different OA types can be described as follows:
 
+- *Diamond*: The full text has been found on a publisher website, there is no article publication cost.
+
 - *Gold:* The full text has been found on a publisher website, in a journal that is fully OA.
 
 - *Hybrid:* The full text has been found on a publisher website, in a journal that is not fully OA.
 
 - *Green:* The full text has been found in an institutional repository, such as DiVA.
-
-- *Bronze:* The full text has been found on a publisher website but no OA license could be identified.
-
 
 **N.B.**: This table is based on peer-reviewed publications for which Unpaywall could determine the OA type (necessary condition: have a DOI number). Unpaywall's method is empirical and does not strictly equate to copyright license. As a consequence, the OA status of a given publication may vary with time --- for example turning from *"Not OA"* to *"Green"* when a full text is added to DiVA.
 

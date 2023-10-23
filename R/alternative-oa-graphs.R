@@ -11,10 +11,10 @@
 #' @export
 abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph")) {
 
-  unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
-  unpaywall_labels <- c("Gold", "Hybrid", "Green", "Bronze", "Not OA")
-  unpaywall <- setNames(unpaywall_cols, unpaywall_labels)
-  
+  colors_df <- unpaywall_colors()
+  unpaywall <- colors_df$oa_color
+  names(unpaywall) <- colors_df$oa_status 
+
   t1 <- 
     df %>% 
     filter(Publication_Year_ch == "Total") %>%
@@ -89,9 +89,9 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
 #' @export
 abm_graph_oadata_share <- function(df, type = c("ggplot", "plotly", "ggiraph")) {
   
-  unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
-  unpaywall_labels <- c("Gold", "Hybrid", "Green", "Bronze", "Not OA")
-  unpaywall <- setNames(unpaywall_cols, unpaywall_labels)
+  colors_df <- unpaywall_colors()
+  unpaywall <- colors_df$oa_color
+  names(unpaywall) <- colors_df$oa_status 
   
   t1 <- 
     df %>% 
@@ -172,9 +172,9 @@ abm_graph_oadata_stackedarea_plotly <- function(df) {
 #' @export
 abm_graph_oadata_linegraphs <- function(df, type = c("ggplot", "plotly", "ggiraph")) {
 
-  unpaywall_cols <- c("#F9BC01", "#8D4EB4", "#20E168", "#CD7F32", "#BBBBBB")
-  unpaywall_labels <- c("Gold", "Hybrid", "Green", "Bronze", "Not OA")
-  unpaywall <- setNames(unpaywall_cols, unpaywall_labels)
+  colors_df <- unpaywall_colors()
+  unpaywall <- colors_df$oa_color
+  names(unpaywall) <- colors_df$oa_status 
   
   t11 <- 
     df %>% 
@@ -188,7 +188,7 @@ abm_graph_oadata_linegraphs <- function(df, type = c("ggplot", "plotly", "ggirap
     ) %>%
     mutate(series = tools::toTitleCase(series)) %>%
     mutate(series = recode(series, Oa = "Total OA", Total = "Grand Total", Closed = "Total Non OA")) %>%
-    mutate(is_oa = ifelse(series %in% c("Gold", "Green", "Hybrid", "Bronze"), "Type of OA", "Totals"))
+    mutate(is_oa = ifelse(series %in% c("Diamond", "Gold", "Green", "Hybrid"), "Type of OA", "Totals"))
   
   t11$series <- factor(t11$series, levels = rev(c(names(unpaywall), "Total Non OA", "Total OA", "Grand Total")))
   

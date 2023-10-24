@@ -332,16 +332,6 @@ abm_ui_button_publist(
 if (params$is_employee == TRUE) {
   abm_ui_button_diva()
 }
-
-# Altmetric Explorer button  
-if (params$embed_data == TRUE && params$is_employee != TRUE) {
-  abm_ui_button_altmetric(
-    unit_meta$altmetric_count, 
-    unit_meta$altmetric_href, 
-    unit_label
-  )
-}
-
 ```
 
 Publication summary

@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ bibliomatrix</a>.</em></p>
 Publication_Type_DiVA
 </th>
 <th style="text-align:right;">
-2016
+2013
 </th>
 </tr></thead>
 <tbody>
@@ -161,7 +161,7 @@ Publication_Type_DiVA
 Article, peer review
 </td>
 <td style="text-align:right;">
-11878.6301
+7349.10529
 </td>
 </tr>
 <tr>
@@ -169,7 +169,7 @@ Article, peer review
 Article, other
 </td>
 <td style="text-align:right;">
-965.8736
+413.13539
 </td>
 </tr>
 <tr>
@@ -177,7 +177,7 @@ Article, other
 Conference paper, peer review
 </td>
 <td style="text-align:right;">
-5622.0315
+4688.37239
 </td>
 </tr>
 <tr>
@@ -185,7 +185,7 @@ Conference paper, peer review
 Conference paper, other
 </td>
 <td style="text-align:right;">
-1612.3000
+1894.90220
 </td>
 </tr>
 <tr>
@@ -193,7 +193,7 @@ Conference paper, other
 Book
 </td>
 <td style="text-align:right;">
-160.7833
+93.32461
 </td>
 </tr>
 </tbody>
@@ -213,10 +213,10 @@ Book
 <span><span class="co"># what about performance?</span></span>
 <span><span class="fu"><a href="http://bench.r-lib.org/reference/bench_time.html" class="external-link">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">bibmon</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; process    real </span></span>
-<span><span class="co">#&gt;   15.3s   20.8s</span></span>
+<span><span class="co">#&gt;   13.8s   21.6s</span></span>
 <span><span class="fu"><a href="http://bench.r-lib.org/reference/bench_time.html" class="external-link">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">localdb</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; process    real </span></span>
-<span><span class="co">#&gt;   4.19s   4.19s</span></span>
+<span><span class="co">#&gt;   9.72s   10.2s</span></span>
 <span></span>
 <span><span class="fu"><a href="http://rstudio.github.io/pool/reference/Pool-class.html" class="external-link">poolClose</a></span><span class="op">(</span><span class="va">bibmon</span><span class="op">)</span></span>
 <span><span class="fu"><a href="http://rstudio.github.io/pool/reference/Pool-class.html" class="external-link">poolClose</a></span><span class="op">(</span><span class="va">localdb</span><span class="op">)</span></span></code></pre></div>

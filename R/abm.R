@@ -6,7 +6,7 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  y_start <- 2016
+  y_start <- 2013
   y_stop <- 2022
   analysisId <- 7
   

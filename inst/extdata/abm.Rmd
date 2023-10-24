@@ -445,7 +445,7 @@ Citation impact
 
 #### `r unit_label`
 
-Row {data-height=350}
+Row {data-height=500}
 ---------------------
 
 ### **Citations 3-year window, fractional counts** {.no-mobile}
@@ -563,7 +563,7 @@ Row
 
 ### **Average field normalized citations (Cf)**
 
-```{r}
+```{r, fig.width=8, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   abm_graph_cf(df_cf)
 } else {
@@ -574,7 +574,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 
 ### **Share of publications among Top 10% cited**
 
-```{r}
+```{r, fig.width=8, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   abm_graph_top10(df_cf)
 } else {
@@ -588,7 +588,7 @@ Journal impact
 
 #### `r unit_label`
 
-Row {data-height=350}
+Row {data-height=500}
 ---------------------
 
 ### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
@@ -655,7 +655,7 @@ Row
 
 ### **Field normalized journal impact (JCf)**
 
-```{r}
+```{r, fig.width=9, fig.height=4}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_jcf(df_jcf)
 } else {
@@ -666,7 +666,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ### **Share of publications in Top 20% journals**
 
-```{r}
+```{r, fig.width=9, fig.height=4}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_top20(df_jcf)
 } else {
@@ -745,7 +745,7 @@ cat("<hr>")
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
 
 ##### **International and Swedish non-university co&#8209;publication**
-```{r, fig.width=6, fig.height=4}
+```{r, fig.width=9, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
@@ -802,7 +802,7 @@ Open Access
 
 #### `r unit_label`
 
-Row {data-height=450}
+Row {data-height=550}
 ---------------------
 
 ### **Open Access publications, full counts** {.no-mobile}
@@ -847,7 +847,7 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 
 ### **Stacked area chart for publications**
 
-```{r, fig.width=6}
+```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oadata_stackedarea(df_oa)
 } else {
@@ -880,7 +880,7 @@ Scopus
 
 #### `r unit_label`
 
-Row {.tabset data-height=1500}
+Row {.tabset data-height=1700}
 -----------------------------------------------------------------------
 
 ### Citation Impact
@@ -979,7 +979,7 @@ cat("<hr>")
 <div>
 ##### **Average field weighted citation impact (FWCI)**
 
-```{r, fig.height = 4, fig.width = 5}
+```{r, fig.height = 4, fig.width = 9}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_normcit(df_scop_normcit)
 } else {
@@ -993,7 +993,7 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 <div>
 ##### **Share of publications among Top 10% cited**
 
-```{r, fig.height = 4, fig.width = 5}
+```{r, fig.height = 4, fig.width = 9}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_top10(df_scop_normcit)
 } else {
@@ -1074,7 +1074,7 @@ cat("<hr>")
 
 ##### **Field normalized journal impact (SNIP)**
 
-```{r, fig.height = 4, fig.width = 5}
+```{r, fig.height = 4, fig.width = 9}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_snip(df_scop_snip)
 } else {
@@ -1088,7 +1088,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 <div>
 ##### **Share of publications in Top 20% journals**
 
-```{r, fig.height = 4, fig.width = 5}
+```{r, fig.height = 4, fig.width = 9}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_scop_top20(df_scop_snip)
 } else {
@@ -1164,7 +1164,7 @@ cat("<hr>")
 
 ##### **International and corporate co&#8209;publication**
 
-```{r, fig.height=4, fig.width = 8}
+```{r, fig.height=4, fig.width = 9}
 if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_scop_copub(df_scop_copub)
 } else {
@@ -1178,7 +1178,7 @@ SDG
 
 #### `r unit_label`
 
-Row {data-height=450}
+Row {data-height=550}
 ---------------------
 
 ### **Publications with any Sustainable Development Goal (fractional counts)** {.no-mobile}

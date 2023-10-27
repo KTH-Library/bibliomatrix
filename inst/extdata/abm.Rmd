@@ -836,7 +836,7 @@ abm_ui_kable_oa(df_oa)
 Row
 -------
 
-### **Overview of Open Access publications - piechart** 
+### **Overview of Open Access publication types** 
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
@@ -846,7 +846,7 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 }
 ```
 
-### **Stacked area chart for publications**
+### **Open Access publication types across time**
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {

@@ -7,7 +7,8 @@
 abm_table_scop_copub(
   data,
   analysis_start = abm_config()$start_year,
-  analysis_stop = abm_config()$stop_year
+  analysis_stop = abm_config()$stop_year,
+  intervals = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ abm_table_scop_copub(
 \item{analysis_start}{first publication year of analysis, default from abm_config()}
 
 \item{analysis_stop}{last publication year of analysis, default from abm_config()}
+
+\item{intervals}{set to TRUE to use 3 year intervals, default FALSE}
 }
 \value{
 tibble with number/share of international copublications and copublications with Swedish non-university organizations

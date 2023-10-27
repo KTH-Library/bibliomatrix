@@ -7,7 +7,8 @@
 abm_table_scop_normcit(
   data,
   analysis_start = abm_config()$start_year,
-  analysis_stop = abm_config()$stop_year
+  analysis_stop = abm_config()$stop_year,
+  intervals = FALSE
 )
 }
 \arguments{
@@ -16,9 +17,11 @@ abm_table_scop_normcit(
 \item{analysis_start}{first publication year of analysis, default from abm_config()}
 
 \item{analysis_stop}{last publication year of analysis, default from abm_config()}
+
+\item{intervals}{set to TRUE to use 3 year intervals, default FALSE}
 }
 \value{
-tibble with field normalized citations and number/share of top10 publications by 3 year interval
+tibble with field normalized citations and number/share of top10 publications by year or 3 year interval
 }
 \description{
 Retrieve field normalized citations table (Scopus) for ABM

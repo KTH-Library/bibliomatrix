@@ -7,7 +7,7 @@
 abm_ui_bullet_citations(df)
 }
 \arguments{
-\item{df}{data frame with citation stats by 3year interval}
+\item{df}{data frame with citation stats by year}
 }
 \description{
 Bullet graph for citations in ABM

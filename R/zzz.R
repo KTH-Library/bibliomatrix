@@ -38,7 +38,7 @@ globalz <- "
     UT country entity org p_10 p_200 p_50 p_over200
     Country_name Name_eng Org_type_eng Unified_org_id kth_frac n_authors
     org_type unified_org_id Publication_year Org_type_code jcf_frac
-    Cf_log Ptop25 Ptop5
+    Cf_log Ptop25 Ptop5 x
 "
 
 # HACK: add global fcns / vars with spaces in the name

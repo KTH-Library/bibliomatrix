@@ -214,7 +214,7 @@ abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "scopus", unit_label)
 
 ```{r}
 has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
-last_interval <- ifelse(has_rows, nth(df_cf$interval, -2), "")
+last_interval <- ifelse(has_rows, paste((as.numeric(nth(df_cf$Publication_Year, -2))-2),nth(df_cf$Publication_Year, -2), sep = "-"), "")
 ```
 
 ### **[Citation impact `r last_interval` (WoS)](#citation-impact)** {.no-padding .no-mobile}
@@ -232,8 +232,7 @@ abm_ui_bullet_citations(df_cf)
 ```{r}
 
 has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
-last_interval <- ifelse(has_rows, nth(df_jcf$interval, -2), "")
-
+last_interval <- ifelse(has_rows, paste((as.numeric(nth(df_jcf$Publication_Year, -2))-2),nth(df_jcf$Publication_Year, -2), sep = "-"), "")
 ```
 ### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .no-mobile}
 
@@ -250,7 +249,7 @@ abm_ui_bullet_journal(df_jcf)
 
 ```{r}
 has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
-last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
+last_interval <- ifelse(has_rows, paste((as.numeric(nth(df_copub$Publication_Year, -2))-2),nth(df_copub$Publication_Year, -2), sep = "-"), "")
 ```
 
 ### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .no-mobile}
@@ -445,7 +444,33 @@ Citation impact
 
 #### `r unit_label`
 
-Row {data-height=500}
+
+Row
+---------------------
+
+### **Average field normalized citations (Cf)**
+
+```{r, fig.width=8, fig.height=4}
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  abm_graph_cf(df_cf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+### **Share of publications among Top 10% cited**
+
+```{r, fig.width=8, fig.height=4}
+if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
+  abm_graph_top10(df_cf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+Row {data-height=550}
 ---------------------
 
 ### **Citations 3-year window, fractional counts** {.no-mobile}
@@ -529,17 +554,8 @@ cat("This table is based on Web of Science publication types Article and Review.
 
 if(isTRUE(unit_level >= 0)){
 
-  intervals <- df_cf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   woscov_cf <- df_coverage %>%
-    filter(Publication_Type == "Article, peer review")
-  woscov_cf <- woscov_cf %>% 
-    inner_join(sliding_intervals(min(woscov_cf$Publication_Year),
-                                 max(woscov_cf$Publication_Year), 3),
-               by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(woscov_frac = sum(sumwos_frac) / sum(p_frac),
-              sumwos_full = sum(sumwos_full))
+    filter(Publication_Type == "Article, peer review", Publication_Year %in% df_cf$Publication_Year)
 
   mincov <- min(woscov_cf$woscov_frac)
   minpubs <- min(woscov_cf$sumwos_full)
@@ -558,37 +574,37 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-Row
----------------------
-
-### **Average field normalized citations (Cf)**
-
-```{r, fig.width=8, fig.height=4}
-if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_cf(df_cf)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
-
-### **Share of publications among Top 10% cited**
-
-```{r, fig.width=8, fig.height=4}
-if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_top10(df_cf)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
 
 Journal impact
 =====================================
 
 #### `r unit_label`
 
-Row {data-height=500}
+Row
+---------------------
+
+### **Field normalized journal impact (JCf)**
+
+```{r, fig.width=9, fig.height=4}
+if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_jcf(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
+### **Share of publications in Top 20% journals**
+
+```{r, fig.width=9, fig.height=4}
+if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_top20(df_jcf)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+Row {data-height=550}
 ---------------------
 
 ### **Journal impact, fractionalized (3-year moving average)** {.no-mobile}
@@ -623,15 +639,8 @@ Row
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
-  intervals <- df_jcf %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   woscov_jcf <- df_coverage %>%
-    filter(Publication_Type == "Article, peer review")
-  woscov_jcf <- woscov_jcf %>% 
-    inner_join(sliding_intervals(min(woscov_jcf$Publication_Year), max(woscov_jcf$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(woscov_frac = sum(sumwos_frac) / sum(p_frac),
-              sumcov_full = sum(sumwos_full))
+    filter(Publication_Type == "Article, peer review", Publication_Year %in% df_jcf$Publication_Year)
 
   mincov <- min(woscov_jcf$woscov_frac)
   minpubs <- min(woscov_jcf$sumcov_full)
@@ -650,39 +659,28 @@ if(isTRUE(unit_level >= 0)){
 }
 ```
 
-Row
----------------------
-
-### **Field normalized journal impact (JCf)**
-
-```{r, fig.width=9, fig.height=4}
-if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_jcf(df_jcf)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
-
-### **Share of publications in Top 20% journals**
-
-```{r, fig.width=9, fig.height=4}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_top20(df_jcf)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
 Co&#8209;publishing {data-orientation=rows}
 =====================================
 
 #### `r unit_label`
 
-Row {.tabset data-height=1300}
+Row {.tabset data-height=1400}
 ---------------------
 
 ### Summary
+
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+
+##### **International and Swedish non-university co&#8209;publication**
+```{r, fig.width=9, fig.height=4}
+if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+  abm_graph_copub(df_copub)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+</div>
 
 ##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
@@ -715,14 +713,8 @@ cat("<hr>")
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
-  intervals <- df_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   woscov_copub <- df_coverage %>%
-    filter(Publication_Type == "Article, peer review")
-  woscov_copub <- woscov_copub %>% 
-    inner_join(sliding_intervals(min(woscov_copub$Publication_Year), max(woscov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(woscov_full = sum(sumwos_full) / sum(p_full))
+    filter(Publication_Type == "Article, peer review", Publication_Year %in% df_copub$Publication_Year)
 
   mincov <- min(woscov_copub$woscov_full)
   minpubs <- min(df_copub$P_full)
@@ -741,19 +733,6 @@ if(isTRUE(unit_level >= 0)){
 }
 cat("<hr>")
 ```
-
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
-
-##### **International and Swedish non-university co&#8209;publication**
-```{r, fig.width=9, fig.height=4}
-if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
-  abm_graph_copub(df_copub)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
-</div>
 
 ### Countries and organizations
 
@@ -802,6 +781,29 @@ Open Access
 
 #### `r unit_label`
 
+Row
+---------------------
+
+### **Overview of Open Access publications - piechart** 
+
+```{r, fig.width=8}
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+### **Stacked area chart for publications**
+
+```{r, fig.width=8}
+if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
+  abm_graph_oadata_stackedarea(df_oa)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
 Row {data-height=550}
 ---------------------
 
@@ -835,29 +837,6 @@ abm_ui_kable_oa(df_oa)
 Row
 -------
 
-### **Overview of Open Access publications - piechart** 
-
-```{r, fig.width=8}
-if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "ggplot")
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
-### **Stacked area chart for publications**
-
-```{r, fig.width=8}
-if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_stackedarea(df_oa)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-
-Row
--------
-
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#open-access){target="_blank" style="position:relative;float:right;"}
 
 The Open Access type of the publications was fetched from the [Unpaywall REST API](https://unpaywall.org/products/api). The method to determine the OA type is presented [here](https://support.unpaywall.org/support/solutions/articles/44001777288-what-do-the-types-of-oa-status-green-gold-hybrid-and-bronze-mean-).
@@ -880,10 +859,39 @@ Scopus
 
 #### `r unit_label`
 
-Row {.tabset data-height=1700}
+Row {.tabset data-height=1800}
 -----------------------------------------------------------------------
 
 ### Citation Impact
+
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
+<div>
+##### **Average field weighted citation impact (FWCI)**
+
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_normcit(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+</div>
+
+<div style='margin:10px'></div>
+
+<div>
+##### **Share of publications among Top 10% cited**
+
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_top10(df_scop_normcit)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+</div>
+</div>
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -950,17 +958,9 @@ abm_ui_kable_scop_normcit(df_scop_normcit)
 cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 if(isTRUE(unit_level >= 0)){
-  intervals <- df_scop_normcit %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   scopcov_normcit <- df_coverage %>%
-    filter(Publication_Type == "Peer reviewed")
-  scopcov_normcit <- scopcov_normcit %>% 
-    inner_join(sliding_intervals(min(scopcov_normcit$Publication_Year),
-                                 max(scopcov_normcit$Publication_Year), 3),
-               by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
-              sumscop_full = sum(sumscop_full))
+    filter(Publication_Type == "Peer reviewed", Publication_Year %in% df_scop_normcit$Publication_Year)
+
   mincov <- min(scopcov_normcit$scopcov_frac)
   minpubs <- min(scopcov_normcit$sumscop_full)
   
@@ -975,35 +975,36 @@ if(isTRUE(unit_level >= 0)){
 cat("<hr>")
 ```
 
+### Journal Impact
+
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
-##### **Average field weighted citation impact (FWCI)**
 
-```{r, fig.height = 4, fig.width = 9}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_normcit(df_scop_normcit)
+##### **Field normalized journal impact (SNIP)**
+
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_snip(df_scop_snip)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
-```
+```  
 </div>
 
 <div style='margin:10px'></div>
 
 <div>
-##### **Share of publications among Top 10% cited**
+##### **Share of publications in Top 20% journals**
 
-```{r, fig.height = 4, fig.width = 9}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_top10(df_scop_normcit)
+```{r, fig.height = 4, fig.width = 6}
+if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
+  abm_graph_scop_top20(df_scop_snip)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
-```
+```  
 </div>
 </div>
-
-### Journal Impact
 
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
 
@@ -1038,17 +1039,8 @@ cat("This table is based on Scopus publication types Article, Review and Confere
 
 if(isTRUE(unit_level >= 0)){
 
-  intervals <- df_scop_snip %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   scopcov_snip <- df_coverage %>%
-    filter(Publication_Type == "Peer reviewed")
-  scopcov_snip <- scopcov_snip %>% 
-    inner_join(sliding_intervals(min(scopcov_snip$Publication_Year),
-                                 max(scopcov_snip$Publication_Year), 3),
-               by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(scopcov_frac = sum(sumscop_frac) / sum(p_frac),
-              sumscop_full = sum(sumscop_full))
+    filter(Publication_Type == "Peer reviewed", Publication_Year %in% df_scop_snip$Publication_Year)
 
   mincov <- min(scopcov_snip$scopcov_frac)
   minpubs <- min(scopcov_snip$sumscop_full)
@@ -1069,39 +1061,20 @@ cat("<hr>")
 ```
 </div>
 
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
-<div>
-
-##### **Field normalized journal impact (SNIP)**
-
-```{r, fig.height = 4, fig.width = 9}
-if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_snip(df_scop_snip)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```  
-</div>
-
-<div style='margin:10px'></div>
-
-<div>
-##### **Share of publications in Top 20% journals**
-
-```{r, fig.height = 4, fig.width = 9}
-if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_top20(df_scop_snip)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```  
-</div>
-</div>
-
-
-
-
 ### Co&#8209;publishing
+
+<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+
+##### **International and corporate co&#8209;publication**
+
+```{r, fig.height=4, fig.width = 9}
+if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
+  abm_graph_scop_copub(df_scop_copub)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+</div>
 
 ##### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
 
@@ -1133,14 +1106,8 @@ cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
-  intervals <- df_scop_copub %>% filter(substr(interval, 1, 1) == "2") %>% pull(interval)
   scopcov_copub <- df_coverage %>%
-    filter(Publication_Type == "Peer reviewed")
-  scopcov_copub <- scopcov_copub %>% 
-    inner_join(sliding_intervals(min(scopcov_copub$Publication_Year), max(scopcov_copub$Publication_Year), 3), by = c("Publication_Year" = "x")) %>%
-    filter(interval %in% intervals) %>%
-    group_by(interval) %>% 
-    summarise(scopcov_full = sum(sumscop_full) / sum(p_full))
+    filter(Publication_Type == "Peer reviewed", Publication_Year %in% df_scop_copub$Publication_Year)
 
   mincov <- min(scopcov_copub$scopcov_full)
   minpubs <- min(df_scop_copub$P_full)
@@ -1160,25 +1127,27 @@ if(isTRUE(unit_level >= 0)){
 cat("<hr>")
 ```
 
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
 
-##### **International and corporate co&#8209;publication**
-
-```{r, fig.height=4, fig.width = 9}
-if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
-  abm_graph_scop_copub(df_scop_copub)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
-}
-```
-</div>
 
 SDG
 =====================================
 
 #### `r unit_label`
 
-Row {data-height=550}
+Row {data-height=650}
+---------------------
+
+### **Sustainable Development Goals (fractional counts)**
+
+```{r, fig.height=8, fig.width = 20}
+if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
+  abm_graph_sdg(df_sdg_table)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+Row {data-height=800}
 ---------------------
 
 ### **Publications with any Sustainable Development Goal (fractional counts)** {.no-mobile}
@@ -1272,19 +1241,6 @@ if(isTRUE(unit_level >= 0)){
 
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
-}
-```
-
-Row {data-height=650}
----------------------
-
-### **Sustainable Development Goals (fractional counts)**
-
-```{r, fig.height=8, fig.width = 20}
-if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
-  abm_graph_sdg(df_sdg_table)
-} else {
-  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 

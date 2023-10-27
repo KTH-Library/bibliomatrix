@@ -1343,24 +1343,26 @@ abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
 
 #' Bullet graph for citations in ABM 
 #' 
-#' @param df data frame with citation stats by 3year interval
+#' @param df data frame with citation stats by year
 #' @import patchwork
 #' @export
 abm_ui_bullet_citations <- function(df) {
 
 if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   
-  last_interval <- nth(df$interval, -2)
-  
-  cf <- as.numeric(filter(df, interval == last_interval)$cf)
-  
+  years <- as.numeric(nth(df$Publication_Year, -2))
+  years <- (years-2):years
+
+  summary <- df |>
+    filter(Publication_Year %in% years) |>
+    summarise(cf = weighted.mean(cf, P_frac, na.rm = TRUE),
+              top10_share = weighted.mean(top10_share, P_frac, na.rm = TRUE))
+
   cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
-                            value = cf, reference = 1.0, roundto = 2)
-  
-  top10 <- as.numeric(filter(df, interval == last_interval)$top10_share)
+                            value = summary$cf, reference = 1.0, roundto = 2)
   
   cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
-                            value = top10, reference = 0.10, pct = TRUE)
+                            value = summary$top10_share, reference = 0.10, pct = TRUE)
   
   cit_bullet1 / cit_bullet2
   
@@ -1371,22 +1373,26 @@ if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 #' Bullet graph for journal citations in ABM 
 #' 
-#' @param df data frame with journal citation stats by 3year interval
+#' @param df data frame with journal citation stats by year
 #' @import patchwork
 #' @export
 abm_ui_bullet_journal <- function(df) {
   
   if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
     
-    last_interval <- nth(df$interval, -2)
+    years <- as.numeric(nth(df$Publication_Year, -2))
+    years <- (years-2):years
     
-    jcf <- as.numeric(filter(df, interval == last_interval)$jcf)
+    summary <- df |>
+      filter(Publication_Year %in% years) |>
+      summarise(jcf = weighted.mean(jcf, P_frac, na.rm = TRUE),
+                top20_share = weighted.mean(top20_share, P_frac, na.rm = TRUE))
+    
     jcit_bullet1 <- abm_bullet(label = "JCf, Field normalized citations", 
-                               value = jcf, reference = 1.0, roundto = 2)
+                               value = summary$jcf, reference = 1.0, roundto = 2)
     
-    top20 <- as.numeric(filter(df, interval == last_interval)$top20_share)
     jcit_bullet2 <- abm_bullet(label = "Share in Top20% journals", 
-                               value = top20, reference = 0.20, pct = TRUE)
+                               value = summary$top20_share, reference = 0.20, pct = TRUE)
     
     jcit_bullet1 / jcit_bullet2
     
@@ -1397,22 +1403,26 @@ abm_ui_bullet_journal <- function(df) {
 
 #' Waffle graph for co-publications in ABM 
 #' 
-#' @param df data frame with co-publications stats by 3year interval
+#' @param df data frame with co-publications stats by year
 #' @import patchwork
 #' @export
 abm_ui_waffle_copub <- function(df) {
   
   if (df %>% filter(!is.na(P_full)) %>% nrow() > 0) {
     
-    last_interval <- nth(df$interval, -2)
+    years <- as.numeric(nth(df$Publication_Year, -2))
+    years <- (years-2):years
     
-    nonuniv_share <- as.numeric(filter(df, interval == last_interval)$nonuniv_share)
-    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-    waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+    summary <- df |>
+      filter(Publication_Year %in% years) |>
+      summarise(nonuniv_share = weighted.mean(nonuniv_share, P_full, na.rm = TRUE),
+                int_share = weighted.mean(int_share, P_full, na.rm = TRUE))
+
+    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * summary$nonuniv_share))
+    waffle1 <- abm_waffle_pct(summary$nonuniv_share, label = nonuniv_lbl) 
     
-    int_share <- as.numeric(filter(df, interval == last_interval)$int_share)
-    int_lbl <- sprintf("International: %d%%", round(100*int_share))
-    waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+    int_lbl <- sprintf("International: %d%%", round(100 * summary$int_share))
+    waffle2 <- abm_waffle_pct(summary$int_share, label = int_lbl)
     
     waffle1 / waffle2
     

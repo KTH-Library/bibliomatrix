@@ -451,7 +451,7 @@ Row
 
 ### **Average field normalized citations (Cf)**
 
-```{r, fig.width=8, fig.height=4}
+```{r, fig.width=6, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   abm_graph_cf(df_cf)
 } else {
@@ -462,7 +462,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 
 ### **Share of publications among Top 10% cited**
 
-```{r, fig.width=8, fig.height=4}
+```{r, fig.width=6, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
   abm_graph_top10(df_cf)
 } else {
@@ -586,7 +586,7 @@ Row
 
 ### **Field normalized journal impact (JCf)**
 
-```{r, fig.width=9, fig.height=4}
+```{r, fig.width=7, fig.height=4}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_jcf(df_jcf)
 } else {
@@ -597,7 +597,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ### **Share of publications in Top 20% journals**
 
-```{r, fig.width=9, fig.height=4}
+```{r, fig.width=7, fig.height=4}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   abm_graph_top20(df_jcf)
 } else {
@@ -665,7 +665,7 @@ Co&#8209;publishing {data-orientation=rows}
 
 #### `r unit_label`
 
-Row {.tabset data-height=1400}
+Row {.tabset data-height=1500}
 ---------------------
 
 ### Summary
@@ -673,7 +673,7 @@ Row {.tabset data-height=1400}
 <div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
 
 ##### **International and Swedish non-university co&#8209;publication**
-```{r, fig.width=9, fig.height=4}
+```{r, fig.width=7, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
@@ -785,7 +785,7 @@ Open Access
 Row
 ---------------------
 
-### **Overview of Open Access publications - piechart** 
+### **Overview of Open Access publication types** 
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
@@ -795,7 +795,7 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 }
 ```
 
-### **Stacked area chart for publications**
+### **Open Access publication types across time**
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
@@ -1068,7 +1068,7 @@ cat("<hr>")
 
 ##### **International and corporate co&#8209;publication**
 
-```{r, fig.height=4, fig.width = 9}
+```{r, fig.height=4, fig.width = 7}
 if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_scop_copub(df_scop_copub)
 } else {

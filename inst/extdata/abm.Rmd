@@ -453,7 +453,7 @@ Row
 
 ```{r, fig.width=6, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_cf(df_cf)
+  time_graph(df_cf, indicator = "cf", ma = TRUE, weight = "P_frac", refline = 1, ylabel = "Average Cf")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -464,7 +464,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 
 ```{r, fig.width=6, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  abm_graph_top10(df_cf)
+  time_graph(df_cf, indicator = "top10_share", ma = TRUE, weight = "P_frac", refline = .1, percent = TRUE, ylabel = "Share Top 10%")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -588,7 +588,7 @@ Row
 
 ```{r, fig.width=7, fig.height=4}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_jcf(df_jcf)
+  time_graph(df_jcf, indicator = "jcf", ma = TRUE, weight = "P_frac", refline = 1, "Average Journal Cf")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -599,7 +599,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ```{r, fig.width=7, fig.height=4}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_top20(df_jcf)
+  time_graph(df_jcf, indicator = "top20_share", ma = TRUE, weight = "P_frac", refline = .2, "Share Journal Top 20%", percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -871,7 +871,7 @@ Row {.tabset data-height=1800}
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_normcit(df_scop_normcit)
+  time_graph(df_scop_normcit, "fwci_x", ma = TRUE, weight = "P_frac", ylabel = "Average FWCI", refline = 1)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -885,7 +885,7 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_top10(df_scop_normcit)
+  time_graph(df_scop_normcit, "top10_share", ma = TRUE, weight = "P_frac", ylabel = "Share Top 10%", refline = .1, percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -985,7 +985,7 @@ cat("<hr>")
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_snip(df_scop_snip)
+  time_graph(df_scop_snip, "avg_snip", ma = TRUE, weight = "P_frac", ylabel = "Average SNIP", refline = 1)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -999,7 +999,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  abm_graph_scop_top20(df_scop_snip)
+  time_graph(df_scop_snip, "top20_share", ma = TRUE, weight = "P_frac", ylabel = "Share Top 10%", refline = .2, percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

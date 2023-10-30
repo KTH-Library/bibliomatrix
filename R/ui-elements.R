@@ -1570,3 +1570,80 @@ abm_ui_kable_sdg_table <- function(df_sdg_table) {
   }
 }
 
+
+#' Graph of indicators by year, with or without moving average and/or reference line
+#'
+#' @param indicator df column name to graph
+#' @param ma set to true for moving averages
+#' @param weigth weight to use for moving average
+#' @param ylabel y-axis label to use in graph
+#' @param refline optional y-reference line
+#' @param percent set to true for percentage value
+#' @import dplyr ggplot2
+#' @importFrom ktheme palette_kth_neo theme_kth_neo
+#' @importFrom zoo rollmean
+#' @return ggplot
+#' @export
+time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, refline = NULL, percent = FALSE) {
+  
+  Publication_Year <- value <- NULL
+  
+  kth_cols <- palette_kth_neo(n = 17, type = "qual")
+  
+  df <- df |>
+    filter(Publication_Year != 'Total') |>
+    rename(value = !!indicator)
+  
+  # Fill up missing years
+  df <- data.frame(Publication_Year = as.character(min(df$Publication_Year):max(df$Publication_Year))) |> 
+    left_join(df, by = "Publication_Year")
+  
+  
+  if(ma){
+    # Add moving average
+    df <- df |>
+      rename(weight = !!weight) |>
+      mutate(ma = rollmean(weight * value, k = 3, fill = NA, na.rm = TRUE) / rollmean(sign(value) * weight, k = 3, fill = NA, na.rm = TRUE))
+  }
+  
+  # Decide max for Y scale
+  maxval <- max(df$value, na.rm = TRUE)
+  if(percent) {
+    ymax <- if_else(is.null(refline),
+                    ceiling(10*maxval)/10,
+                    max(2*refline, ceiling(10*maxval)/10))
+  } else {
+    ymax <- if_else(is.null(refline),
+                    ceiling(maxval),
+                    max(2*refline, ceiling(maxval)))
+  }
+  
+  res <- ggplot(data = df,
+                aes(x = Publication_Year, y = value, group = 1)) +
+    geom_point(color = kth_cols["blue"], size = 3) + 
+    geom_line(color = kth_cols["blue"], linetype = "dashed", linewidth = .5) +
+    xlab("Publication year") +
+    ylab(ylabel) +
+    ylim(0, ymax) +
+    theme_kth_neo() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+  
+  if(!is.null(refline)) {
+    res <- res +
+      geom_hline(yintercept = refline, color = kth_cols["lightteal"], linewidth = .8)
+  }
+  
+  if(ma) {
+    res <- res +
+      geom_line(aes(y = ma), color = kth_cols["darkred"], linewidth = 1.2)
+  }
+  
+  if(percent) {
+    res <- res +
+      scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax))
+  }
+  
+  res
+}

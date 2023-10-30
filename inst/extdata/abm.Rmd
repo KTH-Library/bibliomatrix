@@ -54,6 +54,8 @@ library(extrafont)
 library(kthapi)
 library(DBI)
 library(ktheme)
+#library(tidyquant)
+library(zoo)
 
 colors_vb <- palette_kth_neo(17)
 

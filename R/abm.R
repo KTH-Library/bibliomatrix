@@ -1165,10 +1165,14 @@ abm_graph_cf <- function(df){
   kth_cols <- palette_kth_neo(n = 5, type = "seq")
   ymax <- max(2, ceiling(max(df$cf)))
   
-  ggplot(data = df |> filter(Publication_Year != "Total"),
+  df<- df |> filter(Publication_Year != "Total") |> mutate(ma3 = rollmean(cf, k = 3, na.pad =TRUE))
+  
+  ggplot(data = df,
          aes(x = Publication_Year, y = cf, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    #geom_line(color = kth_cols["blue2"], size = .8) +
+    #geom_ma(ma_fun = SMA, n = 3, size = 3, color = kth_cols["blue2"]) +
+    geom_line(aes(y=ma3), color = kth_cols["blue2"], size = 1) +
     xlab("Publication year") +
     ylab("Average Cf") +
     ylim(0, ymax) +

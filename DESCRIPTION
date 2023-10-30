@@ -73,7 +73,8 @@ Imports:
     ktheme,
     DT,
     blob,
-    rlang
+    rlang,
+    zoo
 Remotes: 
     KTH-Library/kthapi,
     KTH-Library/ktheme

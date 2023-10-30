@@ -1573,9 +1573,10 @@ abm_ui_kable_sdg_table <- function(df_sdg_table) {
 
 #' Graph of indicators by year, with or without moving average and/or reference line
 #'
+#' @param df data frame to read indicators etc from
 #' @param indicator df column name to graph
 #' @param ma set to true for moving averages
-#' @param weigth weight to use for moving average
+#' @param weight weight to use for moving average
 #' @param ylabel y-axis label to use in graph
 #' @param refline optional y-reference line
 #' @param percent set to true for percentage value

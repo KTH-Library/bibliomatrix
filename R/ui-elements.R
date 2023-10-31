@@ -1604,7 +1604,7 @@ time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, 
     # Add moving average
     df <- df |>
       rename(weight = !!weight) |>
-      mutate(ma = rollmean(weight * value, k = 3, fill = NA, na.rm = TRUE) / rollmean(sign(value) * weight, k = 3, fill = NA, na.rm = TRUE))
+      mutate(ma = rollmean(weight * value, k = 3, fill = NA, na.rm = TRUE) / rollmean(ifelse(!is.na(value), weight, NA), k = 3, fill = NA, na.rm = TRUE))
   }
   
   # Decide max for Y scale

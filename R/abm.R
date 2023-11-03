@@ -449,15 +449,15 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
     mutate(Publication_Year_ch = as.character(Publication_Year)) |>
     select(Publication_Year_ch, P_tot, oa_count, diamond_count, gold_count, hybrid_count, green_count, closed_count, oa_share)
 
+  # No summary row if no data
+  if(nrow(table1) == 0)
+    return(table1)
+
   # Insert blank years
   table1 <- tibble(Publication_Year_ch = as.character(analysis_start:analysis_stop)) |> 
     left_join(table1, by = "Publication_Year_ch") |> 
     arrange(Publication_Year_ch)
-  
-  # No summary row if no data
-  if(nrow(table1) == 0)
-    return(table1)
-  
+    
   # Summary part of table
   table2 <- table1 |>
     summarise(Publication_Year_ch = "Total",

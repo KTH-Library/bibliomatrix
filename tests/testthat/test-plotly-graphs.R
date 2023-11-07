@@ -14,25 +14,30 @@ test_that("plotly charts work for KTH", {
   
   
   has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
-  last_interval <- ifelse(has_rows, nth(df_copub$interval, -2), "")
+
+  last_year <- ifelse(has_rows, as.numeric(nth(df_copub$Publication_Year, -2)))
   
-  nonuniv_share <- as.numeric(filter(df_copub, interval == last_interval)$nonuniv_share)
-  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-  waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl)
+  waffle_share <- df_copub |>
+    filter(Publication_Year %in% (last_year-2):last_year) |> 
+    summarise(P = sum(P_full, na.rm = T),
+              nonuniv_share = sum(nonuniv_count, na.rm = T) / P,
+              int_share = sum(int_count, na.rm = T) / P)
   
-  int_share <- as.numeric(filter(df_copub, interval == last_interval)$int_share)
-  int_lbl <- sprintf("International: %d%%", round(100*int_share))
-  waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+  nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * waffle_share$nonuniv_share))
+  int_lbl <- sprintf("International: %d%%", round(100 * waffle_share$int_share))
+  
+  waffle1 <- abm_waffle_pct(waffle_share$nonuniv_share, label = nonuniv_lbl)
+  waffle2 <- abm_waffle_pct(waffle_share$int_share, label = int_lbl)
   
   waffles <- waffle1 / waffle2
 
   waffles
   
   w1 <-
-    abm_waffle_pct_plotly(nonuniv_share, label = nonuniv_lbl)
+    abm_waffle_pct_plotly(waffle_share$nonuniv_share, label = nonuniv_lbl)
   
   w2 <-
-    abm_waffle_pct_plotly(int_share, label = int_lbl)
+    abm_waffle_pct_plotly(waffle_share$int_share, label = int_lbl)
   
   plotly::subplot(plotly::subplot(w1), plotly::subplot(w2), nrows = 2)
 

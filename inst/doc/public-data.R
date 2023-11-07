@@ -1,10 +1,10 @@
-## ----include = FALSE----------------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ----warning=FALSE, message=FALSE---------------------------------------------
+## ---- warning=FALSE, message=FALSE--------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 
@@ -27,7 +27,7 @@ unit_info() %>% filter(org_level == 1)
 unit_info() %>% filter(parent_org_id == 6023) %>% select(unit_code, unit_long_en) %>% arrange(unit_long_en)
 
 
-## ----warning=FALSE, message=FALSE---------------------------------------------
+## ---- warning=FALSE, message=FALSE--------------------------------------------
 library(bibliomatrix)
 library(dplyr)
 
@@ -42,7 +42,7 @@ knitr::kable(kth_abm_tables[["diva"]] %>% select(Publication_Type_DiVA, P_frac, 
 # Note that numeric unit codes need to be enclosed with ` 
 abm_public_kth$units$`5851`$diva
 
-## ----warning=FALSE, message=FALSE---------------------------------------------
+## ---- warning=FALSE, message=FALSE--------------------------------------------
 library(bibliomatrix)
 
 # The only current use for the pubtype_order part of the public data is to present

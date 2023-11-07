@@ -1,4 +1,4 @@
-## ----include = FALSE----------------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -18,7 +18,7 @@ library(dbplyr)
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
-## ----message=FALSE, fig.align='left'------------------------------------------
+## ---- message=FALSE, fig.align='left'-----------------------------------------
 # Open a connection pool to Microsoft SQL Server BIBMON database
 bibmon <- pool_bib("mssql")
 

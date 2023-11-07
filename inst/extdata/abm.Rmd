@@ -586,7 +586,7 @@ Journal impact
 Row
 ---------------------
 
-### **Field normalized journal impact (JCf)** <br> `r paste0('*Yearly (<span style="color:', colors_vb['blue'],'">&#8226;&#8226;</span>) and moving average (<span style="color:', colors_vb['darkred'],'">&mdash;</span>)*')`
+### **Field normalized journal impact (JCf)** <br> `r timegraph_header_legend()`
 
 ```{r, fig.width=7, fig.height=4}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {

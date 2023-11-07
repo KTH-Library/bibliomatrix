@@ -7,7 +7,7 @@
 abm_ui_waffle_copub(df)
 }
 \arguments{
-\item{df}{data frame with co-publications stats by 3year interval}
+\item{df}{data frame with co-publications stats by year}
 }
 \description{
 Waffle graph for co-publications in ABM

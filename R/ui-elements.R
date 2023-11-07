@@ -1021,14 +1021,15 @@ abm_ui_kable_scop_copub <- function(df_scop_copub) {
 #' @import htmltools
 #' @importFrom dplyr arrange
 #' @importFrom formattable formattable color_bar as.datatable proportion
-#' @importFrom ktheme palette_kth
+#' @importFrom ktheme palette_kth_neo
 #' @export
 abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label, unit_title) {
   
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
-  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  pal <- palette_kth_neo(17)
+  lightblue <- unname(pal["lightteal"])
+  lightgrey <- unname(pal["sand"])
   
   if (nrow(df_copub_countries) > 0) {
 
@@ -1099,7 +1100,7 @@ abm_ui_kable_copub_countries <- function(df_copub_countries) {
 #' @import htmltools
 #' @importFrom dplyr select arrange
 #' @importFrom formattable formattable color_bar as.datatable proportion
-#' @importFrom ktheme palette_kth
+#' @importFrom ktheme palette_kth_neo
 #' @export
 abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_title) {
   
@@ -1107,8 +1108,9 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
   
   df <- df_copub_orgs %>% select(-unified_org_id) %>% rename(`Publications (frac)` = kth_frac)
   
-  lightblue <- unname(ktheme::palette_kth(10)["lightblue40"])
-  lightgrey <- unname(ktheme::palette_kth(10)["gray40"])
+  pal <- palette_kth_neo(17)
+  lightblue <- unname(pal["lightteal"])
+  lightgrey <- unname(pal["sand"])
   
   df$org_type <- as.factor(df$org_type)
   
@@ -1341,24 +1343,26 @@ abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
 
 #' Bullet graph for citations in ABM 
 #' 
-#' @param df data frame with citation stats by 3year interval
+#' @param df data frame with citation stats by year
 #' @import patchwork
 #' @export
 abm_ui_bullet_citations <- function(df) {
 
 if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
   
-  last_interval <- nth(df$interval, -2)
-  
-  cf <- as.numeric(filter(df, interval == last_interval)$cf)
-  
+  years <- as.numeric(nth(df$Publication_Year, -2))
+  years <- (years-2):years
+
+  summary <- df |>
+    filter(Publication_Year %in% years) |>
+    summarise(cf = weighted.mean(cf, P_frac, na.rm = TRUE),
+              top10_share = weighted.mean(top10_share, P_frac, na.rm = TRUE))
+
   cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
-                            value = cf, reference = 1.0, roundto = 2)
-  
-  top10 <- as.numeric(filter(df, interval == last_interval)$top10_share)
+                            value = summary$cf, reference = 1.0, roundto = 2)
   
   cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
-                            value = top10, reference = 0.10, pct = TRUE)
+                            value = summary$top10_share, reference = 0.10, pct = TRUE)
   
   cit_bullet1 / cit_bullet2
   
@@ -1369,22 +1373,26 @@ if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 #' Bullet graph for journal citations in ABM 
 #' 
-#' @param df data frame with journal citation stats by 3year interval
+#' @param df data frame with journal citation stats by year
 #' @import patchwork
 #' @export
 abm_ui_bullet_journal <- function(df) {
   
   if (df %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
     
-    last_interval <- nth(df$interval, -2)
+    years <- as.numeric(nth(df$Publication_Year, -2))
+    years <- (years-2):years
     
-    jcf <- as.numeric(filter(df, interval == last_interval)$jcf)
+    summary <- df |>
+      filter(Publication_Year %in% years) |>
+      summarise(jcf = weighted.mean(jcf, P_frac, na.rm = TRUE),
+                top20_share = weighted.mean(top20_share, P_frac, na.rm = TRUE))
+    
     jcit_bullet1 <- abm_bullet(label = "JCf, Field normalized citations", 
-                               value = jcf, reference = 1.0, roundto = 2)
+                               value = summary$jcf, reference = 1.0, roundto = 2)
     
-    top20 <- as.numeric(filter(df, interval == last_interval)$top20_share)
     jcit_bullet2 <- abm_bullet(label = "Share in Top20% journals", 
-                               value = top20, reference = 0.20, pct = TRUE)
+                               value = summary$top20_share, reference = 0.20, pct = TRUE)
     
     jcit_bullet1 / jcit_bullet2
     
@@ -1395,22 +1403,26 @@ abm_ui_bullet_journal <- function(df) {
 
 #' Waffle graph for co-publications in ABM 
 #' 
-#' @param df data frame with co-publications stats by 3year interval
+#' @param df data frame with co-publications stats by year
 #' @import patchwork
 #' @export
 abm_ui_waffle_copub <- function(df) {
   
   if (df %>% filter(!is.na(P_full)) %>% nrow() > 0) {
     
-    last_interval <- nth(df$interval, -2)
+    years <- as.numeric(nth(df$Publication_Year, -2))
+    years <- (years-2):years
     
-    nonuniv_share <- as.numeric(filter(df, interval == last_interval)$nonuniv_share)
-    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * nonuniv_share))
-    waffle1 <- abm_waffle_pct(nonuniv_share, label = nonuniv_lbl) 
+    summary <- df |>
+      filter(Publication_Year %in% years) |>
+      summarise(nonuniv_share = weighted.mean(nonuniv_share, P_full, na.rm = TRUE),
+                int_share = weighted.mean(int_share, P_full, na.rm = TRUE))
+
+    nonuniv_lbl <- sprintf("Swedish non-university: %d%%", round(100 * summary$nonuniv_share))
+    waffle1 <- abm_waffle_pct(summary$nonuniv_share, label = nonuniv_lbl) 
     
-    int_share <- as.numeric(filter(df, interval == last_interval)$int_share)
-    int_lbl <- sprintf("International: %d%%", round(100*int_share))
-    waffle2 <- abm_waffle_pct(int_share, label = int_lbl)
+    int_lbl <- sprintf("International: %d%%", round(100 * summary$int_share))
+    waffle2 <- abm_waffle_pct(summary$int_share, label = int_lbl)
     
     waffle1 / waffle2
     
@@ -1558,3 +1570,90 @@ abm_ui_kable_sdg_table <- function(df_sdg_table) {
   }
 }
 
+
+#' Graph of indicators by year, with or without moving average and/or reference line
+#'
+#' @param df data frame to read indicators etc from
+#' @param indicator df column name to graph
+#' @param ma set to true for moving averages
+#' @param weight weight to use for moving average
+#' @param ylabel y-axis label to use in graph
+#' @param refline optional y-reference line
+#' @param percent set to true for percentage value
+#' @import dplyr ggplot2
+#' @importFrom ktheme palette_kth_neo theme_kth_neo
+#' @importFrom zoo rollmean
+#' @return ggplot
+#' @export
+time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, refline = NULL, percent = FALSE) {
+  
+  Publication_Year <- value <- NULL
+  
+  kth_cols <- palette_kth_neo(n = 17, type = "qual")
+  
+  df <- df |>
+    filter(Publication_Year != 'Total') |>
+    rename(value = !!indicator)
+  
+  # Fill up missing years
+  df <- data.frame(Publication_Year = as.character(min(df$Publication_Year):max(df$Publication_Year))) |> 
+    left_join(df, by = "Publication_Year")
+  
+  
+  if(ma){
+    # Add moving average
+    df <- df |>
+      rename(weight = !!weight) |>
+      mutate(ma = rollmean(weight * value, k = 3, fill = NA, na.rm = TRUE) / rollmean(ifelse(!is.na(value), weight, NA), k = 3, fill = NA, na.rm = TRUE))
+  }
+  
+  # Decide max for Y scale
+  maxval <- max(df$value, na.rm = TRUE)
+  if(percent) {
+    ymax <- if_else(is.null(refline),
+                    ceiling(10*maxval)/10,
+                    max(2*refline, ceiling(10*maxval)/10))
+  } else {
+    ymax <- if_else(is.null(refline),
+                    ceiling(maxval),
+                    max(2*refline, ceiling(maxval)))
+  }
+  
+  res <- ggplot(data = df,
+                aes(x = Publication_Year, y = value, group = 1)) +
+    geom_point(color = kth_cols["blue"], size = 3) + 
+    geom_line(color = kth_cols["blue"], linetype = "dashed", linewidth = .5) +
+    xlab("Publication year") +
+    ylab(ylabel) +
+    ylim(0, ymax) +
+    theme_kth_neo() +
+    theme(axis.title.y = element_text(vjust = 2.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor.y = element_blank())
+  
+  if(!is.null(refline)) {
+    res <- res +
+      geom_hline(yintercept = refline, color = kth_cols["lightteal"], linewidth = .8)
+  }
+  
+  if(ma) {
+    res <- res +
+      geom_line(aes(y = ma), color = kth_cols["darkred"], linewidth = 1.2)
+  }
+  
+  if(percent) {
+    res <- res +
+      scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax))
+  }
+  
+  res
+}
+
+#' Graph to subheader of timegraph
+#' 
+#' @param colors_vb a color set to use
+#' @export
+
+timegraph_header_legend<-function(colors_vb = ktheme::palette_kth_neo(17)){
+  paste0('*Yearly (<span style="color:', colors_vb['blue'],'">&#8226;&#8226;</span>) and moving average (<span style="color:', colors_vb['darkred'],'">&mdash;</span>)*')
+  }

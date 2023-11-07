@@ -4,9 +4,6 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -20,6 +17,9 @@
   </url>
   <url>
     <loc>/index.html</loc>
+  </url>
+  <url>
+    <loc>/LICENSE-text.html</loc>
   </url>
   <url>
     <loc>/news/index.html</loc>
@@ -67,10 +67,10 @@
     <loc>/reference/abm_decode_jwt.html</loc>
   </url>
   <url>
-    <loc>/reference/abm_division_stats.html</loc>
+    <loc>/reference/abm_divisions.html</loc>
   </url>
   <url>
-    <loc>/reference/abm_divisions.html</loc>
+    <loc>/reference/abm_division_stats.html</loc>
   </url>
   <url>
     <loc>/reference/abm_format_rows.html</loc>
@@ -172,16 +172,16 @@
     <loc>/reference/abm_private_data.html</loc>
   </url>
   <url>
-    <loc>/reference/abm_public_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_public_kth.html</loc>
-  </url>
-  <url>
     <loc>/reference/abm_publications.html</loc>
   </url>
   <url>
     <loc>/reference/abm_publications_staffbased.html</loc>
+  </url>
+  <url>
+    <loc>/reference/abm_public_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/abm_public_kth.html</loc>
   </url>
   <url>
     <loc>/reference/abm_pubs_summary.html</loc>
@@ -391,13 +391,13 @@
     <loc>/reference/abm_ui_waffle_copub.html</loc>
   </url>
   <url>
+    <loc>/reference/abm_units.html</loc>
+  </url>
+  <url>
     <loc>/reference/abm_unit_pubs.html</loc>
   </url>
   <url>
     <loc>/reference/abm_unit_stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_units.html</loc>
   </url>
   <url>
     <loc>/reference/abm_waffle_pct.html</loc>
@@ -469,6 +469,12 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
+    <loc>/reference/kthids_from_slug.html</loc>
+  </url>
+  <url>
+    <loc>/reference/kthid_from_accountname.html</loc>
+  </url>
+  <url>
     <loc>/reference/kth_catalog_crawl.html</loc>
   </url>
   <url>
@@ -476,12 +482,6 @@
   </url>
   <url>
     <loc>/reference/kth_theme.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kthid_from_accountname.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kthids_from_slug.html</loc>
   </url>
   <url>
     <loc>/reference/mean_indicator_units.html</loc>
@@ -536,6 +536,12 @@
   </url>
   <url>
     <loc>/reference/status_renviron.html</loc>
+  </url>
+  <url>
+    <loc>/reference/timegraph_header_legend.html</loc>
+  </url>
+  <url>
+    <loc>/reference/time_graph.html</loc>
   </url>
   <url>
     <loc>/reference/unit_info.html</loc>

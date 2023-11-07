@@ -254,7 +254,7 @@ abm_report <- function(id, is_private) {
       unlist(),
       error = function(e) FALSE)
     
-    if (!is.null(report) && report != FALSE)
+    if (!is.null(report) && report[[1]] != FALSE)
       return (report)
     
     myparams <- 

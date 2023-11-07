@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
       </span>
     </div>
 
@@ -66,31 +66,42 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">wos_disclaimer</span><span class="op">(</span>
-  derived_product <span class="op">=</span> <span class="st">"ABM"</span>,
-  derived_product_long <span class="op">=</span> <span class="st">"KTH Annual Bibliometric Monitoring"</span>,
-  bibliometric_partner <span class="op">=</span> <span class="st">"KTH Royal Institute of Technology"</span>,
-  firstyear <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">start_year</span>,
-  lastyear <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stop_year</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">wos_disclaimer</span><span class="op">(</span></span>
+<span>  derived_product <span class="op">=</span> <span class="st">"ABM"</span>,</span>
+<span>  derived_product_long <span class="op">=</span> <span class="st">"KTH Annual Bibliometric Monitoring"</span>,</span>
+<span>  bibliometric_partner <span class="op">=</span> <span class="st">"KTH Royal Institute of Technology"</span>,</span>
+<span>  firstyear <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">start_year</span>,</span>
+<span>  lastyear <span class="op">=</span> <span class="fu"><a href="abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stop_year</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>derived_product</dt>
 <dd><p>the product the disclaimer should be applied on (short name)</p></dd>
+
+
 <dt>derived_product_long</dt>
 <dd><p>a longer product name to use in the first mention of the product</p></dd>
+
+
 <dt>bibliometric_partner</dt>
 <dd><p>the bibliometric partner that provide the derived product</p></dd>
+
+
 <dt>firstyear</dt>
 <dd><p>the first year to use for copyright note, uses abm_config() if not given</p></dd>
+
+
 <dt>lastyear</dt>
 <dd><p>the last year to use for the copyright note, uses abm_config() if not given</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a string with WoS disclamer</p>
+    
+
+<p>a string with WoS disclamer</p>
     </div>
 
   </div>
@@ -105,7 +116,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

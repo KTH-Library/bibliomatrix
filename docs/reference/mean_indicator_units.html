@@ -19,7 +19,7 @@ This three-year average of jcf is used as an performance indicator at KTH."><!--
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
       </span>
     </div>
 
@@ -70,31 +70,42 @@ This three-year average of jcf is used as an performance indicator at KTH.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">mean_indicator_units</span><span class="op">(</span>
-  <span class="va">con</span>,
-  <span class="va">starty</span>,
-  <span class="va">stopy</span>,
-  analysis_level <span class="op">=</span> <span class="fl">2</span>,
-  <span class="va">analysis_version_id</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">mean_indicator_units</span><span class="op">(</span></span>
+<span>  <span class="va">con</span>,</span>
+<span>  <span class="va">starty</span>,</span>
+<span>  <span class="va">stopy</span>,</span>
+<span>  analysis_level <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  <span class="va">analysis_version_id</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>con</dt>
 <dd><p>connection to db</p></dd>
+
+
 <dt>starty</dt>
 <dd><p>first publication year of analysis</p></dd>
+
+
 <dt>stopy</dt>
 <dd><p>last publication year of analysis</p></dd>
+
+
 <dt>analysis_level</dt>
 <dd><p>organization analysis level. Default is 2 (department).</p></dd>
+
+
 <dt>analysis_version_id</dt>
 <dd><p>the analysis_id id to be used from masterfile</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>tibble average citation indicators along with dept name, school name, along with full and fractional publ. counts.</p>
+    
+
+<p>tibble average citation indicators along with dept name, school name, along with full and fractional publ. counts.</p>
     </div>
 
   </div>
@@ -109,7 +120,7 @@ This three-year average of jcf is used as an performance indicator at KTH.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
       </span>
     </div>
 
@@ -66,23 +66,32 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">abm_copub_countries_staffbased</span><span class="op">(</span><span class="va">con</span>, <span class="va">publist</span>, exclude_swe <span class="op">=</span> <span class="cn">TRUE</span>, limit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">abm_copub_countries_staffbased</span><span class="op">(</span><span class="va">con</span>, <span class="va">publist</span>, exclude_swe <span class="op">=</span> <span class="cn">TRUE</span>, limit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>con</dt>
 <dd><p>a database connection to BIBMON</p></dd>
+
+
 <dt>publist</dt>
 <dd><p>a publication list including at least WebofScience_ID, Unit_fraction and n_authors</p></dd>
+
+
 <dt>exclude_swe</dt>
 <dd><p>wether to exclude Sweden as co-publication country, default TRUE</p></dd>
+
+
 <dt>limit</dt>
 <dd><p>if set, limit the result to the first limit rows, default NULL</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a tibble</p>
+    
+
+<p>a tibble</p>
     </div>
 
   </div>
@@ -97,7 +106,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

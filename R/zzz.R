@@ -25,8 +25,8 @@ globalz <- "
     from n_pad unit_long_en Co-publication formatStyle styleEqual uc_from_orgid
     abm_public_kth get_pt_ordning parent fullsort sort_order
     Publication_Type Unit_fraction p_frac p_full sumcov_frac sumcov_full
-    C3 C3_frac Unit_fraction PID WoS_Journal P_tot bronze_count closed_count gold_count
-    green_count hybrid_count is_oa oa_count oa_share oa_status variable uncited P_uncited Share_uncited
+    C3 C3_frac Unit_fraction PID WoS_Journal P_tot diamond_count closed_count gold_count
+    green_count hybrid_count is_oa oa_color oa_count oa_share oa_status variable uncited P_uncited Share_uncited
     Year group perc_text series percent_format current_date varname displayname description_short text
     kthid slug title.en username Unit_Fraction_adj_raw Unit_Fraction_raw Unit_Name n_pubs n_staff name
     name.x name.y nd_researchers pid unit_short DOI firstName lastName ScopusID
@@ -38,7 +38,7 @@ globalz <- "
     UT country entity org p_10 p_200 p_50 p_over200
     Country_name Name_eng Org_type_eng Unified_org_id kth_frac n_authors
     org_type unified_org_id Publication_year Org_type_code jcf_frac
-    Cf_log Ptop25 Ptop5
+    Cf_log Ptop25 Ptop5 x ma3
 "
 
 # HACK: add global fcns / vars with spaces in the name

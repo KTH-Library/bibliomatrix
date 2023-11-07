@@ -69,7 +69,7 @@ if (params$embed_data || !params$use_package_data) {
     con = con,
     unit_code = params$unit_code,
     pub_year = abm_config()$start_year:abm_config()$stop_year,
-    analysisId = abm_config()$analysis_id
+    analysisId = 0
     ) %>% collect()
   dbDisconnect(con)
 }
@@ -451,7 +451,7 @@ Citation impact
 Row
 ---------------------
 
-### **Average field normalized citations (Cf)** <br> *Yearly and moving average*
+### **Average field normalized citations (Cf)** <br> `r timegraph_header_legend()`
 
 ```{r, fig.width=6, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
@@ -462,7 +462,7 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 ```
 
 
-### **Share of publications among Top 10% cited** <br> *Yearly and moving average*
+### **Share of publications among Top 10% cited** <br> `r timegraph_header_legend()`
 
 ```{r, fig.width=6, fig.height=4}
 if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
@@ -586,7 +586,7 @@ Journal impact
 Row
 ---------------------
 
-### **Field normalized journal impact (JCf)** <br> *Yearly and moving average*
+### **Field normalized journal impact (JCf)** <br> `r paste0('*Yearly (<span style="color:', colors_vb['blue'],'">&#8226;&#8226;</span>) and moving average (<span style="color:', colors_vb['darkred'],'">&mdash;</span>)*')`
 
 ```{r, fig.width=7, fig.height=4}
 if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -597,7 +597,7 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 ```
 
 
-### **Share of publications in Top 20% journals** <br> *Yearly and moving average*
+### **Share of publications in Top 20% journals** <br> `r timegraph_header_legend()`
 
 ```{r, fig.width=7, fig.height=4}
 if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -869,7 +869,7 @@ Row {.tabset data-height=1800}
 
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
-##### **Average field weighted citation impact (FWCI)** <br> *Yearly and moving average*
+##### **Average field weighted citation impact (FWCI)** <br> `r timegraph_header_legend()`
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -883,7 +883,7 @@ if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 <div style='margin:10px'></div>
 
 <div>
-##### **Share of publications among Top 10% cited** <br> *Yearly and moving average*
+##### **Share of publications among Top 10% cited** <br> `r timegraph_header_legend()`
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -983,7 +983,7 @@ cat("<hr>")
 <div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
 <div>
 
-##### **Field normalized journal impact (SNIP)** <br> *Yearly and moving average*
+##### **Field normalized journal impact (SNIP)** <br> `r timegraph_header_legend()`
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
@@ -997,7 +997,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 <div style='margin:10px'></div>
 
 <div>
-##### **Share of publications in Top 20% journals** <br> *Yearly and moving average*
+##### **Share of publications in Top 20% journals** <br> `r timegraph_header_legend()`
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {

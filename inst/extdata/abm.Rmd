@@ -646,7 +646,7 @@ if(isTRUE(unit_level >= 0)){
     filter(Publication_Type == "Article, peer review", Publication_Year %in% df_jcf$Publication_Year)
 
   mincov <- min(woscov_jcf$woscov_frac)
-  minpubs <- min(woscov_jcf$sumcov_full)
+  minpubs <- min(woscov_jcf$sumwos_full)
 
   cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",

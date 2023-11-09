@@ -1001,7 +1001,7 @@ if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ```{r, fig.height = 4, fig.width = 6}
 if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_scop_snip, "top20_share", ma = TRUE, weight = "P_frac", ylabel = "Share Top 10%", refline = .2, percent = TRUE)
+  time_graph(df_scop_snip, "top20_share", ma = TRUE, weight = "P_frac", ylabel = "Share Top 20%", refline = .2, percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }

@@ -364,8 +364,8 @@ abm_ui_kable_diva <- function(df_diva) {
   
   if (nrow(df_diva) > 0) {
     df_diva %>%
-      mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage"), round, digits = 1) %>%
-      mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
+      mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage", -"Scopus_coverage"), round, digits = 1) %>%
+      mutate_at(vars(ends_with("coverage")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
       # Note: include_thead = TRUE gives error in kableExtra versions > 1.1.0
@@ -437,8 +437,8 @@ abm_ui_kable_diva_full <- function(df_diva_full) {
   
   if (nrow(df_diva) > 0) {
     df_diva %>%
-      mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage"), round, digits = 0) %>%
-      mutate_at(vars(starts_with("WoS")), function(x) sprintf("%3.1f%%", x * 100)) %>%
+      mutate_at(vars(-"Publication_Type_DiVA", -"WoS_coverage", -"Scopus_coverage"), round, digits = 0) %>%
+      mutate_at(vars(ends_with("coverage")), function(x) sprintf("%3.1f%%", x * 100)) %>%
       kable(col.names = getcolnames(names(df_diva)),
             align = c("l", rep("r", ncol(df_diva) - 1))) %>%
       # Note: include_thead = TRUE gives error in kableExtra versions > 1.1.0

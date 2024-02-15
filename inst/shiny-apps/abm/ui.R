@@ -1,32 +1,51 @@
 library(shiny)
 library(shinydashboard)
 library(shinythemes)
+library(ktheme)
+library(fresh)
+
+abm_theme <- create_theme(
+  adminlte_color(light_blue = kth_colors("blue"),
+                 red = kth_colors("red"),
+                 green = kth_colors("green"),
+                 aqua = kth_colors("lightblue"),
+                 yellow = kth_colors("yellow"),
+                 blue = kth_colors("blue"),
+                 navy = kth_colors("darkblue"),
+                 teal = kth_colors("teal"),
+                 olive = kth_colors("darkgreen"),
+                 lime = kth_colors("lightgreen"),
+                 orange = kth_colors("darkyellow"),
+                 gray_lte = kth_colors("gray"))
+)
+
+
 
 # ----------------------
 # Layout: sidebar with filter
 # TODO: workound various issue with getting the sizing to work properly
 
-dashboardPage(skin = "black",
-  dashboardHeader(title = paste("ABM KTH", bibliomatrix::abm_config()$stop_year + 1),
-    # tags$li(class = "dropdown",
-    #   #img(src = "kth-logo.png", height = 30, width = 30),
-    #   #style = "padding-top:10px; padding-bottom:10px;",
-    #   #class = "dropdown",
-    #   tags$li(class = "dropdown",
-    #     tags$a(href = 'https://kth.se/abm',
-    #       "Login", icon("sign-in"),
-    #       title = "Log in here if you are a student or employed at KTH" #,
-    #   ))
-    # )
-    uiOutput("login")#, inline = TRUE, container = tags$span)
-  ),
+dashboardPage(
+  skin = "blue",
+  dashboardHeader(title = div(paste("KTH ABM ", bibliomatrix::abm_config()$stop_year + 1),
+                              style = paste0("text-align: center;",
+                                             "font-family: Figtree;",
+                                             "font-size: 20px;",
+                                             "background-color: ", kth_colors("blue"), ";"))
+                  ),
   dashboardSidebar(
-    #tags$h4(textOutput("login")),
+    div(
+      br(img(src = "logo_vit_80.png", width = 80)),
+      style = paste0("text-align: center;",
+                     "background-color: ", kth_colors("blue"), ";"),
+      br()
+    ),
     uiOutput("units"),
-    uiOutput("switcher")
-#   checkboxInput("use_prerendered", "Use pre-rendered content", value = TRUE)
+    sidebarMenuOutput("switcher")
   ),
   dashboardBody(
+    use_theme(abm_theme),
+    use_googlefont("Figtree"),
     # this inline CSS is intented to retain indentations on iPhone (which seems )
     tags$head(tags$style(HTML('
       .selectize-dropdown {
@@ -56,7 +75,8 @@ dashboardPage(skin = "black",
     box(width = 12, height = "90vh", 
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),
       htmlOutput("frame")
-    )
+    ),
+    tags$head(tags$style(".skin-blue .main-sidebar {background-color: white;}"))
   )
 )
 

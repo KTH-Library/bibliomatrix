@@ -30,8 +30,7 @@ dashboardPage(
   dashboardHeader(title = div(paste("KTH ABM ", bibliomatrix::abm_config()$stop_year + 1),
                               style = paste0("text-align: center;",
                                              "font-family: Figtree;",
-                                             "font-size: 20px;",
-                                             "background-color: ", kth_colors("blue"), ";"))
+                                             "font-size: 20px;"))
                   ),
   dashboardSidebar(
     div(

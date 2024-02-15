@@ -98,10 +98,10 @@ server <- function(input, output, session) {
     
     output$switcher <- renderMenu(
       sidebarMenu(
-        menuItem(text = a(if_else(ABM_IS_PUBLIC,
-                                  HTML("Use your KTH account<br>to view your own data"),
-                                  HTML("Switch to public app")),
-                 href = if_else(ABM_IS_PUBLIC, ABM_URL_PRIVATE, ABM_URL_PUBLIC)),
+        menuItem(text = if_else(ABM_IS_PUBLIC,
+                                "Log in to view your own data",
+                                "Switch to public app"),
+                 href = if_else(ABM_IS_PUBLIC, ABM_URL_PRIVATE, ABM_URL_PUBLIC),
                  icon = icon(if_else(ABM_IS_PUBLIC, "sign-in", "sign-out"))
         )
       )

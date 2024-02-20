@@ -82,7 +82,7 @@ dashboardPage(
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),
       htmlOutput("frame")
     ),
-    tags$head(tags$style(".skin-blue .main-sidebar {background-color: white;}"))
+    tags$head(tags$style(".skin-blue .main-sidebar {background-color: white; padding-top: 10px}"))
   )
 )
 

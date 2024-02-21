@@ -74,7 +74,8 @@ Imports:
     DT,
     blob,
     rlang,
-    zoo
+    zoo,
+    fresh
 Remotes: 
     KTH-Library/kthapi,
     KTH-Library/ktheme

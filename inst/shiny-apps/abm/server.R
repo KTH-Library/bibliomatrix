@@ -4,6 +4,7 @@ library(shinythemes)
 library(bibliomatrix)
 library(dplyr)
 library(purrr)
+library(ktheme)
 
 # deploy to shiny in root context
 #ln -s /usr/local/lib/R/site-library/bibliomatrix/shiny-apps/abm/* .
@@ -19,7 +20,7 @@ ABM_IS_PUBLIC <- ifelse(Sys.getenv("ABM_IS_PUBLIC") != "", TRUE, FALSE)
 #Sys.setenv("ABM_API" = "")
 
 ABM_URL_PUBLIC <- ifelse(Sys.getenv("ABM_URL_PUBLIC") != "", Sys.getenv("ABM_URL_PUBLIC"), "https://kth.se/abm/public")
-ABM_URL_PRIVATE <- ifelse(Sys.getenv("ABM_URL_PRIVATE") != "", Sys.getenv("ABM_URL_PRIVATE"), "https://kth.se/abm")
+ABM_URL_PRIVATE <- ifelse(Sys.getenv("ABM_URL_PRIVATE") != "", Sys.getenv("ABM_URL_PRIVATE"), "https://www.kth.se/abm/app_direct/abm/")
 
 ABM_API <- Sys.getenv("ABM_API")
 
@@ -81,7 +82,7 @@ server <- function(input, output, session) {
         if (!ABM_IS_PUBLIC)
             orgs <- c(kthid(), orgs)
         
-        shiny::selectInput(inputId = "unitid", label = "Select unit", 
+        shiny::selectInput(inputId = "unitid", label = tags$span(style = paste("color:", kth_colors("darkblue")), "Select unit"), 
                            choices = orgs, selected = 1, #default_org_id(kthid()),
                            multiple = FALSE, selectize = TRUE, width = "100%")
     })
@@ -95,55 +96,47 @@ server <- function(input, output, session) {
     
     is_employee <- function(id) id == kthid()
     
-    output$switcher <- renderUI({
-        if (!ABM_IS_PUBLIC) {
-            sidebarMenu(
-                id = "tabs",
-                menuItem("Switch to public app", href = ABM_URL_PUBLIC, 
-                         icon = icon("sign-out"), 
-                         badgeLabel = "Go", badgeColor = "blue")
-            )    
-        } else (
-            sidebarMenu(
-                id = "tabs",
-                menuItem(htmltools::HTML("Use your KTH account <br>to view your own data"), href = ABM_URL_PRIVATE, 
-                         icon = icon("sign-in"), 
-                         badgeLabel = "Go", badgeColor = "blue")
-            )    
+    output$switcher <- renderMenu(
+      sidebarMenu(
+        menuItem(text = if_else(ABM_IS_PUBLIC,
+                                "Log in to view your own data",
+                                "Switch to public app"),
+                 href = if_else(ABM_IS_PUBLIC, ABM_URL_PRIVATE, ABM_URL_PUBLIC),
+                 icon = icon(if_else(ABM_IS_PUBLIC, "sign-in", "sign-out"))
         )
-        
+      )
+    )               
+
     
-    })
-    
-    output$login <- renderUI({
-        if (!ABM_IS_PUBLIC) {
-            out <- tags$li(class = "dropdown", 
-                style = "padding-top:7px; padding-bottom:7px;",
-                tags$li(class = "dropdown", 
-                    tags$a(href = ABM_URL_PUBLIC,
-                       class = "button button-primary button-sm",
-                       "Switch to public app", icon("sign-out"), " ... ",
-                       title = "Switch to the public version of this application")
-                )
-            )
-        } else if (ABM_IS_PUBLIC == TRUE) {
-            out <- tags$li(class = "dropdown", 
-                style = "padding-top:7px; padding-bottom:7px;",
-                tags$li(class = "dropdown", 
-                    tags$a(href = ABM_URL_PRIVATE, 
-                           style = "padding:7px;",
-                        class = "button button-primary button-sm",
-                        "Use your KTH account", icon("sign-in"), " ... ", img(src = "KTH_logo_RGB_bla.png", height = 30, width = 30),
-                        title = "Switch to view your own publications if you are a KTH researcher")
-                )
-            )            
-        } else {
-            out <- ""
-        }
-        
-        out
-    })
-    
+    # output$login <- renderUI({
+    #     if (!ABM_IS_PUBLIC) {
+    #         out <- tags$li(class = "dropdown", 
+    #             style = "padding-top:7px; padding-bottom:7px;",
+    #             tags$li(class = "dropdown", 
+    #                 tags$a(href = ABM_URL_PUBLIC,
+    #                    class = "button button-primary button-sm",
+    #                    "Switch to public app", icon("sign-out"), " ... ",
+    #                    title = "Switch to the public version of this application")
+    #             )
+    #         )
+    #     } else if (ABM_IS_PUBLIC == TRUE) {
+    #         out <- tags$li(class = "dropdown", 
+    #             style = "padding-top:7px; padding-bottom:7px;",
+    #             tags$li(class = "dropdown", 
+    #                 tags$a(href = ABM_URL_PRIVATE, 
+    #                        style = "padding:7px;",
+    #                     class = "button button-primary button-sm",
+    #                     "Use your KTH account", icon("sign-in"), " ... ", img(src = "KTH_logo_RGB_bla.png", height = 30, width = 30),
+    #                     title = "Switch to view your own publications if you are a KTH researcher")
+    #             )
+    #         )            
+    #     } else {
+    #         out <- ""
+    #     }
+    #     
+    #     out
+    # })
+
     output$frame <- renderUI({
         
         req(input$unitid)

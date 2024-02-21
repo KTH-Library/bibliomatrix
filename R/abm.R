@@ -788,7 +788,7 @@ abm_coverage <- function(data, analysis_start = abm_config()$start_year, analysi
     mutate(woscov_frac = sumwos_frac / p_frac,
            woscov_full = sumwos_full / p_full,
            scopcov_frac = sumscop_frac / p_frac,
-           scopcov_full = sumscop_full / p_frac,
+           scopcov_full = sumscop_full / p_full,
            Publication_Type = "Peer reviewed")
   
   orgdata |>

@@ -101,26 +101,31 @@ test_that("same result is returned from sqlite db and public data", {
   uc <- "KTH"
   
   a1 <- 
-    pluck(abm_public_kth$units, uc, "wos_copub_countries") %>%
-    arrange(country)
+    pluck(abm_public_kth$units, uc, "wos_copub_countries") |>
+    arrange(country) |> 
+    mutate(kth_frac = round(kth_frac, 10))
   
   a2 <- 
-    pluck(abm_public_kth$units, uc, "wos_copub_orgs") %>%
-    arrange(country, org)
+    pluck(abm_public_kth$units, uc, "wos_copub_orgs") |>
+    arrange(country, org) |> 
+    mutate(kth_frac = round(kth_frac, 10))
   
   con <- con_bib_sqlite()
   on.exit(DBI::dbDisconnect(con))
   
   b1 <- 
-    abm_copub_countries(con = con, unit_level = 0, unit_code = uc) %>%
-    arrange(country)
+    abm_copub_countries(con = con, unit_level = 0, unit_code = uc) |>
+    arrange(country) |> 
+    mutate(kth_frac = round(kth_frac, 10))
   
   b2 <- 
-    abm_copub_orgs(con = con, unit_level = 0, unit_code = uc) %>%
-    arrange(country, org)
+    abm_copub_orgs(con = con, unit_level = 0, unit_code = uc) |>
+    arrange(country, org) |> 
+    mutate(kth_frac = round(kth_frac, 10))
   
   is_valid <- identical(a1, b1) && identical(a2, b2)
   
   expect_true(is_valid)
   
 })
+

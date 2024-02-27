@@ -187,9 +187,10 @@ db_sync_table <- function(
     message("Table ", table, " will be overwritten at the destination connection")
   
   rc_sql <- sprintf("SELECT COUNT(*) as n FROM %s;", table)
-  rc <- dbGetQuery(con_src, rc_sql) %>% as_vector()
-  p <- progress_estimated(n = ceiling(rc / chunk_size))
-
+  rc <- dbGetQuery(con_src, rc_sql) |> pull(n)
+  pb <- progress::progress_bar$new(total = ceiling(rc / chunk_size))
+  pb$tick(0)
+  
   rs_sql <- sprintf("SELECT * FROM %s;", table)
   rs <- dbSendQuery(con_src, rs_sql)
 
@@ -200,7 +201,7 @@ db_sync_table <- function(
   while (!dbHasCompleted(rs)) {
     chunk <- odbc::dbFetch(rs, chunk_size) %>% as_tibble()
     DBI::dbWriteTable(con_dest, table, chunk, append = TRUE)
-    p$pause(0.1)$tick()$print()
+    pb$tick(1)
     is_first_iter <- FALSE
   }
   odbc::dbClearResult(rs)

@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 # bibliomatrix <img src="man/figures/sticker.png" align="right" />
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
 [![R build status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
 [![R-CMD-check](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
@@ -29,17 +28,17 @@ If you have queries related to the content, functionality or methods used, pleas
 
 ## Installation
 
-You can install the latest development version of bibliomatrix from [GitHub](https://KTH-Library.github.com/bibliomatrix) with:
+You can install the latest released version of bibliomatrix from [GitHub](https://KTH-Library.github.com/bibliomatrix) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("KTH-Library/bibliomatrix")
 ```
 
-If you don't already have `devtools`, this package can be installed first with:
+For the latest development version, use the code below. *Note* that this version may contain errors and experimental features.
 
 ``` r
-install.packages("devtools", dependencies = TRUE)
+devtools::install_github("KTH-Library/bibliomatrix@devel")
 ```
 
 ### Public data

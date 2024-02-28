@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![Travis build
-status](https://travis-ci.org/KTH-Library/bibliomatrix.svg?branch=master)](https://travis-ci.org/KTH-Library/bibliomatrix)
 [![R build
 status](https://github.com/KTH-Library/bibliomatrix/workflows/R-CMD-check/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions)
 [![R-CMD-check](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KTH-Library/bibliomatrix/actions/workflows/R-CMD-check.yaml)
@@ -26,7 +24,7 @@ repository.
 
 ## Installation
 
-You can install the latest development version of bibliomatrix from
+You can install the latest released version of bibliomatrix from
 [GitHub](https://KTH-Library.github.com/bibliomatrix) with:
 
 ``` r
@@ -34,11 +32,11 @@ You can install the latest development version of bibliomatrix from
 devtools::install_github("KTH-Library/bibliomatrix")
 ```
 
-If you don’t already have `devtools`, this package can be installed
-first with:
+For the latest development version, use the code below. *Note* that this
+version may contain errors and experimental features.
 
 ``` r
-install.packages("devtools", dependencies = TRUE)
+devtools::install_github("KTH-Library/bibliomatrix@devel")
 ```
 
 ### Public data
@@ -96,18 +94,20 @@ kth_abm_tables[[1]] %>%
   knitr::kable(format = "pipe")
 ```
 
-| Publication_Type_DiVA         |     P_frac | WoS_coverage |
-|:------------------------------|-----------:|-------------:|
-| Article, peer review          | 10365.0160 |    0.8876244 |
-| Article, other                |   654.5046 |    0.8230426 |
-| Conference paper, peer review |  4882.7028 |    0.6218883 |
-| Conference paper, other       |  1132.6493 |    0.0500621 |
-| Book                          |   101.9401 |    0.0049048 |
-| Chapter in book               |   958.5153 |    0.0284989 |
-| Article, book review          |    87.1000 |    0.5637199 |
-| Report                        |   451.5233 |    0.0000000 |
-| Doctoral thesis               |  1899.0000 |    0.0000000 |
-| Licentiate thesis             |   503.0000 |    0.0000000 |
+| Publication_Type_DiVA         |      P_frac | WoS_coverage |
+|:------------------------------|------------:|-------------:|
+| Article, peer review          | 14872.62876 |    0.8818465 |
+| Article, other                |   927.71435 |    0.8156852 |
+| Conference paper, peer review |  7436.47547 |    0.6058859 |
+| Conference paper, other       |  1922.34506 |    0.0404143 |
+| Book                          |   153.38119 |    0.0032599 |
+| Anthology (editor)            |    77.65952 |    0.0042922 |
+| Chapter in book               |  1477.59711 |    0.0274206 |
+| Article, book review          |   124.85000 |    0.5474569 |
+| Report                        |   746.33660 |    0.0000000 |
+| Doctoral thesis               |  2703.00000 |    0.0000000 |
+| Licentiate thesis             |   799.00000 |    0.0000000 |
+| Patent                        |    74.40238 |    0.0000000 |
 
 ## Development
 

@@ -56,3 +56,8 @@ str_split <- function(x) unlist(strsplit(trimws(x), "\\s+", perl = TRUE))
 globalz <- c(str_split(globalz), spacenames)
 
 if (getRversion() >= "2.15.1") utils::globalVariables(globalz)
+
+#' @importFrom fresh use_googlefont
+dummy <- function() {
+  fresh::use_googlefont("Figtree")
+}

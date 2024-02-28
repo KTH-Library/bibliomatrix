@@ -27,22 +27,13 @@ abm_theme <- create_theme(
 
 dashboardPage(
   skin = "blue",
-  dashboardHeader(disable = TRUE
-    # title = div(paste("KTH ABM ", bibliomatrix::abm_config()$stop_year + 1),
-    #                           style = paste0("text-align: center;",
-    #                                          "font-family: Figtree;",
-    #                                          "font-size: 20px;"))
-                  ),
+  dashboardHeader(disable = TRUE),
   dashboardSidebar(
     div(
       br(img(src = "logo_vit_80.png")),
       br(paste("KTH ABM ", bibliomatrix::abm_config()$stop_year + 1)),
-          #                           style = paste0("text-align: center;",
-          #                                          "font-family: Figtree;",
-          #                                          "font-size: 20px;"))
       style = paste0("text-align: center;",
                      "background-color: ", kth_colors("blue"), ";",
-                     "font-family: Figtree;",
                      "font-size: 20px;"),
       br()
     ),
@@ -82,7 +73,7 @@ dashboardPage(
       tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),
       htmlOutput("frame")
     ),
-    tags$head(tags$style(".skin-blue .main-sidebar {background-color: white; padding-top: 10px}"))
+    tags$head(tags$style(".skin-blue .main-sidebar {background-color: white; padding-top: 10px; font-family: Figtree;}"))
   )
 )
 

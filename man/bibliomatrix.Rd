@@ -2,6 +2,7 @@
 % Please edit documentation in R/package-bibliomatrix.R
 \docType{package}
 \name{bibliomatrix}
+\alias{-package}
 \alias{bibliomatrix}
 \alias{package-bibliomatrix}
 \title{bibliomatrix}

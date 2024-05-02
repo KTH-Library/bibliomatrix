@@ -27,7 +27,7 @@ abm_theme <- create_theme(
 
 dashboardPage(
   skin = "blue",
-  dashboardHeader(disable = TRUE),
+  header =  dashboardHeader(),
   dashboardSidebar(
     div(
       br(img(src = "logo_vit_80.png")),
@@ -43,6 +43,18 @@ dashboardPage(
   dashboardBody(
     use_theme(abm_theme),
     use_googlefont("Figtree"),
+    # Catch display width to always show sidebar toggle (through dashboarHeader) when display is narrow
+    tags$head(
+      tags$script(HTML("
+        document.addEventListener('DOMContentLoaded', function() {
+          var header = document.querySelector('.main-header');
+          var updateVisibility = function() {
+            header.style.display = window.innerWidth > 800 ? 'none' : 'block';
+          };
+          updateVisibility();
+          window.addEventListener('resize', updateVisibility);
+        });
+      "))),
     # this inline CSS is intented to retain indentations on iPhone (which seems )
     tags$head(tags$style(HTML('
       .selectize-dropdown {

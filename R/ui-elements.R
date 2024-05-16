@@ -144,7 +144,7 @@ abm_ui_summary_pubs <- function(df_diva, lastyear,
       value = round(total_pubs, 1),
       color = unname(ktheme::palette_kth(4)["blue"]),
       icon = "fa-chart-bar",
-      href = "#publications-in-diva")
+      href = "#publication-summary")
     
     vb1
   } else {
@@ -1296,7 +1296,7 @@ abm_ui_valuebox_publications <- function(df, lastyear, vbcolor, unit_label) {
       value = round(total_pubs, 1),
       color = vbcolor,
       icon = "fa-chart-bar",
-      href = "#publications-in-diva")
+      href = "#publication-summary")
 
   } else {
     shiny::HTML(glue("<p><i>{unit_label} has no publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
@@ -1334,8 +1334,8 @@ abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
       value = paste(100*round(cov, 3), "%"),
       color = vbcolor,
       icon = "fa-percent",
-      href = "#publications-in-diva")
-
+      href = "#publication-summary")
+    
   } else {
     shiny::HTML(glue("<p><i>{unit_label} has no peer reviewed publications registered in DiVA {abm_config()$start_year} - {abm_config()$stop_year}</i></p>"))
   }

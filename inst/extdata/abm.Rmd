@@ -254,12 +254,12 @@ has_rows <- df_copub %>% filter(!is.na(P_full)) %>% nrow > 0
 last_interval <- ifelse(has_rows, paste((as.numeric(nth(df_copub$Publication_Year, -2))-2),nth(df_copub$Publication_Year, -2), sep = "-"), "")
 ```
 
-### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .no-mobile}
+### **[Co&#8209;publishing `r last_interval` (WoS)](#copublishing)** {.no-padding .no-mobile}
 ```{r, fig.width=3.75, fig.height = 2}
 abm_ui_waffle_copub(df_copub)
 ```
 
-### **[Co&#8209;publishing `r last_interval` (WoS)](#co&#8209;publishing)** {.no-padding .mobile}
+### **[Co&#8209;publishing `r last_interval` (WoS)](#copublishing)** {.no-padding .mobile}
 
 ```{r, fig.width=2.75, fig.height = 2}
 abm_ui_waffle_copub(df_copub)

@@ -36,134 +36,133 @@ ABM_API_EMP <- paste0(ABM_API, "/employee/%s/flexdashboard")
 
 server <- function(input, output, session) {
 
-    kthid <- function() {
-        if (!ABM_IS_PUBLIC) {
-            ua <- Sys.getenv("SHINYPROXY_USERNAME")
-            if (ua == "") ua <- "u1g9umtq@kth.se"
-            re_saml <- "(.*)@kth\\.se$"
-            is_saml <- function(x) stringr::str_detect(x, re_saml)
-            parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
-            
-            jwt <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
-            if (jwt != "") {
-                payload <- abm_decode_jwt(jwt)
-                kthid <- payload$kthid
-                kthid <- setNames(kthid, sprintf("%s (%s)", payload$unique_name[1], payload$username))
-                #setNames(kthid, displayname_from_kthid(kthid))
-                return (kthid)
-            }
-            
-            if (is_saml(ua)) {
-                kthid <- parse_id(ua)
-                kthid <- setNames(kthid, displayname_from_kthid(kthid))
-            } else {
-                # if shinyproxy with saml then we get user identity as kthid@kth.se
-                # if shinyproxy with ldap then we get user identity as LDAP accountname
-                message("Not shinyproxy/shiny and not SAML, warning... appears to use LDAP")
-                kthid <- setNames(kthid, displayname_from_kthid(kthid))
-            }
-        } else {
-            kthid <- NULL
-        }
-        
+  kthid <- function() {
+    if (!ABM_IS_PUBLIC) {
+      ua <- Sys.getenv("SHINYPROXY_USERNAME")
+      if (ua == "") ua <- "u1g9umtq@kth.se"
+      re_saml <- "(.*)@kth\\.se$"
+      is_saml <- function(x) stringr::str_detect(x, re_saml)
+      parse_id <- function(x) stringr::str_match(x, re_saml)[,2]
+      
+      jwt <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
+      if (jwt != "") {
+        payload <- abm_decode_jwt(jwt)
+        kthid <- payload$kthid
+        kthid <- setNames(kthid, sprintf("%s (%s)", payload$unique_name[1], payload$username))
+        #setNames(kthid, displayname_from_kthid(kthid))
         return (kthid)
+      }
+      
+      if (is_saml(ua)) {
+        kthid <- parse_id(ua)
+        kthid <- setNames(kthid, displayname_from_kthid(kthid))
+      } else {
+        # if shinyproxy with saml then we get user identity as kthid@kth.se
+        # if shinyproxy with ldap then we get user identity as LDAP accountname
+        message("Not shinyproxy/shiny and not SAML, warning... appears to use LDAP")
+        kthid <- setNames(kthid, displayname_from_kthid(kthid))
+      }
+    } else {
+      kthid <- NULL
     }
     
-    default_org_id <- function(kthid){
-        # Set selected org to KTH for now.
-        return(177)
-    }
+    return (kthid)
+  }
+  
+  default_org_id <- function(kthid){
+    # Set selected org to KTH for now.
+    return(177)
+  }
+  
+  output$units <- renderUI({
     
-    output$units <- renderUI({
-        
-        orgs <- abm_public_kth$meta$Diva_org_id %>% 
-            set_names(abm_public_kth$meta$unit_long_en_indent2)
-        
-        if (!ABM_IS_PUBLIC)
-            orgs <- c(kthid(), orgs)
-        
-        shiny::selectInput(inputId = "unitid", label = tags$span(style = paste("color:", kth_colors("darkblue")), "Select unit"), 
-                           choices = orgs, selected = 1, #default_org_id(kthid()),
-                           multiple = FALSE, selectize = TRUE, width = "100%")
-    })
+    orgs <- abm_public_kth$meta$Diva_org_id %>% 
+      set_names(abm_public_kth$meta$unit_long_en_indent2)
     
-    dash_src <- function(id) {
-        if (id %in% abm_public_kth$meta$Diva_org_id)
-            return (sprintf(ABM_API_UNIT, id))
-        if (id == kthid())
-            return (sprintf(ABM_API_EMP, id))
-    }
+    if (!ABM_IS_PUBLIC)
+      orgs <- c(kthid(), orgs)
     
-    is_employee <- function(id) id == kthid()
-    
-    output$switcher <- renderMenu(
-      sidebarMenu(
-        menuItem(text = if_else(ABM_IS_PUBLIC,
-                                "Log in to view your own data",
-                                "Switch to public app"),
-                 href = if_else(ABM_IS_PUBLIC, ABM_URL_PRIVATE, ABM_URL_PUBLIC),
-                 icon = icon(if_else(ABM_IS_PUBLIC, "sign-in", "sign-out"))
-        )
+    shiny::selectInput(inputId = "unitid", label = tags$span(style = paste("color:", kth_colors("darkblue")), "Select unit"), 
+                       choices = orgs, selected = 1, #default_org_id(kthid()),
+                       multiple = FALSE, selectize = TRUE, width = "100%")
+  })
+  
+  dash_src <- function(id) {
+    if (id %in% abm_public_kth$meta$Diva_org_id)
+      return (sprintf(ABM_API_UNIT, id))
+    if (id == kthid())
+      return (sprintf(ABM_API_EMP, id))
+  }
+  
+  is_employee <- function(id) id == kthid()
+  
+  output$switcher <- renderMenu(
+    sidebarMenu(
+      menuItem(text = if_else(ABM_IS_PUBLIC,
+                              "Log in to view your own data",
+                              "Switch to public app"),
+               href = if_else(ABM_IS_PUBLIC, ABM_URL_PRIVATE, ABM_URL_PUBLIC),
+               icon = icon(if_else(ABM_IS_PUBLIC, "sign-in", "sign-out"))
       )
-    )               
-
+    )
+  )               
+  
+  
+  # output$login <- renderUI({
+  #     if (!ABM_IS_PUBLIC) {
+  #         out <- tags$li(class = "dropdown", 
+  #             style = "padding-top:7px; padding-bottom:7px;",
+  #             tags$li(class = "dropdown", 
+  #                 tags$a(href = ABM_URL_PUBLIC,
+  #                    class = "button button-primary button-sm",
+  #                    "Switch to public app", icon("sign-out"), " ... ",
+  #                    title = "Switch to the public version of this application")
+  #             )
+  #         )
+  #     } else if (ABM_IS_PUBLIC == TRUE) {
+  #         out <- tags$li(class = "dropdown", 
+  #             style = "padding-top:7px; padding-bottom:7px;",
+  #             tags$li(class = "dropdown", 
+  #                 tags$a(href = ABM_URL_PRIVATE, 
+  #                        style = "padding:7px;",
+  #                     class = "button button-primary button-sm",
+  #                     "Use your KTH account", icon("sign-in"), " ... ", img(src = "KTH_logo_RGB_bla.png", height = 30, width = 30),
+  #                     title = "Switch to view your own publications if you are a KTH researcher")
+  #             )
+  #         )            
+  #     } else {
+  #         out <- ""
+  #     }
+  #     
+  #     out
+  # })
+  
+  output$frame <- renderUI({
     
-    # output$login <- renderUI({
-    #     if (!ABM_IS_PUBLIC) {
-    #         out <- tags$li(class = "dropdown", 
-    #             style = "padding-top:7px; padding-bottom:7px;",
-    #             tags$li(class = "dropdown", 
-    #                 tags$a(href = ABM_URL_PUBLIC,
-    #                    class = "button button-primary button-sm",
-    #                    "Switch to public app", icon("sign-out"), " ... ",
-    #                    title = "Switch to the public version of this application")
-    #             )
-    #         )
-    #     } else if (ABM_IS_PUBLIC == TRUE) {
-    #         out <- tags$li(class = "dropdown", 
-    #             style = "padding-top:7px; padding-bottom:7px;",
-    #             tags$li(class = "dropdown", 
-    #                 tags$a(href = ABM_URL_PRIVATE, 
-    #                        style = "padding:7px;",
-    #                     class = "button button-primary button-sm",
-    #                     "Use your KTH account", icon("sign-in"), " ... ", img(src = "KTH_logo_RGB_bla.png", height = 30, width = 30),
-    #                     title = "Switch to view your own publications if you are a KTH researcher")
-    #             )
-    #         )            
-    #     } else {
-    #         out <- ""
-    #     }
-    #     
-    #     out
-    # })
-
-    output$frame <- renderUI({
-        
-        req(input$unitid)
-        
-        cat("Report for:", input$unitid, "private visibility:", !ABM_IS_PUBLIC, "\n")
-        
-        report <- abm_report(id = input$unitid, is_private = !ABM_IS_PUBLIC)
-        is_ok <- !is.null(report)
-            
-        if (is_ok) {    
-            
-            #tags$div(HTML(rawToChar(report)))  # this causes CSS issues w navbar
-            #b64 <- base64enc::dataURI(data = report, mime = "text/html")  # this causes slow enc
-            
-            # NB: permission issue if not writing to cache dir (has o+wr)
-            tf <- paste0(file.path("cache", openssl::sha1(rawToChar(report))), ".html")
-            readr::write_file(report, paste0("www/", tf))
-            
-            htmltools::tags$iframe(src = tf, 
-                frameborder = 0, scrolling = "auto", height="100%", width="100%")
-            
-        } else {
-            paste("No report available for this unit, please contact the system owner.")
-        }
-        
-
-    })    
+    req(input$unitid)
     
+    cat("Report for:", input$unitid, "private visibility:", !ABM_IS_PUBLIC, "\n")
+    
+    report <- abm_report(id = input$unitid, is_private = !ABM_IS_PUBLIC)
+    is_ok <- !is.null(report)
+    
+    if (is_ok) {    
+      
+      #tags$div(HTML(rawToChar(report)))  # this causes CSS issues w navbar
+      #b64 <- base64enc::dataURI(data = report, mime = "text/html")  # this causes slow enc
+      
+      # NB: permission issue if not writing to cache dir (has o+wr)
+      tf <- paste0(file.path("cache", openssl::sha1(rawToChar(report))), ".html")
+      readr::write_file(report, paste0("www/", tf))
+      
+      htmltools::tags$iframe(src = tf, 
+                             frameborder = 0, scrolling = "auto", height="100%", width="100%")
+      
+    } else {
+      paste("No report available for this unit, please contact the system owner.")
+    }
+    
+    
+  })    
+  
 }
-

@@ -196,7 +196,7 @@ Row  {data-height=240}
   }
 ```
 
-### **Publications in DiVA `r as_range(lastyear)`<br>(fractional counts)**
+### **[Publications in DiVA `r as_range(lastyear)`<br>(fractional counts)](#publication-summary)**
 
 ```{r, fig.width = 1.75, fig.height = 2}
 abm_ui_valuebox_publications(df_diva, lastyear, colors_vb[1], unit_label)

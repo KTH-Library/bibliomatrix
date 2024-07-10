@@ -905,9 +905,16 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 
   # Get publication level data for selected unit
   data |>
-    filter(Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop) |>
-    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa", "analysis_id")) |>
+    select(-any_of(c("analysis_id",
+                     "is_kth",
+                     "Doc_id",
+                     "w_subj",
+                     "level"))) |>
+    relocate(c(DOI, Publication_Year, Title, Bibliographic_Information, n_authors, Publication_Type_DiVA), .after = PID) |>
+    relocate(Unit_Fraction, .before = Unit_Fraction_adj) |> 
+    relocate(Ptop5, .after = Ptop1) |>
+    relocate(Cf_log, .after = cf) |> 
+    filter(Publication_Year %in% analysis_start:analysis_stop) |>
     mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) |> 
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
@@ -1827,6 +1834,7 @@ abm_sdg_table <- function(data,
     summarise(p = n(), p_frac = sum(Unit_Fraction))
 }
 
+
 #' Create table over any SDG by year for the selected unit
 #'
 #' @param data dataset with publications as tibble
@@ -1913,4 +1921,47 @@ abm_graph_sdg <- function(df) {
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())
   }
+}
+
+
+#' Create Excel workbook with ABM publication data
+#' 
+#' @param data a data frame
+#' @param attribution (optional) attribution text
+#' @return A workbook object
+#' @import openxlsx dplyr stringr
+#' @export
+abm_data_workbook <- function(data, attribution = NULL) {
+  
+  oldmaxWidth <- getOption("openxlsx.maxWidth")
+  options("openxlsx.maxWidth" = 120)
+  on.exit(options("openxlsx.maxWidth" = oldmaxWidth))
+  
+  dec3Style <- createStyle(numFmt = "0.000")
+  dec3 <- which(names(data) %in% c("jcf", "Jtop20", "cf", "Cf_log",
+                                   "Ptop1", "Ptop5", "Ptop10", "Ptop25",
+                                   "Unit_Fraction", "Unit_Fraction_adj",
+                                   "scop_fwci_x", "scop_snip"))
+  
+  wb <- createWorkbook()
+  
+  addWorksheet(wb, "Data")
+  writeDataTable(wb, "Data", data)
+  setColWidths(wb, "Data", cols = 1:ncol(data), widths = "auto")
+  addStyle(wb, "Data", dec3Style, cols = dec3, rows = 2:nrow(data), gridExpand = T)
+  
+  if(!is.null(attribution)) {
+    attrib <- data.frame(x = str_wrap(attribution, 90) |> str_split_1("\n"))
+    attribStyle <- createStyle(fontSize = 12,
+                               fgFill = "#EEEEEE",
+                               textDecoration = "bold")
+    addWorksheet(wb, "Attribution")
+    writeData(wb, "Attribution", x = attrib,
+              startCol = 2, startRow = 2,
+              colNames = FALSE)
+    setColWidths(wb, "Attribution", cols = 2, widths = "auto")
+    addStyle(wb, "Attribution", attribStyle, cols = 2, rows = 2:(1+nrow(attrib)))
+  }  
+  
+  wb
 }

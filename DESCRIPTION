@@ -75,7 +75,8 @@ Imports:
     blob,
     rlang,
     zoo,
-    fresh
+    fresh,
+    openxlsx
 Remotes: 
     KTH-Library/kthapi,
     KTH-Library/ktheme

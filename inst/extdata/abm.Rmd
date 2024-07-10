@@ -89,6 +89,7 @@ if (params$use_package_data != TRUE) {
   df_coverage <- abm_coverage(data)
   con <- con_bib()
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
+  analysis_date <- get_analysis_date(con = con)
   df_copub_countries <- abm_copub_countries(con = con,
                                             unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
                                                                 unit_meta$org_level, 3),
@@ -132,6 +133,7 @@ if (params$use_package_data != TRUE) {
   df_sdg_year <- pluck(abm_public_kth$units, params$unit_code, "scop_sdg_year")
   df_sdg_table <- pluck(abm_public_kth$units, params$unit_code, "scop_sdg_table")
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
+  analysis_date <- get_analysis_date()
 }
 
 unit_level <- unit_meta %>% pull(org_level)
@@ -304,6 +306,8 @@ Row
 The bibliometric indicators referred are based on publications registered in DiVA and published `r abm_config()$start_year` to `r abm_config()$stop_year`. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
 Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science (Citation impact, Journal impact and Co&#8209;publishing tabs) or Scopus (Scopus tab).
+
+Extraction of publications and indicators from the KTH bibliometric database BibMet was conducted at `r analysis_date`.
 
 Row
 --------------------------------

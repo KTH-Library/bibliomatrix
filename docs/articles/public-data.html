@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Using bundled data in `bibliomatrix` • bibliomatrix</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.1</span>
       </span>
     </div>
 
@@ -109,8 +109,9 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co"># To show the units included in the ABM, use either abm_public_kth$meta or the unit_info() function.</span></span>
 <span><span class="co"># (If no database connection is given to unit_info), abm_public_kth$meta is used anyway)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">abm_public_kth</span><span class="op">$</span><span class="va">meta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span>
-<span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 20</span></span></span>
 <span><span class="co">#&gt;    analysis_id Diva_org_id unit_code unit_short unit_long_en                    </span></span>
@@ -130,8 +131,9 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;">#   unit_long_sv &lt;chr&gt;, parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   description_en &lt;chr&gt;, kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_count &lt;dbl&gt;, altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;</span></span></span>
-<span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_level &lt;chr&gt;, sort_order &lt;int&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># The unit_code is used in most functions related to ABM</span></span>
 <span><span class="co"># For schools, unit_code is a single letter, for departments it is equal to the DiVA organization id</span></span>
 <span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"I"</span><span class="op">)</span></span>
@@ -143,8 +145,9 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span>
-<span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"5869"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">unit_code</span> <span class="op">==</span> <span class="st">"5869"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span></span>
 <span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
@@ -153,8 +156,9 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span>
-<span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># The org_level field is 0 for KTH, 1 for schools and 2 for departments. Info for all schools:</span></span>
 <span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">org_level</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 20</span></span></span>
@@ -169,8 +173,9 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   altmetric_href &lt;chr&gt;, altmetric_id &lt;chr&gt;, altmetric_level &lt;chr&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span>
-<span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   sort_order &lt;int&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># The parent_org_id field can be used to show all departments of some particular school</span></span>
 <span><span class="co"># (note that the parent id is always a Diva organization id).</span></span>
 <span><span class="fu"><a href="../reference/unit_info.html">unit_info</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">parent_org_id</span> <span class="op">==</span> <span class="fl">6023</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">unit_code</span>, <span class="va">unit_long_en</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">unit_long_en</span><span class="op">)</span></span>
@@ -187,7 +192,7 @@ whole, its five schools and about 30 departments. The dataset, named
 <div class="section level3">
 <h3 id="abm-tables-units">ABM tables (<code>units</code>)<a class="anchor" aria-label="anchor" href="#abm-tables-units"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -199,164 +204,80 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co"># Show parts of table 1</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">kth_abm_tables</span><span class="op">[[</span><span class="st">"diva"</span><span class="op">]</span><span class="op">]</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Publication_Type_DiVA</span>, <span class="va">P_frac</span>, <span class="va">WoS_coverage</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<thead><tr>
-<th style="text-align:left;">
-Publication_Type_DiVA
-</th>
-<th style="text-align:right;">
-P_frac
-</th>
-<th style="text-align:right;">
-WoS_coverage
-</th>
+<thead><tr class="header">
+<th align="left">Publication_Type_DiVA</th>
+<th align="right">P_frac</th>
+<th align="right">WoS_coverage</th>
 </tr></thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-Article, peer review
-</td>
-<td style="text-align:right;">
-14872.62876
-</td>
-<td style="text-align:right;">
-0.8818465
-</td>
+<tr class="odd">
+<td align="left">Article, peer review</td>
+<td align="right">14872.62876</td>
+<td align="right">0.8818465</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Article, other
-</td>
-<td style="text-align:right;">
-927.71435
-</td>
-<td style="text-align:right;">
-0.8156852
-</td>
+<tr class="even">
+<td align="left">Article, other</td>
+<td align="right">927.71435</td>
+<td align="right">0.8156852</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Conference paper, peer review
-</td>
-<td style="text-align:right;">
-7436.47547
-</td>
-<td style="text-align:right;">
-0.6058859
-</td>
+<tr class="odd">
+<td align="left">Conference paper, peer review</td>
+<td align="right">7436.47547</td>
+<td align="right">0.6058859</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Conference paper, other
-</td>
-<td style="text-align:right;">
-1922.34506
-</td>
-<td style="text-align:right;">
-0.0404143
-</td>
+<tr class="even">
+<td align="left">Conference paper, other</td>
+<td align="right">1922.34506</td>
+<td align="right">0.0404143</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Book
-</td>
-<td style="text-align:right;">
-153.38119
-</td>
-<td style="text-align:right;">
-0.0032599
-</td>
+<tr class="odd">
+<td align="left">Book</td>
+<td align="right">153.38119</td>
+<td align="right">0.0032599</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Anthology (editor)
-</td>
-<td style="text-align:right;">
-77.65952
-</td>
-<td style="text-align:right;">
-0.0042922
-</td>
+<tr class="even">
+<td align="left">Anthology (editor)</td>
+<td align="right">77.65952</td>
+<td align="right">0.0042922</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Chapter in book
-</td>
-<td style="text-align:right;">
-1477.59711
-</td>
-<td style="text-align:right;">
-0.0274206
-</td>
+<tr class="odd">
+<td align="left">Chapter in book</td>
+<td align="right">1477.59711</td>
+<td align="right">0.0274206</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Article, book review
-</td>
-<td style="text-align:right;">
-124.85000
-</td>
-<td style="text-align:right;">
-0.5474569
-</td>
+<tr class="even">
+<td align="left">Article, book review</td>
+<td align="right">124.85000</td>
+<td align="right">0.5474569</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Proceeding (editor)
-</td>
-<td style="text-align:right;">
-43.32143
-</td>
-<td style="text-align:right;">
-0.0230833
-</td>
+<tr class="odd">
+<td align="left">Proceeding (editor)</td>
+<td align="right">43.32143</td>
+<td align="right">0.0230833</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Report
-</td>
-<td style="text-align:right;">
-746.33660
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
+<tr class="even">
+<td align="left">Report</td>
+<td align="right">746.33660</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Doctoral thesis
-</td>
-<td style="text-align:right;">
-2703.00000
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
+<tr class="odd">
+<td align="left">Doctoral thesis</td>
+<td align="right">2703.00000</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Licentiate thesis
-</td>
-<td style="text-align:right;">
-799.00000
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
+<tr class="even">
+<td align="left">Licentiate thesis</td>
+<td align="right">799.00000</td>
+<td align="right">0.0000000</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-Patent
-</td>
-<td style="text-align:right;">
-74.40238
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
+<tr class="odd">
+<td align="left">Patent</td>
+<td align="right">74.40238</td>
+<td align="right">0.0000000</td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Note that numeric unit codes need to be enclosed with ` </span></span>
 <span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">`5851`</span><span class="op">$</span><span class="va">diva</span></span>
@@ -381,7 +302,7 @@ Patent
 <div class="section level3">
 <h3 id="order-of-publication-types-pubtype_order">Order of publication types (<code>pubtype_order</code>)<a class="anchor" aria-label="anchor" href="#order-of-publication-types-pubtype_order"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/KTH-Library/bibliomatrix" class="external-link">bibliomatrix</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The only current use for the pubtype_order part of the public data is to present</span></span>
@@ -424,7 +345,7 @@ Patent
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>

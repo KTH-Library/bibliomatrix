@@ -64,6 +64,9 @@
     <loc>/reference/abm_data.html</loc>
   </url>
   <url>
+    <loc>/reference/abm_data_workbook.html</loc>
+  </url>
+  <url>
     <loc>/reference/abm_decode_jwt.html</loc>
   </url>
   <url>
@@ -455,6 +458,9 @@
   </url>
   <url>
     <loc>/reference/displayname_from_kthid.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_analysis_date.html</loc>
   </url>
   <url>
     <loc>/reference/get_indic_descriptions.html</loc>

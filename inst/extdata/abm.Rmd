@@ -284,7 +284,7 @@ if(isTRUE(unit_level >= 0)){
 
   #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
   glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
-       "{coveragetext(woscov)}, {100*round(woscov, 3)}%.</span></p>")
+       "<b>{coveragetext(woscov)}, {100*round(woscov, 3)}%</b>.</span></p>")
 
 } else {
 

@@ -1334,7 +1334,7 @@ abm_graph_copub <- function(df){
 abm_graph_oa_lines <- function(df){
   
   colors_df <- unpaywall_colors() |>
-    bind_rows(data.frame(oa_status = "Open Access",
+    bind_rows(data.frame(oa_status = "Open Access, all",
                          oa_color = kth_colors("blue")))
   unpaywall <- colors_df$oa_color
   names(unpaywall) <- colors_df$oa_status 
@@ -1347,7 +1347,7 @@ abm_graph_oa_lines <- function(df){
     pivot_longer(cols = c("oa", "diamond", "gold", "hybrid", "green"),
                  values_to = "share") |> 
     mutate(oa_type = case_match(name,
-                                "oa" ~ "Open Access",
+                                "oa" ~ "Open Access, all",
                                 "diamond" ~ "Diamond",
                                 "gold" ~ "Gold",
                                 "green" ~ "Green",
@@ -1368,7 +1368,7 @@ abm_graph_oa_lines <- function(df){
     scale_size_identity() +
     scale_alpha_identity() +
     scale_color_manual(
-      name = 'Type of OA',
+      name = 'OA type',
       values = unpaywall) +
     scale_x_continuous(breaks = xbreaks) +
     scale_y_continuous(breaks = ybreaks,

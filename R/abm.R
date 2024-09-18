@@ -79,6 +79,26 @@ get_indic_descriptions <- function(con){
   }
 }
 
+#' Get date of indicator extraction for ABM
+#' 
+#' @param con connection to db - if no connection is given, use abm_public_kth data
+#' @return date
+#' @import dplyr
+#' @export
+get_analysis_date <- function(con) {
+  if(!missing(con)){
+    con |>
+      tbl("analysis_info") |>
+      collect() |>
+      filter(analysis_id == abm_config()$analysis_id) |>
+      pull(date_of_extraction) |>
+      as.POSIXct() |>
+      as.Date()
+  } else {
+    abm_public_kth$analysis_date
+  }
+}
+
 #' Retrieve Table 1 (Publications in DiVA) for ABM, fractional counts
 #' 
 #' @param data dataset with publications as tibble
@@ -885,17 +905,24 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 
   # Get publication level data for selected unit
   data |>
-    filter(Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop) |>
-    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa", "analysis_id")) |>
+    select(-any_of(c("analysis_id",
+                     "is_kth",
+                     "Doc_id",
+                     "w_subj",
+                     "level"))) |>
+    relocate(c(DOI, Publication_Year, Title, Bibliographic_Information, n_authors, Publication_Type_DiVA), .after = PID) |>
+    relocate(Unit_Fraction, .before = Unit_Fraction_adj) |> 
+    relocate(Ptop5, .after = Ptop1) |>
+    relocate(Cf_log, .after = cf) |> 
+    filter(Publication_Year %in% analysis_start:analysis_stop) |>
     mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) |> 
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
 
 #' Public data from the Annual Bibliometric Monitoring project
 #' 
-#' This returns an object which contains data for the various higher 
-#' organizational units at KTH
+#' This returns an object which contains data for organizational units at KTH
+#' and some metadata used in the ABM
 #' 
 #' Data is cached in a local application directory by default and
 #' is returned from there unless the parameter overwrite_cache is TRUE. 
@@ -903,9 +930,10 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #' 
 #' @param overwrite_cache logical (by default FALSE) specifying whether 
 #'   the cache should be refreshed
-#' @return a list with three slots - "meta" for organizational unit metadata info,
-#'   "units" with a named list of results (set of 5 different tibbles for each of the units)
-#'   and "pt_ordning" for DiVA publication type sort order
+#' @return a list with four slots - "meta" for organizational unit metadata info,
+#'   "units" with a named list of results (set of tibbles for each of the units),
+#'   "pt_ordning" for DiVA publication type sort order
+#'   and analysis_date for the date of data extraction
 #' @importFrom pool poolClose
 #' @importFrom readr write_rds
 #' @importFrom purrr map
@@ -964,6 +992,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   indicator_descriptions <-
     get_indic_descriptions(con = db)
   
+  analysis_date <-
+    get_analysis_date(con = db)
+  
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     
@@ -1010,7 +1041,11 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   poolClose(db)
   
-  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order, "indicator_descriptions" = indicator_descriptions)
+  out <- list("meta" = units_table,
+              "units" = res,
+              "pubtype_order" = pubtype_order,
+              "indicator_descriptions" = indicator_descriptions,
+              "analysis_date" = analysis_date)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 
@@ -1799,6 +1834,7 @@ abm_sdg_table <- function(data,
     summarise(p = n(), p_frac = sum(Unit_Fraction))
 }
 
+
 #' Create table over any SDG by year for the selected unit
 #'
 #' @param data dataset with publications as tibble
@@ -1885,4 +1921,47 @@ abm_graph_sdg <- function(df) {
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())
   }
+}
+
+
+#' Create Excel workbook with ABM publication data
+#' 
+#' @param data a data frame
+#' @param attribution (optional) attribution text
+#' @return A workbook object
+#' @import openxlsx dplyr stringr
+#' @export
+abm_data_workbook <- function(data, attribution = NULL) {
+  
+  oldmaxWidth <- getOption("openxlsx.maxWidth")
+  options("openxlsx.maxWidth" = 120)
+  on.exit(options("openxlsx.maxWidth" = oldmaxWidth))
+  
+  dec3Style <- createStyle(numFmt = "0.000")
+  dec3 <- which(names(data) %in% c("jcf", "Jtop20", "cf", "Cf_log",
+                                   "Ptop1", "Ptop5", "Ptop10", "Ptop25",
+                                   "Unit_Fraction", "Unit_Fraction_adj",
+                                   "scop_fwci_x", "scop_snip"))
+  
+  wb <- createWorkbook()
+  
+  addWorksheet(wb, "Data")
+  writeDataTable(wb, "Data", data)
+  setColWidths(wb, "Data", cols = 1:ncol(data), widths = "auto")
+  addStyle(wb, "Data", dec3Style, cols = dec3, rows = 2:nrow(data), gridExpand = T)
+  
+  if(!is.null(attribution)) {
+    attrib <- data.frame(x = str_wrap(attribution, 90) |> str_split_1("\n"))
+    attribStyle <- createStyle(fontSize = 12,
+                               fgFill = "#EEEEEE",
+                               textDecoration = "bold")
+    addWorksheet(wb, "Attribution")
+    writeData(wb, "Attribution", x = attrib,
+              startCol = 2, startRow = 2,
+              colNames = FALSE)
+    setColWidths(wb, "Attribution", cols = 2, widths = "auto")
+    addStyle(wb, "Attribution", attribStyle, cols = 2, rows = 2:(1+nrow(attrib)))
+  }  
+  
+  wb
 }

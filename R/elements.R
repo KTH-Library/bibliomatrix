@@ -87,10 +87,10 @@ coveragetext <- function(woscoverage){
     ret <- "NA"
     #ret <- "Invalid woscoverage, please give a number in the interval [0,1]"
   if(woscoverage >= 0.75)
-    ret <- "good"
+    ret <- "high"
   if(woscoverage < 0.75 & woscoverage >= 0.6)
     ret <- "moderate"
   if(woscoverage < 0.6)
-    ret <- "poor"
+    ret <- "low"
   ret
 }

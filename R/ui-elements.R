@@ -56,7 +56,7 @@ abm_ui_button_altmetric <- function(altmetric_count, altmetric_href, unit_label)
 #'   data, default: FALSE
 #' @import htmltools flexdashboard dplyr
 #' @importFrom mime guess_type
-#' @importFrom writexl write_xlsx
+#' @importFrom openxlsx saveWorkbook
 #' @importFrom rmarkdown html_dependency_font_awesome
 #' @export
 abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit_file_label,
@@ -69,9 +69,6 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (is_loggedin == TRUE) {
-    
-    # Do not include fields added to masterfile for other reasons than ABM
-    data <- data %>% select(-any_of(c("Ptop5", "Cf_log")))
     
     embed_data <- function(path)
       paste0("data:", mime::guess_type(path), ";base64,", 
@@ -106,13 +103,9 @@ abm_ui_button_publist <- function(data, is_loggedin, unit_label, unit_code, unit
     # Create excel workbook
     filename <- paste0("ABM_PubList_", unit_file_label, "_", current_date, ".xlsx")
     excel_file <- file.path(tempdir(), filename)
-    writexl::write_xlsx(path = excel_file,
-       x = list(
-         Data = as.data.frame(publications_kth), 
-         Attribution = data.frame(attribution = wos_attribution())
-      )
-    )
-    
+    wb <- abm_data_workbook(publications_kth, wos_attribution())
+    saveWorkbook(wb, excel_file, overwrite = TRUE)
+
     embed_file_link(excel_file,
       .text = "Download Publication List in Excel format", 
       title = filename, #"Download Publication List in Excel format", # hover

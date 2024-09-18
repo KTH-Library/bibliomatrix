@@ -1251,7 +1251,7 @@ abm_ui_note <- function(data, df_coverage, unit_level, is_fractional = FALSE, is
         }
       }
       
-      cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+      cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
                "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
                "(DiVA publication type Article, peer review)<br></span>"))
       

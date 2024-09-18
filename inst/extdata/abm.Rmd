@@ -791,17 +791,17 @@ Open Access
 Row
 ---------------------
 
-### **Overview of Open Access publication types** 
+### **Open Access status by year, share** 
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+  abm_graph_oa_lines(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
-### **Open Access publication types across time**
+### **Open Access status by year, number of publications**
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {

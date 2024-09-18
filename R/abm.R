@@ -1322,6 +1322,68 @@ abm_graph_copub <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
+#' Create line graph over share of publications by OA type and year
+#' 
+#' @param df a data frame at the format produced by abm_table6()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme 
+#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_replace
+#' @importFrom scales percent_format
+#' @export
+abm_graph_oa_lines <- function(df){
+  
+  colors_df <- unpaywall_colors() |>
+    bind_rows(data.frame(oa_status = "Open Access",
+                         oa_color = kth_colors("blue")))
+  unpaywall <- colors_df$oa_color
+  names(unpaywall) <- colors_df$oa_status 
+
+  graph_df <- df |>
+    filter(Publication_Year_ch != 'Total') |>
+    mutate(Year = as.integer(Publication_Year_ch)) |> 
+    mutate(across(ends_with("count"), function(x) x/P_tot)) |> 
+    rename_with(.cols = ends_with("count"), ~stringr::str_replace(., "_count", "")) |> 
+    pivot_longer(cols = c("oa", "diamond", "gold", "hybrid", "green"),
+                 values_to = "share") |> 
+    mutate(oa_type = case_match(name,
+                                "oa" ~ "Open Access",
+                                "diamond" ~ "Diamond",
+                                "gold" ~ "Gold",
+                                "green" ~ "Green",
+                                "hybrid" ~ "Hybrid",
+                                .default = NA),
+           lw = if_else(name == 'oa', 1.5, 0.9),
+           sz = if_else(name == 'oa', 3, 2),
+           a = if_else(name == 'oa', 1, .7))
+  
+  xbreaks <- graph_df |> pull(Year) |> unique() |> sort()
+  ybreaks <- seq(0, ceiling(10*max(graph_df$share))/10, .1)
+  
+  ggplot(data = graph_df,
+         aes(x = Year, y = share, color = oa_type, linewidth = lw, size = sz, alpha = a)) +
+    geom_line() +
+    geom_point() +
+    scale_linewidth_identity() +
+    scale_size_identity() +
+    scale_alpha_identity() +
+    scale_color_manual(
+      name = 'Type of OA',
+      values = unpaywall) +
+    scale_x_continuous(breaks = xbreaks) +
+    scale_y_continuous(breaks = ybreaks,
+                       labels = percent_format()) +
+    theme_kth_neo() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      legend.position="bottom") +
+    ylab("Share of publications") + 
+    xlab("Publication year")
+}
+
 #' Create waffle chart (5 rows, 20 columns) for any single percentage
 #' 
 #' @param pct a percentage expressed as a decimal number 0 <= pct <= 1

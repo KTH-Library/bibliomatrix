@@ -299,8 +299,7 @@ if(isTRUE(unit_level >= 0)){
 cat("<p>Note that the coverage numbers for Web of Science and Scopus apply to publications in the KTH bibliometric database Bibmet. If a WoS-id or Scoupus-id from DiVA can not be matched in Bibmet, it does not count as covered.</p>")
 ```
 
-Row
---------------------------------
+
 ### **Background**
 
 The bibliometric indicators referred are based on publications registered in DiVA and published `r abm_config()$start_year` to `r abm_config()$stop_year`. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.

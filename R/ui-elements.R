@@ -659,7 +659,7 @@ abm_ui_datatable_copub <- function(df_copub, unit_file_label, unit_title) {
         ordering = FALSE,
         bPaginate = FALSE,
         dom = 'tB',
-        scrollX = TRUE, 
+        scrollX = TRUE,
         scrollY = FALSE,
         buttons = list(
           list(extend = "copy", title = unit_title),
@@ -1053,6 +1053,7 @@ abm_ui_datatable_copub_countries <- function(df_copub_countries, unit_file_label
                    scrollX = TRUE, 
                    scrollY = FALSE,
                    buttons = list(
+                     list(extend = "pageLength"),
                      list(extend = "copy", title = unit_title),
                      list(extend = "csv", filename = filename, title = unit_title),
                      list(extend = "excel", filename = filename, title = unit_title))
@@ -1132,8 +1133,8 @@ abm_ui_datatable_copub_orgs <- function(df_copub_orgs, unit_file_label, unit_tit
                    dom = 'ftpB',
                    scrollX = TRUE, 
                    scrollY = FALSE,
-                   #list(targets = 2, searchable = FALSE),
                    buttons = list(
+                     list(extend = "pageLength"),
                      list(extend = "copy", title = unit_title),
                      list(extend = "csv", filename = filename, title = unit_title),
                      list(extend = "excel", filename = filename, title = unit_title))
@@ -1649,4 +1650,4 @@ time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, 
 
 timegraph_header_legend<-function(colors_vb = ktheme::palette_kth_neo(17)){
   paste0('*Yearly (<span style="color:', colors_vb['blue'],'">&#8226;&#8226;</span>) and moving average (<span style="color:', colors_vb['darkred'],'">&mdash;</span>)*')
-  }
+}

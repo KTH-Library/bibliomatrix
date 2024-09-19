@@ -670,15 +670,14 @@ Co&#8209;publishing {data-orientation=rows}
 
 #### `r unit_label`
 
-Row {.tabset data-height=1500}
----------------------
+Row {.tabset data-height=6000}
+------------------------------
 
 ### Summary
 
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+#### **International and Swedish non-university co&#8209;publication**
 
-##### **International and Swedish non-university co&#8209;publication**
-```{r, fig.width=7, fig.height=4}
+```{r, fig.width=6, fig.height=4}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
@@ -686,18 +685,9 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 }
 ```
 
-</div>
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
-##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
-
-<style type="text/css">
-div.dt-buttons {
-  position:relative;
-  float:right;
-}
-</style>
-
-```{r, fig.height=4}
+```{r, fig.width=6, fig.height=4}
 abm_ui_datatable_copub(
   df_copub,
   unit_file_label = unit_file_label, 
@@ -705,14 +695,14 @@ abm_ui_datatable_copub(
 )
 ```
 
-##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r}
 abm_ui_kable_copub(df_copub)
 ```
 
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#co-publishing){target="_blank" style="position:relative;float:right;"}
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#co-publishing){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
 cat("<hr>")
@@ -742,7 +732,7 @@ cat("<hr>")
 
 ### Countries and organizations
 
-##### **Co&#8209;publication countries** {.no-mobile}
+#### **Co&#8209;publication countries** {.no-mobile}
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -761,13 +751,13 @@ abm_ui_datatable_copub_countries(
 ) 
 ```
 
-##### **Co&#8209;publication countries** {.no-padding .mobile}
+#### **Co&#8209;publication countries** {.no-padding .mobile}
 ```{r}
 abm_ui_kable_copub_countries(df_copub_countries) 
 ```
 
 
-##### **Co&#8209;publication organizations** {.no-mobile}
+#### **Co&#8209;publication organizations** {.no-mobile}
 
 ```{r}
 abm_ui_datatable_copub_orgs(
@@ -777,7 +767,7 @@ abm_ui_datatable_copub_orgs(
 ) 
 ```
 
-##### **Co&#8209;publication countries** {.no-padding .mobile}
+#### **Co&#8209;publication countries** {.no-padding .mobile}
 ```{r}
 abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```

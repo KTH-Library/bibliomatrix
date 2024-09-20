@@ -1140,8 +1140,9 @@ abm_graph_diva <- function(df) {
     gather("year", "value", -Publication_Type_DiVA) |>
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
-  colvals <- unname(ktheme::palette_kth_neo(13, type = "qual"))
-  
+  colvals <- unname(palette_kth_neo(13, type = "qual"))
+  names(colvals) <- abm_public_kth$pubtype_order |> filter(pt_ordning <= 13) |> pull(diva_publication_type)
+
   ggplot(data = df_diva_long,
          aes(x = year)) +
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, desc(pt_ordning)))) +

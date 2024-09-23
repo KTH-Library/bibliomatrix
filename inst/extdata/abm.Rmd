@@ -1133,7 +1133,7 @@ SDG
 Row {data-height=650}
 ---------------------
 
-### **Sustainable Development Goals (fractional counts)**
+### **Sustainable Development Goals**
 
 ```{r, fig.height=8, fig.width = 20}
 if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
@@ -1146,7 +1146,7 @@ if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
 Row {data-height=800}
 ---------------------
 
-### **Publications with any Sustainable Development Goal (fractional counts)** {.no-mobile}
+### **Publications with any Sustainable Development Goal** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1163,14 +1163,14 @@ abm_ui_datatable_sdg_year(
 )
 ```
 
-### **Publications with any Sustainable Development Goal (fractional counts)** {.mobile}
+### **Publications with any Sustainable Development Goal** {.mobile}
 
 ```{r}
 abm_ui_kable_sdg_year(df_sdg_year)
 ```
 
 
-### **Sustainable Development Goals (fractional counts)** {.no-mobile}
+### **Sustainable Development Goals** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1187,7 +1187,7 @@ abm_ui_datatable_sdg_table(
 )
 ```
 
-### **Sustainable Development Goals (fractional counts)** {.mobile}
+### **Sustainable Development Goals** {.mobile}
 
 ```{r}
 abm_ui_kable_sdg_table(df_sdg_table)

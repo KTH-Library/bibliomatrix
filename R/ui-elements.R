@@ -934,6 +934,7 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
     
     DT::datatable(df,
                   container = header,
+                  fillContainer = TRUE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(

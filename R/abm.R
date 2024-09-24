@@ -229,15 +229,15 @@ abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_
   table1 <-
     orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) |>
     ungroup() |>
-    mutate(Publication_Year_ch = as.character(Publication_Year)) |>
-    arrange(Publication_Year_ch) |> 
-    select(Publication_Year_ch, P_frac, C3, C3_frac, P_uncited, Share_uncited)
+    mutate(Publication_Year = as.character(Publication_Year)) |>
+    arrange(Publication_Year)
   
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -246,12 +246,13 @@ abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) |>
-    mutate(Publication_Year_ch = "Total")
+    mutate(Publication_Year = "Total")
   
   bind_rows(table1, table2)
 }
@@ -297,7 +298,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = sum(cf * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE),
               top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
@@ -315,7 +317,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
   table1 <-
     orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = TRUE),
               top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE)) |>
@@ -354,7 +357,8 @@ abm_table4 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) |>
@@ -371,7 +375,8 @@ abm_table4 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Year dependent part of table
   table1 <- orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) |>
@@ -466,21 +471,21 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
               closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
               oa_share=mean(as.logical(is_oa), na.rm=TRUE)) |>
     ungroup() |>
-    mutate(Publication_Year_ch = as.character(Publication_Year)) |>
-    select(Publication_Year_ch, P_tot, oa_count, diamond_count, gold_count, hybrid_count, green_count, closed_count, oa_share)
+    mutate(Publication_Year = as.character(Publication_Year)) |>
+    select(Publication_Year, P_tot, oa_count, diamond_count, gold_count, hybrid_count, green_count, closed_count, oa_share)
 
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
 
   # Insert blank years
-  table1 <- tibble(Publication_Year_ch = as.character(analysis_start:analysis_stop)) |> 
-    left_join(table1, by = "Publication_Year_ch") |> 
-    arrange(Publication_Year_ch)
+  table1 <- tibble(Publication_Year = as.character(analysis_start:analysis_stop)) |> 
+    left_join(table1, by = "Publication_Year") |> 
+    arrange(Publication_Year)
     
   # Summary part of table
   table2 <- table1 |>
-    summarise(Publication_Year_ch = "Total",
+    summarise(Publication_Year = "Total",
               P_tot = sum(P_tot, na.rm = TRUE),
               oa_count = sum(oa_count, na.rm = TRUE),
               diamond_count = sum(diamond_count, na.rm = TRUE),
@@ -519,15 +524,15 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
   table1 <-
     orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C_sum = sum(Unit_Fraction * scop_cscxo, na.rm = TRUE),
               C_avg = weighted.mean(scop_cscxo, Unit_Fraction, na.rm = TRUE),
               P_uncited_scop = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited_scop = weighted.mean(uncited, Unit_Fraction, na.rm = TRUE)) |>
     ungroup() |>
-    mutate(Publication_Year_ch = as.character(Publication_Year)) |>
-    arrange(Publication_Year_ch) |> 
-    select(Publication_Year_ch, P_frac, C_sum, C_avg, P_uncited_scop, Share_uncited_scop)
+    mutate(Publication_Year = as.character(Publication_Year)) |>
+    arrange(Publication_Year)
   
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -536,13 +541,13 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C_sum = sum(Unit_Fraction * scop_cscxo, na.rm = TRUE),
               C_avg = weighted.mean(scop_cscxo, Unit_Fraction, na.rm = TRUE),
               P_uncited_scop = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited_scop = weighted.mean(uncited, Unit_Fraction, na.rm = TRUE)) |>
-    mutate(Publication_Year_ch = "Total") |> 
-    select(Publication_Year_ch, P_frac, C_sum, C_avg, P_uncited_scop, Share_uncited_scop)
+    mutate(Publication_Year = "Total")
   
   bind_rows(table1, table2)
 }
@@ -573,7 +578,8 @@ abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_yea
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
               top10_count = sum(scop_Ptop10 * Unit_Fraction, na.rm = TRUE),
               top10_share = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) |>
@@ -590,7 +596,8 @@ abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_yea
   # Year dependent part of table
   table1 <- orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
               top10_count = sum(scop_Ptop10 * Unit_Fraction, na.rm = TRUE),
               top10_share = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) |>
@@ -629,7 +636,8 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
   
   # Summary part of table
   table2 <- orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               avg_snip = weighted.mean(scop_snip, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(scop_Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(scop_Jtop20, Unit_Fraction, na.rm = TRUE)) |> 
@@ -646,7 +654,8 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
   # Year dependent part of table
   table1 <- orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               avg_snip = weighted.mean(scop_snip, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(scop_Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(scop_Jtop20, Unit_Fraction, na.rm = TRUE)) |>
@@ -731,14 +740,14 @@ abm_dash_indices <- function(data){
     # Fetch table 3 for cf and top10
     t3 <- abm_table3(data) |>
       filter(Publication_Year %in% (lastyear - 3):(lastyear - 1)) |>
-      summarise(cf = weighted.mean(cf, P_frac, na.rm = TRUE),
-                top10_share = weighted.mean(top10_share, P_frac, na.rm = TRUE))
+      summarise(cf = weighted.mean(cf, pubs_frac, na.rm = TRUE),
+                top10_share = weighted.mean(top10_share, pubs_frac, na.rm = TRUE))
   
     # Fetch table 4 for jcf and top20
     t4 <- abm_table4(data) |>
       filter(Publication_Year %in% (lastyear - 2):(lastyear)) |>
-      summarise(jcf = weighted.mean(jcf, P_frac, na.rm = TRUE),
-                top20_share = weighted.mean(top20_share, P_frac, na.rm = TRUE)) 
+      summarise(jcf = weighted.mean(jcf, pubs_frac, na.rm = TRUE),
+                top20_share = weighted.mean(top20_share, pubs_frac, na.rm = TRUE)) 
   
     # Fetch table 5 for non-univ and international copublications
     t5 <- abm_table5(data) |>
@@ -1341,8 +1350,8 @@ abm_graph_oa_lines <- function(df){
   names(unpaywall) <- colors_df$oa_status 
 
   graph_df <- df |>
-    filter(Publication_Year_ch != 'Total') |>
-    mutate(Year = as.integer(Publication_Year_ch)) |> 
+    filter(Publication_Year != 'Total') |>
+    mutate(Year = as.integer(Publication_Year)) |> 
     mutate(across(ends_with("count"), function(x) x/P_tot)) |> 
     rename_with(.cols = ends_with("count"), ~stringr::str_replace(., "_count", "")) |> 
     pivot_longer(cols = c("oa", "diamond", "gold", "hybrid", "green"),
@@ -1481,7 +1490,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
 abm_graph_oadata_pie <- function(df){
   
   df_oa_graphdata <- df |>
-    filter(Publication_Year_ch == "Total") |>
+    filter(Publication_Year == "Total") |>
     select(diamond_count, gold_count, hybrid_count, green_count, closed_count) |>
     rename("Diamond" = diamond_count,
            "Gold" = gold_count,
@@ -1490,7 +1499,7 @@ abm_graph_oadata_pie <- function(df){
            "Not OA" = closed_count)
   
   percentages <- df |>
-    filter(Publication_Year_ch == "Total") |>
+    filter(Publication_Year == "Total") |>
     mutate(diamond_count = 100*diamond_count/P_tot,
            gold_count = 100*gold_count/P_tot,
            hybrid_count = 100*hybrid_count/P_tot,
@@ -1526,14 +1535,14 @@ abm_graph_oadata_stackedarea <- function(df){
   unpaywall_cols <- unpaywall_colors() |> pull(oa_color)
 
   df_oa_graphdata <- df |>
-    filter(Publication_Year_ch != "Total") |>
-    select(Publication_Year_ch, diamond_count, gold_count, hybrid_count, green_count, closed_count) |>
+    filter(Publication_Year != "Total") |>
+    select(Publication_Year, diamond_count, gold_count, hybrid_count, green_count, closed_count) |>
     rename("Diamond" = diamond_count, "Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Not OA" = closed_count)
   
-  xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year_ch") |>
+  xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year") |>
     rename("OA type:"=variable)
   
-  ggplot(xymelt, aes(x = Publication_Year_ch, y = value, fill = `OA type:`, group = `OA type:`)) +
+  ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`)) +
     scale_fill_manual(values = unpaywall_cols) + 
     geom_area() + 
     #TODO: geom_line() +  ?

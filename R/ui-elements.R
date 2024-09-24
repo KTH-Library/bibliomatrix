@@ -446,22 +446,25 @@ abm_ui_kable_diva_full <- function(df_diva_full) {
 
 #' Datatable for 3 year citations
 #' 
-#' @param df_city3y data frame with DiVA publication data in a specific format
+#' @param df_cit3y data frame with DiVA publication data in a specific format
 #' @param unit_file_label the filename presented when users make use of the download button
 #' @param unit_title the label presented when users make use of the download button
 #' @import htmltools
 #' @importFrom DT formatRound formatPercentage formatStyle
 #' @export
-abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
+abm_ui_datatable_cit3y <- function(df_cit3y, unit_file_label, unit_title) {
 
   current_date <- format(Sys.Date(), "%Y%m%d")
   
-  if (nrow(df_city3y) > 0) {
+  if (nrow(df_cit3y) > 0) {
     filename <- paste0("ABM_table2_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_city3y))))
+    df <- df_cit3y |> 
+      select(Publication_Year, pubs_full, pubs_frac, C3, C3_frac, Share_uncited)
+   
+    header <- eval(parse(text = getheader(names(df))))
     
-    DT::datatable(df_city3y,
+    DT::datatable(df,
                   container = header,
                   rownames = FALSE,
                   fillContainer = FALSE,
@@ -477,8 +480,8 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
                       list(extend = "csv", filename = filename, title = unit_title),
                       list(extend = "excel", filename = filename, title = unit_title))
                   )) |>
-      DT::formatRound(2:5, digits = 1, mark = "") |>
-      DT::formatPercentage(6, digits = 1) |>
+      DT::formatRound(c("pubs_frac", "C3", "C3_frac"), digits = 1, mark = "") |>
+      DT::formatPercentage("Share_uncited", digits = 1) |>
       abm_format_rows()
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -494,11 +497,13 @@ abm_ui_datatable_city3y <- function(df_city3y, unit_file_label, unit_title) {
 #' @export
 abm_ui_kable_cit3y <- function(df_cit3y) {
   if (nrow(df_cit3y) > 0) {
-    df_cit3y |> 
-      mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) |>
+    df <- df_cit3y |> 
+      select(Publication_Year, pubs_full, pubs_frac, C3, C3_frac, Share_uncited)
+    df |> 
+      mutate_at(vars(3:5), function(x) sprintf("%.1f", x)) |>
       mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) |>
-      kable(col.names = getcolnames(names(df_cit3y)),
-            align = c("l", rep("r", ncol(df_cit3y) - 1))) |>
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) |>
       kable_styling(bootstrap_options = c("responsive")) |>
       scroll_box(width = "720px")
   } else {
@@ -521,9 +526,12 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
   if (nrow(df_cf) > 0) {
     filename <- paste0("ABM_table3_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_cf))))
+    df <- df_cf |> 
+      select(Publication_Year, pubs_full, pubs_frac, cf, top10_share)
     
-    DT::datatable(df_cf,
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
       container = header,
       rownames = FALSE,
       extensions = "Buttons",
@@ -539,9 +547,9 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
           list(extend = "excel", filename = filename, title = unit_title))
       )
     ) |> 
-      formatRound(c(2, 4), digits = 1, mark = "") |> 
-      formatRound(3, digits = 2, mark = "") |>
-      formatPercentage(5, digits = 1) |>
+      formatRound(c("pubs_frac"), digits = 1, mark = "") |> 
+      formatRound(c("cf"), digits = 2, mark = "") |>
+      formatPercentage(c("top10_share"), digits = 1) |>
       abm_format_rows()
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -557,12 +565,15 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
 #' @export
 abm_ui_kable_cf <- function(df_cf) {
   if (nrow(df_cf) > 0) {
-    df_cf |> 
-      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) |>
-      mutate_at(vars(3), function(x) sprintf("%.2f", x)) |>
+    df <- df_cf |> 
+      select(Publication_Year, pubs_full, pubs_frac, cf, top10_share)
+    
+    df |>
+      mutate_at(vars(3), function(x) sprintf("%.1f", x)) |>
+      mutate_at(vars(4), function(x) sprintf("%.2f", x)) |>
       mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) |>
-      kable(col.names = getcolnames(names(df_cf)),
-            align = c("l", rep("r", ncol(df_cf) - 1))) |> 
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) |> 
       kable_styling(bootstrap_options = c("responsive")) |>
       scroll_box(width = "720px")
   } else {
@@ -585,9 +596,12 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
   if (nrow(df_jcf) > 0) {
     filename <- paste0("ABM_table4_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_jcf))))
+    df <- df_jcf |> 
+      select(Publication_Year, pubs_full, pubs_frac, jcf, top20_share)
     
-    DT::datatable(df_jcf,
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",
@@ -602,9 +616,9 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
                       list(extend = "csv", filename = filename, title = unit_title),
                       list(extend = "excel", filename = filename, title = unit_title))
                     )) |> 
-      formatRound(c(2, 4), digits = 1, mark = "") |> 
-      formatRound(3, digits = 2, mark = "") |> 
-      formatPercentage(5, digits = 1) |>
+      formatRound(c("pubs_frac"), digits = 1, mark = "") |> 
+      formatRound(c("jcf"), digits = 2, mark = "") |> 
+      formatPercentage("top20_share", digits = 1) |>
       abm_format_rows()
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -620,12 +634,14 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
 #' @export
 abm_ui_kable_jcf <- function(df_jcf) {
   if (nrow(df_jcf) > 0) {
-    df_jcf |> 
-      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) |>
-      mutate_at(vars(3), function(x) sprintf("%.2f", x)) |>
+    df <- df_jcf |> 
+      select(Publication_Year, pubs_full, pubs_frac, jcf, top20_share)
+    df |> 
+      mutate_at(vars(3), function(x) sprintf("%.1f", x)) |>
+      mutate_at(vars(4), function(x) sprintf("%.2f", x)) |>
       mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) |>
-      kable(col.names = getcolnames(names(df_jcf)),
-            align = c("l", rep("r", ncol(df_jcf) - 1))) |>
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) |>
       kable_styling(bootstrap_options = c("responsive")) |>
       scroll_box(width = "720px")
   } else {
@@ -768,11 +784,15 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (nrow(df_scop_cit) > 0) {
+    
     filename <- paste0("ABM_scopus_citations_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_scop_cit))))
+    df <- df_scop_cit |> 
+      select(Publication_Year, pubs_full, pubs_frac, C_sum, C_avg, Share_uncited_scop)
     
-    DT::datatable(df_scop_cit,
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
                   container = header,
                   fillContainer = FALSE,
                   rownames = FALSE,
@@ -788,8 +808,8 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
                       list(extend = "csv", filename = filename, title = unit_title),
                       list(extend = "excel", filename = filename, title = unit_title))
                   )) |>
-      DT::formatRound(2:5, digits = 1, mark = "") |>
-      DT::formatPercentage(6, digits = 1) |>
+      DT::formatRound(c("pubs_frac", "C_sum", "C_avg"), digits = 1, mark = "") |>
+      DT::formatPercentage(c("Share_uncited_scop"), digits = 1) |>
       abm_format_rows()
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -806,11 +826,13 @@ abm_ui_datatable_scop_cit <- function(df_scop_cit, unit_file_label, unit_title) 
 #' @export
 abm_ui_kable_scop_cit <- function(df_scop_cit) {
   if (nrow(df_scop_cit) > 0) {
-    df_scop_cit |> 
-      mutate_at(vars(2:5), function(x) sprintf("%.1f", x)) |>
+    df <- df_scop_cit |>
+      select(Publication_Year, pubs_full, pubs_frac, C_sum, C_avg, Share_uncited_scop)
+    df |> 
+      mutate_at(vars(3:5), function(x) sprintf("%.1f", x)) |>
       mutate_at(vars(6), function(x) sprintf("%.1f%%", x * 100)) |>
-      kable(col.names = getcolnames(names(df_scop_cit)),
-            align = c("l", rep("r", ncol(df_scop_cit) - 1))) |>
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) |>
       kable_styling(bootstrap_options = c("responsive")) |>
       scroll_box(width = "720px")
   } else {
@@ -831,11 +853,15 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (nrow(df_scop_normcit) > 0) {
+    
     filename <- paste0("ABM_table_scop_normcit_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_scop_normcit))))
+    df <- df_scop_normcit |> 
+      select(Publication_Year, pubs_full, pubs_frac, fwci_x, top10_share)
     
-    DT::datatable(df_scop_normcit,
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
                   container = header,
                   fillContainer = FALSE,
                   rownames = FALSE,
@@ -852,9 +878,9 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
                       list(extend = "excel", filename = filename, title = unit_title))
                   )
     ) |> 
-      formatRound(c(2, 4), digits = 1, mark = "") |> 
-      formatRound(3, digits = 2, mark = "") |>
-      formatPercentage(5, digits = 1) |>
+      formatRound(c("pubs_frac"), digits = 1, mark = "") |> 
+      formatRound(c("fwci_x"), digits = 2, mark = "") |>
+      formatPercentage(c("top10_share"), digits = 1) |>
       abm_format_rows()
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -870,12 +896,14 @@ abm_ui_datatable_scop_normcit <- function(df_scop_normcit, unit_file_label, unit
 #' @export
 abm_ui_kable_scop_normcit <- function(df_scop_normcit) {
   if (nrow(df_scop_normcit) > 0) {
-    df_scop_normcit |> 
-      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) |>
-      mutate_at(vars(3), function(x) sprintf("%.2f", x)) |>
+    df <- df_scop_normcit |> 
+      select(Publication_Year, pubs_full, pubs_frac, fwci_x, top10_share)
+    df |>
+      mutate_at(vars(3), function(x) sprintf("%.1f", x)) |>
+      mutate_at(vars(4), function(x) sprintf("%.2f", x)) |>
       mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) |>
-      kable(col.names = getcolnames(names(df_scop_normcit)),
-            align = c("l", rep("r", ncol(df_scop_normcit) - 1))) |> 
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) |> 
       kable_styling(bootstrap_options = c("responsive")) |>
       scroll_box(width = "720px")
   } else {
@@ -896,11 +924,15 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
   current_date <- format(Sys.Date(), "%Y%m%d")
   
   if (nrow(df_scop_snip) > 0) {
+    
     filename <- paste0("ABM_table_scop_snip_", unit_file_label, "_", current_date)
     
-    header <- eval(parse(text = getheader(names(df_scop_snip))))
+    df <- df_scop_snip |> 
+      select(Publication_Year, pubs_full, pubs_frac, avg_snip, top20_share)
     
-    DT::datatable(df_scop_snip,
+    header <- eval(parse(text = getheader(names(df))))
+    
+    DT::datatable(df,
                   container = header,
                   rownames = FALSE,
                   extensions = "Buttons",
@@ -915,9 +947,9 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
                       list(extend = "csv", filename = filename, title = unit_title),
                       list(extend = "excel", filename = filename, title = unit_title))
                   )) |> 
-      formatRound(c(2, 4), digits = 1, mark = "") |> 
-      formatRound(3, digits = 2, mark = "") |> 
-      formatPercentage(5, digits = 1) |>
+      formatRound(c("pubs_frac"), digits = 1, mark = "") |> 
+      formatRound(c("avg_snip"), digits = 2, mark = "") |> 
+      formatPercentage(c("top20_share"), digits = 1) |>
       abm_format_rows()
   } else {
     withTags(p(style = "font-style: italic;", "There are no publications available for this table"))
@@ -933,12 +965,14 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
 #' @export
 abm_ui_kable_scop_snip <- function(df_scop_snip) {
   if (nrow(df_scop_snip) > 0) {
-    df_scop_snip |> 
-      mutate_at(vars(2, 4), function(x) sprintf("%.1f", x)) |>
-      mutate_at(vars(3), function(x) sprintf("%.2f", x)) |>
+    df <- df_scop_snip |> 
+      select(Publication_Year, pubs_full, pubs_frac, avg_snip, top20_share)
+    df |> 
+      mutate_at(vars(3), function(x) sprintf("%.1f", x)) |>
+      mutate_at(vars(4), function(x) sprintf("%.2f", x)) |>
       mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) |>
-      kable(col.names = getcolnames(names(df_scop_snip)),
-            align = c("l", rep("r", ncol(df_scop_snip) - 1))) |>
+      kable(col.names = getcolnames(names(df)),
+            align = c("l", rep("r", ncol(df) - 1))) |>
       kable_styling(bootstrap_options = c("responsive")) |>
       scroll_box(width = "720px")
   } else {
@@ -1341,25 +1375,25 @@ abm_ui_valuebox_coverage <- function(df, vbcolor, db = c("wos", "scopus"),
 #' @import patchwork
 #' @export
 abm_ui_bullet_citations <- function(df) {
-
-if (df |> filter(!is.na(P_frac)) |> nrow() > 0) {
   
-  years <- as.numeric(nth(df$Publication_Year, -2))
-  years <- (years-2):years
-
-  summary <- df |>
-    filter(Publication_Year %in% years) |>
-    summarise(cf = weighted.mean(cf, P_frac, na.rm = TRUE),
-              top10_share = weighted.mean(top10_share, P_frac, na.rm = TRUE))
-
-  cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
-                            value = summary$cf, reference = 1.0, roundto = 2)
-  
-  cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
-                            value = summary$top10_share, reference = 0.10, pct = TRUE)
-  
-  cit_bullet1 / cit_bullet2
-  
+  if (df |> filter(!is.na(pubs_frac)) |> nrow() > 0) {
+    
+    years <- as.numeric(nth(df$Publication_Year, -2))
+    years <- (years-2):years
+    
+    summary <- df |>
+      filter(Publication_Year %in% years) |>
+      summarise(cf = weighted.mean(cf, pubs_frac, na.rm = TRUE),
+                top10_share = weighted.mean(top10_share, pubs_frac, na.rm = TRUE))
+    
+    cit_bullet1 <- abm_bullet(label = "Cf, Field normalized citations", 
+                              value = summary$cf, reference = 1.0, roundto = 2)
+    
+    cit_bullet2 <- abm_bullet(label = "Share Top10% publications", 
+                              value = summary$top10_share, reference = 0.10, pct = TRUE)
+    
+    cit_bullet1 / cit_bullet2
+    
   } else {
     shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
   }
@@ -1372,15 +1406,15 @@ if (df |> filter(!is.na(P_frac)) |> nrow() > 0) {
 #' @export
 abm_ui_bullet_journal <- function(df) {
   
-  if (df |> filter(!is.na(P_frac)) |> nrow() > 0) {
+  if (df |> filter(!is.na(pubs_frac)) |> nrow() > 0) {
     
     years <- as.numeric(nth(df$Publication_Year, -2))
     years <- (years-2):years
     
     summary <- df |>
       filter(Publication_Year %in% years) |>
-      summarise(jcf = weighted.mean(jcf, P_frac, na.rm = TRUE),
-                top20_share = weighted.mean(top20_share, P_frac, na.rm = TRUE))
+      summarise(jcf = weighted.mean(jcf, pubs_frac, na.rm = TRUE),
+                top20_share = weighted.mean(top20_share, pubs_frac, na.rm = TRUE))
     
     jcit_bullet1 <- abm_bullet(label = "JCf, Field normalized citations", 
                                value = summary$jcf, reference = 1.0, roundto = 2)
@@ -1425,7 +1459,7 @@ abm_ui_waffle_copub <- function(df) {
   }
 }
 
-#' Datatable for SDG publicaitons by year
+#' Datatable for SDG publications by year
 #' 
 #' @param df_sdg_year data frame with data on SDG pubs
 #' @param unit_file_label the filename presented when users make use of the download button
@@ -1471,7 +1505,7 @@ abm_ui_datatable_sdg_year <- function(df_sdg_year, unit_file_label, unit_title) 
   }  
 }
 
-#' HTML table for SDG publicaitons by year
+#' HTML table for SDG publications by year
 #' 
 #' @param df_sdg_year data frame with data on SDG pubs
 #' @import htmltools dplyr
@@ -1498,7 +1532,7 @@ abm_ui_kable_sdg_year <- function(df_sdg_year) {
   }
 }
 
-#' Datatable for SDG publicaitons by goal
+#' Datatable for SDG publications by goal
 #' 
 #' @param df_sdg_table data frame with data on SDG pubs
 #' @param unit_file_label the filename presented when users make use of the download button
@@ -1544,7 +1578,7 @@ abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title
   }  
 }
 
-#' HTML table for SDG publicaitons by goal
+#' HTML table for SDG publications by goal
 #' 
 #' @param df_sdg_table data frame with data on SDG pubs
 #' @import htmltools 

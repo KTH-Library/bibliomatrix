@@ -603,6 +603,7 @@ abm_ui_datatable_jcf <- function(df_jcf, unit_file_label, unit_title) {
     
     DT::datatable(df,
                   container = header,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
@@ -934,7 +935,7 @@ abm_ui_datatable_scop_snip <- function(df_scop_snip, unit_file_label, unit_title
     
     DT::datatable(df,
                   container = header,
-                  fillContainer = TRUE,
+                  fillContainer = FALSE,
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(

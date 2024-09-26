@@ -1368,7 +1368,7 @@ abm_graph_oa_lines <- function(df){
            a = if_else(name == 'oa', 1, .7))
   
   xbreaks <- graph_df |> pull(Year) |> unique() |> sort()
-  ybreaks <- seq(0, ceiling(10*max(graph_df$share))/10, .1)
+  ybreaks <- seq(0, ceiling(10*max(graph_df$share, na.rm = TRUE))/10, .1)
   
   ggplot(data = graph_df,
          aes(x = Year, y = share, color = oa_type, linewidth = lw, size = sz, alpha = a)) +
@@ -1967,7 +1967,7 @@ abm_graph_sdg <- function(df) {
       mutate(goal_nr = substr(SDG_Displayname, 5, 6)) |>
       inner_join(colors, by = "goal_nr")
   
-  pmax <- max(sdgs$p_frac)
+  pmax <- max(sdgs$p_frac, na.rm = TRUE)
 
   if (pmax > 200){
     ymax <- trunc(1+pmax/100, 2)*100

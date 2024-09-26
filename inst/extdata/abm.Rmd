@@ -69,7 +69,7 @@ if (params$embed_data || !params$use_package_data) {
     con = con,
     unit_code = params$unit_code,
     pub_year = abm_config()$start_year:abm_config()$stop_year,
-    analysisId = 0
+    analysisId = abm_config()$analysis_id
     ) %>% collect()
   dbDisconnect(con)
 }

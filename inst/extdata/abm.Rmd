@@ -687,6 +687,7 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 ```
 
 </div>
+
 <div style='width: 50%; max-width: 900px;'>
 
 #### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
@@ -705,11 +706,9 @@ abm_ui_datatable_copub(
 abm_ui_kable_copub(df_copub)
 ```
 
-
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#co-publishing){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
-cat("<hr>")
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -731,7 +730,6 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
 
 </div>
@@ -740,6 +738,7 @@ cat("<hr>")
 ### Countries and organizations
 
 #### **Co&#8209;publication countries** {.no-mobile}
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -759,6 +758,7 @@ abm_ui_datatable_copub_countries(
 ```
 
 #### **Co&#8209;publication countries** {.no-padding .mobile}
+
 ```{r}
 abm_ui_kable_copub_countries(df_copub_countries) 
 ```
@@ -775,6 +775,7 @@ abm_ui_datatable_copub_orgs(
 ```
 
 #### **Co&#8209;publication countries** {.no-padding .mobile}
+
 ```{r}
 abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
@@ -1034,7 +1035,6 @@ abm_ui_kable_scop_snip(df_scop_snip)
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis", out.width='95%'}
-cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1057,7 +1057,6 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
 
 </div>
@@ -1079,9 +1078,11 @@ if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
 </div>
 
 <div style='width: 50%; max-width: 900px;'>
+
 #### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
 
 <style type="text/css">
@@ -1108,7 +1109,6 @@ abm_ui_kable_scop_copub(df_scop_copub)
 #### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis", out.width = '100%'}
-cat("<hr>")
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1130,8 +1130,8 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
+
 </div>
 </div>
 

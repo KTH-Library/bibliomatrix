@@ -7,7 +7,7 @@ output:
     favicon: KTH_logo_RGB_svart.png
     fig_mobile: FALSE
 params:
-  unit_code: !r bibliomatrix:::abm_config()$default_unit
+  unit_code: !r bibliomatrix::abm_config()$default_unit
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE

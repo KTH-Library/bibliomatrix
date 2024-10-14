@@ -81,8 +81,8 @@ dashboardPage(
           g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
         })();
       </script>")),
-    box(width = 12, height = "90vh", 
-      tags$style(type = "text/css", "#frame {height: calc(100vh - 120px) !important;}"),
+    box(width = 12, height = "97vh", 
+      tags$style(type = "text/css", "#frame {height: calc(100vh - 50px) !important;}"),
       htmlOutput("frame")
     ),
     tags$head(tags$style(".skin-blue .main-sidebar {background-color: white; padding-top: 10px; font-family: Figtree;}"))

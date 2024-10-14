@@ -2,7 +2,7 @@
 % Please edit documentation in R/ui-elements.R
 \name{abm_ui_kable_sdg_table}
 \alias{abm_ui_kable_sdg_table}
-\title{HTML table for SDG publicaitons by goal}
+\title{HTML table for SDG publications by goal}
 \usage{
 abm_ui_kable_sdg_table(df_sdg_table)
 }
@@ -10,5 +10,5 @@ abm_ui_kable_sdg_table(df_sdg_table)
 \item{df_sdg_table}{data frame with data on SDG pubs}
 }
 \description{
-HTML table for SDG publicaitons by goal
+HTML table for SDG publications by goal
 }

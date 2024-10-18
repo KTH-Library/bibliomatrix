@@ -39,7 +39,7 @@ server <- function(input, output, session) {
   kthid <- function() {
     if (!ABM_IS_PUBLIC) {
       ua <- Sys.getenv("SHINYPROXY_USERNAME")
-      if (ua == "") ua <- "u1g9umtq@kth.se"
+      if (ua == "") ua <- "u1u0kle4@kth.se"
       re_saml <- "(.*)@kth\\.se$"
       is_saml <- function(x) stringr::str_detect(x, re_saml)
       parse_id <- function(x) stringr::str_match(x, re_saml)[,2]

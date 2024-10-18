@@ -5,7 +5,7 @@
 \alias{abm_public_kth}
 \title{Public data with Annual Bibliometric Monitoring for KTH assembed in 2019}
 \format{
-An object of class \code{list} of length 4.
+An object of class \code{list} of length 5.
 }
 \usage{
 abm_public_kth

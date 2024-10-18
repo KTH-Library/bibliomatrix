@@ -1995,6 +1995,55 @@ abm_graph_sdg <- function(df) {
   }
 }
 
+#' Create graph over SDGs, mobile version
+#' 
+#' @param df a data frame at the format produced by abm_sdg_table()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom scales label_number
+#' @importFrom stringr str_pad
+#' @export
+abm_graph_sdg_mobile <- function(df) {
+  
+  SDG_Displayname <- color <- goal <- goal_nr <- NULL
+  
+  if(nrow(df) > 0){
+    colors <- sdg_colors() |>
+      mutate(goal_nr = str_pad(goal, 2, "left", "0")) |> 
+      select(goal_nr, color)
+    sdgs <- df |>
+      filter(SDG_Displayname != 'None') |> 
+      mutate(goal_nr = substr(SDG_Displayname, 5, 6)) |>
+      mutate(SDG_Shortname = substr(SDG_Displayname, 1, 6)) |> 
+      inner_join(colors, by = "goal_nr")
+
+    pmax <- max(sdgs$p_frac, na.rm = TRUE)
+    
+    if (pmax > 200){
+      ymax <- trunc(1+pmax/100, 2)*100
+      ybreaks <- seq(0, ymax, 200)
+    } else {
+      ymax <- trunc(1+pmax/10, 1)*10
+      ybreaks <- seq(0, ymax, 20)
+    }
+    
+    ggplot(data = sdgs,
+           aes(x = SDG_Shortname)) +
+      geom_bar(aes(weight = p_frac), fill = sdgs$color) +
+      xlab(NULL) +
+      ylab("P (frac)") +
+      coord_flip() +
+      scale_x_discrete(limits = rev(levels(as.factor(sdgs$SDG_Shortname)))) +
+      scale_y_continuous(breaks = ybreaks,
+                         minor_breaks = NULL,
+                         limits = c(0, ymax),
+                         expand = c(0, 10)) +
+      theme_kth_neo() + 
+      theme(axis.text.y  = element_text(hjust = 0),
+            panel.grid.major.y = element_blank(),
+            panel.grid.minor.y = element_blank())
+  }
+}
 
 #' Create Excel workbook with ABM publication data
 #' 

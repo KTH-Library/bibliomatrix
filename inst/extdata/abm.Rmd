@@ -1142,7 +1142,7 @@ SDG
 Row {data-height=650}
 ---------------------
 
-### **Sustainable Development Goals**
+### **Sustainable Development Goals** {.no-mobile}
 
 ```{r, fig.height=8, fig.width = 20}
 if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
@@ -1151,6 +1151,18 @@ if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
+
+### **Sustainable Development Goals** {.mobile}
+
+```{r, fig.height=8, fig.width = 6}
+if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
+  abm_graph_sdg_mobile(df_sdg_table)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
 
 Row {data-height=800}
 ---------------------

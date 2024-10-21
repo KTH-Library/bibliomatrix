@@ -7,7 +7,7 @@ output:
     favicon: KTH_logo_RGB_svart.png
     fig_mobile: FALSE
 params:
-  unit_code: !r bibliomatrix:::abm_config()$default_unit
+  unit_code: !r bibliomatrix::abm_config()$default_unit
   is_employee: FALSE
   use_package_data: TRUE
   embed_data: FALSE
@@ -69,7 +69,7 @@ if (params$embed_data || !params$use_package_data) {
     con = con,
     unit_code = params$unit_code,
     pub_year = abm_config()$start_year:abm_config()$stop_year,
-    analysisId = 0
+    analysisId = abm_config()$analysis_id
     ) %>% collect()
   dbDisconnect(con)
 }
@@ -89,6 +89,7 @@ if (params$use_package_data != TRUE) {
   df_coverage <- abm_coverage(data)
   con <- con_bib()
   unit_meta <- unit_info(con = con) %>% filter(unit_code == params$unit_code)
+  analysis_date <- get_analysis_date(con = con)
   df_copub_countries <- abm_copub_countries(con = con,
                                             unit_level = ifelse(isTRUE(unit_meta$org_level >= 0),
                                                                 unit_meta$org_level, 3),
@@ -132,6 +133,7 @@ if (params$use_package_data != TRUE) {
   df_sdg_year <- pluck(abm_public_kth$units, params$unit_code, "scop_sdg_year")
   df_sdg_table <- pluck(abm_public_kth$units, params$unit_code, "scop_sdg_table")
   unit_meta <- filter(abm_public_kth$meta, unit_code == params$unit_code)
+  analysis_date <- get_analysis_date()
 }
 
 unit_level <- unit_meta %>% pull(org_level)
@@ -145,8 +147,7 @@ if(isTRUE(unit_level >= 0)){
   
 } else {
   
-  unit_label <- 
-    kth_displayname(user = params$unit_code, "kthid")
+  unit_label <- kth_displayname(user = params$unit_code, "kthid")
 }
 
 #unit_label <- paste0("Annual Bibliometric Monitoring: ", unit_label)
@@ -215,7 +216,7 @@ abm_ui_valuebox_coverage(df_coverage, colors_vb[1], "scopus", unit_label)
 ```
 
 ```{r}
-has_rows <- df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0
+has_rows <- df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0
 last_interval <- ifelse(has_rows, paste((as.numeric(nth(df_cf$Publication_Year, -2))-2),nth(df_cf$Publication_Year, -2), sep = "-"), "")
 ```
 
@@ -233,7 +234,7 @@ abm_ui_bullet_citations(df_cf)
 
 ```{r}
 
-has_rows <- df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0
+has_rows <- df_jcf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0
 last_interval <- ifelse(has_rows, paste((as.numeric(nth(df_jcf$Publication_Year, -2))-2),nth(df_jcf$Publication_Year, -2), sep = "-"), "")
 ```
 ### **[Journal impact `r last_interval` (WoS)](#journal-impact)**  {.no-padding .no-mobile}
@@ -281,8 +282,8 @@ cat("<p>Indicators in the Citation impact, Journal impact and Co&#8209;publishin
 if(isTRUE(unit_level >= 0)){
 
   #<span title='mytitle' onclick=\"window.location.href='https://KTH-Library.github.io/abm/ABM_guide.pdf';\" style='cursor: pointer;></span>'
-  glue("<p><span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
-       "{coveragetext(woscov)}, {100*round(woscov, 3)}%.</span></p>")
+  glue("<p><span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Overall Web of Science coverage for peer reviewed publications in this unit is ",
+       "<b>{coveragetext(woscov)}, {100*round(woscov, 3)}%</b>.</span></p>")
 
 } else {
 
@@ -297,13 +298,14 @@ if(isTRUE(unit_level >= 0)){
 cat("<p>Note that the coverage numbers for Web of Science and Scopus apply to publications in the KTH bibliometric database Bibmet. If a WoS-id or Scoupus-id from DiVA can not be matched in Bibmet, it does not count as covered.</p>")
 ```
 
-Row
---------------------------------
+
 ### **Background**
 
 The bibliometric indicators referred are based on publications registered in DiVA and published `r abm_config()$start_year` to `r abm_config()$stop_year`. Only publications which have been affiliated to KTH are included. This means that publications written by a researcher before she/he was employed at KTH, and that are not affiliated to KTH, will not be included in the statistics.
 
 Statistics regarding citations and co&#8209;publishing are based on the subset of publications in DiVA that are registered in Web of Science (Citation impact, Journal impact and Co&#8209;publishing tabs) or Scopus (Scopus tab).
+
+Extraction of publications and indicators from the KTH bibliometric database BibMet was conducted at `r analysis_date`.
 
 Row
 --------------------------------
@@ -401,7 +403,7 @@ Row
 
 ### **Publication volume** {.no-padding .no-mobile}
 
-```{r, fig.width=8, fig.height=5}
+```{r, fig.width=10, fig.height=5}
 if (nrow(df_diva) > 0) {
   p <- abm_graph_diva(df_diva)
   p
@@ -453,9 +455,9 @@ Row
 
 ### **Average field normalized citations (Cf)** <br> `r timegraph_header_legend()`
 
-```{r, fig.width=6, fig.height=4}
-if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  time_graph(df_cf, indicator = "cf", ma = TRUE, weight = "P_frac", refline = 1, ylabel = "Average Cf")
+```{r, fig.width=7, fig.height=4}
+if (df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0){
+  time_graph(df_cf, indicator = "cf", ma = TRUE, weight = "pubs_frac", refline = 1, ylabel = "Average Cf")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -464,9 +466,9 @@ if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
 
 ### **Share of publications among Top 10% cited** <br> `r timegraph_header_legend()`
 
-```{r, fig.width=6, fig.height=4}
-if (df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0){
-  time_graph(df_cf, indicator = "top10_share", ma = TRUE, weight = "P_frac", refline = .1, percent = TRUE, ylabel = "Share Top 10%")
+```{r, fig.width=7, fig.height=4}
+if (df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0){
+  time_graph(df_cf, indicator = "top10_share", ma = TRUE, weight = "pubs_frac", refline = .1, percent = TRUE, ylabel = "Share Top 10%")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -485,7 +487,7 @@ div.dt-buttons {
 }
 </style>
 ```{r}
-abm_ui_datatable_city3y(
+abm_ui_datatable_cit3y(
   df_cit3y, 
   unit_file_label = unit_file_label, 
   unit_title = abm_unit_title
@@ -532,11 +534,11 @@ cat("This table is based on Web of Science publication types Article, Proceeding
 
 if(isTRUE(unit_level >= 0)){
 
-  years <- df_cit3y %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  years <- df_cit3y %>% filter(substr(Publication_Year, 1, 1) == "2") %>% pull(Publication_Year) %>% as.integer()
   mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(woscov_frac) %>% min()
   minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumwos_full) %>% min()
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
 
@@ -563,7 +565,7 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(woscov_cf$woscov_frac)
   minpubs <- min(woscov_cf$sumwos_full)
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication type Article, peer review)<br></span>"))
 
@@ -578,19 +580,19 @@ if(isTRUE(unit_level >= 0)){
 ```
 
 
-Journal impact
+Journal impact {data-orientation=columns}
 =====================================
 
 #### `r unit_label`
 
-Row
----------------------
+Column {data-width=700}
+-----------------------
 
 ### **Field normalized journal impact (JCf)** <br> `r timegraph_header_legend()`
 
-```{r, fig.width=7, fig.height=4}
-if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_jcf, indicator = "jcf", ma = TRUE, weight = "P_frac", refline = 1, "Average Journal Cf")
+```{r, fig.dim=c(8,4), out.height='40%', out.width='90%'}
+if(df_jcf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
+  time_graph(df_jcf, indicator = "jcf", ma = TRUE, weight = "pubs_frac", refline = 1, "Average Journal Cf")
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -599,16 +601,16 @@ if(df_jcf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
 
 ### **Share of publications in Top 20% journals** <br> `r timegraph_header_legend()`
 
-```{r, fig.width=7, fig.height=4}
-if(df_cf %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_jcf, indicator = "top20_share", ma = TRUE, weight = "P_frac", refline = .2, "Share Journal Top 20%", percent = TRUE)
+```{r, fig.dim=c(8,4), out.height='40%', out.width='90%'}
+if(df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
+  time_graph(df_jcf, indicator = "top20_share", ma = TRUE, weight = "pubs_frac", refline = .2, "Share Journal Top 20%", percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
-Row {data-height=550}
----------------------
+Column {data-width=600}
+-----------------------
 
 ### **Journal impact, fractionalized** {.no-mobile}
 
@@ -619,7 +621,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r}
+```{r, fig.width=6, fig.height=4, out.height='40%'}
 abm_ui_datatable_jcf(
   df_jcf,
   unit_file_label = unit_file_label, 
@@ -633,9 +635,6 @@ abm_ui_datatable_jcf(
 abm_ui_kable_jcf(df_jcf)
 ```
 
-Row
------------------
-
 ### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#journal-impact){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
@@ -648,7 +647,7 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(woscov_jcf$woscov_frac)
   minpubs <- min(woscov_jcf$sumwos_full)
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication type Article, peer review)<br></span>"))
 
@@ -667,15 +666,18 @@ Co&#8209;publishing {data-orientation=rows}
 
 #### `r unit_label`
 
-Row {.tabset data-height=1500}
----------------------
+Row {.tabset data-height=6000}
+------------------------------
 
 ### Summary
 
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:start;'>
 
-##### **International and Swedish non-university co&#8209;publication**
-```{r, fig.width=7, fig.height=4}
+<div style='width: 50%; max-width: 750px;'>
+
+#### **International and Swedish non-university co&#8209;publication**
+
+```{r, fig.width=6, fig.height=5, out.width='95%'}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_copub(df_copub)
 } else {
@@ -685,16 +687,11 @@ if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
 
 </div>
 
-##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
+<div style='width: 50%; max-width: 900px;'>
 
-<style type="text/css">
-div.dt-buttons {
-  position:relative;
-  float:right;
-}
-</style>
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-mobile}
 
-```{r, fig.height=4}
+```{r, fig.width=6, fig.height=4}
 abm_ui_datatable_copub(
   df_copub,
   unit_file_label = unit_file_label, 
@@ -702,17 +699,15 @@ abm_ui_datatable_copub(
 )
 ```
 
-##### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
+#### **International and Swedish non-university co&#8209;publications (full counts)** {.no-padding .mobile}
 
 ```{r}
 abm_ui_kable_copub(df_copub)
 ```
 
-
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#co-publishing){target="_blank" style="position:relative;float:right;"}
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#co-publishing){target="_blank" style="position:relative;float:right;"}
 
 ```{r, echo=FALSE, results="asis"}
-cat("<hr>")
 cat("This table is based on Web of Science publication types Article and Review.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -722,7 +717,7 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(woscov_copub$woscov_full)
   minpubs <- min(df_copub$P_full)
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Web of Science coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication type Article, peer review)<br></span>"))
 
@@ -734,12 +729,15 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
+
+</div>
+</div>
 
 ### Countries and organizations
 
-##### **Co&#8209;publication countries** {.no-mobile}
+#### **Co&#8209;publication countries** {.no-mobile}
+
 <style type="text/css">
 div.dt-buttons {
   position:relative;
@@ -758,13 +756,14 @@ abm_ui_datatable_copub_countries(
 ) 
 ```
 
-##### **Co&#8209;publication countries** {.no-padding .mobile}
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+
 ```{r}
 abm_ui_kable_copub_countries(df_copub_countries) 
 ```
 
 
-##### **Co&#8209;publication organizations** {.no-mobile}
+#### **Co&#8209;publication organizations** {.no-mobile}
 
 ```{r}
 abm_ui_datatable_copub_orgs(
@@ -774,7 +773,8 @@ abm_ui_datatable_copub_orgs(
 ) 
 ```
 
-##### **Co&#8209;publication countries** {.no-padding .mobile}
+#### **Co&#8209;publication countries** {.no-padding .mobile}
+
 ```{r}
 abm_ui_kable_copub_orgs(df_copub_orgs) 
 ```
@@ -787,17 +787,17 @@ Open Access
 Row
 ---------------------
 
-### **Overview of Open Access publication types** 
+### **Open Access status by year, share** 
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
-  abm_graph_oadata_piechart(df_oa, type = "ggplot")
+  abm_graph_oa_lines(df_oa)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
 
-### **Open Access publication types across time**
+### **Open Access status by year, number of publications**
 
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
@@ -863,48 +863,48 @@ Scopus
 #### `r unit_label`
 
 Row {.tabset data-height=1800}
------------------------------------------------------------------------
+------------------------------
 
 ### Citation Impact
 
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
-<div>
-##### **Average field weighted citation impact (FWCI)** <br> `r timegraph_header_legend()`
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:start;'>
 
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_scop_normcit, "fwci_x", ma = TRUE, weight = "P_frac", ylabel = "Average FWCI", refline = 1)
+#### **Average field weighted citation impact (FWCI)** <br> `r timegraph_header_legend()`
+
+```{r, fig.height = 4, fig.width = 6, out.width='85%'}
+if(df_scop_normcit %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
+  time_graph(df_scop_normcit, "fwci_x", ma = TRUE, weight = "pubs_frac", ylabel = "Average FWCI", refline = 1)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
-</div>
 
-<div style='margin:10px'></div>
+#### **Share of publications among Top 10% cited** <br> `r timegraph_header_legend()`
 
-<div>
-##### **Share of publications among Top 10% cited** <br> `r timegraph_header_legend()`
-
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_normcit %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_scop_normcit, "top10_share", ma = TRUE, weight = "P_frac", ylabel = "Share Top 10%", refline = .1, percent = TRUE)
+```{r, fig.height = 4, fig.width = 6, out.width='85%'}
+if(df_scop_normcit %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
+  time_graph(df_scop_normcit, "top10_share", ma = TRUE, weight = "pubs_frac", ylabel = "Share Top 10%", refline = .1, percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
-</div>
+
 </div>
 
-<style type="text/css">
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:start;'>
+
+<div style='width: 45%;'>
+
+#### **Citations, open window** {.no-mobile}
+
+<style>
 div.dt-buttons {
   position:relative;
   float:right;
 }
 </style>
 
-##### **Citations, open window** {.no-mobile}
-
-```{r}
+```{r, fig.width = 6, out.width='85%'}
 abm_ui_datatable_scop_cit(
   df_scop_cit,
   unit_file_label = unit_file_label,
@@ -912,22 +912,20 @@ abm_ui_datatable_scop_cit(
 )
 ```
 
-##### **Citations, open window** {.mobile}
+#### **Citations, open window** {.mobile}
 
 ```{r}
 abm_ui_kable_scop_cit(df_scop_cit)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
-
-```{r, echo=FALSE, results="asis", fig.width=6}
-cat("<hr>")
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
+```{r, echo=FALSE, results="asis", out.width='85%'}
 cat("This table is based on Scopus publication types Article, Conference Paper, Review, Letter and Editorial.<br>")
 if(isTRUE(unit_level >= 0)){
-  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  years <- df_scop_cit %>% filter(substr(Publication_Year, 1, 1) == "2") %>% pull(Publication_Year) %>% as.integer()
   mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
   minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
   if(minpubs < 50)
@@ -935,12 +933,14 @@ if(isTRUE(unit_level >= 0)){
 } else {
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 }
-cat("<hr>")
 ```
 
-##### **Field weighted citation impact (FWCI)** {.no-mobile}
+</div>
+<div style='width: 45%;'>
 
-```{r}
+#### **Field weighted citation impact (FWCI)** {.no-mobile}
+
+```{r, fig.width = 6, out.width='85%'}
 abm_ui_datatable_scop_normcit(
   df_scop_normcit,
   unit_file_label = unit_file_label, 
@@ -948,17 +948,15 @@ abm_ui_datatable_scop_normcit(
 )
 ```
 
-##### **Field weighted citation impact (FWCI)** {.mobile}
+#### **Field weighted citation impact (FWCI)** {.mobile}
 
 ```{r}
 abm_ui_kable_scop_normcit(df_scop_normcit)
 ```
 
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
-
-```{r, echo=FALSE, results="asis", fig.width=6}
-cat("<hr>")
+```{r, echo=FALSE, results="asis", out.width='85%'}
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 if(isTRUE(unit_level >= 0)){
   scopcov_normcit <- df_coverage %>%
@@ -967,7 +965,7 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(scopcov_normcit$scopcov_frac)
   minpubs <- min(scopcov_normcit$sumscop_full)
   
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
   if(minpubs < 50)
@@ -975,43 +973,42 @@ if(isTRUE(unit_level >= 0)){
 } else {
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 }
-cat("<hr>")
 ```
+
+</div>
+</div>
 
 ### Journal Impact
 
-<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:stretch;'>
-<div>
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:start;'>
 
-##### **Field normalized journal impact (SNIP)** <br> `r timegraph_header_legend()`
+<div style='width: 50%; max-width: 750px;'>
 
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_scop_snip, "avg_snip", ma = TRUE, weight = "P_frac", ylabel = "Average SNIP", refline = 1)
+#### **Field normalized journal impact (SNIP)** <br> `r timegraph_header_legend()`
+
+```{r, fig.height = 3, fig.width = 6, out.width='95%'}
+if(df_scop_snip %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
+  time_graph(df_scop_snip, "avg_snip", ma = TRUE, weight = "pubs_frac", ylabel = "Average SNIP", refline = 1)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```  
-</div>
 
-<div style='margin:10px'></div>
+#### **Share of publications in Top 20% journals** <br> `r timegraph_header_legend()`
 
-<div>
-##### **Share of publications in Top 20% journals** <br> `r timegraph_header_legend()`
-
-```{r, fig.height = 4, fig.width = 6}
-if(df_scop_snip %>% filter(!is.na(P_frac)) %>% nrow() > 0) {
-  time_graph(df_scop_snip, "top20_share", ma = TRUE, weight = "P_frac", ylabel = "Share Top 20%", refline = .2, percent = TRUE)
+```{r, fig.height = 3, fig.width = 6, out.width='95%'}
+if(df_scop_snip %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
+  time_graph(df_scop_snip, "top20_share", ma = TRUE, weight = "pubs_frac", ylabel = "Share Top 20%", refline = .2, percent = TRUE)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```  
-</div>
+
 </div>
 
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:stretch;'>
+<div style='width: 50%; max-width: 900px;'>
 
-##### **Journal impact, fractionalized** {.no-mobile}
+#### **Journal impact, fractionalized** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1020,7 +1017,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height=4}
+```{r, fig.height=4, fig.width=6, out.width='95%'}
 abm_ui_datatable_scop_snip(
   df_scop_snip,
   unit_file_label = unit_file_label, 
@@ -1028,16 +1025,15 @@ abm_ui_datatable_scop_snip(
 )
 ```
 
-##### **Journal impact, fractionalized** {.mobile}
+#### **Journal impact, fractionalized** {.mobile}
 
-```{r}
+```{r, out.width='95%'}
 abm_ui_kable_scop_snip(df_scop_snip)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
-```{r, echo=FALSE, results="asis"}
-cat("<hr>")
+```{r, echo=FALSE, results="asis", out.width='95%'}
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1048,7 +1044,7 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(scopcov_snip$scopcov_frac)
   minpubs <- min(scopcov_snip$sumscop_full)
   
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
 
@@ -1060,26 +1056,33 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
+
+</div>
 </div>
 
 ### Co&#8209;publishing
 
-<div style='display:flex; flex-direction:column; justify-content:space-evenly; align-items:center;'>
 
-##### **International and corporate co&#8209;publication**
+<div style='display:flex; flex-direction:row; justify-content:space-evenly; align-items:start;'>
 
-```{r, fig.height=4, fig.width = 7}
+<div style='width: 50%; max-width: 750px;'>
+
+#### **International and corporate co&#8209;publication**
+
+```{r, fig.width=6, fig.height=5, out.width='95%'}
 if(df_scop_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
   abm_graph_scop_copub(df_scop_copub)
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
 ```
+
 </div>
 
-##### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
+<div style='width: 50%; max-width: 900px;'>
+
+#### **International and corporate co&#8209;publications (full counts)** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1088,7 +1091,7 @@ div.dt-buttons {
 }
 </style>
 
-```{r, fig.height = 4}
+```{r, out.width='100%'}
 abm_ui_datatable_scop_copub(
   df_scop_copub,
   unit_file_label = unit_file_label, 
@@ -1096,16 +1099,15 @@ abm_ui_datatable_scop_copub(
 )
 ```
 
-##### **International and corporate co&#8209;publications (full counts)** {.mobile}
+#### **International and corporate co&#8209;publications (full counts)** {.mobile}
 
 ```{r}
 abm_ui_kable_scop_copub(df_scop_copub)
 ```
 
-##### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
+#### **Notes** [<i class="fa fa-info-circle" aria-hidden="true"></i> more...](`r STATIC`/ABM_guide.html#scopus){target="_blank" style="position:relative;float:right;"}
 
-```{r, echo=FALSE, results="asis"}
-cat("<hr>")
+```{r, echo=FALSE, results="asis", out.width = '100%'}
 cat("This table is based on Scopus publication types Article, Review and Conference Paper.<br>")
 
 if(isTRUE(unit_level >= 0)){
@@ -1115,7 +1117,7 @@ if(isTRUE(unit_level >= 0)){
   mincov <- min(scopcov_copub$scopcov_full)
   minpubs <- min(df_scop_copub$P_full)
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
 
@@ -1127,10 +1129,10 @@ if(isTRUE(unit_level >= 0)){
   cat("<b>Bibliometric results for individual researchers should always be interpreted with caution.</b>")
 
 }
-cat("<hr>")
 ```
 
-
+</div>
+</div>
 
 SDG
 =====================================
@@ -1140,7 +1142,7 @@ SDG
 Row {data-height=650}
 ---------------------
 
-### **Sustainable Development Goals (fractional counts)**
+### **Sustainable Development Goals** {.no-mobile}
 
 ```{r, fig.height=8, fig.width = 20}
 if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
@@ -1150,10 +1152,22 @@ if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
 }
 ```
 
+
+### **Sustainable Development Goals** {.mobile}
+
+```{r, fig.height=8, fig.width = 6}
+if(df_sdg_table %>% filter(SDG_Displayname != 'None') %>% nrow() > 0) {
+  abm_graph_sdg_mobile(df_sdg_table)
+} else {
+  shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
+}
+```
+
+
 Row {data-height=800}
 ---------------------
 
-### **Publications with any Sustainable Development Goal (fractional counts)** {.no-mobile}
+### **Publications with any Sustainable Development Goal** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1170,14 +1184,14 @@ abm_ui_datatable_sdg_year(
 )
 ```
 
-### **Publications with any Sustainable Development Goal (fractional counts)** {.mobile}
+### **Publications with any Sustainable Development Goal** {.mobile}
 
 ```{r}
 abm_ui_kable_sdg_year(df_sdg_year)
 ```
 
 
-### **Sustainable Development Goals (fractional counts)** {.no-mobile}
+### **Sustainable Development Goals** {.no-mobile}
 
 <style type="text/css">
 div.dt-buttons {
@@ -1194,7 +1208,7 @@ abm_ui_datatable_sdg_table(
 )
 ```
 
-### **Sustainable Development Goals (fractional counts)** {.mobile}
+### **Sustainable Development Goals** {.mobile}
 
 ```{r}
 abm_ui_kable_sdg_table(df_sdg_table)
@@ -1210,11 +1224,11 @@ cat("This table is based on Scopus publication types Article, Review and Confere
 
 if(isTRUE(unit_level >= 0)){
 
-  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  years <- df_scop_cit %>% filter(substr(Publication_Year, 1, 1) == "2") %>% pull(Publication_Year) %>% as.integer()
   mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
   minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
 
@@ -1232,11 +1246,11 @@ cat("This table is based on Scopus publication types Article, Review and Confere
 
 if(isTRUE(unit_level >= 0)){
 
-  years <- df_scop_cit %>% filter(substr(Publication_Year_ch, 1, 1) == "2") %>% pull(Publication_Year_ch) %>% as.integer()
+  years <- df_scop_cit %>% filter(substr(Publication_Year, 1, 1) == "2") %>% pull(Publication_Year) %>% as.integer()
   mincov <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(scopcov_frac) %>% min()
   minpubs <- df_coverage %>% filter(Publication_Type == "Peer reviewed" & Publication_Year %in% years) %>% pull(sumscop_full) %>% min()
 
-  cat(glue("<span title='Legend: 75% or above is good, 60% or above is moderate while lower than 60% is poor'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
+  cat(glue("<span title='Legend: 75% or above is high, 60% or above is moderate while lower than 60% is low'>Rows are based on at least <b>{minpubs}</b> (full counted) publications with ",
            "<b>{coveragetext(mincov)}</b> Scopus coverage (at least <b>{round(100*mincov, 1)}%</b>).<br>",
            "(DiVA publication types Article, peer review and Conference paper, peer review)<br></span>"))
 

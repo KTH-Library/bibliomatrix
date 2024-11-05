@@ -39,7 +39,7 @@ globalz <- "
     Country_name Name_eng Org_type_eng Unified_org_id kth_frac n_authors
     org_type unified_org_id Publication_year Org_type_code jcf_frac
     Cf_log Ptop25 Ptop5 x ma3 Title Bibliographic_Information Ptop1
-    date_of_extraction lw oa_type share sz
+    date_of_extraction lw oa_type share sz SDG_Shortname
 "
 
 # HACK: add global fcns / vars with spaces in the name

@@ -25,12 +25,13 @@ library(here)
 ## DO THIS when pushing
 
 document()
-check()
+check(vignettes = FALSE)
+
 # remember to update the bundled data
 db_sync(overwrite_existing = TRUE)
 source(here("data-raw/public_data.R"))
 
-# changes to abm.Rmd may require Ctrl-Shift-B (for new internal pkg data to be installed)!
+# May require Ctrl-Shift-B (for new internal pkg data to be installed)!
 
 # first revert the .gitignore if it has been changed by below
 build_vignettes()

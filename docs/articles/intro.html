@@ -153,23 +153,23 @@ bibliomatrix</a>.</em></p>
 <tbody>
 <tr class="odd">
 <td align="left">Article, peer review</td>
-<td align="right">13848.427</td>
+<td align="right">15387.8392</td>
 </tr>
 <tr class="even">
 <td align="left">Article, other</td>
-<td align="right">1047.465</td>
+<td align="right">1164.3819</td>
 </tr>
 <tr class="odd">
 <td align="left">Conference paper, peer review</td>
-<td align="right">7986.389</td>
+<td align="right">8875.3077</td>
 </tr>
 <tr class="even">
 <td align="left">Conference paper, other</td>
-<td align="right">2393.626</td>
+<td align="right">2663.2656</td>
 </tr>
 <tr class="odd">
 <td align="left">Book</td>
-<td align="right">147.350</td>
+<td align="right">164.1667</td>
 </tr>
 </tbody>
 </table>
@@ -188,10 +188,10 @@ bibliomatrix</a>.</em></p>
 <span><span class="co"># what about performance?</span></span>
 <span><span class="fu"><a href="http://bench.r-lib.org/reference/bench_time.html" class="external-link">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">bibmon</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; process    real </span></span>
-<span><span class="co">#&gt;   21.2s   39.2s</span></span>
+<span><span class="co">#&gt;  19.11s   2.98m</span></span>
 <span><span class="fu"><a href="http://bench.r-lib.org/reference/bench_time.html" class="external-link">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">localdb</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; process    real </span></span>
-<span><span class="co">#&gt;   7.61s   7.63s</span></span>
+<span><span class="co">#&gt;   7.66s   7.73s</span></span>
 <span></span>
 <span><span class="fu"><a href="http://rstudio.github.io/pool/reference/Pool-class.html" class="external-link">poolClose</a></span><span class="op">(</span><span class="va">bibmon</span><span class="op">)</span></span>
 <span><span class="fu"><a href="http://rstudio.github.io/pool/reference/Pool-class.html" class="external-link">poolClose</a></span><span class="op">(</span><span class="va">localdb</span><span class="op">)</span></span></code></pre></div>

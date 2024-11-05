@@ -11,13 +11,14 @@ abm_public_data(overwrite_cache = FALSE)
 the cache should be refreshed}
 }
 \value{
-a list with three slots - "meta" for organizational unit metadata info,
-  "units" with a named list of results (set of 5 different tibbles for each of the units)
-  and "pt_ordning" for DiVA publication type sort order
+a list with four slots - "meta" for organizational unit metadata info,
+  "units" with a named list of results (set of tibbles for each of the units),
+  "pt_ordning" for DiVA publication type sort order
+  and analysis_date for the date of data extraction
 }
 \description{
-This returns an object which contains data for the various higher 
-organizational units at KTH
+This returns an object which contains data for organizational units at KTH
+and some metadata used in the ABM
 }
 \details{
 Data is cached in a local application directory by default and

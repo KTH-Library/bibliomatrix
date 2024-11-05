@@ -14,7 +14,7 @@ suppressWarnings(packageStartupMessage(banner))
 globalz <- "
     Citations_3yr Diva_dep_id Diva_org_id Diva_school_id Doc_Year Jtop20
     P_frac Ptop10 Publication_Type_DiVA Publication_Type_WoS
-    Publication_Year Publication_Year_ch Unit_Fraction Unit_Fraction_adj
+    Publication_Year Unit_Fraction Unit_Fraction_adj
     Unit_code WebofScience_ID cf cn dep_name int interval jcf key level
     org_level parent_org_id pt_ordning pt_ordning.x pt_ordning.y
     skola_namn swe_nuniv unit unit_code unit_id unit_long unit_long_eng
@@ -34,11 +34,12 @@ globalz <- "
     scop_Jtop20 scop_Ptop10 scop_bin scop_corp scop_cscxo scop_doctype
     scop_fwci_x scop_int scop_snip sumscop_frac sumscop_full sumwos_frac
     sumwos_full P_full avg_snip corp_share description_en df_diva fwci_x is_kth
-    description_en analysis_id 
+    description_en analysis_id diva_publication_type pubs_frac pubs_full share_sdg
     UT country entity org p_10 p_200 p_50 p_over200
     Country_name Name_eng Org_type_eng Unified_org_id kth_frac n_authors
     org_type unified_org_id Publication_year Org_type_code jcf_frac
-    Cf_log Ptop25 Ptop5 x ma3
+    Cf_log Ptop25 Ptop5 x ma3 Title Bibliographic_Information Ptop1
+    date_of_extraction lw oa_type share sz SDG_Shortname
 "
 
 # HACK: add global fcns / vars with spaces in the name

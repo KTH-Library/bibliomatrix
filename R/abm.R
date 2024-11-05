@@ -6,9 +6,9 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  y_start <- 2013
-  y_stop <- 2022
-  analysisId <- 8
+  y_start <- 2014
+  y_stop <- 2023
+  analysisId <- 11
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -76,6 +76,26 @@ get_indic_descriptions <- function(con){
     con |> tbl("indicator_descriptions") |> collect()
   } else {
     abm_public_kth$indicator_descriptions
+  }
+}
+
+#' Get date of indicator extraction for ABM
+#' 
+#' @param con connection to db - if no connection is given, use abm_public_kth data
+#' @return date
+#' @import dplyr
+#' @export
+get_analysis_date <- function(con) {
+  if(!missing(con)){
+    con |>
+      tbl("analysis_info") |>
+      collect() |>
+      filter(analysis_id == abm_config()$analysis_id) |>
+      pull(date_of_extraction) |>
+      as.POSIXct() |>
+      as.Date()
+  } else {
+    abm_public_kth$analysis_date
   }
 }
 
@@ -209,15 +229,15 @@ abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_
   table1 <-
     orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) |>
     ungroup() |>
-    mutate(Publication_Year_ch = as.character(Publication_Year)) |>
-    arrange(Publication_Year_ch) |> 
-    select(Publication_Year_ch, P_frac, C3, C3_frac, P_uncited, Share_uncited)
+    mutate(Publication_Year = as.character(Publication_Year)) |>
+    arrange(Publication_Year)
   
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -226,12 +246,13 @@ abm_table2 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C3 = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE),
               C3_frac = sum(Unit_Fraction * Citations_3yr, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE),
               P_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited = sum(Unit_Fraction * uncited, na.rm = TRUE) / sum(Unit_Fraction, na.rm = TRUE)) |>
-    mutate(Publication_Year_ch = "Total")
+    mutate(Publication_Year = "Total")
   
   bind_rows(table1, table2)
 }
@@ -277,7 +298,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = sum(cf * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE),
               top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
@@ -295,7 +317,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
   table1 <-
     orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = TRUE),
               top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE)) |>
@@ -334,7 +357,8 @@ abm_table4 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) |>
@@ -351,7 +375,8 @@ abm_table4 <- function(data, analysis_start = abm_config()$start_year, analysis_
   # Year dependent part of table
   table1 <- orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               jcf = weighted.mean(jcf, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(Jtop20, Unit_Fraction, na.rm = TRUE)) |>
@@ -446,21 +471,21 @@ abm_table6 <- function(data, analysis_start = abm_config()$start_year, analysis_
               closed_count=sum(as.logical(oa_status=="closed"), na.rm=TRUE),
               oa_share=mean(as.logical(is_oa), na.rm=TRUE)) |>
     ungroup() |>
-    mutate(Publication_Year_ch = as.character(Publication_Year)) |>
-    select(Publication_Year_ch, P_tot, oa_count, diamond_count, gold_count, hybrid_count, green_count, closed_count, oa_share)
+    mutate(Publication_Year = as.character(Publication_Year)) |>
+    select(Publication_Year, P_tot, oa_count, diamond_count, gold_count, hybrid_count, green_count, closed_count, oa_share)
 
   # No summary row if no data
   if(nrow(table1) == 0)
     return(table1)
 
   # Insert blank years
-  table1 <- tibble(Publication_Year_ch = as.character(analysis_start:analysis_stop)) |> 
-    left_join(table1, by = "Publication_Year_ch") |> 
-    arrange(Publication_Year_ch)
+  table1 <- tibble(Publication_Year = as.character(analysis_start:analysis_stop)) |> 
+    left_join(table1, by = "Publication_Year") |> 
+    arrange(Publication_Year)
     
   # Summary part of table
   table2 <- table1 |>
-    summarise(Publication_Year_ch = "Total",
+    summarise(Publication_Year = "Total",
               P_tot = sum(P_tot, na.rm = TRUE),
               oa_count = sum(oa_count, na.rm = TRUE),
               diamond_count = sum(diamond_count, na.rm = TRUE),
@@ -499,15 +524,15 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
   table1 <-
     orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C_sum = sum(Unit_Fraction * scop_cscxo, na.rm = TRUE),
               C_avg = weighted.mean(scop_cscxo, Unit_Fraction, na.rm = TRUE),
               P_uncited_scop = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited_scop = weighted.mean(uncited, Unit_Fraction, na.rm = TRUE)) |>
     ungroup() |>
-    mutate(Publication_Year_ch = as.character(Publication_Year)) |>
-    arrange(Publication_Year_ch) |> 
-    select(Publication_Year_ch, P_frac, C_sum, C_avg, P_uncited_scop, Share_uncited_scop)
+    mutate(Publication_Year = as.character(Publication_Year)) |>
+    arrange(Publication_Year)
   
   # No summary row if no data
   if(nrow(table1) == 0)
@@ -516,13 +541,13 @@ abm_table_scop_cit <- function(data, analysis_start = abm_config()$start_year, a
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               C_sum = sum(Unit_Fraction * scop_cscxo, na.rm = TRUE),
               C_avg = weighted.mean(scop_cscxo, Unit_Fraction, na.rm = TRUE),
               P_uncited_scop = sum(Unit_Fraction * uncited, na.rm = TRUE),
               Share_uncited_scop = weighted.mean(uncited, Unit_Fraction, na.rm = TRUE)) |>
-    mutate(Publication_Year_ch = "Total") |> 
-    select(Publication_Year_ch, P_frac, C_sum, C_avg, P_uncited_scop, Share_uncited_scop)
+    mutate(Publication_Year = "Total")
   
   bind_rows(table1, table2)
 }
@@ -553,7 +578,8 @@ abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_yea
   # Summary part of table
   table2 <-
     orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
               top10_count = sum(scop_Ptop10 * Unit_Fraction, na.rm = TRUE),
               top10_share = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) |>
@@ -570,7 +596,8 @@ abm_table_scop_normcit <- function(data, analysis_start = abm_config()$start_yea
   # Year dependent part of table
   table1 <- orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
               top10_count = sum(scop_Ptop10 * Unit_Fraction, na.rm = TRUE),
               top10_share = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) |>
@@ -609,7 +636,8 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
   
   # Summary part of table
   table2 <- orgdata |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               avg_snip = weighted.mean(scop_snip, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(scop_Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(scop_Jtop20, Unit_Fraction, na.rm = TRUE)) |> 
@@ -626,7 +654,8 @@ abm_table_scop_snip <- function(data, analysis_start = abm_config()$start_year, 
   # Year dependent part of table
   table1 <- orgdata |>
     group_by(Publication_Year) |>
-    summarise(P_frac = sum(Unit_Fraction, na.rm = TRUE),
+    summarise(pubs_full = n(),
+              pubs_frac = sum(Unit_Fraction, na.rm = TRUE),
               avg_snip = weighted.mean(scop_snip, Unit_Fraction, na.rm = TRUE),
               top20_count = sum(scop_Jtop20*Unit_Fraction, na.rm = TRUE),
               top20_share = weighted.mean(scop_Jtop20, Unit_Fraction, na.rm = TRUE)) |>
@@ -711,14 +740,14 @@ abm_dash_indices <- function(data){
     # Fetch table 3 for cf and top10
     t3 <- abm_table3(data) |>
       filter(Publication_Year %in% (lastyear - 3):(lastyear - 1)) |>
-      summarise(cf = weighted.mean(cf, P_frac, na.rm = TRUE),
-                top10_share = weighted.mean(top10_share, P_frac, na.rm = TRUE))
+      summarise(cf = weighted.mean(cf, pubs_frac, na.rm = TRUE),
+                top10_share = weighted.mean(top10_share, pubs_frac, na.rm = TRUE))
   
     # Fetch table 4 for jcf and top20
     t4 <- abm_table4(data) |>
       filter(Publication_Year %in% (lastyear - 2):(lastyear)) |>
-      summarise(jcf = weighted.mean(jcf, P_frac, na.rm = TRUE),
-                top20_share = weighted.mean(top20_share, P_frac, na.rm = TRUE)) 
+      summarise(jcf = weighted.mean(jcf, pubs_frac, na.rm = TRUE),
+                top20_share = weighted.mean(top20_share, pubs_frac, na.rm = TRUE)) 
   
     # Fetch table 5 for non-univ and international copublications
     t5 <- abm_table5(data) |>
@@ -885,17 +914,24 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 
   # Get publication level data for selected unit
   data |>
-    filter(Publication_Year >= analysis_start &
-             Publication_Year <= analysis_stop) |>
-    select(-c("w_subj", "Unit_Fraction_adj", "level", "is_oa", "analysis_id")) |>
+    select(-any_of(c("analysis_id",
+                     "is_kth",
+                     "Doc_id",
+                     "w_subj",
+                     "level"))) |>
+    relocate(c(DOI, Publication_Year, Title, Bibliographic_Information, n_authors, Publication_Type_DiVA), .after = PID) |>
+    relocate(Unit_Fraction, .before = Unit_Fraction_adj) |> 
+    relocate(Ptop5, .after = Ptop1) |>
+    relocate(Cf_log, .after = cf) |> 
+    filter(Publication_Year %in% analysis_start:analysis_stop) |>
     mutate(oa_status = ifelse(is.na(oa_status), "unknown", oa_status)) |> 
     arrange(Publication_Year, Publication_Type_DiVA, WoS_Journal, PID)
 }
 
 #' Public data from the Annual Bibliometric Monitoring project
 #' 
-#' This returns an object which contains data for the various higher 
-#' organizational units at KTH
+#' This returns an object which contains data for organizational units at KTH
+#' and some metadata used in the ABM
 #' 
 #' Data is cached in a local application directory by default and
 #' is returned from there unless the parameter overwrite_cache is TRUE. 
@@ -903,9 +939,10 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #' 
 #' @param overwrite_cache logical (by default FALSE) specifying whether 
 #'   the cache should be refreshed
-#' @return a list with three slots - "meta" for organizational unit metadata info,
-#'   "units" with a named list of results (set of 5 different tibbles for each of the units)
-#'   and "pt_ordning" for DiVA publication type sort order
+#' @return a list with four slots - "meta" for organizational unit metadata info,
+#'   "units" with a named list of results (set of tibbles for each of the units),
+#'   "pt_ordning" for DiVA publication type sort order
+#'   and analysis_date for the date of data extraction
 #' @importFrom pool poolClose
 #' @importFrom readr write_rds
 #' @importFrom purrr map
@@ -964,6 +1001,9 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   indicator_descriptions <-
     get_indic_descriptions(con = db)
   
+  analysis_date <-
+    get_analysis_date(con = db)
+  
   # for a unit, retrieve all abm tables
   unit_tables <- function(x) {
     
@@ -1010,7 +1050,11 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   
   poolClose(db)
   
-  out <- list("meta" = units_table, "units" = res, "pubtype_order" = pubtype_order, "indicator_descriptions" = indicator_descriptions)
+  out <- list("meta" = units_table,
+              "units" = res,
+              "pubtype_order" = pubtype_order,
+              "indicator_descriptions" = indicator_descriptions,
+              "analysis_date" = analysis_date)
   
   message("Updating cached data for public data at: ", cache_location)
   readr::write_rds(out, cache_location) 
@@ -1105,8 +1149,9 @@ abm_graph_diva <- function(df) {
     gather("year", "value", -Publication_Type_DiVA) |>
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
   
-  colvals <- unname(ktheme::palette_kth_neo(13, type = "qual"))
-  
+  colvals <- unname(palette_kth_neo(13, type = "qual"))
+  names(colvals) <- abm_public_kth$pubtype_order |> filter(pt_ordning <= 13) |> pull(diva_publication_type)
+
   ggplot(data = df_diva_long,
          aes(x = year)) +
     geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, desc(pt_ordning)))) +
@@ -1287,6 +1332,68 @@ abm_graph_copub <- function(df){
           panel.grid.minor.y = element_blank())
 }
 
+#' Create line graph over share of publications by OA type and year
+#' 
+#' @param df a data frame at the format produced by abm_table6()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme 
+#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_replace
+#' @importFrom scales percent_format
+#' @export
+abm_graph_oa_lines <- function(df){
+  
+  colors_df <- unpaywall_colors() |>
+    bind_rows(data.frame(oa_status = "Open Access, all",
+                         oa_color = kth_colors("blue")))
+  unpaywall <- colors_df$oa_color
+  names(unpaywall) <- colors_df$oa_status 
+
+  graph_df <- df |>
+    filter(Publication_Year != 'Total') |>
+    mutate(Year = as.integer(Publication_Year)) |> 
+    mutate(across(ends_with("count"), function(x) x/P_tot)) |> 
+    rename_with(.cols = ends_with("count"), ~stringr::str_replace(., "_count", "")) |> 
+    pivot_longer(cols = c("oa", "diamond", "gold", "hybrid", "green"),
+                 values_to = "share") |> 
+    mutate(oa_type = case_match(name,
+                                "oa" ~ "Open Access, all",
+                                "diamond" ~ "Diamond",
+                                "gold" ~ "Gold",
+                                "green" ~ "Green",
+                                "hybrid" ~ "Hybrid",
+                                .default = NA),
+           lw = if_else(name == 'oa', 1.5, 0.9),
+           sz = if_else(name == 'oa', 3, 2),
+           a = if_else(name == 'oa', 1, .7))
+  
+  xbreaks <- graph_df |> pull(Year) |> unique() |> sort()
+  ybreaks <- seq(0, ceiling(10*max(graph_df$share, na.rm = TRUE))/10, .1)
+  
+  ggplot(data = graph_df,
+         aes(x = Year, y = share, color = oa_type, linewidth = lw, size = sz, alpha = a)) +
+    geom_line() +
+    geom_point() +
+    scale_linewidth_identity() +
+    scale_size_identity() +
+    scale_alpha_identity() +
+    scale_color_manual(
+      name = 'OA type',
+      values = unpaywall) +
+    scale_x_continuous(breaks = xbreaks) +
+    scale_y_continuous(breaks = ybreaks,
+                       labels = percent_format()) +
+    theme_kth_neo() +
+    theme(
+      axis.text.x = element_text(angle = 45, hjust = 1),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      legend.position="bottom") +
+    ylab("Share of publications") + 
+    xlab("Publication year")
+}
+
 #' Create waffle chart (5 rows, 20 columns) for any single percentage
 #' 
 #' @param pct a percentage expressed as a decimal number 0 <= pct <= 1
@@ -1383,7 +1490,7 @@ abm_bullet <- function(label, value, reference, roundto = 1, pct = FALSE)
 abm_graph_oadata_pie <- function(df){
   
   df_oa_graphdata <- df |>
-    filter(Publication_Year_ch == "Total") |>
+    filter(Publication_Year == "Total") |>
     select(diamond_count, gold_count, hybrid_count, green_count, closed_count) |>
     rename("Diamond" = diamond_count,
            "Gold" = gold_count,
@@ -1392,7 +1499,7 @@ abm_graph_oadata_pie <- function(df){
            "Not OA" = closed_count)
   
   percentages <- df |>
-    filter(Publication_Year_ch == "Total") |>
+    filter(Publication_Year == "Total") |>
     mutate(diamond_count = 100*diamond_count/P_tot,
            gold_count = 100*gold_count/P_tot,
            hybrid_count = 100*hybrid_count/P_tot,
@@ -1428,14 +1535,14 @@ abm_graph_oadata_stackedarea <- function(df){
   unpaywall_cols <- unpaywall_colors() |> pull(oa_color)
 
   df_oa_graphdata <- df |>
-    filter(Publication_Year_ch != "Total") |>
-    select(Publication_Year_ch, diamond_count, gold_count, hybrid_count, green_count, closed_count) |>
+    filter(Publication_Year != "Total") |>
+    select(Publication_Year, diamond_count, gold_count, hybrid_count, green_count, closed_count) |>
     rename("Diamond" = diamond_count, "Gold" = gold_count, "Hybrid" = hybrid_count, "Green" = green_count, "Not OA" = closed_count)
   
-  xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year_ch") |>
+  xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year") |>
     rename("OA type:"=variable)
   
-  ggplot(xymelt, aes(x = Publication_Year_ch, y = value, fill = `OA type:`, group = `OA type:`)) +
+  ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`)) +
     scale_fill_manual(values = unpaywall_cols) + 
     geom_area() + 
     #TODO: geom_line() +  ?
@@ -1799,6 +1906,7 @@ abm_sdg_table <- function(data,
     summarise(p = n(), p_frac = sum(Unit_Fraction))
 }
 
+
 #' Create table over any SDG by year for the selected unit
 #'
 #' @param data dataset with publications as tibble
@@ -1859,7 +1967,7 @@ abm_graph_sdg <- function(df) {
       mutate(goal_nr = substr(SDG_Displayname, 5, 6)) |>
       inner_join(colors, by = "goal_nr")
   
-  pmax <- max(sdgs$p_frac)
+  pmax <- max(sdgs$p_frac, na.rm = TRUE)
 
   if (pmax > 200){
     ymax <- trunc(1+pmax/100, 2)*100
@@ -1885,4 +1993,96 @@ abm_graph_sdg <- function(df) {
           panel.grid.major.y = element_blank(),
           panel.grid.minor.y = element_blank())
   }
+}
+
+#' Create graph over SDGs, mobile version
+#' 
+#' @param df a data frame at the format produced by abm_sdg_table()
+#' @return a ggplot object
+#' @import ggplot2 dplyr ktheme
+#' @importFrom scales label_number
+#' @importFrom stringr str_pad
+#' @export
+abm_graph_sdg_mobile <- function(df) {
+  
+  SDG_Displayname <- color <- goal <- goal_nr <- NULL
+  
+  if(nrow(df) > 0){
+    colors <- sdg_colors() |>
+      mutate(goal_nr = str_pad(goal, 2, "left", "0")) |> 
+      select(goal_nr, color)
+    sdgs <- df |>
+      filter(SDG_Displayname != 'None') |> 
+      mutate(goal_nr = substr(SDG_Displayname, 5, 6)) |>
+      mutate(SDG_Shortname = substr(SDG_Displayname, 1, 6)) |> 
+      inner_join(colors, by = "goal_nr")
+
+    pmax <- max(sdgs$p_frac, na.rm = TRUE)
+    
+    if (pmax > 200){
+      ymax <- trunc(1+pmax/100, 2)*100
+      ybreaks <- seq(0, ymax, 200)
+    } else {
+      ymax <- trunc(1+pmax/10, 1)*10
+      ybreaks <- seq(0, ymax, 20)
+    }
+    
+    ggplot(data = sdgs,
+           aes(x = SDG_Shortname)) +
+      geom_bar(aes(weight = p_frac), fill = sdgs$color) +
+      xlab(NULL) +
+      ylab("P (frac)") +
+      coord_flip() +
+      scale_x_discrete(limits = rev(levels(as.factor(sdgs$SDG_Shortname)))) +
+      scale_y_continuous(breaks = ybreaks,
+                         minor_breaks = NULL,
+                         limits = c(0, ymax),
+                         expand = c(0, 10)) +
+      theme_kth_neo() + 
+      theme(axis.text.y  = element_text(hjust = 0),
+            panel.grid.major.y = element_blank(),
+            panel.grid.minor.y = element_blank())
+  }
+}
+
+#' Create Excel workbook with ABM publication data
+#' 
+#' @param data a data frame
+#' @param attribution (optional) attribution text
+#' @return A workbook object
+#' @import openxlsx dplyr stringr
+#' @export
+abm_data_workbook <- function(data, attribution = NULL) {
+  
+  oldmaxWidth <- getOption("openxlsx.maxWidth")
+  options("openxlsx.maxWidth" = 120)
+  on.exit(options("openxlsx.maxWidth" = oldmaxWidth))
+  
+  dec3Style <- createStyle(numFmt = "0.000")
+  dec3 <- which(names(data) %in% c("jcf", "Jtop20", "cf", "Cf_log",
+                                   "Ptop1", "Ptop5", "Ptop10", "Ptop25",
+                                   "Unit_Fraction", "Unit_Fraction_adj",
+                                   "scop_fwci_x", "scop_snip"))
+  
+  wb <- createWorkbook()
+  
+  addWorksheet(wb, "Data")
+  writeDataTable(wb, "Data", data)
+  setColWidths(wb, "Data", cols = 1:ncol(data), widths = "auto")
+  addStyle(wb, "Data", dec3Style, cols = dec3, rows = 2:nrow(data), gridExpand = T)
+  
+  if(!is.null(attribution)) {
+    attrib <- data.frame(x = str_wrap(attribution, 90) |> str_split_1("\n"))
+    attribStyle <- createStyle(fontSize = 12,
+                               fgFill = "#EEEEEE",
+                               textDecoration = "bold")
+    addWorksheet(wb, "Attribution")
+    writeData(wb, "Attribution", x = attrib,
+              startCol = 2, startRow = 2,
+              colNames = FALSE)
+    setColWidths(wb, "Attribution", cols = 2, widths = "auto")
+    addStyle(wb, "Attribution", attribStyle, cols = 2, rows = 2:(1+nrow(attrib)))
+  }  
+  
+  wb
 }

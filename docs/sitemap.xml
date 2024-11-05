@@ -1,558 +1,193 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/intro.html</loc>
-  </url>
-  <url>
-    <loc>/articles/public-data.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_bullet.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_bullet_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_bullet_plotly2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_config.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_copub_countries.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_copub_countries_staffbased.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_copub_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_copub_orgs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_copub_orgs_staffbased.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_coverage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_dash_indices.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_dash_indics.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_decode_jwt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_divisions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_division_stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_format_rows.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_cf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_cf_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_copub_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_diva.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_diva2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_diva_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_divisions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_jcf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_jcf_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata_linegraphs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata_pie.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata_piechart.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata_share.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata_stackedarea.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_oadata_stackedarea_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_scop_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_scop_normcit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_scop_snip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_scop_top10.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_scop_top20.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_sdg.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_top10.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_top10_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_top20.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_top20_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_wos_coverage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_graph_wos_coverage_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_oa_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_oa_data_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_private_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_publications.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_publications_staffbased.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_public_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_public_kth.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_pubs_summary.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_report.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_researchers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_sdg_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_sdg_year.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_slugs_departments.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_slugs_institutions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_staff_data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_staff_list.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_tab1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table1.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table1_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table1_full.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table2_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table3.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table3_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table4.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table4_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table5.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table5_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table6.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table6_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table_scop_cit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table_scop_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table_scop_normcit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_table_scop_snip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_bullet_citations.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_bullet_journal.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_button_altmetric.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_button_diva.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_button_publist.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_cf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_city3y.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_copub_countries.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_copub_orgs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_diva.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_diva_full.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_jcf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_oa.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_publications.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_researchers.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_scop_cit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_scop_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_scop_normcit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_scop_snip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_sdg_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_datatable_sdg_year.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_cf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_cit3y.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_copub_countries.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_copub_orgs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_diva.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_diva_full.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_jcf.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_oa.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_scop_cit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_scop_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_scop_normcit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_scop_snip.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_sdg_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_kable_sdg_year.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_note.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_summary_pubs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_valuebox_coverage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_valuebox_publications.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_ui_waffle_copub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_units.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_unit_pubs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_unit_stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_waffle_pct.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_waffle_pct_plotly.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_woscoverage.html</loc>
-  </url>
-  <url>
-    <loc>/reference/abm_woscoverage_alt.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_accountname.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_displayname.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_displayname2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_kthid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_kthid2.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_memberof.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ad_search.html</loc>
-  </url>
-  <url>
-    <loc>/reference/bibliomatrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/con_bib.html</loc>
-  </url>
-  <url>
-    <loc>/reference/coveragetext.html</loc>
-  </url>
-  <url>
-    <loc>/reference/db_sqlite_location.html</loc>
-  </url>
-  <url>
-    <loc>/reference/db_sync.html</loc>
-  </url>
-  <url>
-    <loc>/reference/db_upload_crawl.html</loc>
-  </url>
-  <url>
-    <loc>/reference/db_upsert_table.html</loc>
-  </url>
-  <url>
-    <loc>/reference/displayname_from_kthid.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_indic_descriptions.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_pt_ordning.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_pubtype_order.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kthids_from_slug.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kthid_from_accountname.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kth_catalog_crawl.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kth_divisions_crawl.html</loc>
-  </url>
-  <url>
-    <loc>/reference/kth_theme.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mean_indicator_units.html</loc>
-  </url>
-  <url>
-    <loc>/reference/mean_jcf_units.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nowrap_html.html</loc>
-  </url>
-  <url>
-    <loc>/reference/nowrap_hyphen_sub.html</loc>
-  </url>
-  <url>
-    <loc>/reference/palette_kth.html</loc>
-  </url>
-  <url>
-    <loc>/reference/palette_kth_info.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/pool_bib.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prerender.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prerender_cache_location.html</loc>
-  </url>
-  <url>
-    <loc>/reference/prerender_cache_sync.html</loc>
-  </url>
-  <url>
-    <loc>/reference/run_api.html</loc>
-  </url>
-  <url>
-    <loc>/reference/run_app.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sliding_intervals.html</loc>
-  </url>
-  <url>
-    <loc>/reference/status_db.html</loc>
-  </url>
-  <url>
-    <loc>/reference/status_kthapi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/status_ldap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/status_renviron.html</loc>
-  </url>
-  <url>
-    <loc>/reference/timegraph_header_legend.html</loc>
-  </url>
-  <url>
-    <loc>/reference/time_graph.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unit_info.html</loc>
-  </url>
-  <url>
-    <loc>/reference/unit_staff.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wos_attribution.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wos_disclaimer.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/intro.html</loc></url>
+<url><loc>/articles/public-data.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/abm_bullet.html</loc></url>
+<url><loc>/reference/abm_bullet_plotly.html</loc></url>
+<url><loc>/reference/abm_bullet_plotly2.html</loc></url>
+<url><loc>/reference/abm_config.html</loc></url>
+<url><loc>/reference/abm_copub_countries.html</loc></url>
+<url><loc>/reference/abm_copub_countries_staffbased.html</loc></url>
+<url><loc>/reference/abm_copub_data.html</loc></url>
+<url><loc>/reference/abm_copub_orgs.html</loc></url>
+<url><loc>/reference/abm_copub_orgs_staffbased.html</loc></url>
+<url><loc>/reference/abm_coverage.html</loc></url>
+<url><loc>/reference/abm_dash_indices.html</loc></url>
+<url><loc>/reference/abm_dash_indics.html</loc></url>
+<url><loc>/reference/abm_data.html</loc></url>
+<url><loc>/reference/abm_data_workbook.html</loc></url>
+<url><loc>/reference/abm_decode_jwt.html</loc></url>
+<url><loc>/reference/abm_divisions.html</loc></url>
+<url><loc>/reference/abm_division_stats.html</loc></url>
+<url><loc>/reference/abm_format_rows.html</loc></url>
+<url><loc>/reference/abm_graph_cf.html</loc></url>
+<url><loc>/reference/abm_graph_cf_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_copub.html</loc></url>
+<url><loc>/reference/abm_graph_copub_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_diva.html</loc></url>
+<url><loc>/reference/abm_graph_diva2.html</loc></url>
+<url><loc>/reference/abm_graph_diva_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_divisions.html</loc></url>
+<url><loc>/reference/abm_graph_jcf.html</loc></url>
+<url><loc>/reference/abm_graph_jcf_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_oadata.html</loc></url>
+<url><loc>/reference/abm_graph_oadata_linegraphs.html</loc></url>
+<url><loc>/reference/abm_graph_oadata_pie.html</loc></url>
+<url><loc>/reference/abm_graph_oadata_piechart.html</loc></url>
+<url><loc>/reference/abm_graph_oadata_share.html</loc></url>
+<url><loc>/reference/abm_graph_oadata_stackedarea.html</loc></url>
+<url><loc>/reference/abm_graph_oadata_stackedarea_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_oa_lines.html</loc></url>
+<url><loc>/reference/abm_graph_scop_copub.html</loc></url>
+<url><loc>/reference/abm_graph_scop_normcit.html</loc></url>
+<url><loc>/reference/abm_graph_scop_snip.html</loc></url>
+<url><loc>/reference/abm_graph_scop_top10.html</loc></url>
+<url><loc>/reference/abm_graph_scop_top20.html</loc></url>
+<url><loc>/reference/abm_graph_sdg.html</loc></url>
+<url><loc>/reference/abm_graph_sdg_mobile.html</loc></url>
+<url><loc>/reference/abm_graph_top10.html</loc></url>
+<url><loc>/reference/abm_graph_top10_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_top20.html</loc></url>
+<url><loc>/reference/abm_graph_top20_plotly.html</loc></url>
+<url><loc>/reference/abm_graph_wos_coverage.html</loc></url>
+<url><loc>/reference/abm_graph_wos_coverage_plotly.html</loc></url>
+<url><loc>/reference/abm_oa_data.html</loc></url>
+<url><loc>/reference/abm_oa_data_alt.html</loc></url>
+<url><loc>/reference/abm_private_data.html</loc></url>
+<url><loc>/reference/abm_publications.html</loc></url>
+<url><loc>/reference/abm_publications_staffbased.html</loc></url>
+<url><loc>/reference/abm_public_data.html</loc></url>
+<url><loc>/reference/abm_public_kth.html</loc></url>
+<url><loc>/reference/abm_pubs_summary.html</loc></url>
+<url><loc>/reference/abm_report.html</loc></url>
+<url><loc>/reference/abm_researchers.html</loc></url>
+<url><loc>/reference/abm_sdg_table.html</loc></url>
+<url><loc>/reference/abm_sdg_year.html</loc></url>
+<url><loc>/reference/abm_slugs_departments.html</loc></url>
+<url><loc>/reference/abm_slugs_institutions.html</loc></url>
+<url><loc>/reference/abm_staff_data.html</loc></url>
+<url><loc>/reference/abm_staff_list.html</loc></url>
+<url><loc>/reference/abm_tab1.html</loc></url>
+<url><loc>/reference/abm_table1.html</loc></url>
+<url><loc>/reference/abm_table1_alt.html</loc></url>
+<url><loc>/reference/abm_table1_full.html</loc></url>
+<url><loc>/reference/abm_table2.html</loc></url>
+<url><loc>/reference/abm_table2_alt.html</loc></url>
+<url><loc>/reference/abm_table3.html</loc></url>
+<url><loc>/reference/abm_table3_alt.html</loc></url>
+<url><loc>/reference/abm_table4.html</loc></url>
+<url><loc>/reference/abm_table4_alt.html</loc></url>
+<url><loc>/reference/abm_table5.html</loc></url>
+<url><loc>/reference/abm_table5_alt.html</loc></url>
+<url><loc>/reference/abm_table6.html</loc></url>
+<url><loc>/reference/abm_table6_alt.html</loc></url>
+<url><loc>/reference/abm_table_scop_cit.html</loc></url>
+<url><loc>/reference/abm_table_scop_copub.html</loc></url>
+<url><loc>/reference/abm_table_scop_normcit.html</loc></url>
+<url><loc>/reference/abm_table_scop_snip.html</loc></url>
+<url><loc>/reference/abm_ui_bullet_citations.html</loc></url>
+<url><loc>/reference/abm_ui_bullet_journal.html</loc></url>
+<url><loc>/reference/abm_ui_button_altmetric.html</loc></url>
+<url><loc>/reference/abm_ui_button_diva.html</loc></url>
+<url><loc>/reference/abm_ui_button_publist.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_cf.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_cit3y.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_city3y.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_copub.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_copub_countries.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_copub_orgs.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_diva.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_diva_full.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_jcf.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_oa.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_publications.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_researchers.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_scop_cit.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_scop_copub.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_scop_normcit.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_scop_snip.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_sdg_table.html</loc></url>
+<url><loc>/reference/abm_ui_datatable_sdg_year.html</loc></url>
+<url><loc>/reference/abm_ui_kable_cf.html</loc></url>
+<url><loc>/reference/abm_ui_kable_cit3y.html</loc></url>
+<url><loc>/reference/abm_ui_kable_copub.html</loc></url>
+<url><loc>/reference/abm_ui_kable_copub_countries.html</loc></url>
+<url><loc>/reference/abm_ui_kable_copub_orgs.html</loc></url>
+<url><loc>/reference/abm_ui_kable_diva.html</loc></url>
+<url><loc>/reference/abm_ui_kable_diva_full.html</loc></url>
+<url><loc>/reference/abm_ui_kable_jcf.html</loc></url>
+<url><loc>/reference/abm_ui_kable_oa.html</loc></url>
+<url><loc>/reference/abm_ui_kable_scop_cit.html</loc></url>
+<url><loc>/reference/abm_ui_kable_scop_copub.html</loc></url>
+<url><loc>/reference/abm_ui_kable_scop_normcit.html</loc></url>
+<url><loc>/reference/abm_ui_kable_scop_snip.html</loc></url>
+<url><loc>/reference/abm_ui_kable_sdg_table.html</loc></url>
+<url><loc>/reference/abm_ui_kable_sdg_year.html</loc></url>
+<url><loc>/reference/abm_ui_note.html</loc></url>
+<url><loc>/reference/abm_ui_summary_pubs.html</loc></url>
+<url><loc>/reference/abm_ui_valuebox_coverage.html</loc></url>
+<url><loc>/reference/abm_ui_valuebox_publications.html</loc></url>
+<url><loc>/reference/abm_ui_waffle_copub.html</loc></url>
+<url><loc>/reference/abm_units.html</loc></url>
+<url><loc>/reference/abm_unit_pubs.html</loc></url>
+<url><loc>/reference/abm_unit_stats.html</loc></url>
+<url><loc>/reference/abm_waffle_pct.html</loc></url>
+<url><loc>/reference/abm_waffle_pct_plotly.html</loc></url>
+<url><loc>/reference/abm_woscoverage.html</loc></url>
+<url><loc>/reference/abm_woscoverage_alt.html</loc></url>
+<url><loc>/reference/ad_accountname.html</loc></url>
+<url><loc>/reference/ad_displayname.html</loc></url>
+<url><loc>/reference/ad_displayname2.html</loc></url>
+<url><loc>/reference/ad_kthid.html</loc></url>
+<url><loc>/reference/ad_kthid2.html</loc></url>
+<url><loc>/reference/ad_memberof.html</loc></url>
+<url><loc>/reference/ad_search.html</loc></url>
+<url><loc>/reference/bibliomatrix.html</loc></url>
+<url><loc>/reference/con_bib.html</loc></url>
+<url><loc>/reference/coveragetext.html</loc></url>
+<url><loc>/reference/db_sqlite_location.html</loc></url>
+<url><loc>/reference/db_sync.html</loc></url>
+<url><loc>/reference/db_upload_crawl.html</loc></url>
+<url><loc>/reference/db_upsert_table.html</loc></url>
+<url><loc>/reference/displayname_from_kthid.html</loc></url>
+<url><loc>/reference/get_analysis_date.html</loc></url>
+<url><loc>/reference/get_indic_descriptions.html</loc></url>
+<url><loc>/reference/get_pt_ordning.html</loc></url>
+<url><loc>/reference/get_pubtype_order.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/kthids_from_slug.html</loc></url>
+<url><loc>/reference/kthid_from_accountname.html</loc></url>
+<url><loc>/reference/kth_catalog_crawl.html</loc></url>
+<url><loc>/reference/kth_divisions_crawl.html</loc></url>
+<url><loc>/reference/kth_theme.html</loc></url>
+<url><loc>/reference/mean_indicator_units.html</loc></url>
+<url><loc>/reference/mean_jcf_units.html</loc></url>
+<url><loc>/reference/nowrap_html.html</loc></url>
+<url><loc>/reference/nowrap_hyphen_sub.html</loc></url>
+<url><loc>/reference/palette_kth.html</loc></url>
+<url><loc>/reference/palette_kth_info.html</loc></url>
+<url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/pool_bib.html</loc></url>
+<url><loc>/reference/prerender.html</loc></url>
+<url><loc>/reference/prerender_cache_location.html</loc></url>
+<url><loc>/reference/prerender_cache_sync.html</loc></url>
+<url><loc>/reference/run_api.html</loc></url>
+<url><loc>/reference/run_app.html</loc></url>
+<url><loc>/reference/sliding_intervals.html</loc></url>
+<url><loc>/reference/status_db.html</loc></url>
+<url><loc>/reference/status_kthapi.html</loc></url>
+<url><loc>/reference/status_ldap.html</loc></url>
+<url><loc>/reference/status_renviron.html</loc></url>
+<url><loc>/reference/timegraph_header_legend.html</loc></url>
+<url><loc>/reference/time_graph.html</loc></url>
+<url><loc>/reference/unit_info.html</loc></url>
+<url><loc>/reference/unit_staff.html</loc></url>
+<url><loc>/reference/wos_attribution.html</loc></url>
+<url><loc>/reference/wos_disclaimer.html</loc></url>
 </urlset>
+

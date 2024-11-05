@@ -17,7 +17,7 @@ abm_graph_oadata_piechart <- function(df, type = c("ggplot", "plotly", "ggiraph"
 
   t1 <- 
     df %>% 
-    filter(Publication_Year_ch == "Total") %>%
+    filter(Publication_Year == "Total") %>%
     select(-"oa_count" & ends_with("count")) %>% 
     select_if(colSums(.) != 0) %>%
     pivot_longer(cols = ends_with("_count"), names_to = "group", names_pattern = "(.*?)_count", values_to = "count") %>%
@@ -95,7 +95,7 @@ abm_graph_oadata_share <- function(df, type = c("ggplot", "plotly", "ggiraph")) 
   
   t1 <- 
     df %>% 
-    filter(Publication_Year_ch == "Total") %>%
+    filter(Publication_Year == "Total") %>%
     select(-"oa_count" & ends_with("count")) %>%
     pivot_longer(cols = ends_with("_count"), names_to = "group", names_pattern = "(.*?)_count", values_to = "count") %>%
     mutate(value = 100 * count / sum(count, na.rm = TRUE)) %>%
@@ -178,7 +178,7 @@ abm_graph_oadata_linegraphs <- function(df, type = c("ggplot", "plotly", "ggirap
   
   t11 <- 
     df %>% 
-    rename(Year = "Publication_Year_ch", total_count = P_tot) %>%
+    rename(Year = "Publication_Year", total_count = P_tot) %>%
     filter(Year != "Total") %>%
     tidyr::pivot_longer(
       cols = ends_with("_count"), 

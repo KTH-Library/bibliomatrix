@@ -2,7 +2,7 @@
 % Please edit documentation in R/ui-elements.R
 \name{abm_ui_datatable_sdg_year}
 \alias{abm_ui_datatable_sdg_year}
-\title{Datatable for SDG publicaitons by year}
+\title{Datatable for SDG publications by year}
 \usage{
 abm_ui_datatable_sdg_year(df_sdg_year, unit_file_label, unit_title)
 }
@@ -14,5 +14,5 @@ abm_ui_datatable_sdg_year(df_sdg_year, unit_file_label, unit_title)
 \item{unit_title}{the label presented when users make use of the download button}
 }
 \description{
-Datatable for SDG publicaitons by year
+Datatable for SDG publications by year
 }

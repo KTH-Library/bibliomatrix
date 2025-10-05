@@ -79,6 +79,6 @@ Remotes:
     KTH-Library/kthapi,
     KTH-Library/ktheme,
     hrbrmstr/waffle
-URL: https://github.com/KTH-Library/bibliomatrix
+URL: https://github.com/KTH-Library/bibliomatrix, https://kth-library.github.io/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues
 VignetteBuilder: knitr

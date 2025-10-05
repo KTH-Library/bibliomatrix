@@ -64,15 +64,15 @@ t1 %>%
 # You can build a sqlite3 databsae for local use (this will take a while the first time)
 db_sync()
 localdb <- con_bib("sqlite")
-kth_data_local <- abm_data(localdb, unit_code = "KTH")
+kth_data_local <- abm_data(localdb, unit_code = "KTH", analysisId = abm_config()$analysis_id)
 t2 <- abm_table1(kth_data_local)
 
 # are the results the same?
 identical(t1, t2)
 
 # what about performance?
-bench_time(abm_table1(abm_data(con = bibmon, unit_code = "KTH")))
-bench_time(abm_table1(abm_data(con = localdb, unit_code = "KTH")))
+bench_time(abm_table1(abm_data(con = bibmon, unit_code = "KTH", analysisId = abm_config()$analysis_id)))
+bench_time(abm_table1(abm_data(con = localdb, unit_code = "KTH", analysisId = abm_config()$analysis_id)))
 
 dbDisconnect(bibmon)
 dbDisconnect(localdb)

@@ -1698,7 +1698,7 @@ abm_graph_scop_copub <- function(df){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
-  oa_data <- abm_data(con = con, unit_code = unit_code) |> 
+  oa_data <- abm_data(con = con, unit_code = unit_code, analysisId = abm_config()$analysis_id) |> 
     rename("UT" = "WebofScience_ID") |>
     left_join(con |> tbl("Bestresaddr_KTH"), by = "UT") |>  #by = c("WebofScience_ID" = "UT")
     filter(!is.na(UT)) |>

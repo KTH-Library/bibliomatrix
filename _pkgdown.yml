@@ -1,1 +1,4 @@
 destination: docs
+template:
+  bootstrap: 5
+url: https://kth-library.github.io/bibliomatrix/

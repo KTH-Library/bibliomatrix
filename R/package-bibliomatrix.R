@@ -5,7 +5,6 @@
 #' the KTH Library.
 #'
 #' @name bibliomatrix
-#' @docType package
 #' @keywords package
 #' @aliases package-bibliomatrix
 #' 

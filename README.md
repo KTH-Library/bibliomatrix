@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# bibliomatrix <img src="man/figures/sticker.png" align="right" />
+# bibliomatrix <img src="man/figures/sticker.png" alt="Bibliomatrix R package" align="right" />
 
 <!-- badges: start -->
 

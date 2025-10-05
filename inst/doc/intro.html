@@ -48,8 +48,9 @@ overflow: visible;
 }
 </style>
 <style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -60,7 +61,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -359,11 +360,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(bench)</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">library</span>(DBI)</span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(pool)</span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
-<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="sc">==</span> <span class="st">&quot;Windows&quot;</span>) </span>
-<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  <span class="fu">readRenviron</span>(<span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="fu">library</span>(dbplyr)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">Sys.info</span>()[<span class="st">&quot;sysname&quot;</span>] <span class="sc">==</span> <span class="st">&quot;Windows&quot;</span>) </span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>  <span class="fu">readRenviron</span>(<span class="fu">file.path</span>(<span class="fu">Sys.getenv</span>(<span class="st">&quot;R_USER&quot;</span>), <span class="st">&quot;.Renviron&quot;</span>))</span></code></pre></div>
 </div>
 <div id="data-for-annual-bibliometric-monitoring-abm" class="section level2">
 <h2>Data for Annual Bibliometric Monitoring (ABM)</h2>
@@ -378,11 +378,11 @@ for the ABM tables can be retrieved.</p>
 <p><em>NOTE: For the public part of ABM, no database connection is
 needed, see <a href="public-data.html">Using bundled data in
 bibliomatrix</a>.</em></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Open a connection pool to Microsoft SQL Server BIBMON database</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>bibmon <span class="ot">&lt;-</span> <span class="fu">pool_bib</span>(<span class="st">&quot;mssql&quot;</span>)</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Open a connection to Microsoft SQL Server BIBMON database</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>bibmon <span class="ot">&lt;-</span> <span class="fu">con_bib</span>(<span class="st">&quot;mssql&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># get data for ABM table 1</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>kth_data <span class="ot">&lt;-</span> <span class="fu">abm_data</span>(bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>kth_data <span class="ot">&lt;-</span> <span class="fu">abm_data</span>(bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>, <span class="at">analysisId =</span> <span class="fu">abm_config</span>()<span class="sc">$</span>analysis_id)</span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>t1 <span class="ot">&lt;-</span> <span class="fu">abm_table1</span>(kth_data)</span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># display first few results</span></span>
@@ -400,31 +400,31 @@ bibliomatrix</a>.</em></p>
 <tbody>
 <tr class="odd">
 <td align="left">Article, peer review</td>
-<td align="right">15387.8392</td>
+<td align="right">1539.95793</td>
 </tr>
 <tr class="even">
 <td align="left">Article, other</td>
-<td align="right">1164.3819</td>
+<td align="right">116.91652</td>
 </tr>
 <tr class="odd">
 <td align="left">Conference paper, peer review</td>
-<td align="right">8875.3077</td>
+<td align="right">888.21882</td>
 </tr>
 <tr class="even">
 <td align="left">Conference paper, other</td>
-<td align="right">2663.2656</td>
+<td align="right">269.63990</td>
 </tr>
 <tr class="odd">
 <td align="left">Book</td>
-<td align="right">164.1667</td>
+<td align="right">16.81667</td>
 </tr>
 </tbody>
 </table>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># You can build a sqlite3 databsae for local use (this will take a while the first time)</span></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">db_sync</span>()</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>localdb <span class="ot">&lt;-</span> <span class="fu">pool_bib</span>(<span class="st">&quot;sqlite&quot;</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>kth_data_local <span class="ot">&lt;-</span> <span class="fu">abm_data</span>(localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>localdb <span class="ot">&lt;-</span> <span class="fu">con_bib</span>(<span class="st">&quot;sqlite&quot;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>kth_data_local <span class="ot">&lt;-</span> <span class="fu">abm_data</span>(localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>, <span class="at">analysisId =</span> <span class="fu">abm_config</span>()<span class="sc">$</span>analysis_id)</span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>t2 <span class="ot">&lt;-</span> <span class="fu">abm_table1</span>(kth_data_local)</span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># are the results the same?</span></span>
@@ -432,15 +432,15 @@ bibliomatrix</a>.</em></p>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a></span>
 <span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># what about performance?</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>, <span class="at">analysisId =</span> <span class="fu">abm_config</span>()<span class="sc">$</span>analysis_id)))</span>
 <span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;     22s   2.98m</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>)))</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;   4.23s   22.6s</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>, <span class="at">analysisId =</span> <span class="fu">abm_config</span>()<span class="sc">$</span>analysis_id)))</span>
 <span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   7.44s   7.42s</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   3.55s   3.55s</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">poolClose</span>(bibmon)</span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">poolClose</span>(localdb)</span></code></pre></div>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">dbDisconnect</span>(bibmon)</span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">dbDisconnect</span>(localdb)</span></code></pre></div>
 </div>
 
 

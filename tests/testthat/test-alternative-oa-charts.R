@@ -8,8 +8,8 @@ test_that("alternative oa charts work", {
   c2 <- con_bib_mssql()
   on.exit(DBI::dbDisconnect(c2))
   
-  d1 <- abm_data(con = c1, unit_code = "KTH")
-  d2 <-  abm_data(con = c2, unit_code = "KTH")
+  d1 <- abm_data(con = c1, unit_code = "KTH", analysisId = abm_config()$analysis_id)
+  d2 <- abm_data(con = c2, unit_code = "KTH", analysisId = abm_config()$analysis_id)
   
   df1 <- abm_table6(d1)
   df2 <- abm_table6(d2)

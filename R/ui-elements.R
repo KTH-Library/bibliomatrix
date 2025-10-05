@@ -1565,7 +1565,7 @@ abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
-                    ordering = FALSE,
+                    ordering = TRUE,
                     bPaginate = FALSE,
                     dom = 'tB',
                     buttons = list(

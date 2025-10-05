@@ -6,9 +6,10 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  y_start <- 2014
-  y_stop <- 2023
-  analysisId <- 11
+  current_year <- as.integer(format(Sys.Date(), "%Y"))
+  y_start <- current_year - 11
+  y_stop <- current_year - 1
+  analysisId <- 17
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")

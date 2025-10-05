@@ -11,7 +11,7 @@
 #' 
 # needed for use of . in magrittr pipelines
 utils::globalVariables(c("."))
-NULL
+"_PACKAGE"
 
 #' Public data with Annual Bibliometric Monitoring for KTH assembed in 2019
 #'

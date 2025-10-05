@@ -944,7 +944,7 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #'   "units" with a named list of results (set of tibbles for each of the units),
 #'   "pt_ordning" for DiVA publication type sort order
 #'   and analysis_date for the date of data extraction
-#' @importFrom pool poolClose
+#' @importFrom DBI dbDisconnect
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -982,7 +982,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   if (file.exists(cache_location) & !overwrite_cache)
     return (readr::read_rds(cache_location))  
   
-  db <- pool_bib()
+  db <- con_bib()
   
   # retrieve unit codes
   units_table <- 
@@ -1049,7 +1049,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  poolClose(db)
+  dbDisconnect(db)
   
   out <- list("meta" = units_table,
               "units" = res,
@@ -1072,7 +1072,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #'   and "units" with a named list of results (set of 5 different tibbles for 
 #'   the tables and also the publication list).
 #' @importFrom stats setNames
-#' @importFrom pool poolClose
+#' @importFrom DBI dbDisconnect
 #' @export
 #' @examples 
 #' \dontrun{
@@ -1092,7 +1092,7 @@ abm_private_data <- function(unit_code) {
   if (missing(unit_code))
     stop("Please provide a kthid to be used as unit_code.")
   
-  db <- pool_bib()
+  db <- con_bib()
   
   # retrieve unit codes
   units_table <- 
@@ -1129,7 +1129,7 @@ abm_private_data <- function(unit_code) {
   res <- list(unit_tables(unit_code))
   res <- setNames(res, unit_code)
   
-  poolClose(db)
+  dbDisconnect(db)
   
   out <- list("meta" = units_table, "units" = res)
   

@@ -30,14 +30,14 @@ status_db <- function() {
     return (list (msg = msg, status = FALSE))
   }
   
-  db <- try(pool_bib(source_type = "mssql"), silent = TRUE)
+  db <- try(con_bib(source_type = "mssql"), silent = TRUE)
   
   if (inherits(db, 'try-error')) {
     return (list (msg = "Cannot get connection to database", status = FALSE))
   }  
   
   res <- try(get_pubtype_order(db), silent = TRUE)
-  pool::poolClose(db)
+  DBI::dbDisconnect(db)
 
   if (inherits(res, 'try-error')) {
     return (list (msg = geterrmessage(), status = FALSE))

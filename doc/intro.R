@@ -12,15 +12,14 @@ library(readr)
 library(knitr)
 library(bench)
 library(DBI)
-library(pool)
 library(dbplyr)
 
 if (Sys.info()["sysname"] == "Windows") 
   readRenviron(file.path(Sys.getenv("R_USER"), ".Renviron"))
 
 ## ----message=FALSE, fig.align='left'------------------------------------------
-# Open a connection pool to Microsoft SQL Server BIBMON database
-bibmon <- pool_bib("mssql")
+# Open a connection to Microsoft SQL Server BIBMON database
+bibmon <- con_bib("mssql")
 
 # get data for ABM table 1
 kth_data <- abm_data(bibmon, unit_code = "KTH")
@@ -34,7 +33,7 @@ t1 %>%
 
 # You can build a sqlite3 databsae for local use (this will take a while the first time)
 db_sync()
-localdb <- pool_bib("sqlite")
+localdb <- con_bib("sqlite")
 kth_data_local <- abm_data(localdb, unit_code = "KTH")
 t2 <- abm_table1(kth_data_local)
 
@@ -45,6 +44,6 @@ identical(t1, t2)
 bench_time(abm_table1(abm_data(con = bibmon, unit_code = "KTH")))
 bench_time(abm_table1(abm_data(con = localdb, unit_code = "KTH")))
 
-poolClose(bibmon)
-poolClose(localdb)
+dbDisconnect(bibmon)
+dbDisconnect(localdb)
 

@@ -1857,9 +1857,40 @@ mean_indicator_units <- function(con,starty,stopy, analysis_level=2, analysis_ve
               P_full_OA = n()) |> 
           ungroup()
   
+  dept_scop <- con |> tbl("masterfile") |>
+    filter(analysis_id == analysis_version_id, level == analysis_level, 
+           between(Publication_Year,starty,stopy), 
+           scop_doctype %in% c("Article", "Review", "Conference Paper"), 
+           !is.na(ScopusID)) |> 
+    collect()
+  
+  dept_scop_unique<- dept_scop |> distinct(Unit_code, ScopusID, .keep_all=TRUE) 
+    
+   # |>
+   #  select(Publication_Year, Unit_Fraction, scop_fwci_x, scop_Ptop10, ScopusID) |>
+   #  mutate(Publication_Year = as.character(Publication_Year)) |> 
+   #  unique()
+  scop_cit_av <- dept_scop_unique |> filter(!is.na(scop_fwci_x)) |> 
+    group_by(Unit_Name, Unit_code) |> 
+    summarise(pubs_full_scop = n(),
+              pubs_frac_scop = sum(Unit_Fraction, na.rm = TRUE),
+              fwci_x = weighted.mean(scop_fwci_x, Unit_Fraction, na.rm = TRUE),
+              top10_share_scop = weighted.mean(scop_Ptop10, Unit_Fraction, na.rm = TRUE)) |>
+    ungroup() 
+              
+  # orgdata <- data |>
+  #   filter(Publication_Year >= analysis_start &
+  #            Publication_Year <= analysis_stop &
+  #            scop_doctype %in% c("Article", "Review", "Conference Paper") &
+  #            !is.na(scop_snip)) |>
+  #   select(Publication_Year, Unit_Fraction, scop_snip, scop_Jtop20, ScopusID) |>
+  #   mutate(Publication_Year = as.character(Publication_Year)) |> 
+  #   unique()
+  
   indicator_final<- jcf_av |> left_join(unit_info(con = con, analysisId = analysis_version_id) |> select(unit_code, parent_org_id), by=c("Unit_code" = "unit_code")) |> 
     left_join(cf_av |> select(-Unit_Name), by=c("Unit_code" = "Unit_code")) |>
     left_join(oa_av |> select(-Unit_Name), by=c("Unit_code" = "Unit_code")) |>
+    #left_join(scop_cit_av |> select(-Unit_Name), by=c("Unit_code" = "Unit_code")) |>
     left_join(unit_info(con = con, analysisId = analysis_version_id) |> select(Diva_org_id, unit_long_en), by=c("parent_org_id" = "Diva_org_id")) |> #to join in school name
     select(-parent_org_id) |> relocate(unit_long_en) |> 
     rename("Parent name" = unit_long_en)

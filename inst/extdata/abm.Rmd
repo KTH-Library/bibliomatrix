@@ -56,6 +56,7 @@ library(DBI)
 library(ktheme)
 #library(tidyquant)
 library(zoo)
+library(plotly)
 
 colors_vb <- palette_kth_neo(17)
 
@@ -336,7 +337,9 @@ if (params$is_employee == TRUE) {
 
 ```{r, fig.width=10}
 if (nrow(df_diva) > 0) {
-  p <- abm_graph_diva(df_diva)
+  p <- abm_graph_diva(df_diva) |> ggplotly(tooltip = c("y")) |>  # tooltip = c("fill","y")) 
+    config(displayModeBar = FALSE) |>
+    layout(autosize = TRUE, showlegend = TRUE)
   p
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")

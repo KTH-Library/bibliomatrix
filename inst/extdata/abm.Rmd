@@ -596,12 +596,12 @@ if(isTRUE(unit_level >= 0)){
 ```
 
 
-Journal impact {data-orientation=columns}
+Journal impact <!-- {data-orientation=columns} -->
 =====================================
 
 #### `r unit_label`
 
-Column {data-width=700}
+Row {data-width=700}
 -----------------------
 
 ### **Field normalized journal impact (JCf)** <br> `r timegraph_header_legend()`
@@ -625,7 +625,7 @@ if(df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0) {
 }
 ```
 
-Column {data-width=600}
+Row  {data-width=600; data-height=550}
 -----------------------
 
 ### **Journal impact, fractionalized** {.no-mobile}

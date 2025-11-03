@@ -1148,14 +1148,15 @@ abm_graph_diva <- function(df) {
   df_diva_long <- df |>
     select(-"P_frac", -"WoS_coverage", -"Scopus_coverage") |>
     gather("year", "value", -Publication_Type_DiVA) |>
-    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) |>
+    mutate(`Publication type` = reorder(Publication_Type_DiVA, desc(pt_ordning)))
   
   colvals <- unname(palette_kth_neo(13, type = "qual"))
   names(colvals) <- abm_public_kth$pubtype_order |> filter(pt_ordning <= 13) |> pull(diva_publication_type)
 
   ggplot(data = df_diva_long,
          aes(x = year)) +
-    geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, desc(pt_ordning)))) +
+    geom_bar(aes(weight = value, fill = `Publication type`)) +
     labs(x = "Publication year",
          y = "Number of publications (fractional)",
          fill = NULL) +
@@ -1163,6 +1164,7 @@ abm_graph_diva <- function(df) {
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position = "right",
+          legend.y.intersp = 0.5,
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
@@ -1545,7 +1547,8 @@ abm_graph_oadata_stackedarea <- function(df){
   
   ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`)) +
     scale_fill_manual(values = unpaywall_cols) + 
-    geom_area() + 
+    geom_area(stat = "identity") + 
+    #geom_polygon() +
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +

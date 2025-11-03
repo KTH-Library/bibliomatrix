@@ -1695,3 +1695,16 @@ time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, 
 timegraph_header_legend<-function(colors_vb = ktheme::palette_kth_neo(17)){
   paste0('*Yearly (<span style="color:', colors_vb['blue'],'">&#8226;&#8226;</span>) and moving average (<span style="color:', colors_vb['darkred'],'">&mdash;</span>)*')
 }
+
+#' Plotlyfy graph in ABM context
+#' 
+#' @param graphobj a ggplot object
+#' @param tooltip which paramenters to show as tooltips
+#' @return a plotly object
+#' @importFrom plotly ggplotly
+#' @export
+abm_plotlyfy <- function(graphobj, tooltip, optionsbar = FALSE, showlegend = TRUE)
+  graphobj |> 
+  ggplotly(tooltip = tooltip) |>  
+  config(displayModeBar = optionsbar) |>
+  layout(autosize = TRUE, showlegend = showlegend)

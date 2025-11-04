@@ -47,7 +47,8 @@ spacenames <- c(
   "Organizational Unit",
   "OA type:",
   "Publication count",
-  "Co-publication:"
+  "Co-publication:",
+  "Publication type"
 )
 
 str_remove <- function(x, y) gsub(paste(y, collapse='|'), "", x = x, fixed = TRUE)

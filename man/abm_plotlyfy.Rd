@@ -10,6 +10,10 @@ abm_plotlyfy(graphobj, tooltip, optionsbar = FALSE, showlegend = TRUE)
 \item{graphobj}{a ggplot object}
 
 \item{tooltip}{which paramenters to show as tooltips}
+
+\item{optionsbar}{boolean, default false, indicating whether optionssbar should be shown}
+
+\item{showlegend}{boolean, default true, indicating whether legend should be included}
 }
 \value{
 a plotly object

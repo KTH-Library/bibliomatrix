@@ -1144,6 +1144,8 @@ abm_private_data <- function(unit_code) {
 #' @importFrom stats reorder
 #' @export
 abm_graph_diva <- function(df) {
+
+  `Publication type` <- NULL
   
   df_diva_long <- df |>
     select(-"P_frac", -"WoS_coverage", -"Scopus_coverage") |>

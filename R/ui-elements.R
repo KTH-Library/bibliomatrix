@@ -1700,11 +1700,14 @@ timegraph_header_legend<-function(colors_vb = ktheme::palette_kth_neo(17)){
 #' 
 #' @param graphobj a ggplot object
 #' @param tooltip which paramenters to show as tooltips
+#' @param optionsbar boolean, default false, indicating whether optionssbar should be shown
+#' @param showlegend boolean, default true, indicating whether legend should be included
 #' @return a plotly object
 #' @importFrom plotly ggplotly
 #' @export
-abm_plotlyfy <- function(graphobj, tooltip, optionsbar = FALSE, showlegend = TRUE)
+abm_plotlyfy <- function(graphobj, tooltip, optionsbar = FALSE, showlegend = TRUE) {
   graphobj |> 
   ggplotly(tooltip = tooltip) |>  
   config(displayModeBar = optionsbar) |>
   layout(autosize = TRUE, showlegend = showlegend)
+}

@@ -54,7 +54,7 @@ con_bib_mssql <- function()
     database = Sys.getenv("DBNAME"),
     UID = Sys.getenv("DBUSER"),
     PWD = Sys.getenv("DBPASS"),
-    timeout = timeout,
+    timeout = timeout, 
     Encrypt = "No")
 }
 

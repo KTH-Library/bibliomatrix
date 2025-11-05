@@ -388,7 +388,7 @@ Row
 ```{r, fig.width=10, fig.height=5}
 if (nrow(df_diva) > 0) {
   p <- abm_graph_diva(df_diva) |>
-    abm_plotlyfy(tooltip = c("y","fill")) |> 
+    abm_plotlyfy(tooltip = c("y","fill", "x")) |> 
     layout(margin = list(l = 30, t = 40, r = 30)) # trying some extra spacing
   p
 } else {
@@ -498,7 +498,9 @@ Row
 ```{r, fig.width=7, fig.height=4}
 if (df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0){
   time_graph(df_cf, indicator = "cf", ma = TRUE, weight = "pubs_frac", refline = 1, ylabel = "Average Cf") |>
-    abm_plotlyfy(tooltip = c("y","x")) 
+    abm_plotlyfy(tooltip = c("y","x")) |> 
+    style(hovertemplate = paste0("<b>Publication Year:</b> %{x}<br>",
+                                 "<b>Cf:</b> %{y:.3}<extra></extra>"))
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -511,7 +513,9 @@ if (df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0){
 if (df_cf %>% filter(!is.na(pubs_frac)) %>% nrow() > 0){
   time_graph(df_cf, indicator = "top10_share", ma = TRUE, weight = "pubs_frac", 
              refline = .1, percent = TRUE, ylabel = "Share Top 10%") |>
-    abm_plotlyfy(tooltip = c("y","x")) 
+    abm_plotlyfy(tooltip = c("y","x")) |> 
+        style(hovertemplate = paste0("<b>Publication Year:</b> %{x}<br>",
+                                 "<b>Share Top 10%:</b> %{y:.1%}<extra></extra>"))
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -840,7 +844,16 @@ Row
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oa_lines(df_oa) |>
-    abm_plotlyfy(tooltip = c("y","x"))
+    abm_plotlyfy(tooltip = c("y","x")) |> 
+    layout(legend = list(orientation = "h",
+                         yanchor = "bottom",
+                         y = -0.35,
+                         x = 0.5,
+                         xanchor = "center")) |>
+    style(hovertemplate = paste0("<b>%{data.legendgroup}</b><br>",
+                                 "<b>Publication Year:</b> %{x}<br>",
+                                 "<b>Share OA:</b> %{y:.1%}<extra></extra>"))
+  
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")
 }
@@ -851,7 +864,15 @@ if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
 ```{r, fig.width=8}
 if (df_oa %>% filter(!is.na(P_tot)) %>% nrow() > 0) {
   abm_graph_oadata_stackedarea(df_oa) |>
-    abm_plotlyfy(tooltip = c("y","x"))
+    abm_plotlyfy(tooltip = c("y","x")) |> 
+    layout(legend = list(orientation = "h",
+                         yanchor = "bottom",
+                         y = -0.32,
+                         x = 0.5,
+                         xanchor = "center")) |>
+    style(hovertemplate = paste0("<b>%{data.legendgroup}</b><br>",
+          "<b>Publication Year:</b> %{x}<br>",
+          "<b>Nr publications:</b> %{y}<extra></extra>"))
   
 } else {
   shiny::HTML("<p><i>There are no publications available for this graph</i></p>")

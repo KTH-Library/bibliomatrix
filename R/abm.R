@@ -1383,7 +1383,7 @@ abm_graph_oa_lines <- function(df){
     scale_size_identity() +
     scale_alpha_identity() +
     scale_color_manual(
-      name = 'OA type',
+      #name = 'OA type',
       values = unpaywall) +
     scale_x_continuous(breaks = xbreaks) +
     scale_y_continuous(breaks = ybreaks,

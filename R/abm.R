@@ -1157,7 +1157,9 @@ abm_graph_diva <- function(df) {
   names(colvals) <- abm_public_kth$pubtype_order |> filter(pt_ordning <= 13) |> pull(diva_publication_type)
 
   ggplot(data = df_diva_long,
-         aes(x = year)) +
+         aes(x = year, text = paste(round(value,1)),  #"<b>Publications:</b>",
+             value2 = round(df_diva_long$value,1),
+             value = value)) +
     geom_bar(aes(weight = value, fill = `Publication type`)) +
     labs(x = "Publication year",
          y = "Number of publications (fractional)",
@@ -1547,7 +1549,8 @@ abm_graph_oadata_stackedarea <- function(df){
   xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year") |>
     rename("OA type:"=variable)
   
-  ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`)) +
+  ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`,
+                     text = paste0(round(value)))) +
     scale_fill_manual(values = unpaywall_cols) + 
     geom_area(stat = "identity") + 
     #geom_polygon() +

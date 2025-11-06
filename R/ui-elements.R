@@ -1667,7 +1667,8 @@ time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, 
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
-          panel.grid.minor.y = element_blank())
+          panel.grid.minor.y = element_blank(),
+          axis.title.x = element_blank())
   
   if(!is.null(refline)) {
     res <- res +

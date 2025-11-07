@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   intro: intro.html
   public-data: public-data.html
-last_built: 2025-10-05T16:54Z
+last_built: 2025-11-07T13:39Z
 urls:
   reference: https://kth-library.github.io/bibliomatrix/reference
   article: https://kth-library.github.io/bibliomatrix/articles

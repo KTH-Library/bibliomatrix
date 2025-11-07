@@ -25,11 +25,13 @@ library(here)
 ## DO THIS when pushing
 
 document()
-check(vignettes = FALSE)
 
 # remember to update the bundled data
 db_sync(overwrite_existing = TRUE)
 source(here("data-raw/public_data.R"))
+
+# Don't check until after updating data some tests will fail
+check(vignettes = FALSE)
 
 # May require Ctrl-Shift-B (for new internal pkg data to be installed)!
 

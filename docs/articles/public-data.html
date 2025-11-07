@@ -4,90 +4,64 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Using bundled data in `bibliomatrix` • bibliomatrix</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Using bundled data in `bibliomatrix`">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Using bundled data in `bibliomatrix`">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">bibliomatrix</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.9</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <a class="navbar-brand me-2" href="../index.html">bibliomatrix</a>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/intro.html">Introduction to usage of `bibliomatrix`</a>
-    </li>
-    <li>
-      <a href="../articles/public-data.html">Using bundled data in `bibliomatrix`</a>
-    </li>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/intro.html">Introduction to usage of `bibliomatrix`</a></li>
+    <li><a class="dropdown-item" href="../articles/public-data.html">Using bundled data in `bibliomatrix`</a></li>
   </ul>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/KTH-Library/bibliomatrix/" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/KTH-Library/bibliomatrix/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Using bundled data in
-<code>bibliomatrix</code>
-</h1>
+
+<div class="row">
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>Using bundled data in `bibliomatrix`</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/KTH-Library/bibliomatrix/blob/HEAD/vignettes/public-data.Rmd" class="external-link"><code>vignettes/public-data.Rmd</code></a></small>
-      <div class="hidden name"><code>public-data.Rmd</code></div>
-
+      <div class="d-none name"><code>public-data.Rmd</code></div>
     </div>
 
     
@@ -114,16 +88,16 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 34 × 20</span></span></span>
 <span><span class="co">#&gt;    analysis_id Diva_org_id unit_code unit_short unit_long_en                    </span></span>
 <span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          11         177 KTH       KTH        KTH Royal Institute of Technolo…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>          11        <span style="text-decoration: underline;">5</span>850 A         ABE        School of Architecture and the …</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>          11        <span style="text-decoration: underline;">5</span>851 5851      <span style="color: #BB0000;">NA</span>         Architecture                    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>          11        <span style="text-decoration: underline;">5</span>857 5857      <span style="color: #BB0000;">NA</span>         Civil and Architectural Enginee…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>          11      <span style="text-decoration: underline;">875</span>600 875600    <span style="color: #BB0000;">NA</span>         Philosophy and History          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>          11        <span style="text-decoration: underline;">5</span>869 5869      <span style="color: #BB0000;">NA</span>         Real Estate and Construction Ma…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>          11       <span style="text-decoration: underline;">13</span>604 13604     <span style="color: #BB0000;">NA</span>         Sustainable development, Enviro…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>          11        <span style="text-decoration: underline;">5</span>884 5884      <span style="color: #BB0000;">NA</span>         Urban Planning and Environment  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>          11      <span style="text-decoration: underline;">879</span>223 E         EECS       School of Electrical Engineerin…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>          11      <span style="text-decoration: underline;">882</span>650 882650    <span style="color: #BB0000;">NA</span>         Computer Science                </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>          17         177 KTH       KTH        KTH Royal Institute of Technolo…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>          17        <span style="text-decoration: underline;">5</span>850 A         ABE        School of Architecture and the …</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>          17        <span style="text-decoration: underline;">5</span>851 5851      <span style="color: #BB0000;">NA</span>         Architecture                    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>          17        <span style="text-decoration: underline;">5</span>857 5857      <span style="color: #BB0000;">NA</span>         Civil and Architectural Enginee…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>          17      <span style="text-decoration: underline;">875</span>600 875600    <span style="color: #BB0000;">NA</span>         Philosophy and History          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>          17        <span style="text-decoration: underline;">5</span>869 5869      <span style="color: #BB0000;">NA</span>         Real Estate and Construction Ma…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>          17       <span style="text-decoration: underline;">13</span>604 13604     <span style="color: #BB0000;">NA</span>         Sustainable development, Enviro…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>          17        <span style="text-decoration: underline;">5</span>884 5884      <span style="color: #BB0000;">NA</span>         Urban Planning and Environment  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>          17      <span style="text-decoration: underline;">879</span>223 E         EECS       School of Electrical Engineerin…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>          17      <span style="text-decoration: underline;">882</span>650 882650    <span style="color: #BB0000;">NA</span>         Computer Science                </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 24 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 15 more variables: unit_long_en_indent1 &lt;chr&gt;, unit_long_en_indent2 &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   unit_long_sv &lt;chr&gt;, parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;,</span></span></span>
@@ -137,7 +111,7 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span></span>
 <span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          11        <span style="text-decoration: underline;">6</span>023 I         ITM        School of I… <span style="color: #949494;">"</span>    School of Indu…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          17        <span style="text-decoration: underline;">6</span>023 I         ITM        School of I… <span style="color: #949494;">"</span>    School of Indu…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
@@ -147,7 +121,7 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 20</span></span></span>
 <span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          11        <span style="text-decoration: underline;">5</span>869 5869      <span style="color: #BB0000;">NA</span>         Real Estate… <span style="color: #949494;">"</span>        Real Estat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          17        <span style="text-decoration: underline;">5</span>869 5869      <span style="color: #BB0000;">NA</span>         Real Estate… <span style="color: #949494;">"</span>        Real Estat…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
@@ -159,11 +133,11 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 20</span></span></span>
 <span><span class="co">#&gt;   analysis_id Diva_org_id unit_code unit_short unit_long_en unit_long_en_indent1</span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          11        <span style="text-decoration: underline;">5</span>850 A         ABE        School of A… <span style="color: #949494;">"</span>    School of Arch…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>          11      <span style="text-decoration: underline;">879</span>223 E         EECS       School of E… <span style="color: #949494;">"</span>    School of Elec…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>          11        <span style="text-decoration: underline;">6</span>091 S         SCI        School of E… <span style="color: #949494;">"</span>    School of Engi…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>          11      <span style="text-decoration: underline;">879</span>224 C         CBH        School of E… <span style="color: #949494;">"</span>    School of Engi…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>          11        <span style="text-decoration: underline;">6</span>023 I         ITM        School of I… <span style="color: #949494;">"</span>    School of Indu…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>          17        <span style="text-decoration: underline;">5</span>850 A         ABE        School of A… <span style="color: #949494;">"</span>    School of Arch…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>          17      <span style="text-decoration: underline;">879</span>223 E         EECS       School of E… <span style="color: #949494;">"</span>    School of Elec…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>          17        <span style="text-decoration: underline;">6</span>091 S         SCI        School of E… <span style="color: #949494;">"</span>    School of Engi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>          17      <span style="text-decoration: underline;">879</span>224 C         CBH        School of E… <span style="color: #949494;">"</span>    School of Engi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>          17        <span style="text-decoration: underline;">6</span>023 I         ITM        School of I… <span style="color: #949494;">"</span>    School of Indu…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 14 more variables: unit_long_en_indent2 &lt;chr&gt;, unit_long_sv &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   parent_org_id &lt;int&gt;, org_level &lt;int&gt;, active &lt;int&gt;, description_en &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   kthid &lt;chr&gt;, slug &lt;chr&gt;, altmetric_desc &lt;chr&gt;, altmetric_count &lt;dbl&gt;,</span></span></span>
@@ -206,67 +180,67 @@ whole, its five schools and about 30 departments. The dataset, named
 <tbody>
 <tr class="odd">
 <td align="left">Article, peer review</td>
-<td align="right">14801.92449</td>
-<td align="right">0.8766310</td>
+<td align="right">14604.55749</td>
+<td align="right">0.8648226</td>
 </tr>
 <tr class="even">
 <td align="left">Article, other</td>
-<td align="right">927.15950</td>
-<td align="right">0.8126962</td>
+<td align="right">868.11426</td>
+<td align="right">0.7931583</td>
 </tr>
 <tr class="odd">
 <td align="left">Conference paper, peer review</td>
-<td align="right">7205.46836</td>
-<td align="right">0.5993095</td>
+<td align="right">7063.61959</td>
+<td align="right">0.5851030</td>
 </tr>
 <tr class="even">
 <td align="left">Conference paper, other</td>
-<td align="right">1701.73812</td>
-<td align="right">0.0441298</td>
+<td align="right">1560.91673</td>
+<td align="right">0.0464649</td>
 </tr>
 <tr class="odd">
 <td align="left">Book</td>
-<td align="right">149.36738</td>
-<td align="right">0.0033475</td>
+<td align="right">155.47214</td>
+<td align="right">0.0032160</td>
 </tr>
 <tr class="even">
 <td align="left">Anthology (editor)</td>
-<td align="right">64.55952</td>
-<td align="right">0.0051632</td>
+<td align="right">55.92619</td>
+<td align="right">0.0059602</td>
 </tr>
 <tr class="odd">
 <td align="left">Chapter in book</td>
-<td align="right">1386.53486</td>
-<td align="right">0.0252909</td>
+<td align="right">1423.19541</td>
+<td align="right">0.0225510</td>
 </tr>
 <tr class="even">
 <td align="left">Article, book review</td>
-<td align="right">117.35000</td>
-<td align="right">0.5100128</td>
+<td align="right">111.85000</td>
+<td align="right">0.5082700</td>
 </tr>
 <tr class="odd">
 <td align="left">Proceeding (editor)</td>
-<td align="right">39.96587</td>
-<td align="right">0.0250213</td>
+<td align="right">35.36587</td>
+<td align="right">0.0282758</td>
 </tr>
 <tr class="even">
 <td align="left">Report</td>
-<td align="right">655.40003</td>
+<td align="right">602.34419</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">Doctoral thesis</td>
-<td align="right">2692.00000</td>
+<td align="right">2638.00000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">Licentiate thesis</td>
-<td align="right">718.00000</td>
+<td align="right">639.00000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">Patent</td>
-<td align="right">71.96071</td>
+<td align="right">71.04405</td>
 <td align="right">0.0000000</td>
 </tr>
 </tbody>
@@ -276,21 +250,21 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co"># Note that numeric unit codes need to be enclosed with ` </span></span>
 <span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">`5851`</span><span class="op">$</span><span class="va">diva</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 14</span></span></span>
-<span><span class="co">#&gt;    Publication_Type_DiVA `2014` `2015` `2016` `2017` `2018` `2019` `2020` `2021`</span></span>
+<span><span class="co">#&gt;    Publication_Type_DiVA `2015` `2016` `2017` `2018` `2019` `2020` `2021` `2022`</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Article, peer review    11.7 11.8     8.5   13.2    5.17  9.09    4.96   4.04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Article, other          <span style="color: #BB0000;">NA</span>    2.5     2      1.75   0.5   2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Conference paper, pe…    7.7  7.33    1.25   4.96   2.33  7.90    3.33   1   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Conference paper, ot…   15   13.3    12.6   11.6   13    11.2     1      7   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Book                     2    0.333   2.33   1.67   1     0.833   0.5   <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Anthology (editor)       1   <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      4.33  <span style="color: #BB0000;">NA</span>     1       2.58  <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Chapter in book         16.3 12.5    16.8   23.1   30.5  16.1    15.5   10   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Article, book review     1    2       1      2     <span style="color: #BB0000;">NA</span>     1       3     <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Proceeding (editor)     <span style="color: #BB0000;">NA</span>    1      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      1   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Report                   2   10.4     2.33   2.52  <span style="color: #BB0000;">NA</span>     2       1.17   1   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Doctoral thesis          1   <span style="color: #BB0000;">NA</span>       3      5      3    <span style="color: #BB0000;">NA</span>       4      4   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Licentiate thesis       <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>       1     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;, P_frac &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Article, peer review  11.8     8.5   13.2    5.17  9.09    4.96   4.04   4.46</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Article, other         2.5     2.5    1.75   0.5   2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      3.82</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Conference paper, pe…  7.33    1.25   5.46   2.33  7.90    3.33   1      9.62</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Conference paper, ot… 14.3    12.6   12.1   13.5  11.2     1      7      5.33</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Book                   0.333   2.33   1.67   1     0.833   0.5   <span style="color: #BB0000;">NA</span>      0.75</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Anthology (editor)    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      4.33  <span style="color: #BB0000;">NA</span>     1       2.58  <span style="color: #BB0000;">NA</span>      1.2 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Chapter in book       12.5    16.5   23.1   30.5  16.1    15.5   13      8.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Article, book review   2       1      2     <span style="color: #BB0000;">NA</span>     1       3     <span style="color: #BB0000;">NA</span>      1   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Proceeding (editor)    1      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      1     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Report                10.4     2.33   2.52  <span style="color: #BB0000;">NA</span>     2       1.17   1      3.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Doctoral thesis       <span style="color: #BB0000;">NA</span>       3      5      3    <span style="color: #BB0000;">NA</span>       4      4     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Licentiate thesis     <span style="color: #BB0000;">NA</span>       1     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: `2023` &lt;dbl&gt;, `2024` &lt;dbl&gt;, P_frac &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   WoS_coverage &lt;dbl&gt;, Scopus_coverage &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -322,29 +296,22 @@ whole, its five schools and about 30 departments. The dataset, named
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>         15 Other                        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span>         16 Not published material</span></span></code></pre></div>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Gaël Serge Dubus, Tobias Jeppsson, Agne Larsson, David Minguillo, Markus Skyttner.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Gaël Serge Dubus, Tobias Jeppsson, Agne Larsson, David Minguillo, Markus Skyttner.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 

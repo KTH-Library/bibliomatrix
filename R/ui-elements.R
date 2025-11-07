@@ -1565,7 +1565,7 @@ abm_ui_datatable_sdg_table <- function(df_sdg_table, unit_file_label, unit_title
                   rownames = FALSE,
                   extensions = "Buttons",
                   options = list(
-                    ordering = FALSE,
+                    ordering = TRUE,
                     bPaginate = FALSE,
                     dom = 'tB',
                     buttons = list(
@@ -1667,7 +1667,8 @@ time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, 
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
-          panel.grid.minor.y = element_blank())
+          panel.grid.minor.y = element_blank(),
+          axis.title.x = element_blank())
   
   if(!is.null(refline)) {
     res <- res +
@@ -1694,4 +1695,20 @@ time_graph <- function(df, indicator, ma = FALSE, weight = NULL, ylabel = NULL, 
 
 timegraph_header_legend<-function(colors_vb = ktheme::palette_kth_neo(17)){
   paste0('*Yearly (<span style="color:', colors_vb['blue'],'">&#8226;&#8226;</span>) and moving average (<span style="color:', colors_vb['darkred'],'">&mdash;</span>)*')
+}
+
+#' Plotlyfy graph in ABM context
+#' 
+#' @param graphobj a ggplot object
+#' @param tooltip which paramenters to show as tooltips
+#' @param optionsbar boolean, default false, indicating whether optionssbar should be shown
+#' @param showlegend boolean, default true, indicating whether legend should be included
+#' @return a plotly object
+#' @importFrom plotly ggplotly
+#' @export
+abm_plotlyfy <- function(graphobj, tooltip, optionsbar = FALSE, showlegend = TRUE) {
+  graphobj |> 
+  ggplotly(tooltip = tooltip) |>  
+  config(displayModeBar = optionsbar) |>
+  layout(autosize = TRUE, showlegend = showlegend, font = list(family = "figtree"))
 }

@@ -6,9 +6,10 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  y_start <- 2014
-  y_stop <- 2023
-  analysisId <- 11
+  current_year <- as.integer(format(Sys.Date(), "%Y"))
+  y_start <- current_year - 10
+  y_stop <- current_year - 1
+  analysisId <- 17
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -943,7 +944,7 @@ abm_publications <- function(data, analysis_start = abm_config()$start_year, ana
 #'   "units" with a named list of results (set of tibbles for each of the units),
 #'   "pt_ordning" for DiVA publication type sort order
 #'   and analysis_date for the date of data extraction
-#' @importFrom pool poolClose
+#' @importFrom DBI dbDisconnect
 #' @importFrom readr write_rds
 #' @importFrom purrr map
 #' @importFrom stats setNames
@@ -981,7 +982,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   if (file.exists(cache_location) & !overwrite_cache)
     return (readr::read_rds(cache_location))  
   
-  db <- pool_bib()
+  db <- con_bib()
   
   # retrieve unit codes
   units_table <- 
@@ -1048,7 +1049,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
   res <- map(units, unit_tables)
   res <- setNames(res, units)
   
-  poolClose(db)
+  dbDisconnect(db)
   
   out <- list("meta" = units_table,
               "units" = res,
@@ -1071,7 +1072,7 @@ abm_public_data <- function(overwrite_cache = FALSE) {
 #'   and "units" with a named list of results (set of 5 different tibbles for 
 #'   the tables and also the publication list).
 #' @importFrom stats setNames
-#' @importFrom pool poolClose
+#' @importFrom DBI dbDisconnect
 #' @export
 #' @examples 
 #' \dontrun{
@@ -1091,7 +1092,7 @@ abm_private_data <- function(unit_code) {
   if (missing(unit_code))
     stop("Please provide a kthid to be used as unit_code.")
   
-  db <- pool_bib()
+  db <- con_bib()
   
   # retrieve unit codes
   units_table <- 
@@ -1128,7 +1129,7 @@ abm_private_data <- function(unit_code) {
   res <- list(unit_tables(unit_code))
   res <- setNames(res, unit_code)
   
-  poolClose(db)
+  dbDisconnect(db)
   
   out <- list("meta" = units_table, "units" = res)
   
@@ -1143,18 +1144,23 @@ abm_private_data <- function(unit_code) {
 #' @importFrom stats reorder
 #' @export
 abm_graph_diva <- function(df) {
+
+  `Publication type` <- NULL
   
   df_diva_long <- df |>
     select(-"P_frac", -"WoS_coverage", -"Scopus_coverage") |>
     gather("year", "value", -Publication_Type_DiVA) |>
-    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type"))
+    left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) |>
+    mutate(`Publication type` = reorder(Publication_Type_DiVA, desc(pt_ordning)))
   
   colvals <- unname(palette_kth_neo(13, type = "qual"))
   names(colvals) <- abm_public_kth$pubtype_order |> filter(pt_ordning <= 13) |> pull(diva_publication_type)
 
   ggplot(data = df_diva_long,
-         aes(x = year)) +
-    geom_bar(aes(weight = value, fill = reorder(Publication_Type_DiVA, desc(pt_ordning)))) +
+         aes(x = year, text = paste(round(value,1)),  #"<b>Publications:</b>",
+             value2 = round(df_diva_long$value,1),
+             value = value)) +
+    geom_bar(aes(weight = value, fill = `Publication type`)) +
     labs(x = "Publication year",
          y = "Number of publications (fractional)",
          fill = NULL) +
@@ -1162,6 +1168,7 @@ abm_graph_diva <- function(df) {
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           legend.position = "right",
+          legend.y.intersp = 0.5,
           panel.grid.major.x = element_blank(),
           panel.grid.minor.y = element_blank())
 }
@@ -1182,11 +1189,11 @@ abm_graph_wos_coverage <- function(df) {
   df <- df |> 
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) |> 
     filter(WoS_coverage != 0) |> 
-    mutate(Publication_Type_DiVA = gsub(" \\(", "\n(", gsub(", ", ",\n", Publication_Type_DiVA)))
+    mutate(Publication_Type_DiVA_alt = gsub(" \\(", "\n(", gsub(", ", ",\n", Publication_Type_DiVA)))
   
   ggplot(data = df,
-    aes(x = reorder(Publication_Type_DiVA, WoS_coverage), 
-       text = paste('coverage:', sprintf("%.1f", 100 * WoS_coverage), '%')
+    aes(x = reorder(Publication_Type_DiVA_alt, WoS_coverage), 
+       text = paste(Publication_Type_DiVA)  #'coverage:', sprintf("%.1f", 100 * WoS_coverage), '%'
     )) +
   geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
   xlab(NULL) +
@@ -1217,11 +1224,11 @@ abm_graph_cf <- function(df){
     geom_point(color = kth_cols["blue1"], size = 3) + 
     #geom_line(color = kth_cols["blue2"], size = .8) +
     #geom_ma(ma_fun = SMA, n = 3, size = 3, color = kth_cols["blue2"]) +
-    geom_line(aes(y=ma3), color = kth_cols["blue2"], size = 1) +
+    geom_line(aes(y=ma3), color = kth_cols["blue2"], linewidth = 1) +
     xlab("Publication year") +
     ylab("Average Cf") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], linewidth = .8) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
@@ -1242,7 +1249,7 @@ abm_graph_top10 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top10_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication year") +
     ylab("Share Top 10%") +
     geom_hline(yintercept = 0.1, color = kth_cols["blue3"], size = .8) +
@@ -1266,11 +1273,11 @@ abm_graph_jcf <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = jcf, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication year") +
     ylab("Average Journal Cf") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], linewidth = .8) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
@@ -1291,7 +1298,7 @@ abm_graph_top20 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top20_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication year") +
     ylab("Share Journal Top 20%") +
     geom_hline(yintercept = 0.2, color = kth_cols["blue3"], size = .8) +
@@ -1319,7 +1326,7 @@ abm_graph_copub <- function(df){
   
   ggplot(data = df_copub_long,
          aes(x = Publication_Year, y = value, group = `Co-publication:`)) +
-    geom_line(aes(color = `Co-publication:`), size = .8) +
+    geom_line(aes(color = `Co-publication:`), linewidth = .8) +
     geom_point(aes(color = `Co-publication:`), size = 3) +
     xlab("Publication year") +
     ylab("Share of publications") +
@@ -1378,7 +1385,7 @@ abm_graph_oa_lines <- function(df){
     scale_size_identity() +
     scale_alpha_identity() +
     scale_color_manual(
-      name = 'OA type',
+      #name = 'OA type',
       values = unpaywall) +
     scale_x_continuous(breaks = xbreaks) +
     scale_y_continuous(breaks = ybreaks,
@@ -1542,9 +1549,11 @@ abm_graph_oadata_stackedarea <- function(df){
   xymelt <- melt(df_oa_graphdata, id.vars = "Publication_Year") |>
     rename("OA type:"=variable)
   
-  ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`)) +
+  ggplot(xymelt, aes(x = Publication_Year, y = value, fill = `OA type:`, group = `OA type:`,
+                     text = paste0(round(value)))) +
     scale_fill_manual(values = unpaywall_cols) + 
-    geom_area() + 
+    geom_area(stat = "identity") + 
+    #geom_polygon() +
     #TODO: geom_line() +  ?
     xlab("Publication year") +
     ylab("Number of publications") +
@@ -1568,7 +1577,7 @@ abm_graph_scop_normcit <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = fwci_x, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Average FWCI") +
     ylim(0, ymax) +
@@ -1593,10 +1602,10 @@ abm_graph_scop_top10 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top10_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Share Top 10%") +
-    geom_hline(yintercept = 0.1, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 0.1, color = kth_cols["blue3"], linewidth = .8) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
@@ -1617,11 +1626,11 @@ abm_graph_scop_snip <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = avg_snip, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Average SNIP") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], linewidth = .8) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
@@ -1642,10 +1651,10 @@ abm_graph_scop_top20 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top20_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Share Journal Top 20%") +
-    geom_hline(yintercept = 0.2, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 0.2, color = kth_cols["blue3"], linewidth = .8) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
@@ -1670,7 +1679,7 @@ abm_graph_scop_copub <- function(df){
   
   ggplot(data = df_copub_long,
          aes(x = Publication_Year, y = value, group = `Co-publication:`)) +
-    geom_line(aes(color = `Co-publication:`), size = .8) +
+    geom_line(aes(color = `Co-publication:`), linewidth = .8) +
     geom_point(aes(color = `Co-publication:`), size = 3) +
     xlab("Publication year") +
     ylab("Share of publications") +
@@ -1697,7 +1706,7 @@ abm_graph_scop_copub <- function(df){
 #' @import DBI dplyr tidyr purrr
 #' @export
 abm_copub_data <- function(con = con_bib(), unit_code, analysis_start = abm_config()$start_year, analysis_stop = abm_config()$stop_year) {
-  oa_data <- abm_data(con = con, unit_code = unit_code) |> 
+  oa_data <- abm_data(con = con, unit_code = unit_code, analysisId = abm_config()$analysis_id) |> 
     rename("UT" = "WebofScience_ID") |>
     left_join(con |> tbl("Bestresaddr_KTH"), by = "UT") |>  #by = c("WebofScience_ID" = "UT")
     filter(!is.na(UT)) |>

@@ -1,7 +1,10 @@
-pandoc: '3.5'
-pkgdown: 2.1.0
+pandoc: 3.6.3
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   intro: intro.html
   public-data: public-data.html
-last_built: 2024-11-05T11:50Z
+last_built: 2025-11-07T13:39Z
+urls:
+  reference: https://kth-library.github.io/bibliomatrix/reference
+  article: https://kth-library.github.io/bibliomatrix/articles

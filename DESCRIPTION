@@ -18,11 +18,11 @@ Description: Shared functionality for working with bibliometric analytics. This
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 2.10)
+Depends: R (>= 4.1.0)
 Suggests: 
     testthat (>= 2.1.0),
     bench
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     DBI (>= 1.0.0),
     RSQLite (>= 2.1.2),
@@ -34,7 +34,6 @@ Imports:
     tidyr (>= 1.0.0),
     tibble (>= 2.1.3),
     curl (>= 4.2),
-    pool (>= 0.1.4),
     magrittr (>= 1.5),
     readr (>= 1.3.1),
     callr (>= 3.3.2),
@@ -78,7 +77,8 @@ Imports:
     openxlsx
 Remotes: 
     KTH-Library/kthapi,
-    KTH-Library/ktheme
-URL: https://github.com/KTH-Library/bibliomatrix
+    KTH-Library/ktheme,
+    hrbrmstr/waffle
+URL: https://github.com/KTH-Library/bibliomatrix, https://kth-library.github.io/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues
 VignetteBuilder: knitr

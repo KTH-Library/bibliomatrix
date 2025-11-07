@@ -54,7 +54,8 @@ con_bib_mssql <- function()
     database = Sys.getenv("DBNAME"),
     UID = Sys.getenv("DBUSER"),
     PWD = Sys.getenv("DBPASS"),
-    timeout = timeout)
+    timeout = timeout, 
+    Encrypt = "No")
 }
 
 #' Connection to Bibliometrics data source for KTH using SQLite3 db
@@ -234,7 +235,8 @@ db_sync <- function(
   tables_included, 
   tables_excluded = c("OA_status", "Document", "LastFailedJobs",
                       "DIVA_School_Dept", "Diva_departments", "Doc_statistics",
-                      "masterfile_full", "masterfile_2021jan", "masterfile_2019dec"),
+                      "masterfile_full", "masterfile_2021jan", "masterfile_2019dec",
+                      "masterfile_2019nov", "masterfile_tmp"),
   overwrite_existing = FALSE) 
 {
   c1 <- con_bib_mssql()
@@ -296,97 +298,3 @@ db_sqlite_location <- function() {
   file.path(rappdirs::app_dir("bibmon")$config(), "bibmon.db")
 }
 
-#' Connection pool to Bibliometrics data source for KTH
-#' 
-#' This function returns a db connection to one of two possible pre-configured
-#' data sources containing Bibliometrics data
-#' 
-#' @param source_type one of "sqlite" or "mssql" with "sqlite" being default
-#' @return database connection
-#' @export
-pool_bib <- function(source_type = c("sqlite", "mssql"))
-{
-  type <- match.arg(source_type)
-  switch(type,
-         sqlite = pool_bib_sqlite(),
-         mssql = pool_bib_mssql()
-  )
-}
-
-#' Connection pool to Bibliometrics data source for KTH using MS SQL Server db
-#' 
-#' This function relies on an .Renviron file with environment variables for 
-#' a connection to the MS SQL Server data source. Make sure one exists and 
-#' that variables are set for: DBHOST, DBNAME, DBUSER, DBPASS
-#' 
-#' @import DBI odbc pool
-#' @noRd
-pool_bib_mssql <- function() {
-
-  envvars <- c("DBHOST", "DBNAME", "DBUSER", "DBPASS")
-  
-  if (any(Sys.getenv(envvars) == "")) {
-    message("Do you have an .Renviron file at: ", normalizePath("~/.Renviron"), "?")
-    stop("Please use an .Renviron with these envvars set", paste(envvars))
-  }
-  
-  if (Sys.getenv("DBTIMEOUT") == "") {
-    timeout <- 60
-  } else {
-    timeout <- strtoi(Sys.getenv("DBTIMEOUT"))
-    is_valid <- !is.na(timeout)
-    stopifnot(is_valid)
-  }
-  
-  if (Sys.getenv("SQL_SERVER_DRIVER") == "") {
-    drv <- "ODBC Driver 17 for SQL Server"
-  } else {
-    drv <- Sys.getenv("SQL_SERVER_DRIVER")
-  }
-  
-  dbPool(
-    odbc(),
-    driver = drv,
-    Port = 1433,
-    server = Sys.getenv("DBHOST"),
-    database = Sys.getenv("DBNAME"),
-    UID = Sys.getenv("DBUSER"),
-    PWD = Sys.getenv("DBPASS"),
-    timeout = timeout)
-}
-
-#' Connection pool to Bibliometrics data source for KTH using SQLite3 db
-#' 
-#' This function relies on a "bibmon.db" file being present in the relevant application
-#' directory for a connection to the SQLite3 data source.
-#' 
-#' @import DBI RSQLite rappdirs pool
-#' @importFrom rappdirs app_dir
-#' @noRd
-pool_bib_sqlite <- function(create = FALSE, overwrite = FALSE) {
-  db_path <- db_sqlite_location()
-  
-  if (!file.exists(db_path) & !create) 
-    stop("No sqlite3 db available at ", db_path)
-  
-  if (file.exists(db_path) & create & !overwrite)
-    stop("A file exists at ", db_path, ", use `overwrite` = TRUE to overwrite it.")
-  
-  if (file.exists(db_path) & create & overwrite) {
-    message("Deleting database at ", db_path, ", creating new empty database there.")
-    unlink(db_path)
-  }
-  
-  if (!file.exists(dirname(db_path)) & create) {
-    message("Creating local dir for sqlit3 db at ", dirname(db_path))
-    dir.create(dirname(db_path), recursive = TRUE, showWarnings = FALSE)
-  }
-  sqliteflag <- if (create) RSQLite::SQLITE_RWC else RSQLite::SQLITE_RW
-
-  dbPool(
-    drv = RSQLite::SQLite(),
-    dbname = db_path,
-    synchronous = "normal",
-    flags = sqliteflag
-  )
-}

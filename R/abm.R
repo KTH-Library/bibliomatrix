@@ -7,7 +7,7 @@ abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
   current_year <- as.integer(format(Sys.Date(), "%Y"))
-  y_start <- current_year - 11
+  y_start <- current_year - 10
   y_stop <- current_year - 1
   analysisId <- 17
   

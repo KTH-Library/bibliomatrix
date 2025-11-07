@@ -180,67 +180,67 @@ whole, its five schools and about 30 departments. The dataset, named
 <tbody>
 <tr class="odd">
 <td align="left">Article, peer review</td>
-<td align="right">16144.51542</td>
-<td align="right">0.8658760</td>
+<td align="right">14604.55749</td>
+<td align="right">0.8648226</td>
 </tr>
 <tr class="even">
 <td align="left">Article, other</td>
-<td align="right">985.03079</td>
-<td align="right">0.8031067</td>
+<td align="right">868.11426</td>
+<td align="right">0.7931583</td>
 </tr>
 <tr class="odd">
 <td align="left">Conference paper, peer review</td>
-<td align="right">7951.83840</td>
-<td align="right">0.5923955</td>
+<td align="right">7063.61959</td>
+<td align="right">0.5851030</td>
 </tr>
 <tr class="even">
 <td align="left">Conference paper, other</td>
-<td align="right">1830.55663</td>
-<td align="right">0.0422990</td>
+<td align="right">1560.91673</td>
+<td align="right">0.0464649</td>
 </tr>
 <tr class="odd">
 <td align="left">Book</td>
-<td align="right">172.28881</td>
-<td align="right">0.0029021</td>
+<td align="right">155.47214</td>
+<td align="right">0.0032160</td>
 </tr>
 <tr class="even">
 <td align="left">Anthology (editor)</td>
-<td align="right">68.00952</td>
-<td align="right">0.0049013</td>
+<td align="right">55.92619</td>
+<td align="right">0.0059602</td>
 </tr>
 <tr class="odd">
 <td align="left">Chapter in book</td>
-<td align="right">1566.38886</td>
-<td align="right">0.0235219</td>
+<td align="right">1423.19541</td>
+<td align="right">0.0225510</td>
 </tr>
 <tr class="even">
 <td align="left">Article, book review</td>
-<td align="right">123.85000</td>
-<td align="right">0.4993944</td>
+<td align="right">111.85000</td>
+<td align="right">0.5082700</td>
 </tr>
 <tr class="odd">
 <td align="left">Proceeding (editor)</td>
-<td align="right">41.65754</td>
-<td align="right">0.0240053</td>
+<td align="right">35.36587</td>
+<td align="right">0.0282758</td>
 </tr>
 <tr class="even">
 <td align="left">Report</td>
-<td align="right">714.42882</td>
+<td align="right">602.34419</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">Doctoral thesis</td>
-<td align="right">2935.00000</td>
+<td align="right">2638.00000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="even">
 <td align="left">Licentiate thesis</td>
-<td align="right">757.00000</td>
+<td align="right">639.00000</td>
 <td align="right">0.0000000</td>
 </tr>
 <tr class="odd">
 <td align="left">Patent</td>
-<td align="right">75.21071</td>
+<td align="right">71.04405</td>
 <td align="right">0.0000000</td>
 </tr>
 </tbody>
@@ -249,22 +249,22 @@ whole, its five schools and about 30 departments. The dataset, named
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Note that numeric unit codes need to be enclosed with ` </span></span>
 <span><span class="va">abm_public_kth</span><span class="op">$</span><span class="va">units</span><span class="op">$</span><span class="va">`5851`</span><span class="op">$</span><span class="va">diva</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 15</span></span></span>
-<span><span class="co">#&gt;    Publication_Type_DiVA `2014` `2015` `2016` `2017` `2018` `2019` `2020` `2021`</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 14</span></span></span>
+<span><span class="co">#&gt;    Publication_Type_DiVA `2015` `2016` `2017` `2018` `2019` `2020` `2021` `2022`</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Article, peer review    11.7 11.8     8.5   13.2    5.17  9.09    4.96   4.04</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Article, other          <span style="color: #BB0000;">NA</span>    2.5     2.5    1.75   0.5   2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Conference paper, pe…    7.7  7.33    1.25   5.46   2.33  7.90    3.33   1   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Conference paper, ot…   15   14.3    12.6   12.1   13.5  11.2     1      7   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Book                     2    0.333   2.33   1.67   1     0.833   0.5   <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Anthology (editor)       1   <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      4.33  <span style="color: #BB0000;">NA</span>     1       2.58  <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Chapter in book         16.3 12.5    16.5   23.1   30.5  16.1    15.5   13   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Article, book review     1    2       1      2     <span style="color: #BB0000;">NA</span>     1       3     <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Proceeding (editor)     <span style="color: #BB0000;">NA</span>    1      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      1   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Report                   2   10.4     2.33   2.52  <span style="color: #BB0000;">NA</span>     2       1.17   1   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Doctoral thesis          1   <span style="color: #BB0000;">NA</span>       3      5      3    <span style="color: #BB0000;">NA</span>       4      4   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Licentiate thesis       <span style="color: #BB0000;">NA</span>   <span style="color: #BB0000;">NA</span>       1     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: `2022` &lt;dbl&gt;, `2023` &lt;dbl&gt;, `2024` &lt;dbl&gt;, P_frac &lt;dbl&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Article, peer review  11.8     8.5   13.2    5.17  9.09    4.96   4.04   4.46</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Article, other         2.5     2.5    1.75   0.5   2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>      3.82</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Conference paper, pe…  7.33    1.25   5.46   2.33  7.90    3.33   1      9.62</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Conference paper, ot… 14.3    12.6   12.1   13.5  11.2     1      7      5.33</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Book                   0.333   2.33   1.67   1     0.833   0.5   <span style="color: #BB0000;">NA</span>      0.75</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Anthology (editor)    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      4.33  <span style="color: #BB0000;">NA</span>     1       2.58  <span style="color: #BB0000;">NA</span>      1.2 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Chapter in book       12.5    16.5   23.1   30.5  16.1    15.5   13      8.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Article, book review   2       1      2     <span style="color: #BB0000;">NA</span>     1       3     <span style="color: #BB0000;">NA</span>      1   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Proceeding (editor)    1      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>      1     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Report                10.4     2.33   2.52  <span style="color: #BB0000;">NA</span>     2       1.17   1      3.5 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Doctoral thesis       <span style="color: #BB0000;">NA</span>       3      5      3    <span style="color: #BB0000;">NA</span>       4      4     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Licentiate thesis     <span style="color: #BB0000;">NA</span>       1     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     2      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: `2023` &lt;dbl&gt;, `2024` &lt;dbl&gt;, P_frac &lt;dbl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   WoS_coverage &lt;dbl&gt;, Scopus_coverage &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level3">

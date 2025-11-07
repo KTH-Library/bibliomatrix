@@ -121,28 +121,28 @@ bibliomatrix</a>.</em></p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Publication_Type_DiVA</th>
-<th align="right">2014</th>
+<th align="right">2015</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">Article, peer review</td>
-<td align="right">1539.95793</td>
+<td align="right">1514.91639</td>
 </tr>
 <tr class="even">
 <td align="left">Article, other</td>
-<td align="right">116.91652</td>
+<td align="right">97.35675</td>
 </tr>
 <tr class="odd">
 <td align="left">Conference paper, peer review</td>
-<td align="right">888.21882</td>
+<td align="right">873.15176</td>
 </tr>
 <tr class="even">
 <td align="left">Conference paper, other</td>
-<td align="right">269.63990</td>
+<td align="right">233.38373</td>
 </tr>
 <tr class="odd">
 <td align="left">Book</td>
-<td align="right">16.81667</td>
+<td align="right">19.50000</td>
 </tr>
 </tbody>
 </table>
@@ -161,10 +161,10 @@ bibliomatrix</a>.</em></p>
 <span><span class="co"># what about performance?</span></span>
 <span><span class="fu"><a href="https://bench.r-lib.org/reference/bench_time.html" class="external-link">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">bibmon</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span>, analysisId <span class="op">=</span> <span class="fu"><a href="../reference/abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">analysis_id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; process    real </span></span>
-<span><span class="co">#&gt;   2.91s  21.39s</span></span>
+<span><span class="co">#&gt;   2.88s  21.27s</span></span>
 <span><span class="fu"><a href="https://bench.r-lib.org/reference/bench_time.html" class="external-link">bench_time</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_table1.html">abm_table1</a></span><span class="op">(</span><span class="fu"><a href="../reference/abm_data.html">abm_data</a></span><span class="op">(</span>con <span class="op">=</span> <span class="va">localdb</span>, unit_code <span class="op">=</span> <span class="st">"KTH"</span>, analysisId <span class="op">=</span> <span class="fu"><a href="../reference/abm_config.html">abm_config</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">analysis_id</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; process    real </span></span>
-<span><span class="co">#&gt;   4.08s   4.17s</span></span>
+<span><span class="co">#&gt;   6.33s   6.66s</span></span>
 <span></span>
 <span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">bibmon</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://dbi.r-dbi.org/reference/dbDisconnect.html" class="external-link">dbDisconnect</a></span><span class="op">(</span><span class="va">localdb</span><span class="op">)</span></span></code></pre></div>

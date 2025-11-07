@@ -394,29 +394,29 @@ bibliomatrix</a>.</em></p>
 <thead>
 <tr class="header">
 <th align="left">Publication_Type_DiVA</th>
-<th align="right">2014</th>
+<th align="right">2015</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">Article, peer review</td>
-<td align="right">1539.95793</td>
+<td align="right">1514.91639</td>
 </tr>
 <tr class="even">
 <td align="left">Article, other</td>
-<td align="right">116.91652</td>
+<td align="right">97.35675</td>
 </tr>
 <tr class="odd">
 <td align="left">Conference paper, peer review</td>
-<td align="right">888.21882</td>
+<td align="right">873.15176</td>
 </tr>
 <tr class="even">
 <td align="left">Conference paper, other</td>
-<td align="right">269.63990</td>
+<td align="right">233.38373</td>
 </tr>
 <tr class="odd">
 <td align="left">Book</td>
-<td align="right">16.81667</td>
+<td align="right">19.50000</td>
 </tr>
 </tbody>
 </table>
@@ -434,10 +434,10 @@ bibliomatrix</a>.</em></p>
 <span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co"># what about performance?</span></span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> bibmon, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>, <span class="at">analysisId =</span> <span class="fu">abm_config</span>()<span class="sc">$</span>analysis_id)))</span>
 <span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;   4.23s   22.6s</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt;   2.59s  22.49s</span></span>
 <span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="fu">bench_time</span>(<span class="fu">abm_table1</span>(<span class="fu">abm_data</span>(<span class="at">con =</span> localdb, <span class="at">unit_code =</span> <span class="st">&quot;KTH&quot;</span>, <span class="at">analysisId =</span> <span class="fu">abm_config</span>()<span class="sc">$</span>analysis_id)))</span>
 <span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; process    real </span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   3.55s   3.55s</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt;   7.56s    7.6s</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">dbDisconnect</span>(bibmon)</span>
 <span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">dbDisconnect</span>(localdb)</span></code></pre></div>

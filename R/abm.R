@@ -1224,11 +1224,11 @@ abm_graph_cf <- function(df){
     geom_point(color = kth_cols["blue1"], size = 3) + 
     #geom_line(color = kth_cols["blue2"], size = .8) +
     #geom_ma(ma_fun = SMA, n = 3, size = 3, color = kth_cols["blue2"]) +
-    geom_line(aes(y=ma3), color = kth_cols["blue2"], size = 1) +
+    geom_line(aes(y=ma3), color = kth_cols["blue2"], linewidth = 1) +
     xlab("Publication year") +
     ylab("Average Cf") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], linewidth = .8) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
@@ -1249,7 +1249,7 @@ abm_graph_top10 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top10_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication year") +
     ylab("Share Top 10%") +
     geom_hline(yintercept = 0.1, color = kth_cols["blue3"], size = .8) +
@@ -1273,11 +1273,11 @@ abm_graph_jcf <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = jcf, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication year") +
     ylab("Average Journal Cf") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], linewidth = .8) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
@@ -1298,7 +1298,7 @@ abm_graph_top20 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top20_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication year") +
     ylab("Share Journal Top 20%") +
     geom_hline(yintercept = 0.2, color = kth_cols["blue3"], size = .8) +
@@ -1326,7 +1326,7 @@ abm_graph_copub <- function(df){
   
   ggplot(data = df_copub_long,
          aes(x = Publication_Year, y = value, group = `Co-publication:`)) +
-    geom_line(aes(color = `Co-publication:`), size = .8) +
+    geom_line(aes(color = `Co-publication:`), linewidth = .8) +
     geom_point(aes(color = `Co-publication:`), size = 3) +
     xlab("Publication year") +
     ylab("Share of publications") +
@@ -1577,7 +1577,7 @@ abm_graph_scop_normcit <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = fwci_x, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Average FWCI") +
     ylim(0, ymax) +
@@ -1602,10 +1602,10 @@ abm_graph_scop_top10 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top10_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Share Top 10%") +
-    geom_hline(yintercept = 0.1, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 0.1, color = kth_cols["blue3"], linewidth = .8) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
@@ -1626,11 +1626,11 @@ abm_graph_scop_snip <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = avg_snip, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Average SNIP") +
     ylim(0, ymax) +
-    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 1.0, color = kth_cols["blue3"], linewidth = .8) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
           panel.grid.major.x = element_blank(),
@@ -1651,10 +1651,10 @@ abm_graph_scop_top20 <- function(df){
   ggplot(data = df |> filter(!Publication_Year == "Total"),
          aes(x = Publication_Year, y = top20_share, group=1)) +
     geom_point(color = kth_cols["blue1"], size = 3) + 
-    geom_line(color = kth_cols["blue2"], size = .8) +
+    geom_line(color = kth_cols["blue2"], linewidth = .8) +
     xlab("Publication years") +
     ylab("Share Journal Top 20%") +
-    geom_hline(yintercept = 0.2, color = kth_cols["blue3"], size = .8) +
+    geom_hline(yintercept = 0.2, color = kth_cols["blue3"], linewidth = .8) +
     scale_y_continuous(labels = percent_format(accuracy = 5L), limits = c(0, ymax)) +
     theme_kth_neo() +
     theme(axis.title.y = element_text(vjust = 2.5),
@@ -1679,7 +1679,7 @@ abm_graph_scop_copub <- function(df){
   
   ggplot(data = df_copub_long,
          aes(x = Publication_Year, y = value, group = `Co-publication:`)) +
-    geom_line(aes(color = `Co-publication:`), size = .8) +
+    geom_line(aes(color = `Co-publication:`), linewidth = .8) +
     geom_point(aes(color = `Co-publication:`), size = 3) +
     xlab("Publication year") +
     ylab("Share of publications") +

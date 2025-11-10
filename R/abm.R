@@ -1189,11 +1189,11 @@ abm_graph_wos_coverage <- function(df) {
   df <- df |> 
     left_join(get_pubtype_order(), by = c("Publication_Type_DiVA" = "diva_publication_type")) |> 
     filter(WoS_coverage != 0) |> 
-    mutate(Publication_Type_DiVA = gsub(" \\(", "\n(", gsub(", ", ",\n", Publication_Type_DiVA)))
+    mutate(Publication_Type_DiVA_alt = gsub(" \\(", "\n(", gsub(", ", ",\n", Publication_Type_DiVA)))
   
   ggplot(data = df,
-    aes(x = reorder(Publication_Type_DiVA, WoS_coverage), 
-       text = paste('coverage:', sprintf("%.1f", 100 * WoS_coverage), '%')
+    aes(x = reorder(Publication_Type_DiVA_alt, WoS_coverage), 
+       text = paste(Publication_Type_DiVA)  #'coverage:', sprintf("%.1f", 100 * WoS_coverage), '%'
     )) +
   geom_bar(aes(weight = WoS_coverage), fill = kth_cols["blue"]) +
   xlab(NULL) +

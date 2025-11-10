@@ -1710,5 +1710,5 @@ abm_plotlyfy <- function(graphobj, tooltip, optionsbar = FALSE, showlegend = TRU
   graphobj |> 
   ggplotly(tooltip = tooltip) |>  
   config(displayModeBar = optionsbar) |>
-  layout(autosize = TRUE, showlegend = showlegend, font = list(family = "figtree"))
+  layout(autosize = TRUE, showlegend = showlegend, font = list(family = "Figtree"))
 }

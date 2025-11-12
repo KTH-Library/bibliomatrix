@@ -750,7 +750,7 @@ Row {.tabset data-height=6000}
 
 ```{r, fig.width=6, fig.height=5, out.width='95%'}
 if(df_copub %>% filter(!is.na(P_full)) %>% nrow() > 0) {
-  (abm_graph_scop_copub(df_scop_copub) + 
+  (abm_graph_copub(df_copub) + 
     theme(axis.title.x = element_blank())) |>
     abm_plotlyfy(tooltip = c("y","x")) |> 
     style(hovertemplate = paste0("<b>%{data.legendgroup}</b><br>",

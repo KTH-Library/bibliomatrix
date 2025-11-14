@@ -15,15 +15,23 @@ params:
 
 ```{css echo=FALSE}
 @font-face {
-  font-family: 'Figtree';
+  font-family: 'Figtree Light';
   font-style: normal;
   font-weight: 400;
   src: url('fonts/figtree-v5-latin_latin-ext-regular.woff2') format('woff2');
 }
 
 body {
-  font-family: 'Figtree';
+  font-family: 'Figtree Light';
 }
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts/figtree-v5-latin_latin-ext-regular.woff2') format('woff2');
+}
+
+
 ```
 
 

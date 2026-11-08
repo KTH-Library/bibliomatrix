@@ -9,7 +9,7 @@ abm_config <- function() {
   current_year <- as.integer(format(Sys.Date(), "%Y"))
   y_start <- current_year - 10
   y_stop <- current_year - 1
-  analysisId <- 17
+  analysisId <- 23
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")

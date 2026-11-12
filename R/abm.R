@@ -292,7 +292,7 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
              Publication_Year <= analysis_stop - 1 &
              Publication_Type_WoS %in% c("Article", "Review") & 
              !is.na(cf)) |> 
-    select(Publication_Year, Unit_Fraction_adj, cf, Ptop10, WebofScience_ID) |>
+    select(Publication_Year, Unit_Fraction_adj, cf, Ptop10, WebofScience_ID, Cf_percentile) |>
     mutate(Publication_Year = as.character(Publication_Year)) |> 
     unique()
   
@@ -303,7 +303,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
               pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = sum(cf * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE),
-              top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
+              top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
+              percentile = sum(Cf_percentile * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
     mutate(Publication_Year = "Total")
   
   if(intervals) {
@@ -322,7 +323,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
               pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = TRUE),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE)) |>
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE),
+              percentile = sum(Cf_percentile * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
     ungroup()
   
   # No summary row if no data

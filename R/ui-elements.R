@@ -527,7 +527,7 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
     filename <- paste0("ABM_table3_", unit_file_label, "_", current_date)
     
     df <- df_cf |> 
-      select(Publication_Year, pubs_full, pubs_frac, cf, top10_share)
+      select(Publication_Year, pubs_full, pubs_frac, cf, top10_share, percentile)
     
     header <- eval(parse(text = getheader(names(df))))
     
@@ -566,7 +566,7 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
 abm_ui_kable_cf <- function(df_cf) {
   if (nrow(df_cf) > 0) {
     df <- df_cf |> 
-      select(Publication_Year, pubs_full, pubs_frac, cf, top10_share)
+      select(Publication_Year, pubs_full, pubs_frac, cf, top10_share, percentile)
     
     df |>
       mutate_at(vars(3), function(x) sprintf("%.1f", x)) |>

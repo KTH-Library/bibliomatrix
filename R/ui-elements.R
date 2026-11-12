@@ -548,7 +548,7 @@ abm_ui_datatable_cf <- function(df_cf, unit_file_label, unit_title) {
       )
     ) |> 
       formatRound(c("pubs_frac"), digits = 1, mark = "") |> 
-      formatRound(c("cf"), digits = 2, mark = "") |>
+      formatRound(c("cf", "percentile"), digits = 2, mark = "") |>
       formatPercentage(c("top10_share"), digits = 1) |>
       abm_format_rows()
   } else {
@@ -570,7 +570,7 @@ abm_ui_kable_cf <- function(df_cf) {
     
     df |>
       mutate_at(vars(3), function(x) sprintf("%.1f", x)) |>
-      mutate_at(vars(4), function(x) sprintf("%.2f", x)) |>
+      mutate_at(vars(4,6), function(x) sprintf("%.2f", x)) |>
       mutate_at(vars(5), function(x) sprintf("%.1f%%", x * 100)) |>
       kable(col.names = getcolnames(names(df)),
             align = c("l", rep("r", ncol(df) - 1))) |> 

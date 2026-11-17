@@ -1,6 +1,6 @@
 Package: bibliomatrix
 Title: Provide Functionality for Bibliometric Analytics
-Version: 1.9
+Version: 1.11
 Authors@R: 
     as.person(c(
         "Gaël Serge Dubus <dubus@kth.se> [aut]", 
@@ -22,7 +22,6 @@ Depends: R (>= 4.1.0)
 Suggests: 
     testthat (>= 2.1.0),
     bench
-RoxygenNote: 7.3.3
 Imports: 
     DBI (>= 1.0.0),
     RSQLite (>= 2.1.2),
@@ -82,3 +81,4 @@ Remotes:
 URL: https://github.com/KTH-Library/bibliomatrix, https://kth-library.github.io/bibliomatrix
 BugReports: https://github.com/KTH-Library/bibliomatrix/issues
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.0.0

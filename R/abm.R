@@ -6,10 +6,11 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  current_year <- as.integer(format(Sys.Date(), "%Y"))
+  current_year <- 2026
+  #current_year <- as.integer(format(Sys.Date(), "%Y"))
   y_start <- current_year - 10
   y_stop <- current_year - 1
-  analysisId <- 17
+  analysisId <- 23
   
   if (Sys.getenv("ABM_START_YEAR") != "")
     y_start <- Sys.getenv("ABM_START_YEAR")
@@ -23,6 +24,7 @@ abm_config <- function() {
   list(
     start_year = y_start, 
     stop_year = y_stop,
+    analysis_year = current_year,
     default_unit = "KTH",
     analysis_id = analysisId
   )
@@ -292,7 +294,7 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
              Publication_Year <= analysis_stop - 1 &
              Publication_Type_WoS %in% c("Article", "Review") & 
              !is.na(cf)) |> 
-    select(Publication_Year, Unit_Fraction_adj, cf, Ptop10, WebofScience_ID) |>
+    select(Publication_Year, Unit_Fraction_adj, cf, Ptop10, WebofScience_ID, Cf_percentile) |>
     mutate(Publication_Year = as.character(Publication_Year)) |> 
     unique()
   
@@ -303,7 +305,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
               pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = sum(cf * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE),
-              top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
+              top10_share = sum(Ptop10 * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE),
+              percentile = sum(Cf_percentile * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
     mutate(Publication_Year = "Total")
   
   if(intervals) {
@@ -322,7 +325,8 @@ abm_table3 <- function(data, analysis_start = abm_config()$start_year, analysis_
               pubs_frac = sum(Unit_Fraction_adj, na.rm = TRUE),
               cf = weighted.mean(cf, Unit_Fraction_adj, na.rm = TRUE),
               top10_count = sum(Ptop10*Unit_Fraction_adj, na.rm = TRUE),
-              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE)) |>
+              top10_share = weighted.mean(Ptop10, Unit_Fraction_adj, na.rm = TRUE),
+              percentile = sum(Cf_percentile * Unit_Fraction_adj, na.rm = TRUE) / sum(Unit_Fraction_adj, na.rm = TRUE)) |>
     ungroup()
   
   # No summary row if no data

@@ -6,7 +6,8 @@
 abm_config <- function() {
   
   # this can later be expanded with more relevant defaults
-  current_year <- as.integer(format(Sys.Date(), "%Y"))
+  current_year <- 2026
+  #current_year <- as.integer(format(Sys.Date(), "%Y"))
   y_start <- current_year - 10
   y_stop <- current_year - 1
   analysisId <- 23
@@ -23,6 +24,7 @@ abm_config <- function() {
   list(
     start_year = y_start, 
     stop_year = y_stop,
+    analysis_year = current_year,
     default_unit = "KTH",
     analysis_id = analysisId
   )

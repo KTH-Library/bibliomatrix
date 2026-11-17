@@ -31,7 +31,7 @@ dashboardPage(
   dashboardSidebar(
     div(
       br(img(src = "logo_vit_80.png")),
-      br(paste("KTH ABM ", bibliomatrix::abm_config()$stop_year + 1)),
+      br(paste("KTH ABM ", bibliomatrix::abm_config()$analysis_year)),
       style = paste0("text-align: center;",
                      "background-color: ", kth_colors("blue"), ";",
                      "font-size: 20px;"),
